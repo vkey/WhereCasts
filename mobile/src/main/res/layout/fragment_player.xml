@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/podcast_player_layout"
+        android:layout_width="match_parent"
+        android:paddingTop="150dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/podcast_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/podcast_episode_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"
+            android:textSize="16sp"
+            android:layout_below="@+id/podcast_title"
+            />
+
+        <RelativeLayout
+            android:id="@+id/podcast_episode_buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@+id/podcast_episode_title">
+
+            <ImageView
+                android:id="@+id/iv_skip_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_skip_back"
+                android:visibility="invisible"
+                android:layout_marginStart="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                />
+
+            <ImageView
+                android:id="@+id/iv_podcast_playpause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_action_episode_play"
+                />
+
+            <ImageView
+                android:id="@+id/iv_skip_forward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_skip_forward"
+                android:visibility="invisible"
+                android:layout_marginEnd="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/podcast_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_below="@+id/podcast_episode_buttons_layout"
+            />
+
+        <RelativeLayout
+            android:id="@+id/podcast_episode_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_below="@+id/podcast_progress_bar">
+
+            <TextView
+                android:id="@+id/tv_podcast_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/sb_podcast_episode"
+                />
+
+            <SeekBar
+                android:id="@+id/sb_podcast_episode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_podcast_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/sb_podcast_episode"
+                android:textSize="12sp"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>

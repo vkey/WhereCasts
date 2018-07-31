@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">Play</string>
+    <string name="tab_add">Add</string>
+    <string name="tab_premium">Premium</string>
+
+    <string name="validation_invalid_url">Enter a valid url</string>
+    <string name="validation_empty_url">Enter a RSS url</string>
+
+    <string name="copyright">Copyright © %s</string>
+    <string name="version">Version: %s</string>
+
+    <string name="tip_1">Accept permissions on your wear device before importing podcasts.</string>
+    <string name="tip_2">Tip: Use Android\'s Share functionality to send RSS urls to this app.</string>
+
+    <string name="upload_file_summary_unlocked">Sending files will create an auto-playlist on your Wear device (&lt;20 MB recommended).</string>
+    <string name="upload_file_summary_locked">PREMIUM: Sending files will create an auto-playlist on your Wear device (&lt;20 MB recommended).</string>
+
+    <string name="error_no_episode">The URL you entered did not return any podcasts.\nClick here to verify it is a valid RSS feed</string>
+
+    <string name="form_add_hint_podcast_title">Podcast title (optional)</string>
+    <string name="form_add_hint_podcast_url">Podcast RSS url</string>
+
+    <string name="button_text_import_podcast">Send To Watch</string>
+    <string name="button_text_import_opml">Import OPML</string>
+    <string name="button_text_upload_file">Send file</string>
+    <string name="button_text_no_device">No Wear Device Found</string>
+    <string name="button_text_searching_device">Looking For Wear Device…</string>
+    <string name="button_text_unlock_premium">Unlock\nPremium Features</string>
+    <string name="button_text_resync_premium">Resync\nPremium Features</string>
+    <string name="button_text_resync_premium_waiting">Waiting for response…</string>
+
+    <string name="button_text_playlists_readd">Re-add\n%d Playlists</string>
+    <string name="button_text_playlists_purchase">Purchase\nPlaylists</string>
+    <string name="alert_playlists_purchased">Playlists created successfully.\nManage playlists under the settings on your watch. Restarting the app on your watch may be required.</string>
+
+    <string name="menu_text_about">About</string>
+    <string name="menu_text_directory">Discover</string>
+
+    <string name="page_title_search_results">Results</string>
+
+    <string name="text_importing_opml_sending">Sending podcasts to your wear device…</string>
+    <string name="text_importing_opml_parsing">Parsing OPML (could take awhile depending on number of podcasts)…</string>
+    <string name="alert_get_directory_error">Failed to fetch podcasts directory</string>
+
+    <string name="alert_podcast_added">%s sent to watch.</string>
+    <string name="alert_episode_added">Sent to download playlist on watch.</string>
+    <string name="alert_episode_import_first">This episode will be sent to your watch and downloaded</string>
+    <string name="alert_playlist_purchased">%d created.</string>
+    <string name="text_file_uploaded">Sent successfully.\nThere may be a delay before file(s) show up on watch.\nSwipe left on the main screen.</string>
+    <string name="text_file_upload_start">Sending file…</string>
+    <string name="alert_playlists_quantity_none">Select a quantity</string>
+    <string name="alert_playlists_purchase_disclaimer">Purchasing playlists will delete any playlists currently on your watch.</string>
+    <string name="alert_playlists_readd_disclaimer">Re-adding playlists will delete any playlists currently on your watch.</string>
+    <string name="alert_purchased">You have already purchased this.</string>
+
+    <string name="plurals_single_podcast_added">podcast imported successfully</string>
+    <string name="plurals_multiple_podcasts_added">%d podcasts imported successfully</string>
+
+    <string name="confirm_import_opml">If you haven\'t already, accept permissions on your wear device.</string>
+
+    <string name="error_opml_import">There was an error importing your OPML.  Double check it is in the correct format.</string>
+
+</resources>

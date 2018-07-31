@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_podcasts_settings_updates_display">
+
+        <SwitchPreference
+            android:key="syncOnStart"
+            android:title="@string/settings_podcasts_label_sync_startup"
+            android:defaultValue="false"
+            />
+
+        <SwitchPreference
+            android:key="updatesEnabled"
+            android:title="@string/settings_podcasts_label_updates_enabled"
+            android:defaultValue="true"
+            />
+
+        <ListPreference
+            android:key="updateInterval"
+            android:title="@string/settings_podcasts_label_updates_interval"
+            android:entries="@array/interval_text"
+            android:entryValues="@array/interval_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="@integer/default_update_interval"
+            />
+
+        <CheckBoxPreference
+            android:key="updateCharging"
+            android:title="@string/settings_podcasts_label_updates_charging"
+            android:defaultValue="true"
+            />
+
+
+        <SwitchPreference
+            android:key="pref_updates_new_episodes_sound"
+            android:title="@string/settings_podcasts_label_updates_sound"
+            android:defaultValue="true"
+            />
+
+        <ListPreference
+            android:key="pref_updates_new_episodes_disable_start"
+            android:title="@string/settings_podcasts_label_download_complete_sound_disable_start"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            />
+
+        <ListPreference
+            android:key="pref_updates_new_episodes_disable_end"
+            android:title="@string/settings_podcasts_label_download_complete_sound_disable_end"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            />
+
+        <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />
+        <Preference android:key="pref_sync_art" android:title="@string/settings_podcasts_label_sync_thumbnails" />
+        <Preference android:key="pref_delete_thumbs" />
+    </PreferenceCategory>
+</PreferenceScreen>

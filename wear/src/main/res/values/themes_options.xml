@@ -1,0 +1,18 @@
+<resources>
+    <string name="theme_options">@string/settings_podcasts_entries_title_themes</string>
+    <string-array name="theme_options_text">
+        <item>@string/settings_podcasts_sort_order_themes_default</item>
+        <item>@string/settings_podcasts_sort_order_themes_dark</item>
+        <!--<item>settings_podcasts_sort_order_themes_light</item>-->
+        <item>@string/settings_podcasts_sort_order_themes_amoled</item>
+        <item>@string/settings_podcasts_sort_order_themes_dynamic</item>
+    </string-array>
+
+    <string-array name="theme_options_values">
+        <item>0</item>
+        <item>1</item>
+        <!--<item>2</item>-->
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

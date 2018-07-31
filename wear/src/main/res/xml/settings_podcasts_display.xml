@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:key="display_settings" android:title="@string/settings_podcasts_settings_title_display">
+
+        <ListPreference
+            android:key="pref_theme"
+            android:title="@string/settings_podcasts_label_header_theme"
+            android:entries="@array/theme_options_text"
+            android:entryValues="@array/theme_options_values"
+            android:defaultValue="0"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:foreground="?android:attr/selectableItemBackground"
+            />
+
+        <ListPreference
+            android:key="pref_header_color"
+            android:title="@string/settings_podcasts_label_header_color"
+            android:entries="@array/header_color_text"
+            android:entryValues="@array/header_color_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="10"
+            />
+
+        <!--
+        <ListPreference
+            android:key="pref_font_size"
+            android:title="Font Size"
+            android:entries="@array/font_size_text"
+            android:entryValues="@array/font_size_values"
+            android:defaultValue="1"
+            />
+            -->
+
+        <ListPreference
+            android:key="pref_episode_limit"
+            android:title="@string/settings_podcast_episode_limit_title"
+            android:entries="@array/episode_limit_text"
+            android:entryValues="@array/episode_limit_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="50"
+            />
+
+        <SwitchPreference
+            android:key="pref_hide_empty"
+            android:title="@string/settings_podcasts_label_hide_nonew_podcasts"
+            android:defaultValue="false"
+            />
+
+
+        <!--
+        <SwitchPreference
+            android:key="pref_paging_indicator"
+            android:title="@string/settings_podcasts_label_display_paging_indicator"
+            android:defaultValue="false"
+            />
+        -->
+        <ListPreference
+            android:key="pref_display_podcasts_sort_order"
+            android:title="@string/settings_podcasts_label_podcast_sort"
+            android:entries="@array/sort_order_podcasts_text"
+            android:entryValues="@array/sort_order_podcasts_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="1"
+            />
+
+        <ListPreference
+            android:key="pref_display_episodes_sort_order"
+            android:title="@string/settings_podcasts_label_episodes_sort"
+            android:entries="@array/sort_order_episodes_global_text"
+            android:entryValues="@array/sort_order_episodes_global_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="4"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

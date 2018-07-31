@@ -1,0 +1,35 @@
+<resources>
+
+    <style name="Main" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:buttonTint">@color/wc_checkboxes</item>
+        <item name="android:textColor">@color/wc_text</item>
+        <item name="colorAccent">@color/wc_checkboxes</item>
+    </style>
+
+    <style name="Dark" parent="Main">
+        <item name="android:background">@color/wc_background_dark</item>
+    </style>
+
+    <style name="Light" parent="Main">
+        <item name="android:background">@color/wc_background_light</item>
+        <item name="android:textColor">@color/wc_textColor_light</item>
+    </style>
+
+    <style name="AMOLED" parent="Main">
+        <item name="android:background">@color/wc_background_amoled</item>
+    </style>
+
+    <style name="podcast_list_unread_count">
+        <item name="android:textSize">11sp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="podcast_list_title">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Main.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Main.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

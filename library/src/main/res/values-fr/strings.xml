@@ -1,0 +1,30 @@
+<resources>
+    <string name="retrieving_podcasts">Récupération du répertoire des podcasts…</string>
+    <string name="retrieving_search_results">Récupération des résultats…</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="yesterday">Hier</string>
+    <string name="ok">D\'accord</string>
+    <string name="cancel">Annuler</string>
+    <string name="alert_no_network">Pas de réseau disponible</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="play">Jouer</string>
+    <string name="pause">Pause</string>
+    <string name="general_error">Une erreur est survenue Veuillez réessayer.</string>
+    <string name="confirm_directory_first_import">Bien envoyé\nIl peut y avoir un délai avant que le (s) fichier (s) n\'apparaisse sur la montre\nBalayez vers la gauche sur l\'écran principal</string>
+    <string name="last_updated">Dernière mise à jour</string>
+    <string name="syncing">Synchronisation…</string>
+    <string name="success">Succès</string>
+    <string name="search">Chercher</string>
+    <string name="searching">Recherche…</string>
+    <string name="no_results">Aucun résultat trouvé</string>
+    <string name="save">sauvegarder</string>
+    <string name="added">Ajoutée</string>
+    <string name="add">Ajouter</string>
+    <string name="renamed">Renommé</string>
+    <string name="rename">Renommer</string>
+    <string name="delete">Effacer</string>
+    <string name="none">Aucun</string>
+    <string name="select">Sélectionner</string>
+    <string name="never">Jamais</string>
+
+</resources>

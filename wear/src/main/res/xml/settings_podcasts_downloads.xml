@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_downloads">
+
+        <SwitchPreference
+            android:key="pref_auto_delete"
+            android:title="@string/settings_podcasts_label_auto_delete"
+            android:defaultValue="false"
+            />
+
+        <SwitchPreference
+            android:key="pref_downloads_restart_on_failure"
+            android:title="@string/settings_podcasts_label_downloads_restart_failed"
+            android:defaultValue="true"
+            />
+
+        <SwitchPreference
+            android:key="pref_disable_bluetooth"
+            android:title="@string/settings_podcasts_label_disable_bluetooth"
+            android:defaultValue="false"
+            />
+
+        <SwitchPreference
+            android:key="pref_download_complete_sound"
+            android:title="@string/settings_podcasts_label_download_complete_sound"
+            android:defaultValue="true"
+            />
+
+        <ListPreference
+            android:key="pref_download_sound_disable_start"
+            android:title="@string/settings_podcasts_label_download_complete_sound_disable_start"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            />
+
+        <ListPreference
+            android:key="pref_download_sound_disable_end"
+            android:title="@string/settings_podcasts_label_download_complete_sound_disable_end"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            />
+
+        <SwitchPreference
+            android:key="pref_high_bandwidth"
+            android:title="@string/settings_podcasts_label_high_bandwidth"
+            android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
+            android:defaultValue="true"
+            />
+
+        <Preference android:key="pref_delete_downloads" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

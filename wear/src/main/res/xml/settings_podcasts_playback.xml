@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_playback">
+
+        <ListPreference
+            android:key="pref_playback_speed"
+            android:title="@string/settings_podcasts_label_playback_speed"
+            android:entries="@array/playback_speed_text"
+            android:entryValues="@array/playback_speed_values"
+            android:defaultValue="1.0f"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            />
+
+        <ListPreference
+            android:key="pref_playback_skip_back"
+            android:title="@string/settings_podcasts_label_playback_skip_back"
+            android:entries="@array/playback_skip_text"
+            android:entryValues="@array/playback_skip_values"
+            android:defaultValue="30"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            />
+
+        <ListPreference
+            android:key="pref_playback_skip_forward"
+            android:title="@string/settings_podcasts_label_playback_skip_forward"
+            android:entries="@array/playback_skip_text"
+            android:entryValues="@array/playback_skip_values"
+            android:defaultValue="30"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            />
+
+           <SwitchPreference
+            android:key="pref_hardware_override_episode"
+            android:defaultValue="false"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

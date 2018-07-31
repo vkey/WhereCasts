@@ -1,0 +1,36 @@
+<resources>
+    <color name="wc_dark_red">#FFCC0000</color>
+    <color name="wc_white">#FFFFFF</color>
+    <color name="wc_checkboxes">#ff4285f4</color>
+    <color name="background">#ff101018</color>
+
+    <color name="wc_text">#FFFFFF</color>
+
+    <color name="wc_background_dark">#2e2e2e</color>
+    <color name="wc_background_light">#ffffff</color>
+    <color name="wc_background_amoled">#000000</color>
+
+    <color name="wc_textColor_amoled">#ffffff</color>
+    <color name="wc_textColor_amoled_secondary">#aeaeae</color>
+    <color name="wc_textColor_dark">#ffffff</color>
+    <color name="wc_textColor_light">#000000</color>
+    <color name="wc_transparent">#00000000</color>
+
+    <color name="wc_ambient_playpause_on">#2d2d2d</color>
+    <color name="wc_ambient_playpause_off">#ffffff</color>
+    <color name="wc_seekbar">#1e78de</color>
+
+    <color name="wc_header_color_amoled">#000000</color>
+    <color name="wc_header_color_blue">#003aac</color>
+    <color name="wc_header_color_dark_blue">#00205e</color>
+    <color name="wc_header_color_lite_blue">#3c7af5</color>
+    <color name="wc_header_color_dark_grey">#252525</color>
+    <color name="wc_header_color_gray">#757575</color>
+    <color name="wc_header_color_green">#00993f</color>
+    <color name="wc_header_color_dark_green">#00611a</color>
+    <color name="wc_header_color_orange">#e06603</color>
+    <color name="wc_header_color_dark_orange">#974400</color>
+    <color name="wc_header_color_red">#FFCC0000</color>
+    <color name="wc_header_color_purple">#800080</color>
+
+</resources>

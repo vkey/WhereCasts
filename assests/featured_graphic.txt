@@ -1,0 +1,37 @@
+Wear Casts
+
+A podcast player for Android Wear
+
+Hue: 160
+Sat: 0
+Lum: 92
+Red: 98
+Green: 98
+Blue 98
+
+
+Stream or download podcasts right from your Android Wear device.
+
+A standalone podcast app for Android Wear that let's you manage, stream or download your favorite podcasts right from your Wear device.  
+
+Features:
+
+* Import an OPML file or manually add your podcasts through the phone app
+
+* Options to auto download new episodes and auto delete played episodes.
+
+* Remembers last played position for each podcast
+
+* User managed scheduled syncing
+
+* Notification of new episodes (if background sync is enabled)
+
+* Auto playlists for podcasts downloaded and in progress
+
+* Interactive playing notification
+
+* Responds to external audio controls
+
+* Use your phone as a backup player.  Selected podcast on Wear device is synced to phone companion app (streaming only on phone).
+
+Note: Phone is required to add/import podcasts only.

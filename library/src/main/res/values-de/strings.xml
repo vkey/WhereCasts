@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="retrieving_podcasts">Podcasts-Verzeichnis abrufen…</string>
+    <string name="retrieving_search_results">Ergebnisse abrufen…</string>
+    <string name="today">Heute</string>
+    <string name="yesterday">Gestern</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="alert_no_network">Kein Netzwerk verfügbar</string>
+    <string name="privacy_policy">Datenschutz-Bestimmungen</string>
+    <string name="play">abspielen</string>
+    <string name="pause">Pause</string>
+    <string name="general_error">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</string>
+    <string name="confirm_directory_first_import">Erfolgreich gesendet\nEs kann zu einer Verzögerung kommen, bevor Dateien auf der Uhr angezeigt werden\nStreichen Sie nach links auf dem Hauptbildschirm</string>
+    <string name="last_updated">Letzte Aktualisierung</string>
+    <string name="syncing">Synchronisierung…</string>
+    <string name="success">Erfolg</string>
+    <string name="search">Suche</string>
+    <string name="searching">Suche…</string>
+    <string name="no_results">keine Ergebnisse gefunden</string>
+    <string name="save">sparen</string>
+    <string name="added">Hinzugefügt</string>
+    <string name="add">Hinzufügen</string>
+    <string name="renamed">Umbenannt</string>
+    <string name="rename">Umbenennen</string>
+    <string name="delete">Löschen</string>
+    <string name="none">Keiner</string>
+    <string name="select">Wählen</string>
+    <string name="never">noch nie</string>
+
+</resources>

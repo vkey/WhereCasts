@@ -1,0 +1,18 @@
+<resources>
+    <string name="home_screen">@string/settings_podcasts_entries_title_home_screen</string>
+    <string-array name="home_screen_text">
+        <item>@string/settings_podcasts_home_screen_default</item>
+        <item>@string/settings_podcasts_home_screen_local</item>
+        <item>@string/settings_podcasts_home_screen_inprogress</item>
+        <item>@string/settings_podcasts_home_screen_downloads</item>
+        <item>@string/settings_podcasts_home_screen_upnext</item>
+    </string-array>
+
+    <string-array name="home_screen_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

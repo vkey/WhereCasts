@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_podcasts_title">
+
+        <!--<Preference android:key="pref_general" android:title="@string/settings_podcasts_title_general" android:icon="@drawable/ic_settings_general" />-->
+        <Preference android:key="pref_display" android:title="@string/settings_podcasts_title_display" android:icon="@drawable/ic_settings_display" />
+        <Preference android:key="pref_playlists" android:title="@string/settings_podcasts_title_playlists" android:icon="@drawable/ic_settings_playlists" />
+        <Preference android:key="pref_updates" android:title="@string/settings_podcasts_title_updates" android:icon="@drawable/ic_settings_updates" />
+        <Preference android:key="pref_downloads" android:title="@string/settings_podcasts_title_downloads" android:icon="@drawable/ic_settings_downloads" />
+        <Preference android:key="pref_playback" android:title="@string/settings_podcasts_title_playback" android:icon="@drawable/ic_settings_playback" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

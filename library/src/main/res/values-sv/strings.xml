@@ -1,0 +1,30 @@
+<resources>
+    <string name="retrieving_podcasts">Hämtar podcasts katalog…</string>
+    <string name="retrieving_search_results">Hämtar resultat…</string>
+    <string name="today">I dag</string>
+    <string name="yesterday">I går</string>
+    <string name="ok">ok</string>
+    <string name="cancel">Annullera</string>
+    <string name="alert_no_network">Inget nätverk tillgängligt</string>
+    <string name="privacy_policy">Integritetspolicy</string>
+    <string name="play">Spela</string>
+    <string name="pause">Paus</string>
+    <string name="general_error">Ett fel uppstod. Var god försök igen.</string>
+    <string name="confirm_directory_first_import">Skickades framgångsfullt.\nDet kan finnas en fördröjning innan filerna visas på klockan\nDra åt vänster på huvudskärmen</string>
+    <string name="last_updated">Senast uppdaterad</string>
+    <string name="syncing">synkronisera…</string>
+    <string name="success">Framgång</string>
+    <string name="search">Sök</string>
+    <string name="searching">Sökande…</string>
+    <string name="no_results">Inga resultat funna</string>
+    <string name="save">Spara</string>
+    <string name="added">Lagt till</string>
+    <string name="add">Lägg till</string>
+    <string name="renamed">omdöpt</string>
+    <string name="rename">Döpa om</string>
+    <string name="delete">Radera</string>
+    <string name="none">Ingen</string>
+    <string name="select">Välj</string>
+    <string name="never">Aldrig</string>
+
+</resources>

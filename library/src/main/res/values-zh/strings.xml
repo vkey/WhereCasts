@@ -1,0 +1,29 @@
+<resources>
+    <string name="retrieving_podcasts">檢索播客目錄…</string>
+    <string name="retrieving_search_results">檢索結果…</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="ok">好</string>
+    <string name="cancel">取消</string>
+    <string name="alert_no_network">沒有網絡可用</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="play">玩</string>
+    <string name="pause">暫停</string>
+    <string name="general_error">發生錯誤。 請再試一次.</string>
+    <string name="confirm_directory_first_import">發送成功\n文件顯示在手錶上可能會有延遲\n在主屏幕上向左滑動</string>
+    <string name="last_updated">最近更新時間</string>
+    <string name="syncing">同步…</string>
+    <string name="success">成功</string>
+    <string name="search">搜索</string>
+    <string name="searching">搜索…</string>
+    <string name="no_results">未找到結果</string>
+    <string name="save">保存</string>
+    <string name="added">添加</string>
+    <string name="add">加</string>
+    <string name="renamed">改名</string>
+    <string name="rename">改名</string>
+    <string name="delete">刪除</string>
+    <string name="none">沒有</string>
+    <string name="select">選擇</string>
+    <string name="never">決不</string>
+</resources>

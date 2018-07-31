@@ -1,0 +1,314 @@
+<resources>
+    <string name="menu_episode_title_upnext">添加到下一個</string>
+    <string name="playlist_title_upnext">下一個</string>
+    <string name="confirm_remove_upnext">去掉?</string>
+    <string name="confirm_remove_local">刪除?</string>
+    <string name="notification_updating_status">更新…</string>
+    <string name="notification_channel_media_service">媒體服務</string>
+    <string name="notification_channel_media_playing">媒體播放通知</string>
+    <string name="notification_channel_newepisodes">新的情節通知</string>
+
+    <string name="rate_app_reminder">你想評價這個應用程序? （點擊YES會打開手機上的商店頁面）.</string>
+
+    <string name="text_loading_episodes">載入中…</string>
+    <string name="text_loading_episodes_playlist">清爽…</string>
+    <string name="text_loading_podcasts">加載您的播客…</string>
+    <string name="text_no_search_results">未找到結果</string>
+    <string name="text_settings_playlists_empty">通過手機應用中的付費標籤獲取播放列表</string>
+
+    <string name="playlists_title_default">播放列表 %d</string>
+
+    <string name="premium_locked_playback_speed">保費，通過手機應用程序解鎖.</string>
+
+    <string name="empty_episode_list">向下滑動即可刷新</string>
+    <string name="empty_episode_list_search_results">沒有結果\n向下滑動即可顯示所有內容</string>
+
+    <string name="empty_podcast_list">通過電話應用導入播客或下拉以發現播客</string>
+    <string name="empty_podcast_list2">向左滑動自動播放列表\n在手機應用中獲得更多播放列表</string>
+    <string name="text_playlists_add_empty">未找到播放列表\n\n在手機應用中添加自定義播放列表\ n（在“付費”標籤下）</string>
+
+    <string name="confirm_mark_finished">標記為完成?</string>
+    <string name="confirm_delete_download">刪除下載?</string>
+    <string name="confirm_delete_file">刪除文件?</string>
+    <string name="confirm_delete_all_downloads">刪除所有下載?</string>
+    <string name="confirm_delete_all_thumbs">刪除所有縮略圖?</string>
+    <string name="confirm_cancel_download">取消下載?</string>
+
+    <string name="confirm_initial_download_title">警告！</string>
+
+    <string name="confirm_mark_all_finished">馬克全部完成?</string>
+    <string name="confirm_delete_all_download">刪除所有下載?</string>
+
+    <string name="confirm_delete_episode_download">刪除這個劇集的下載?</string>
+    <string name="confirm_delete_podcast">取消訂閱這個播客?</string>
+
+    <string name="confirm_initial_download_message">建議通過WiFi或蜂窩網絡下載。 您是否要在下載時禁用藍牙（可以在設置中更改）?</string>
+
+    <string name="confirm_mark_played">標記為已播放?</string>
+    <string name="confirm_mark_unplayed">標記為未播放?</string>
+
+    <string name="confirm_mark_all_played">馬克都玩過了嗎?</string>
+    <string name="confirm_mark_all_unplayed">標記所有未播放?</string>
+
+    <string name="settings_podcasts_label_header_color">標題顏色</string>
+    <string name="settings_podcasts_label_header_theme">主題</string>
+    <string name="settings_podcast_label_assign_playlist">分配給播放列表</string>
+
+    <string name="settings_podcast_title">播客設置</string>
+    <string name="settings_podcasts_title_downloads">下載</string>
+    <string name="settings_podcasts_title_general">一般</string>
+    <string name="settings_podcasts_title_playback">回放</string>
+    <string name="settings_podcasts_title_display">顯示</string>
+    <string name="settings_podcasts_title_playlists">播放列表</string>
+    <string name="settings_podcasts_title_updates">更新</string>
+    <string name="settings_podcasts_settings_title_downloads">下載設置</string>
+    <string name="settings_podcasts_settings_title_general">常規設置</string>
+    <string name="settings_podcasts_settings_title_playback">播放設置</string>
+    <string name="settings_podcasts_settings_title_playlist">播放列表設置</string>
+    <string name="settings_podcasts_settings_title_display">顯示設置</string>
+    <string name="settings_podcasts_settings_updates_display">更新設置</string>
+    <string name="settings_podcasts_label_hide_nonew_podcasts">隱藏沒有新劇集的播客</string>
+    <string name="settings_podcasts_label_playlists_hide_empty">隱藏空白播放列表</string>
+    <string name="settings_podcasts_label_display_paging_indicator">隱藏分頁指示器</string>
+    <string name="settings_podcasts_label_playlist_sort">播放列表排序順序</string>
+    <string name="settings_podcasts_label_episodes_sort">劇集排序順序</string>
+    <string name="settings_podcasts_label_podcast_sort">播客列表排序順序</string>
+    <string name="settings_podcasts_label_home_screen">\'主屏幕</string>
+    <string name="settings_podcast_label_autodownload">自動下載下一集</string>
+    <string name="settings_podcast_sort_order_global">[全球]</string>
+    <string name="settings_podcast_label_download_next">下載下一集</string>
+    <string name="settings_podcast_label_download_next_summary">當你正在收聽的人結束時</string>
+    <string name="settings_podcast_label_download_next_alert">如果下線，下載將排隊</string>
+    <string name="settings_podcast_label_download_sort_order">排序（覆蓋全局排序順序）</string>
+    <string name="settings_podcast_label_downloads_saved">自動清理下載</string>
+    <string name="settings_podcast_label_downloads_saved_summary">超過此數字的下載將自動刪除</string>
+    <string name="settings_podcast_label_hideplayed">隱藏播放的劇集</string>
+    <string name="settings_podcast_label_delete_podcast">退訂</string>
+    <string name="settings_podcast_episode_limit_title">要顯示的劇集數量</string>
+    <string name="settings_podcast_episode_limit_all">所有</string>
+
+    <string name="settings_podcasts_title">設置</string>
+    <string name="settings_podcasts_label_sync_podcasts">點擊即可同步播客</string>
+    <string name="settings_podcasts_label_sync_thumbnails">點擊即可同步縮略圖</string>
+    <string name="settings_podcasts_label_sync_startup">啟動時同步</string>
+    <string name="settings_podcasts_label_updates_enabled">啟用更新</string>
+    <string name="settings_podcasts_label_updates_interval">更新間隔</string>
+    <string name="settings_podcasts_label_updates_charging">只在充電時更新</string>
+    <string name="settings_podcasts_label_updates_sound">找到新劇集時播放聲音</string>
+    <string name="settings_podcasts_label_updates_enabled_summary">僅在設備充電時運行</string>
+    <string name="settings_podcasts_label_auto_delete">完成後刪除下載的文件</string>
+    <string name="settings_podcasts_label_downloads_restart_failed">如果失敗，則自動重新啟動下載</string>
+    <string name="settings_podcasts_label_disable_bluetooth">下載時禁用藍牙</string>
+    <string name="settings_podcasts_label_download_complete_sound">下載完成時播放聲音</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_start">禁用聲音</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_end">禁用聲音</string>
+    <string name="settings_podcasts_label_playback_speed">播放速度</string>
+    <string name="settings_podcasts_label_playback_skip_back">跳回</string>
+    <string name="settings_podcasts_label_playback_skip_forward">向前跳過</string>
+    <string name="settings_podcasts_label_playback_playlists">完成後從播放列表中刪除劇集</string>
+    <string name="settings_podcasts_label_hardware_button">用硬件按鈕控製播放</string>
+    <string name="settings_podcasts_label_hardware_buttons">用硬件按鈕控製播放</string>
+    <string name="settings_podcasts_label_hardware_buttons_1_summary">播放/暫停（僅適用於播放屏幕）</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">頂部：跳回\n中：播放/暫停\nB底部：向前跳過\n(僅適用於播放屏幕)</string>
+    <string name="settings_podcasts_label_high_bandwidth">檢查高帶寬網絡</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">流媒體或下載之前</string>
+    <string name="settings_podcasts_label_downloads_delete_all">點擊刪除所有下載 (%d)</string>
+    <string name="settings_podcasts_label_downloads_thumbs_all">點擊刪除所有縮略圖 (%d)</string>
+
+    <string name="settings_podcasts_entries_title_header_color">標題顏色</string>
+    <string name="settings_podcasts_entries_header_color_blue">藍色</string>
+    <string name="settings_podcasts_entries_header_color_dark_gray">深灰色</string>
+    <string name="settings_podcasts_entries_header_color_green">綠色</string>
+    <string name="settings_podcasts_entries_header_color_orange">橙子</string>
+    <string name="settings_podcasts_entries_header_color_red">紅</string>
+    <string name="settings_podcasts_entries_header_color_purple">紫色</string>
+    <string name="settings_podcasts_entries_header_color_gray">灰色</string>
+    <string name="settings_podcasts_entries_header_color_dark_blue">深藍</string>
+    <string name="settings_podcasts_entries_header_color_lite_blue">淺藍</string>
+    <string name="settings_podcasts_entries_header_color_dark_green">深綠色</string>
+    <string name="settings_podcasts_entries_header_color_dark_orange">深橙色</string>
+
+    <string name="settings_podcasts_entries_title_home_screen">主屏幕</string>
+    <string name="settings_podcasts_home_screen_default">默認</string>
+    <string name="settings_podcasts_home_screen_local">本地</string>
+    <string name="settings_podcasts_home_screen_inprogress">進行中</string>
+    <string name="settings_podcasts_home_screen_downloads">下載</string>
+    <string name="settings_podcasts_home_screen_upnext">接下來</string>
+
+    <string name="settings_podcasts_entries_title_themes">主題</string>
+    <string name="settings_podcasts_sort_order_themes_default">默認</string>
+    <string name="settings_podcasts_sort_order_themes_dark">黑暗</string>
+    <string name="settings_podcasts_sort_order_themes_light">光</string>
+    <string name="settings_podcasts_sort_order_themes_amoled">AMOLED</string>
+    <string name="settings_podcasts_sort_order_themes_dynamic">動態</string>
+
+    <string name="settings_podcasts_updates_interval_1_hours">1 小時</string>
+    <string name="settings_podcasts_updates_interval_3_hours">3 小時</string>
+    <string name="settings_podcasts_updates_interval_6_hours">6 小時</string>
+    <string name="settings_podcasts_updates_interval_12_hours">12 小時</string>
+
+    <string name="settings_podcasts_sort_order_name_asc">名稱（A-Z）</string>
+    <string name="settings_podcasts_sort_order_name_desc">名稱（Z-A）</string>
+    <string name="settings_podcasts_sort_order_date_asc">日期（最早在最前面）</string>
+    <string name="settings_podcasts_sort_order_date_desc">日期（最新）</string>
+    <string name="settings_podcasts_sort_order_new_episodes">新情節的數量</string>
+    <string name="settings_podcasts_sort_order_latest_episodes">最新劇集（最新）</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_desc">下載日期（最新）</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_asc">日期下載（最早的最上面）</string>
+    <string name="settings_podcasts_sort_order_dateadded_desc">添加日期（最新）</string>
+    <string name="settings_podcasts_sort_order_dateadded_asc">添加日期（最舊的最上面）</string>
+    <string name="settings_podcasts_sort_order_progress">進展（最遠）</string>
+
+    <string name="settings_podcasts_label_skip_start_time">開始播客</string>
+    <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
+    <string name="settings_podcasts_label_skip_start_time_10_seconds">10 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_30_seconds">30 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_1_minute">1 分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 還剩幾分鐘</string>
+    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 還剩幾分鐘</string>
+
+    <string name="settings_podcasts_label_finish_end_time">用播放結束播客</string>
+    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
+    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 剩下的秒數</string>
+    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 剩下的秒數</string>
+    <string name="setting_podcasts_label_finish_end_time_1_minute">1 分鐘左邊</string>
+    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 還剩幾分鐘</string>
+    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 還剩幾分鐘</string>
+
+    <string name="setting_podcasts_playback_skip_10_seconds">10 秒</string>
+    <string name="setting_podcasts_playback_skip_20_seconds">20 秒</string>
+    <string name="setting_podcasts_playback_skip_30_seconds">30 秒</string>
+    <string name="setting_podcasts_playback_skip_40_seconds">40 秒</string>
+    <string name="setting_podcasts_playback_skip_50_seconds">50 秒</string>
+    <string name="setting_podcasts_playback_skip_60_seconds">60 秒</string>
+
+    <string name="menu_main_title_settings">設置</string>
+
+    <string name="menu_main_title_download">下載</string>
+    <string name="menu_main_title_download_delete">刪除下載</string>
+    <string name="menu_main_title_download_cancel">取消下載</string>
+    <string name="menu_main_title_playlist_add">添加到播放列表</string>
+
+    <string name="menu_episodes_mark_all_played">馬克都玩過了</string>
+    <string name="menu_episodes_mark_all_unplayed">標記所有未播放</string>
+    <string name="menu_episodes_add_playlist">全部添加到播放列表</string>
+
+    <string name="menu_episodes_delete_all">刪除所有</string>
+    <string name="menu_episodes_finish_all">完成所有</string>
+
+    <string name="tips_swipe_left">向左滑動查看自動播放列表</string>
+    <string name="tips_swipe_long_press">長按播客的選項</string>
+
+    <string name="nav_directory_resync">重新同步</string>
+    <string name="alert_directory_resync">你確定要重新同步嗎?</string>
+    <string name="nav_main_discover">發現播客</string>
+    <string name="nav_main_settings">設置</string>
+
+    <string name="nav_add_refresh">刷新</string>
+
+    <string name="confirm_yes">是</string>
+    <string name="confirm_no">沒有</string>
+
+    <string name="playlist_title_inprogress">進行中</string>
+    <string name="playlist_title_downloads">下載</string>
+    <string name="playlist_title_unplayed">未播放</string>
+    <string name="playlist_title_local">本地</string>
+
+    <string name="text_episode_no_media">找不到要播放的媒體。刪除並重新添加或聯繫播客提供商.</string>
+    <string name="alert_podcast_added">添加</string>
+    <string name="alert_episode_playlist_added">添加到 %s</string>
+    <string name="alert_episodes_playlist_added">添加 %d 劇集 %s</string>
+    <string name="alert_search_empty">輸入一個搜索詞</string>
+    <string name="alert_refreshing_thumb">刷新縮略圖…</string>
+
+    <string name="alert_locating_network">等待網絡…</string>
+    <string name="alert_locating_network_notfound">找不到網絡</string>
+    <string name="alert_sync_started">正在開始同步</string>
+    <string name="alert_sync_finished">正在同步完成</string>
+    <string name="alert_disable_bluetooth_disabled_start">禁用藍牙…</string>
+    <string name="alert_unsubscribing">退訂…</string>
+    <string name="alert_disable_bluetooth_disabled_end">禁用藍牙</string>
+    <string name="alert_disable_bluetooth_enabled">禁用藍牙</string>
+    <string name="alert_episode_download_start">下載…</string>
+    <string name="alert_episode_network_search">尋找高帶寬網絡…</string>
+    <string name="alert_episode_network_notfound">找不到網絡. 你想打開WiFi設置嗎?</string>
+    <string name="alert_episode_network_no_high_bandwidth">找不到高帶寬網絡。 你想打開WiFi設置嗎？?</string>
+    <string name="alert_playlist_delete">你確定?</string>
+
+    <string name="alert_download_error_noresume">無法恢復下載。 請再試一次</string>
+    <string name="alert_download_error_device_not_found">找不到設備</string>
+    <string name="alert_download_error_file_exists">文件已存在</string>
+    <string name="alert_download_error_file_error">文件錯誤</string>
+    <string name="alert_download_error_data_error">HTTP數據錯誤</string>
+    <string name="alert_download_error_low_disk">空間不足</string>
+    <string name="alert_download_error_redirects">太多的重定向</string>
+    <string name="alert_download_error_unhandled_http">未處理的http代碼</string>
+    <string name="alert_download_error_unknown">未知錯誤。 請再試一次</string>
+    <string name="alert_download_error_not_found">未找到播客</string>
+    <string name="alert_download_error_default">發生了錯誤。 請再試一次</string>
+    <string name="alert_download_error_restart">下載失敗。重新啟動…</string>
+    <string name="alert_download_error_failed">下載無法重新啟動.</string>
+
+    <string name="alert_error_sorting_latest_episodes">按最新劇集排序時出錯. 這通常意味著播客的糟糕日期.</string>
+
+    <string name="alert_network_waiting">等待網絡…</string>
+
+    <string name="alert_file_none_deleted">沒有文件被刪除</string>
+    <string name="alert_file_deleted">1 文件已刪除</string>
+    <string name="alert_files_deleted">%d 文件已刪除</string>
+
+    <string name="validation_podcast_rename_title">輸入一個標題</string>
+    <string name="validation_podcast_rename_length">標題長度太大</string>
+
+    <string name="plurals_single_new_episode">1 新的情節</string>
+    <string name="plurals_multiple_new_episodes">%d 新的情節</string>
+    <string name="new_episodes_alert">新しいエピソード</string>
+
+    <string name="notification_download_count">%d 下載</string>
+
+    <string name="tts_audio_skip_next">接下來玩</string>
+    <string name="tts_audio_skip_previous">以前玩過</string>
+
+    <string name="dropdown_playlist_select">[ 添加到播放列表 ]</string>
+    <string name="button_mark_played">標記為已播放</string>
+    <string name="button_mark_unplayed">標記為未播放</string>
+    <string name="alert_marked_unplayed">標記為未播放</string>
+    <string name="alert_marked_played">標記為已播放</string>
+    <string name="alert_streaming">流…</string>
+
+</resources>

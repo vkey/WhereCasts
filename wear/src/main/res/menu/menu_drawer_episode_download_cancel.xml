@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_drawer_episode_download_cancel"
+        android:title="@string/menu_main_title_download_cancel"
+        android:icon="@drawable/ic_action_episode_download_cancel"
+        />
+</menu>

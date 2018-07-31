@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">遊ぶ</string>
+    <string name="tab_add">追加</string>
+    <string name="tab_premium">プレミアム</string>
+
+    <string name="validation_invalid_url">有効なURLを入力してください</string>
+    <string name="validation_empty_url">RSS URLを入力</string>
+
+    <string name="copyright">著作権 © %s</string>
+    <string name="version">バージョン: %s</string>
+
+    <string name="tip_1">ポッドキャストをインポートする前に、あなたのウェアデバイスの許可を受け入れる.</string>
+    <string name="tip_2">ヒント：Androidの共有機能を使用してこのアプリにRSS URLを送信する.</string>
+
+    <string name="upload_file_summary_unlocked">ファイルをアップロードすると、Wearデバイスに自動再生リストが作成されます (&lt;20 MB お勧め).</string>
+    <string name="upload_file_summary_locked">プレミアム: ファイルをアップロードすると、Wearデバイスに自動再生リストが作成されます (&lt;20 MB お勧め).</string>
+
+    <string name="error_no_episode">入力したURLがPodcastを返さなかった.\nそれが有効なRSSフィードであることを確認するには、ここをクリックしてください</string>
+
+    <string name="form_add_hint_podcast_title">ポッドキャストのタイトル（オプション）</string>
+    <string name="form_add_hint_podcast_url">ポッドキャストRSS URL</string>
+
+    <string name="button_text_import_podcast">ウォッチに送る</string>
+    <string name="button_text_import_opml">OPML額</string>
+    <string name="button_text_upload_file">ファイルを送信</string>
+    <string name="button_text_no_device">装着機器が見つかりません</string>
+    <string name="button_text_searching_device">着用デバイスを探している…</string>
+    <string name="button_text_unlock_premium">プレミアムのアンロック\n特徴</string>
+    <string name="button_text_resync_premium">Resync\nPremium\nn特徴</string>
+    <string name="button_text_resync_premium_waiting">応答を待っている…</string>
+
+    <string name="button_text_playlists_readd">アドオンの再\n%d プレイリスト</string>
+    <string name="button_text_playlists_purchase">購入\nプレイリスト</string>
+    <string name="alert_playlists_purchased">再生リストが正常に作成されました.\n時計の設定でプレイリストを管理します。 時計でアプリを再起動する必要がある場合があります.</string>
+
+    <string name="menu_text_about">〜について</string>
+    <string name="menu_text_directory">発見</string>
+
+    <string name="page_title_search_results">結果</string>
+
+    <string name="text_importing_opml_sending">あなたのウェアデバイスにポッドキャストを送信する…</string>
+    <string name="text_importing_opml_parsing">OPMLの解析（Podcastの数に応じてしばらく時間がかかります）…</string>
+    <string name="alert_get_directory_error">Podcastディレクトリを取得できませんでした</string>
+
+    <string name="alert_podcast_added">%s 見るために送られた.</string>
+    <string name="alert_episode_added">時計でプレイリストをダウンロードするために送信されました.</string>
+    <string name="alert_episode_import_first">このエピソードは時計に送信され、ダウンロードされます</string>
+    <string name="alert_playlist_purchased">%d 作成した.</string>
+    <string name="text_file_uploaded">ファイルが正常に送信されました。 ファイルが表示されるまでに時間がかかることがあります.</string>
+    <string name="text_file_upload_start">送信ファイル…</string>
+    <string name="alert_playlists_quantity_none">数量を選択</string>
+    <string name="alert_playlists_purchase_disclaimer">プレイリストを購入すると、現在時計に入っているプレイリストがすべて削除されます.</string>
+    <string name="alert_playlists_readd_disclaimer">プレイリストを再追加すると、現在あなたの時計にあるプレイリストが削除されます.</string>
+    <string name="alert_purchased">あなたはすでにこれを購入しています.</string>
+
+    <string name="plurals_single_podcast_added">ポッドキャストが正常にインポートされました</string>
+    <string name="plurals_multiple_podcasts_added">%d ポッドキャストが正常にインポートされました</string>
+
+    <string name="confirm_import_opml">あなたがまだ着用していない場合は、ウェアデバイスの許可を受け入れます.</string>
+
+    <string name="error_opml_import">OPMLをインポート中にエラーが発生しました。正しいフォーマットであることを再度確認してください.</string>
+
+</resources>

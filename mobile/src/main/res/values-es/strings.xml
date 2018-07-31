@@ -1,0 +1,64 @@
+<resources>
+    <string name="tab_play">Jugar</string>
+    <string name="tab_add">Agregar</string>
+    <string name="tab_premium">Prima</string>
+
+    <string name="validation_invalid_url">Ingrese una URL válida</string>
+    <string name="validation_empty_url">Ingrese una url RSS</string>
+
+    <string name="copyright">Copyright © %s</string>
+    <string name="version">Versión: %s</string>
+
+    <string name="tip_1">Acepte permisos en su dispositivo de desgaste antes de importar podcasts.</string>
+    <string name="tip_2">Sugerencia: utilice la funcionalidad de Compartir de Android para enviar URL de RSS a esta aplicación.</string>
+
+    <string name="upload_file_summary_unlocked">La carga de archivos creará una lista de reproducción automática de ellos en su dispositivo Wear (&lt;20 MB recomendado).</string>
+    <string name="upload_file_summary_locked">PRIMA: La carga de archivos creará una lista de reproducción automática de ellos en su dispositivo Wear (&lt;20 MB recomendado).</string>
+
+    <string name="error_no_episode">La URL que ingresaste no devolvió ningún podcast.\nHaga clic aquí para verificar que sea un feed RSS válido</string>
+
+    <string name="form_add_hint_podcast_title">Título de podcast (opcional)</string>
+    <string name="form_add_hint_podcast_url">URL de podcast RSS</string>
+
+    <string name="button_text_import_podcast">Enviar para mirar</string>
+    <string name="button_text_import_opml">Cantidad de OPML</string>
+    <string name="button_text_upload_file">Enviar archivo</string>
+    <string name="button_text_no_device">No se encontró ningún dispositivo de desgaste</string>
+    <string name="button_text_searching_device">Buscando un dispositivo de desgaste…</string>
+    <string name="button_text_unlock_premium">Desbloquear\nPremium\nCaracteristicas</string>
+    <string name="button_text_resync_premium">Resincronización\nPremium\nCaracteristicas</string>
+    <string name="button_text_resync_premium_waiting">Esperando una respuesta…</string>
+
+    <string name="button_text_playlists_readd">Re añadir\n%d Listas de reproducción</string>
+    <string name="button_text_playlists_purchase">Compra\nListas de reproducción</string>
+    <string name="alert_playlists_purchased">Listas de reproducción creadas con éxito.\nAdministre las listas de reproducción en la configuración de su reloj. Es posible que se requiera reiniciar la aplicación en tu reloj.</string>
+
+
+    <string name="menu_text_about">Acerca de</string>
+    <string name="menu_text_directory">Descubrir</string>
+
+    <string name="page_title_search_results">Resultados</string>
+
+    <string name="text_importing_opml_sending">Envío de podcasts a su dispositivo de desgaste…</string>
+    <string name="text_importing_opml_parsing">Analizando OPML (podría tomar un tiempo dependiendo de la cantidad de podcasts)…</string>
+    <string name="alert_get_directory_error">Error al buscar el directorio de podcasts</string>
+
+    <string name="alert_podcast_added">%s enviado para mirar.</string>
+    <string name="alert_episode_added">Enviado para descargar la lista de reproducción de servicio.</string>
+    <string name="alert_episode_import_first">Este episodio se enviará a tu reloj y se descargará</string>
+    <string name="alert_playlist_purchased">%d creado.</string>
+    <string name="text_file_uploaded">Archivo enviado con éxito Puede haber un retraso antes de que el archivo se muestre en observación.</string>
+    <string name="text_file_upload_start">Archivo de envío…</string>
+    <string name="alert_playlists_quantity_none">Seleccione una cantidad</string>
+    <string name="alert_playlists_purchase_disclaimer">Comprar listas de reproducción eliminará cualquier lista de reproducción que esté actualmente en su reloj.</string>
+    <string name="alert_playlists_readd_disclaimer">Al volver a agregar listas de reproducción, se eliminarán las listas de reproducción que estén actualmente en su reloj.</string>
+    <string name="alert_purchased">Ya has comprado esto.</string>
+
+    <string name="plurals_single_podcast_added">podcast importado con éxito</string>
+    <string name="plurals_multiple_podcasts_added">%d podcasts importados con éxito</string>
+
+    <string name="confirm_import_opml">Si aún no lo has hecho, acepta permisos en tu dispositivo de desgaste.</string>
+
+    <string name="error_opml_import">Hubo un error al importar su OPML. Verifique que esté en el formato correcto.</string>
+
+</resources>

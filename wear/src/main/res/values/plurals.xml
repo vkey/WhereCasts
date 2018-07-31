@@ -1,0 +1,11 @@
+<resources>
+    <plurals name="news_episodes">
+        <item quantity="one">@string/plurals_single_new_episode</item>
+        <item quantity="other">@string/plurals_multiple_new_episodes</item>
+    </plurals>
+
+    <plurals name="hardware_buttons">
+        <item quantity="one">@string/settings_podcasts_label_hardware_button</item>
+        <item quantity="other">@string/settings_podcasts_label_hardware_buttons</item>
+    </plurals>
+</resources>

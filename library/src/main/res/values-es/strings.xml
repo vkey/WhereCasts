@@ -1,0 +1,30 @@
+<resources>
+    <string name="retrieving_podcasts">Recuperando el directorio de podcasts…</string>
+    <string name="retrieving_search_results">Recuperando resultados…</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="alert_no_network">No hay red disponible</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="play">Jugar</string>
+    <string name="pause">Pausa</string>
+    <string name="general_error">Ocurrió un error. Inténtalo de nuevo.</string>
+    <string name="confirm_directory_first_import">Enviado correctamente\nPuede haber un retraso antes de que aparezcan los archivos de servicio\nDeslice el dedo hacia la izquierda en la pantalla principal</string>
+    <string name="last_updated">Última actualización</string>
+    <string name="syncing">Sincronizando…</string>
+    <string name="success">Éxito</string>
+    <string name="search">Buscar</string>
+    <string name="searching">buscando…</string>
+    <string name="no_results">No se han encontrado resultados</string>
+    <string name="save">Salvar</string>
+    <string name="added">Adicional</string>
+    <string name="add">Añadir</string>
+    <string name="renamed">Renombrado</string>
+    <string name="rename">Rebautizar</string>
+    <string name="delete">Borrar</string>
+    <string name="none">Ninguna</string>
+    <string name="select">Seleccionar</string>
+    <string name="never">Nunca</string>
+
+</resources>

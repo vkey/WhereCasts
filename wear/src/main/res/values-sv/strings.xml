@@ -1,0 +1,315 @@
+<resources>
+    <string name="menu_episode_title_upnext">Lägg till uppåt nästa</string>
+    <string name="playlist_title_upnext">Nästa</string>
+    <string name="confirm_remove_upnext">Avlägsna?</string>
+    <string name="confirm_remove_local">Radera?</string>
+    <string name="notification_updating_status">uppdatering…</string>
+    <string name="notification_channel_media_service">Mediatjänst</string>
+    <string name="notification_channel_media_playing">Media Playing Notification</string>
+    <string name="notification_channel_newepisodes">New Episodes Notification</string>
+
+    <string name="rate_app_reminder">Vill du betygsätta den här appen? (klicka på JA öppnar butikssidan på din telefon).</string>
+
+    <string name="text_loading_episodes">Läser in…</string>
+    <string name="text_loading_episodes_playlist">Uppfriskande…</string>
+    <string name="text_loading_podcasts">Laddar dina podcaster…</string>
+    <string name="text_no_search_results">Inga resultat funna</string>
+    <string name="text_settings_playlists_empty">Hämta spellistor via fliken Premium i appen</string>
+
+    <string name="playlists_title_default">Spellista %d</string>
+
+    <string name="premium_locked_playback_speed">Premium, låsa upp via telefonapp.</string>
+
+    <string name="empty_episode_list">Dra ner för att uppdatera</string>
+    <string name="empty_episode_list_search_results">Inga resultat\nDra ner för att visa alla</string>
+
+    <string name="empty_podcast_list">Importera podcaster via telefonapp eller dra ner för att upptäcka podcaster</string>
+    <string name="empty_podcast_list2">Dra åt vänster för auto-spellistor\nFå fler spellistor i telefonapp</string>
+    <string name="text_playlists_add_empty">Inga spellistor hittades\n\nLägg till anpassade spellistor i telefonappen \ n (under fliken Premium)</string>
+
+    <string name="confirm_mark_finished">Markera som färdig?</string>
+    <string name="confirm_delete_download">Radera nedladdning?</string>
+    <string name="confirm_delete_file">Radera fil?</string>
+    <string name="confirm_delete_all_downloads">Ta bort alla nedladdningar?</string>
+    <string name="confirm_delete_all_thumbs">Ta bort alla miniatyrbilder?</string>
+    <string name="confirm_cancel_download">Avbryt Ladda ner?</string>
+
+    <string name="confirm_initial_download_title">Varning!</string>
+
+    <string name="confirm_mark_all_finished">Mark all finished?</string>
+    <string name="confirm_delete_all_download">Ta bort alla nedladdningar?</string>
+
+    <string name="confirm_delete_episode_download">Ta bort den här episodens nedladdning?</string>
+    <string name="confirm_delete_podcast">Avsluta prenumerationen från den här podcasten?</string>
+
+    <string name="confirm_initial_download_message">Nedladdning via WiFi eller mobil rekommenderas. Vill du avaktivera Bluetooth när du laddar ner (det här kan ändras i inställningarna)?</string>
+
+    <string name="confirm_mark_played">Markera som spelat?</string>
+    <string name="confirm_mark_unplayed">Markera som ospelad?</string>
+
+    <string name="confirm_mark_all_played">Markera alla spelade?</string>
+    <string name="confirm_mark_all_unplayed">Markera alla ospelade?</string>
+
+    <string name="settings_podcast_title">Podcast Inställningar</string>
+    <string name="settings_podcast_sort_order_global">[Global]</string>
+    <string name="settings_podcast_label_autodownload">Auto ladda ner senaste avsnittet</string>
+    <string name="settings_podcast_label_download_next">Hämta nästa avsnitt</string>
+    <string name="settings_podcast_label_download_next_summary">När den du lyssnar på slutar</string>
+    <string name="settings_podcast_label_download_next_alert">Nedladdningar kommer köa om offline</string>
+    <string name="settings_podcast_label_download_sort_order">Sortera efter (överstiger global sorteringsordning)</string>
+    <string name="settings_podcast_label_downloads_saved">Automatisk uppringning av nedladdningar</string>
+    <string name="settings_podcast_label_downloads_saved_summary">Nedladdningar över det här numret kommer att raderas automatiskt</string>
+    <string name="settings_podcast_label_hideplayed">Dölj spelade episoder</string>
+    <string name="settings_podcast_label_delete_podcast">Säga upp</string>
+    <string name="settings_podcast_episode_limit_title">Antal episoder att visa</string>
+    <string name="settings_podcast_episode_limit_all">Allt</string>
+
+    <string name="settings_podcast_label_assign_playlist">Tilldela till spellista</string>
+
+    <string name="settings_podcasts_label_header_color">Rubrikfärg</string>
+    <string name="settings_podcasts_label_header_theme">Tema</string>
+
+    <string name="settings_podcasts_title">inställningar</string>
+    <string name="settings_podcasts_title_downloads">Nedladdningar</string>
+    <string name="settings_podcasts_title_general">Allmän</string>
+    <string name="settings_podcasts_title_playback">Uppspelning</string>
+    <string name="settings_podcasts_title_display">Visa</string>
+    <string name="settings_podcasts_title_playlists">spellistor</string>
+    <string name="settings_podcasts_title_updates">uppdateringar</string>
+    <string name="settings_podcasts_settings_title_downloads">Hämta inställningar</string>
+    <string name="settings_podcasts_settings_title_general">Allmänna Inställningar</string>
+    <string name="settings_podcasts_settings_title_display">Bildskärmsinställningar</string>
+    <string name="settings_podcasts_settings_title_playback">Uppspelningsinställningar</string>
+    <string name="settings_podcasts_settings_title_playlist">Inställningar för spellista</string>
+    <string name="settings_podcasts_settings_updates_display">Uppdatera inställningarna</string>
+    <string name="settings_podcasts_label_sync_podcasts">Klicka för att synkronisera podcasts</string>
+    <string name="settings_podcasts_label_hide_nonew_podcasts">Dölj podcaster med inga nya episoder</string>
+    <string name="settings_podcasts_label_playlists_hide_empty">Dölj tomma spellistor</string>
+    <string name="settings_podcasts_label_display_paging_indicator">Dölj personsökningsindikatorn</string>
+    <string name="settings_podcasts_label_playlist_sort">Spellista Sortera ordning</string>
+    <string name="settings_podcasts_label_episodes_sort">Episoder Sortera Order</string>
+    <string name="settings_podcasts_label_podcast_sort">Podcast List Sorteringsorder</string>
+    <string name="settings_podcasts_label_home_screen">\'Hemskärm</string>
+    <string name="settings_podcasts_label_sync_thumbnails">Klicka för att synkronisera miniatyrer</string>
+    <string name="settings_podcasts_label_sync_startup">Synkronisera vid uppstart</string>
+    <string name="settings_podcasts_label_updates_enabled">Aktivera uppdateringar</string>
+    <string name="settings_podcasts_label_updates_interval">Uppdateringsintervall</string>
+    <string name="settings_podcasts_label_updates_charging">Uppdatera endast under laddning</string>
+    <string name="settings_podcasts_label_updates_sound">Spela upp ljud när nya episoder hittas</string>
+    <string name="settings_podcasts_label_updates_enabled_summary">Körs endast när enheten laddas</string>
+    <string name="settings_podcasts_label_auto_delete">Ta bort nedladdade filer när du är klar</string>
+    <string name="settings_podcasts_label_downloads_restart_failed">Starta om en nedladdning automatiskt om den misslyckas</string>
+    <string name="settings_podcasts_label_disable_bluetooth">Inaktivera Bluetooth medan du hämtar</string>
+    <string name="settings_podcasts_label_download_complete_sound">Spela ljud när nedladdningen är klar</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_start">Inaktivera ljud från</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_end">Inaktivera ljudet till</string>
+    <string name="settings_podcasts_label_playback_speed">Uppspelningshastighet</string>
+    <string name="settings_podcasts_label_playback_skip_back">Hoppa tillbaka</string>
+    <string name="settings_podcasts_label_playback_skip_forward">Hoppa framåt</string>
+    <string name="settings_podcasts_label_playback_playlists">Ta bort episoder från spellistan när du är klar</string>
+    <string name="settings_podcasts_label_hardware_button">Styr uppspelning med hårdvaruknapp</string>
+    <string name="settings_podcasts_label_hardware_buttons">Styr uppspelning med hårdvaruknappar</string>
+    <string name="settings_podcasts_label_hardware_buttons_1_summary">Spela upp / Pausa (fungerar bara på spelskärmen)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Överst: Hoppa tillbaka\nMellan: Spela / Pausa\nBottom: Hoppa framåt\n(fungerar bara på spelskärmen)</string>
+    <string name="settings_podcasts_label_high_bandwidth">Kontrollera nätverksnätverk med hög bandbredd</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Innan du strömmar eller hämtar</string>
+    <string name="settings_podcasts_label_downloads_delete_all">Klicka för att radera alla miniatyrbilder (%d)</string>
+    <string name="settings_podcasts_label_downloads_thumbs_all">Klicka för att radera alla nedladdningar (%d)</string>
+
+    <string name="settings_podcasts_entries_title_header_color">Rubrikfärg</string>
+    <string name="settings_podcasts_entries_header_color_blue">Blå</string>
+    <string name="settings_podcasts_entries_header_color_dark_gray">Mörkgrå</string>
+    <string name="settings_podcasts_entries_header_color_green">Grön</string>
+    <string name="settings_podcasts_entries_header_color_orange">Orange</string>
+    <string name="settings_podcasts_entries_header_color_red">Röd</string>
+    <string name="settings_podcasts_entries_header_color_purple">Lila</string>
+    <string name="settings_podcasts_entries_header_color_gray">Grå</string>
+    <string name="settings_podcasts_entries_header_color_dark_blue">Mörkblå</string>
+    <string name="settings_podcasts_entries_header_color_lite_blue">Ljusblå</string>
+    <string name="settings_podcasts_entries_header_color_dark_green">Mörkgrön</string>
+    <string name="settings_podcasts_entries_header_color_dark_orange">Dark Orange</string>
+
+    <string name="settings_podcasts_entries_title_home_screen">Hemskärm</string>
+    <string name="settings_podcasts_home_screen_default">Standard</string>
+    <string name="settings_podcasts_home_screen_local">Lokal</string>
+    <string name="settings_podcasts_home_screen_inprogress">Pågående</string>
+    <string name="settings_podcasts_home_screen_downloads">Nedladdningar</string>
+    <string name="settings_podcasts_home_screen_upnext">Strax</string>
+
+    <string name="settings_podcasts_entries_title_themes">teman</string>
+    <string name="settings_podcasts_sort_order_themes_default">Standard</string>
+    <string name="settings_podcasts_sort_order_themes_dark">Mörk</string>
+    <string name="settings_podcasts_sort_order_themes_light">Ljus</string>
+    <string name="settings_podcasts_sort_order_themes_amoled">AMOLED</string>
+    <string name="settings_podcasts_sort_order_themes_dynamic">Dynamisk</string>
+
+    <string name="settings_podcasts_updates_interval_1_hours">1 timme</string>
+    <string name="settings_podcasts_updates_interval_3_hours">3 timmar</string>
+    <string name="settings_podcasts_updates_interval_6_hours">6 timmar</string>
+    <string name="settings_podcasts_updates_interval_12_hours">12 timmar</string>
+
+    <string name="settings_podcasts_sort_order_name_asc">Namn (A-Z)</string>
+    <string name="settings_podcasts_sort_order_name_desc">Namn (Z-A)</string>
+    <string name="settings_podcasts_sort_order_date_asc">Datum (äldsta på toppen)</string>
+    <string name="settings_podcasts_sort_order_date_desc">Datum (Nyast på toppen)</string>
+    <string name="settings_podcasts_sort_order_new_episodes">Antal nya episoder</string>
+    <string name="settings_podcasts_sort_order_latest_episodes">Senaste episoderna (Nyast på toppen)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_desc">Datum Nedladdat (Nyast på toppen)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_asc">Datum Nedladdat (äldst på toppen)</string>
+    <string name="settings_podcasts_sort_order_dateadded_desc">Datum tillagd (Nyast på toppen)</string>
+    <string name="settings_podcasts_sort_order_dateadded_asc">Datum tillagd (äldst på toppen)</string>
+    <string name="settings_podcasts_sort_order_progress">Framsteg (längst överst)</string>
+
+    <string name="settings_podcasts_label_skip_start_time">Starta podcast på</string>
+    <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
+    <string name="settings_podcasts_label_skip_start_time_10_seconds">10 sekunder</string>
+    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 sekunder</string>
+    <string name="settings_podcasts_label_skip_start_time_30_seconds">30 sekunder</string>
+    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 sekunder</string>
+    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minut</string>
+    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 minuter kvar</string>
+
+    <string name="settings_podcasts_label_finish_end_time">Avsluta podcast med</string>
+    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
+    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 sekunder kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 sekunder kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_1_minute">1 minut kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 minuter kvar</string>
+    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 minuter kvar</string>
+
+    <string name="setting_podcasts_playback_skip_10_seconds">10 sekunder</string>
+    <string name="setting_podcasts_playback_skip_20_seconds">20 sekunder</string>
+    <string name="setting_podcasts_playback_skip_30_seconds">30 sekunder</string>
+    <string name="setting_podcasts_playback_skip_40_seconds">40 sekunder</string>
+    <string name="setting_podcasts_playback_skip_50_seconds">50 sekunder</string>
+    <string name="setting_podcasts_playback_skip_60_seconds">60 sekunder</string>
+
+    <string name="menu_main_title_settings">inställningar</string>
+
+    <string name="menu_main_title_download">Ladda ner</string>
+    <string name="menu_main_title_download_delete">Ta bort hämtning</string>
+    <string name="menu_main_title_download_cancel">Avbryt Ladda ner</string>
+    <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
+
+    <string name="menu_episodes_mark_all_played">Markera alla spelade</string>
+    <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>
+    <string name="menu_episodes_add_playlist">Lägg till allt till spellista</string>
+
+    <string name="menu_episodes_delete_all">Radera allt</string>
+    <string name="menu_episodes_finish_all">Avsluta alla</string>
+
+    <string name="tips_swipe_left">Dra åt vänster för att visa automatiska spellistor</string>
+    <string name="tips_swipe_long_press">Långt tryck på en podcast för alternativ</string>
+
+    <string name="nav_directory_resync">Resync</string>
+    <string name="alert_directory_resync">Är du säker på att du vill resync?</string>
+    <string name="nav_main_discover">Upptäck Podcasts</string>
+    <string name="nav_main_settings">inställningar</string>
+
+    <string name="nav_add_refresh">Uppdatera</string>
+
+    <string name="confirm_yes">JA</string>
+    <string name="confirm_no">NEJ</string>
+
+    <string name="playlist_title_inprogress">Pågående</string>
+    <string name="playlist_title_downloads">Nedladdningar</string>
+    <string name="playlist_title_unplayed">ospelade</string>
+    <string name="playlist_title_local">Lokal</string>
+
+    <string name="text_episode_no_media">Kan inte hitta media för uppspelning. Ta bort och lägg till eller kontakta podcastleverantören.</string>
+    <string name="alert_podcast_added">Lagt till</string>
+    <string name="alert_episode_playlist_added">Lagt till %s</string>
+    <string name="alert_episodes_playlist_added">Lagt till %d episoder till %s</string>
+    <string name="alert_search_empty">Ange ett sökord</string>
+    <string name="alert_refreshing_thumb">Uppfriskande miniatyrbild…</string>
+
+    <string name="alert_locating_network">Väntar på nätverk…</string>
+    <string name="alert_locating_network_notfound">Det går inte att hitta ett nätverk</string>
+    <string name="alert_sync_started">Synkronisering startade</string>
+    <string name="alert_sync_finished">Synkronisering slutförd</string>
+    <string name="alert_disable_bluetooth_disabled_start">Inaktiverar Bluetooth…</string>
+    <string name="alert_unsubscribing">Gå ur…</string>
+    <string name="alert_disable_bluetooth_disabled_end">Bluetooth disabled</string>
+    <string name="alert_disable_bluetooth_enabled">Bluetooth aktiverad</string>
+    <string name="alert_episode_download_start">nedladdning…</string>
+    <string name="alert_episode_network_search">Söker efter nätverk med hög bandbredd…</string>
+    <string name="alert_episode_network_notfound">Inget nätverk hittades. Vill du öppna WiFi-inställningarna?</string>
+    <string name="alert_episode_network_no_high_bandwidth">Inget nätverk med hög bandbredd hittades. Vill du öppna WiFi-inställningarna?</string>
+    <string name="alert_playlist_delete">Är du säker?</string>
+
+    <string name="alert_download_error_noresume">Kan inte återuppta nedladdning. Var god försök igen</string>
+    <string name="alert_download_error_device_not_found">Enheten hittades inte</string>
+    <string name="alert_download_error_file_exists">filen finns redan</string>
+    <string name="alert_download_error_file_error">Filfel</string>
+    <string name="alert_download_error_data_error">HTTP-datafel</string>
+    <string name="alert_download_error_low_disk">Otillräckligt utrymme</string>
+    <string name="alert_download_error_redirects">För många omdirigeringar</string>
+    <string name="alert_download_error_unhandled_http">Hanterad http-kod</string>
+    <string name="alert_download_error_unknown">Okänt fel. Var god försök igen</string>
+    <string name="alert_download_error_not_found">Podcast inte hittad</string>
+    <string name="alert_download_error_default">Ett fel har uppstått. Var god försök igen</string>
+    <string name="alert_download_error_restart">Nedladdning misslyckad. omstart…</string>
+    <string name="alert_download_error_failed">Hämtningen kunde inte startas om.</string>
+
+    <string name="alert_error_sorting_latest_episodes">Ett fel inträffade sortering efter senaste episoderna. Detta betyder vanligtvis ett dåligt datum för en podcast.</string>
+
+    <string name="alert_network_waiting">väntar på nätverk…</string>
+
+    <string name="alert_file_none_deleted">Inga filer raderade</string>
+    <string name="alert_file_deleted">1 filen raderad</string>
+    <string name="alert_files_deleted">%d filer raderade</string>
+
+    <string name="validation_podcast_rename_title">Ange en titel</string>
+    <string name="validation_podcast_rename_length">Titellängd för stor</string>
+
+    <string name="plurals_single_new_episode">1 nytt avsnitt</string>
+    <string name="plurals_multiple_new_episodes">%d nya episoder</string>
+    <string name="new_episodes_alert">Nya episoder</string>
+
+    <string name="notification_download_count">%d Nedladdningar</string>
+
+    <string name="tts_audio_skip_next">spelar nästa</string>
+    <string name="tts_audio_skip_previous">spelar tidigare</string>
+
+    <string name="dropdown_playlist_select">[ Lägg till i spellista ]</string>
+    <string name="button_mark_played">Markera som spelat</string>
+    <string name="button_mark_unplayed">Markera som ospelad</string>
+    <string name="alert_marked_unplayed">Markerad som ospelad</string>
+    <string name="alert_marked_played">Markerad som spelad</string>
+    <string name="alert_streaming">Streaming…</string>
+
+</resources>

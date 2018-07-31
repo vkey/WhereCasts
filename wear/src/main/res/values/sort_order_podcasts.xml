@@ -1,0 +1,20 @@
+<resources>
+    <string name="sort_order_podcasts">@string/settings_podcasts_entries_title_sort_order</string>
+    <string-array name="sort_order_podcasts_text">
+        <item>@string/settings_podcasts_sort_order_name_asc</item>
+        <item>@string/settings_podcasts_sort_order_name_desc</item>
+        <item>@string/settings_podcasts_sort_order_dateadded_desc</item>
+        <item>@string/settings_podcasts_sort_order_dateadded_asc</item>
+        <item>@string/settings_podcasts_sort_order_new_episodes</item>
+        <item>@string/settings_podcasts_sort_order_latest_episodes</item>
+    </string-array>
+
+    <string-array name="sort_order_podcasts_values">
+        <item>1</item>
+        <item>2</item>
+        <item>7</item>
+        <item>8</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+</resources>

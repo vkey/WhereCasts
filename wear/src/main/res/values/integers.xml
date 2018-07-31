@@ -1,0 +1,26 @@
+<resources>
+    <integer name="default_update_interval">21600000</integer> <!-- 6 hours -->
+    <integer name="default_skip_start_time">0</integer>
+    <integer name="playlist_default">-1</integer>
+    <integer name="playlist_inprogress">-2</integer>
+    <integer name="playlist_downloads">-3</integer>
+    <integer name="playlist_unplayed">-4</integer>
+    <integer name="playlist_upnext">-5</integer>
+    <integer name="playlist_local">-6</integer>
+    <integer name="color_background">-15724520</integer>
+    <integer name="skip_seconds">30</integer>
+    <integer name="default_episodes_global_sort_order">4</integer>
+    <integer name="default_episodes_sort_order">0</integer>
+    <integer name="default_playlist_sort_order">5</integer>
+    <integer name="default_podcasts_sort_order">1</integer>
+    <integer name="default_home_screen">0</integer>
+    <integer name="default_theme">0</integer>
+    <integer name="default_header_color">10</integer>
+    <integer name="default_finish_end_time">0</integer>
+    <integer name="minimum_bandwidth">320</integer>
+    <integer name="default_font_size">1</integer>
+    <integer name="default_playlist_select">-99</integer>
+    <integer name="default_playback_skip">30</integer>
+    <integer name="default_download_next_count">1</integer>
+    <integer name="episode_with_no_podcast_id">-5</integer>
+</resources>

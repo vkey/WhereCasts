@@ -1,0 +1,30 @@
+<resources>
+    <string name="retrieving_podcasts">पॉडकास्ट निर्देशिका पुनर्प्राप्त करना…</string>
+    <string name="retrieving_search_results">परिणामों को पुनः प्राप्त करना…</string>
+    <string name="today">आज</string>
+    <string name="yesterday">बिता कल</string>
+    <string name="ok">ठीक</string>
+    <string name="cancel">रद्द करना</string>
+    <string name="alert_no_network">कोई नेटवर्क उपलब्ध नहीं है</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="play">प्ले</string>
+    <string name="pause">ठहराव</string>
+    <string name="general_error">एक त्रुटि पाई गई। कृपया पुन: प्रयास करें.</string>
+    <string name="confirm_directory_first_import">सफलतापूर्वक भेज दिया।\nघड़ी पर दिखाई देने वाली फ़ाइल (फाइलें) के पहले विलंब हो सकता है\nमुख्य स्क्रीन पर बाएं स्वाइप करें</string>
+    <string name="last_updated">आखरी अपडेट</string>
+    <string name="syncing">सिंक कर रहा है…</string>
+    <string name="success">सफलता</string>
+    <string name="search">खोज</string>
+    <string name="searching">खोज कर…</string>
+    <string name="no_results">कोई परिणाम नहीं मिला</string>
+    <string name="save">बचाना</string>
+    <string name="added">जोड़ा गया</string>
+    <string name="add">जोड़ना</string>
+    <string name="renamed">नाम बदलकर</string>
+    <string name="rename">नाम बदलें</string>
+    <string name="delete">हटाना</string>
+    <string name="none">कोई नहीं</string>
+    <string name="select">चुनते हैं</string>
+    <string name="never">कभी नहीँ</string>
+
+</resources>

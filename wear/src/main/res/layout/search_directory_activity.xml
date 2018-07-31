@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wear.widget.drawer.WearableDrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/search_progress_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/search_action_voice"
+            android:layout_marginTop="20dp"
+            />
+
+        <ProgressBar
+            android:id="@+id/search_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_centerVertical="true"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_below="@+id/search_progress_text"
+            />
+
+        <ImageView
+            android:id="@+id/search_action_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_action_voice"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_marginTop="30dp"
+            />
+
+        <EditText
+            android:id="@+id/search_action_text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:layout_below="@+id/search_action_voice"
+            />
+
+        <android.support.wear.widget.WearableRecyclerView
+            android:id="@+id/search_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:paddingBottom="70dp"
+            android:paddingTop="20dp"
+            />
+
+    </RelativeLayout>
+
+    <android.support.wear.widget.drawer.WearableNavigationDrawerView
+        android:id="@+id/drawer_nav_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</android.support.wear.widget.drawer.WearableDrawerLayout>

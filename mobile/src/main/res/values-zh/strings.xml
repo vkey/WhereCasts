@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">玩</string>
+    <string name="tab_add">加</string>
+    <string name="tab_premium">額外費用</string>
+
+    <string name="validation_invalid_url">輸入一個有效的網址</string>
+    <string name="validation_empty_url">輸入一個RSS網址</string>
+
+    <string name="copyright">版權 © %s</string>
+    <string name="version">版: %s</string>
+
+    <string name="tip_1">導入podcast之前，請在您的穿戴設備上接受權限.</string>
+    <string name="tip_2">提示：使用Android的Share功能將RSS網址發送到這個應用程序.</string>
+
+    <string name="upload_file_summary_unlocked">上傳文件將在Wear設備上創建自動播放列表 (&lt;20 MB 推薦的).</string>
+    <string name="upload_file_summary_locked">PREMIUM: 上傳文件將在Wear設備上創建自動播放列表 (&lt;20 MB 推薦的).</string>
+
+    <string name="error_no_episode">您輸入的網址沒有返回任何播客.\n點擊這裡驗證它是一個有效的RSS源</string>
+
+    <string name="form_add_hint_podcast_title">播客標題（可選）</string>
+    <string name="form_add_hint_podcast_url">播客的RSS網址</string>
+
+    <string name="button_text_import_podcast">發送到監視</string>
+    <string name="button_text_import_opml">導入OPML</string>
+    <string name="button_text_upload_file">發送文件</string>
+    <string name="button_text_no_device">找不到磨損的設備</string>
+    <string name="button_text_searching_device">尋找磨損裝置…</string>
+    <string name="button_text_unlock_premium">解鎖保費\n特徵</string>
+    <string name="button_text_resync_premium">重新同步高級版\n特徵</string>
+    <string name="button_text_resync_premium_waiting">等待回應…</string>
+
+    <string name="button_text_playlists_readd">重新添加\n%d 播放列表</string>
+    <string name="button_text_playlists_purchase">採購\n播放列表</string>
+    <string name="alert_playlists_purchased">播放列表已成功創建.\n在手錶設置下管理播放列表. 重新啟動手錶上的應用程序可能是必需的.</string>
+
+    <string name="menu_text_about">關於</string>
+    <string name="menu_text_directory">發現</string>
+
+    <string name="page_title_search_results">結果</string>
+
+    <string name="text_importing_opml_sending">將播客發送到您的穿戴設備…</string>
+    <string name="text_importing_opml_parsing">解析OPML（可能需要一段時間，取決於播客的數量）…</string>
+    <string name="alert_get_directory_error">無法獲取播客目錄</string>
+
+    <string name="alert_podcast_added">%s 送去觀看.</string>
+    <string name="alert_episode_added">發送以下載手錶上的播放列表.</string>
+    <string name="alert_episode_import_first">此劇集將發送到您的手錶並下載</string>
+    <string name="alert_playlist_purchased">%d 創建.</string>
+    <string name="text_file_uploaded">文件發送成功。 在手錶上顯示文件之前可能會有延遲.</string>
+    <string name="text_file_upload_start">發送文件…</string>
+    <string name="alert_playlists_quantity_none">選擇一個數量</string>
+    <string name="alert_playlists_purchase_disclaimer">購買播放列表將刪除手錶上當前的任何播放列表.</string>
+    <string name="alert_playlists_readd_disclaimer">重新添加播放列表將刪除手錶上當前的任何播放列表.</string>
+    <string name="alert_purchased">你已經購買了這個.</string>
+
+    <string name="plurals_single_podcast_added">播客成功導入</string>
+    <string name="plurals_multiple_podcasts_added">%d 播客成功導入</string>
+
+    <string name="confirm_import_opml">如果還沒有，請在磨損裝置上接受許可。</string>
+
+    <string name="error_opml_import">導入您的OPML時出錯。仔細檢查它的格式是否正確。</string>
+
+</resources>

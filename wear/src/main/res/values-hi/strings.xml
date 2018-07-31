@@ -1,0 +1,316 @@
+<resources>
+    <string name="menu_episode_title_upnext">आगे बढ़ें अगला</string>
+    <string name="playlist_title_upnext">आगामी</string>
+    <string name="confirm_remove_upnext">हटाना?</string>
+    <string name="confirm_remove_local">हटाना?</string>
+    <string name="notification_updating_status">अद्यतन कर रहा है…</string>
+    <string name="notification_channel_media_service">मीडिया सेवा</string>
+    <string name="notification_channel_media_playing">मीडिया बजाना अधिसूचना</string>
+    <string name="notification_channel_newepisodes">नया एपिसोड अधिसूचना</string>
+
+    <string name="rate_app_reminder">क्या आप इस ऐप को रेट करना चाहेंगे? (हां क्लिक करने पर आपके फोन पर स्टोर पेज खुल जाएगा).</string>
+
+    <string name="text_loading_episodes">लोड हो रहा है…</string>
+    <string name="text_loading_episodes_playlist">ताज़ा किया जा रहा…</string>
+    <string name="text_loading_podcasts">अपने पॉडकास्ट लोड हो रहा है…</string>
+    <string name="text_no_search_results">कोई परिणाम नहीं मिला</string>
+    <string name="text_settings_playlists_empty">फोन ऐप में प्रीमियम टैब के माध्यम से प्लेलिस्ट प्राप्त करें</string>
+
+    <string name="playlists_title_default">प्लेलिस्ट %d</string>
+
+    <string name="premium_locked_playback_speed">प्रीमियम, फ़ोन ऐप के माध्यम से अनलॉक करें.</string>
+
+    <string name="empty_episode_list">ताज़ा करने के लिए नीचे स्वाइप करें</string>
+    <string name="empty_episode_list_search_results">कोई परिणाम नहीं\nसभी को दिखाने के लिए नीचे स्वाइप करें</string>
+
+    <string name="empty_podcast_list">फ़ोन ऐप के माध्यम से पॉडकास्ट आयात करें या पॉडकास्ट खोजने के लिए नीचे खींचें</string>
+    <string name="empty_podcast_list2">ऑटो-प्लेलिस्ट के लिए बाएं स्वाइप करें\nफोन ऐप में और प्लेलिस्ट प्राप्त करें</string>
+    <string name="text_playlists_add_empty">कोई प्लेलिस्ट नहीं मिली\n\nफोन ऐप में कस्टम प्लेलिस्ट जोड़ें \ n (प्रीमियम टैब के तहत)</string>
+
+    <string name="confirm_mark_finished">पूरा होने के रूप में चिह्नित करें?</string>
+    <string name="confirm_delete_download">डाउनलोड हटाएं?</string>
+    <string name="confirm_delete_file">फ़ाइल को हटाएं?</string>
+    <string name="confirm_delete_all_downloads">सभी डाउनलोड हटाएं?</string>
+    <string name="confirm_delete_all_thumbs">सभी थंबनेल हटाएं?</string>
+    <string name="confirm_cancel_download">डाउनलोड रद्द करें?</string>
+
+    <string name="confirm_initial_download_title">चेतावनी!</string>
+
+    <string name="confirm_mark_all_finished">सभी को समाप्त करें चिह्नित करें?</string>
+    <string name="confirm_delete_all_download">सभी डाउनलोड हटाएं?</string>
+
+    <string name="confirm_delete_episode_download">इस एपिसोड के डाउनलोड को हटाएं?</string>
+    <string name="confirm_delete_podcast">इस पॉडकास्ट से सदस्यता रद्द करें?</string>
+
+    <string name="confirm_initial_download_message">वाईफाई या सेलुलर पर डाउनलोड करने की अनुशंसा की जाती है। क्या आप डाउनलोड करते समय ब्लूटूथ को अक्षम करना चाहते हैं (इसे सेटिंग्स में बदला जा सकता है)?</string>
+
+    <string name="confirm_mark_played">चिह्नित के रूप में चिह्नित करें?</string>
+    <string name="confirm_mark_unplayed">अनप्लेड के रूप में चिह्नित करें?</string>
+
+    <string name="confirm_mark_all_played">सभी को खेले गए निशान?</string>
+    <string name="confirm_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें?</string>
+
+    <string name="settings_podcast_title">पॉडकास्ट सेटिंग्स</string>
+    <string name="settings_podcast_sort_order_global">[वैश्विक]</string>
+    <string name="settings_podcast_label_autodownload">ऑटो डाउनलोड नवीनतम एपिसोड</string>
+    <string name="settings_podcast_label_download_next">अगले एपिसोड डाउनलोड करें</string>
+    <string name="settings_podcast_label_download_next_summary">जब आप एक को समाप्त करना सुन रहे हैं</string>
+    <string name="settings_podcast_label_download_next_alert">ऑफलाइन होने पर डाउनलोड कतारबद्ध होंगे</string>
+    <string name="settings_podcast_label_download_sort_order">द्वारा क्रमबद्ध करें (वैश्विक क्रम क्रम ओवरराइड करता है)</string>
+    <string name="settings_podcast_label_downloads_saved">ऑटो सफाई डाउनलोड</string>
+    <string name="settings_podcast_label_downloads_saved_summary">इस नंबर के ऊपर डाउनलोड स्वतः हटा दिए जाएंगे</string>
+    <string name="settings_podcast_label_hideplayed">एपिसोड छुपाएं</string>
+    <string name="settings_podcast_label_delete_podcast">सदस्यता रद्द</string>
+    <string name="settings_podcast_label_assign_playlist">प्लेलिस्ट को असाइन करें</string>
+
+    <string name="settings_podcasts_label_header_color">हैडर का रंग</string>
+    <string name="settings_podcasts_label_header_theme">विषय</string>
+
+    <string name="settings_podcasts_title">सेटिंग्स</string>
+    <string name="settings_podcasts_title_downloads">डाउनलोड</string>
+    <string name="settings_podcasts_title_general">सामान्य</string>
+    <string name="settings_podcasts_title_display">प्रदर्शन</string>
+    <string name="settings_podcasts_title_playback">प्लेबैक</string>
+    <string name="settings_podcasts_title_playlists">प्लेलिस्ट</string>
+    <string name="settings_podcasts_title_updates">अपडेट</string>
+    <string name="settings_podcasts_settings_title_downloads">सेटिंग्स डाउनलोड करें</string>
+    <string name="settings_podcasts_settings_title_general">सामान्य सेटिंग्स</string>
+    <string name="settings_podcasts_settings_title_playback">प्लेबैक सेटिंग्स</string>
+    <string name="settings_podcasts_settings_title_playlist">प्लेलिस्ट सेटिंग्स</string>
+    <string name="settings_podcasts_settings_title_display">प्रदर्शन सेटिंग्स</string>
+    <string name="settings_podcasts_settings_updates_display">सेटिंग अपडेट करें</string>
+    <string name="settings_podcasts_label_sync_podcasts">पॉडकास्ट सिंक करने के लिए क्लिक करें</string>
+    <string name="settings_podcasts_label_hide_nonew_podcasts">कोई नया एपिसोड के साथ पॉडकास्ट छुपाएं</string>
+    <string name="settings_podcasts_label_playlists_hide_empty">खाली प्लेलिस्ट छुपाएं</string>
+    <string name="settings_podcasts_label_display_paging_indicator">पेजिंग संकेतक छुपाएं</string>
+    <string name="settings_podcasts_label_playlist_sort">प्लेलिस्ट क्रमबद्ध क्रम</string>
+    <string name="settings_podcasts_label_episodes_sort">एपिसोड सॉर्ट क्रम</string>
+    <string name="settings_podcasts_label_podcast_sort">पॉडकास्ट सूची क्रमबद्ध क्रम</string>
+    <string name="settings_podcasts_label_home_screen">\'होम स्क्रीन</string>
+    <string name="settings_podcasts_label_sync_thumbnails">थंबनेल समन्वयित करने के लिए क्लिक करें</string>
+    <string name="settings_podcasts_label_sync_startup">स्टार्टअप पर समन्वयन</string>
+    <string name="settings_podcasts_label_updates_enabled">अपडेट सक्षम करें</string>
+    <string name="settings_podcasts_label_updates_interval">अंतराल का आधुनिकीकरण</string>
+    <string name="settings_podcasts_label_updates_charging">केवल चार्ज करते समय अद्यतन करें</string>
+    <string name="settings_podcasts_label_updates_sound">जब नए एपिसोड पाए जाते हैं तो ध्वनि चलाएं</string>
+    <string name="settings_podcasts_label_updates_enabled_summary">केवल तब चलता है जब डिवाइस चार्ज हो रहा है</string>
+    <string name="settings_podcasts_label_auto_delete">समाप्त होने पर डाउनलोड की गई फ़ाइलों को हटाएं</string>
+    <string name="settings_podcasts_label_downloads_restart_failed">यदि यह विफल हो जाता है तो स्वचालित रूप से डाउनलोड को पुनरारंभ करें</string>
+    <string name="settings_podcasts_label_disable_bluetooth">डाउनलोड करते समय ब्लूटूथ अक्षम करें</string>
+    <string name="settings_podcasts_label_download_complete_sound">डाउनलोड पूर्ण होने पर ध्वनि चलाएं</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_start">से ध्वनि अक्षम करें</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_end">ध्वनि को अक्षम करें</string>
+    <string name="settings_podcasts_label_hide_empty_podcasts">पॉडकास्ट को कोई नया या अनपेक्षित एपिसोड नहीं छुपाएं</string>
+    <string name="settings_podcast_episode_limit_title">एपिसोड की संख्या प्रदर्शित करने के लिए</string>
+    <string name="settings_podcast_episode_limit_all">सब</string>
+
+    <string name="settings_podcasts_label_playback_speed">प्लेबैक स्पीड</string>
+    <string name="settings_podcasts_label_playback_skip_back">वापस छोड़ें</string>
+    <string name="settings_podcasts_label_playback_skip_forward">छोड़कर आगे बढ़ो</string>
+    <string name="settings_podcasts_label_playback_playlists">समाप्त होने पर प्लेलिस्ट से एपिसोड निकालें</string>
+    <string name="settings_podcasts_label_hardware_button">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
+    <string name="settings_podcasts_label_hardware_buttons">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
+    <string name="settings_podcasts_label_hardware_buttons_1_summary">चलाएं / रोकें (केवल स्क्रीन खेलने पर काम करता है)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">शीर्ष: वापस जाएं\nमध्य: चलायें / रोकें\nनीचे: आगे बढ़ें\n(केवल स्क्रीन खेलने पर काम करता है)</string>
+    <string name="settings_podcasts_label_high_bandwidth">उच्च बैंडविड्थ नेटवर्क की जांच करें</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">स्ट्रीमिंग या डाउनलोड करने से पहले</string>
+    <string name="settings_podcasts_label_downloads_delete_all">सभी डाउनलोड हटाने के लिए क्लिक करें (%d)</string>
+    <string name="settings_podcasts_label_downloads_thumbs_all">सभी थंबनेल हटाने के लिए क्लिक करें (%d)</string>
+
+    <string name="settings_podcasts_entries_title_header_color">हैडर का रंग</string>
+    <string name="settings_podcasts_entries_header_color_blue">नीला</string>
+    <string name="settings_podcasts_entries_header_color_dark_gray">अंधेरे भूरा</string>
+    <string name="settings_podcasts_entries_header_color_green">हरा</string>
+    <string name="settings_podcasts_entries_header_color_orange">नारंगी</string>
+    <string name="settings_podcasts_entries_header_color_red">लाल</string>
+    <string name="settings_podcasts_entries_header_color_purple">बैंगनी</string>
+    <string name="settings_podcasts_entries_header_color_gray">धूसर</string>
+    <string name="settings_podcasts_entries_header_color_dark_blue">गहरा नीला</string>
+    <string name="settings_podcasts_entries_header_color_lite_blue">हल्का नीला</string>
+    <string name="settings_podcasts_entries_header_color_dark_green">गहरा हरा</string>
+    <string name="settings_podcasts_entries_header_color_dark_orange">गहरा नारंगी</string>
+
+    <string name="settings_podcasts_entries_title_home_screen">होम स्क्रीन</string>
+    <string name="settings_podcasts_home_screen_default">चूक</string>
+    <string name="settings_podcasts_home_screen_local">स्थानीय</string>
+    <string name="settings_podcasts_home_screen_inprogress">चालू</string>
+    <string name="settings_podcasts_home_screen_downloads">डाउनलोड</string>
+    <string name="settings_podcasts_home_screen_upnext">अगला</string>
+
+    <string name="settings_podcasts_entries_title_themes">विषय-वस्तु</string>
+    <string name="settings_podcasts_sort_order_themes_default">चूक</string>
+    <string name="settings_podcasts_sort_order_themes_dark">अंधेरा</string>
+    <string name="settings_podcasts_sort_order_themes_light">रोशनी</string>
+    <string name="settings_podcasts_sort_order_themes_amoled">AMOLED</string>
+    <string name="settings_podcasts_sort_order_themes_dynamic">गतिशील</string>
+
+    <string name="settings_podcasts_updates_interval_1_hours">1 घंटा</string>
+    <string name="settings_podcasts_updates_interval_3_hours">3 घंटे</string>
+    <string name="settings_podcasts_updates_interval_6_hours">6 घंटे</string>
+    <string name="settings_podcasts_updates_interval_12_hours">12 घंटे</string>
+
+    <string name="settings_podcasts_sort_order_name_asc">नाम (ए-जेड)</string>
+    <string name="settings_podcasts_sort_order_name_desc">नाम (जेड-ए)</string>
+    <string name="settings_podcasts_sort_order_date_asc">तिथि (शीर्ष पर सबसे पुराना)</string>
+    <string name="settings_podcasts_sort_order_date_desc">तिथि (शीर्ष पर नवीनतम)</string>
+    <string name="settings_podcasts_sort_order_new_episodes">नए एपिसोड की संख्या</string>
+    <string name="settings_podcasts_sort_order_latest_episodes">नवीनतम एपिसोड (शीर्ष पर सबसे ऊपर)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_desc">डाउनलोड की तिथि (शीर्ष पर सबसे ऊपर)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_asc">डाउनलोड की तिथि (शीर्ष पर सबसे पुराना)</string>
+    <string name="settings_podcasts_sort_order_dateadded_desc">तिथि जोड़ी (शीर्ष पर सबसे ऊपर)</string>
+    <string name="settings_podcasts_sort_order_dateadded_asc">तिथि जोड़ी (शीर्ष पर सबसे पुराना)</string>
+    <string name="settings_podcasts_sort_order_progress">प्रगति (शीर्ष पर सबसे ज्यादा)</string>
+
+    <string name="settings_podcasts_label_skip_start_time">पॉडकास्ट शुरू करेंं</string>
+    <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
+    <string name="settings_podcasts_label_skip_start_time_10_seconds">10 सेकंड</string>
+    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 सेकंड</string>
+    <string name="settings_podcasts_label_skip_start_time_30_seconds">30 सेकंड</string>
+    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 सेकंड</string>
+    <string name="settings_podcasts_label_skip_start_time_1_minute">1 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 मिनट</string>
+    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 मिनट</string>
+
+    <string name="settings_podcasts_label_finish_end_time">साथ पॉडकास्ट अंत</string>
+    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
+    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 सेकंड शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 सेकंड शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_1_minute">1 मिनट बाकी</string>
+    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 मिनट शेष</string>
+    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 मिनट शेष</string>
+
+    <string name="setting_podcasts_playback_skip_10_seconds">10 सेकंड</string>
+    <string name="setting_podcasts_playback_skip_20_seconds">20 सेकंड</string>
+    <string name="setting_podcasts_playback_skip_30_seconds">30 सेकंड</string>
+    <string name="setting_podcasts_playback_skip_40_seconds">40 सेकंड</string>
+    <string name="setting_podcasts_playback_skip_50_seconds">50 सेकंड</string>
+    <string name="setting_podcasts_playback_skip_60_seconds">60 सेकंड</string>
+
+    <string name="menu_main_title_settings">सेटिंग्स</string>
+
+    <string name="menu_main_title_download">डाउनलोड</string>
+    <string name="menu_main_title_download_delete">डाउनलोड हटाएं</string>
+    <string name="menu_main_title_download_cancel">डाउनलोड रद्द करें</string>
+    <string name="menu_main_title_playlist_add">प्लेलिस्ट में जोड़ें</string>
+
+    <string name="menu_episodes_mark_all_played">सभी को खेले गए निशान</string>
+    <string name="menu_episodes_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें</string>
+    <string name="menu_episodes_add_playlist">प्लेलिस्ट में सभी जोड़ें</string>
+
+    <string name="menu_episodes_delete_all">सभी हटा दो</string>
+    <string name="menu_episodes_finish_all">सभी को समाप्त करें</string>
+
+    <string name="tips_swipe_left">ऑटो प्लेलिस्ट देखने के लिए बाईं ओर स्वाइप करें</string>
+    <string name="tips_swipe_long_press">विकल्पों के लिए एक पॉडकास्ट लंबे समय तक दबाएं</string>
+
+    <string name="nav_directory_resync">पुन: सिंक</string>
+    <string name="alert_directory_resync">क्या आप वाकई पुनर्वितरण करना चाहते हैं?</string>
+    <string name="nav_main_discover">पॉडकास्ट खोजें</string>
+    <string name="nav_main_settings">सेटिंग्स</string>
+
+    <string name="nav_add_refresh">ताज़ा करना</string>
+
+    <string name="confirm_yes">हाँ</string>
+    <string name="confirm_no">नहीं</string>
+
+    <string name="playlist_title_inprogress">चालू</string>
+    <string name="playlist_title_downloads">डाउनलोड</string>
+    <string name="playlist_title_unplayed">नहीं चलाए गए</string>
+    <string name="playlist_title_local">स्थानीय</string>
+
+    <string name="text_episode_no_media">प्लेबैक के लिए मीडिया नहीं मिल सकता है पॉडकास्ट प्रदाता हटाएं और पुनः जोड़ें या संपर्क करें.</string>
+    <string name="alert_podcast_added">जोड़ा गया</string>
+    <string name="alert_episode_playlist_added">में जोड़ा %s</string>
+    <string name="alert_episodes_playlist_added">जोड़ा गया %d एपिसोड %s</string>
+    <string name="alert_search_empty">एक खोज शब्द दर्ज करें</string>
+    <string name="alert_refreshing_thumb">ताज़ा थंबनेल…</string>
+
+    <string name="alert_locating_network">नेटवर्क की प्रतीक्षा कर रहा है…</string>
+    <string name="alert_locating_network_notfound">कोई नेटवर्क नहीं ढूँढा जा सकता</string>
+    <string name="alert_sync_started">सिंकिंग प्रारंभ हुआ</string>
+    <string name="alert_sync_finished">सिंकिंग पूर्ण हुआ</string>
+    <string name="alert_disable_bluetooth_disabled_start">ब्लूटूथ को अक्षम करना…</string>
+    <string name="alert_unsubscribing">सदस्यता रद्द किए…</string>
+    <string name="alert_disable_bluetooth_disabled_end">ब्लूटूथ को अक्षम करना</string>
+    <string name="alert_disable_bluetooth_enabled">ब्लूटूथ सक्षम किया गया</string>
+    <string name="alert_episode_download_start">डाउनलोड कर रहा है…</string>
+    <string name="alert_episode_network_search">उच्च बैंडविड्थ नेटवर्क की खोज…</string>
+    <string name="alert_episode_network_notfound">कोई नेटवर्क नहीं मिला क्या आप वाईफाई सेटिंग को खोलना चाहते हैं?</string>
+    <string name="alert_episode_network_no_high_bandwidth">कोई उच्च बैंडविड्थ नेटवर्क नहीं मिला। क्या आप वाईफाई सेटिंग्स खोलना चाहते हैं?</string>
+    <string name="alert_playlist_delete">क्या आपको यकीन है?</string>
+
+    <string name="alert_download_error_noresume">डाउनलोड फिर से शुरू नहीं कर सकता। कृपया पुन: प्रयास करें</string>
+    <string name="alert_download_error_device_not_found">डिवाइस नहीं मिला</string>
+    <string name="alert_download_error_file_exists">फ़ाइल पहले से ही मौजूद है</string>
+    <string name="alert_download_error_file_error">फ़ाइल त्रुटि</string>
+    <string name="alert_download_error_data_error">HTTP डेटा त्रुटि</string>
+    <string name="alert_download_error_low_disk">अपर्याप्त जगह</string>
+    <string name="alert_download_error_redirects">बहुत सारे रीडायरेक्ट</string>
+    <string name="alert_download_error_unhandled_http">अनचाहे http कोड</string>
+    <string name="alert_download_error_unknown">अज्ञात त्रुटि। कृपया पुन: प्रयास करें</string>
+    <string name="alert_download_error_not_found">पॉडकास्ट नहीं मिला</string>
+    <string name="alert_download_error_default">एक गलती हुई है। कृपया पुन: प्रयास करें</string>
+    <string name="alert_download_error_restart">डाउनलोड विफल। पुन: प्रारंभ हो…</string>
+    <string name="alert_download_error_failed">डाउनलोड को पुनरारंभ नहीं किया जा सका.</string>
+
+    <string name="alert_error_sorting_latest_episodes">नवीनतम एपिसोड द्वारा क्रमबद्ध एक त्रुटि हुई। आमतौर पर इसका मतलब पॉडकास्ट के लिए एक बुरी तारीख है.</string>
+
+    <string name="alert_network_waiting">नेटवर्क की प्रतीक्षा…</string>
+
+    <string name="alert_file_none_deleted">कोई फाइल नहीं हटाई गई</string>
+    <string name="alert_file_deleted">1 फ़ाइल हटा दी गई</string>
+    <string name="alert_files_deleted">%d फ़ाइलें हटा दी गईं</string>
+
+    <string name="validation_podcast_rename_title">एक शीर्षक दर्ज करें</string>
+    <string name="validation_podcast_rename_length">शीर्षक लंबाई बहुत बड़ी है</string>
+
+    <string name="plurals_single_new_episode">1 नई कड़ी</string>
+    <string name="plurals_multiple_new_episodes">%d नए एपिसोड</string>
+    <string name="new_episodes_alert">नए एपिसोड</string>
+
+    <string name="notification_download_count">%d डाउनलोड</string>
+
+    <string name="tts_audio_skip_next">अगले खेलना</string>
+    <string name="tts_audio_skip_previous">अगले खेलना</string>
+
+    <string name="dropdown_playlist_select">[ प्लेलिस्ट में जोड़ें ]</string>
+    <string name="button_mark_played">ह्नित के रूप में चिह्नित करें</string>
+    <string name="button_mark_unplayed">अनप्लेड के रूप में चिह्नित करें</string>
+    <string name="alert_marked_unplayed">Unplayed के रूप में चिह्नित</string>
+    <string name="alert_marked_played">खेला के रूप में चिह्नित</string>
+    <string name="alert_streaming">स्ट्रीमिंग…</string>
+
+</resources>

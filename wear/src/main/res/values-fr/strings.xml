@@ -1,0 +1,314 @@
+<resources>
+    <string name="menu_episode_title_upnext">Ajouter à Up Next</string>
+    <string name="playlist_title_upnext">Prochain</string>
+    <string name="confirm_remove_upnext">Retirer?</string>
+    <string name="confirm_remove_local">Effacer?</string>
+    <string name="notification_updating_status">Mise à jour…</string>
+    <string name="notification_channel_media_service">Service de médias</string>
+    <string name="notification_channel_media_playing">Notification de lecture de média</string>
+    <string name="notification_channel_newepisodes">Nouvelle notification d\'épisodes</string>
+
+    <string name="rate_app_reminder">Voulez-vous évaluer cette application? (cliquer OUI ouvrira la page du magasin sur votre téléphone).</string>
+
+    <string name="text_loading_episodes">Chargement…</string>
+    <string name="text_loading_episodes_playlist">Rafraîchissant…</string>
+    <string name="text_loading_podcasts">Chargement de vos podcasts…</string>
+    <string name="text_no_search_results">aucun résultat trouvé</string>
+    <string name="text_settings_playlists_empty">Obtenez des listes de lecture via l\'onglet Premium de l\'application Téléphone</string>
+
+    <string name="playlists_title_default">Playlist %d</string>
+
+    <string name="premium_locked_playback_speed">Premium, débloquer grâce à l\'application de téléphone.</string>
+
+    <string name="empty_episode_list">Balayez vers le bas pour actualiser</string>
+    <string name="empty_episode_list_search_results">Aucun résultat\nBalayez vers le bas pour afficher tout</string>
+
+    <string name="empty_podcast_list">Importer des podcasts via l\'application téléphonique ou dérouler pour découvrir des podcasts</string>
+    <string name="empty_podcast_list2">Balayez vers la gauche pour les playlists automatiques\nObtenez plus de playlists dans l'application téléphonique</string>
+    <string name="text_playlists_add_empty">Aucune liste de lecture trouvée\n\nAjouter des listes de lecture personnalisées dans l\'application Téléphone \ n (sous l'onglet Premium)</string>
+
+    <string name="confirm_mark_finished">Marquer comme fini?</string>
+    <string name="confirm_delete_download">Supprimer Télécharger?</string>
+    <string name="confirm_delete_file">Supprimer le fichier?</string>
+    <string name="confirm_delete_all_downloads">Supprimer tous les téléchargements?</string>
+    <string name="confirm_delete_all_thumbs">Supprimer toutes les vignettes?</string>
+    <string name="confirm_cancel_download">Annuler Télécharger?</string>
+
+    <string name="confirm_initial_download_title">Attention!</string>
+
+    <string name="confirm_mark_all_finished">Marquer tout fini?</string>
+    <string name="confirm_delete_all_download">Delete all downloads?</string>
+
+    <string name="confirm_delete_episode_download">Supprimer le téléchargement de cet épisode?</string>
+    <string name="confirm_delete_podcast">Se désabonner de ce podcast?</string>
+
+    <string name="confirm_initial_download_message">Le téléchargement sur WiFi ou cellulaire est recommandé. Voulez-vous désactiver Bluetooth à chaque téléchargement (cela peut être modifié dans les paramètres)?</string>
+
+    <string name="confirm_mark_played">Marquer comme joué?</string>
+    <string name="confirm_mark_unplayed">Marquer comme non joué?</string>
+
+    <string name="confirm_mark_all_played">Marquer tout joué?</string>
+    <string name="confirm_mark_all_unplayed">Marquer tout non joué?</string>
+
+    <string name="settings_podcast_title">Paramètres de podcast</string>
+    <string name="settings_podcast_sort_order_global">[Global]</string>
+    <string name="settings_podcast_label_autodownload">Téléchargement automatique du dernier épisode</string>
+    <string name="settings_podcast_label_download_next">Télécharger le prochain épisode</string>
+    <string name="settings_podcast_label_download_next_summary">Lorsque celui que vous écoutez se termine</string>
+    <string name="settings_podcast_label_download_next_alert">Les téléchargements seront mis en file d\'attente si hors ligne</string>
+    <string name="settings_podcast_label_download_sort_order">Trier par (remplace l\'ordre de tri global)</string>
+    <string name="settings_podcast_label_downloads_saved">Téléchargements de nettoyage automatique</string>
+    <string name="settings_podcast_label_downloads_saved_summary">Les téléchargements au-dessus de ce numéro seront automatiquement supprimés</string>
+    <string name="settings_podcast_label_hideplayed">Masquer les épisodes joués</string>
+    <string name="settings_podcast_label_delete_podcast">Se désabonner</string>
+    <string name="settings_podcast_episode_limit_title">Nombre d\'épisodes à afficher</string>
+    <string name="settings_podcast_episode_limit_all">Tout</string>
+
+    <string name="settings_podcast_label_assign_playlist">Affecter à la playlist</string>
+
+    <string name="settings_podcasts_label_header_color">Couleur de l\'en-tête</string>
+    <string name="settings_podcasts_label_header_theme">Thème</string>
+
+    <string name="settings_podcasts_title">Paramètres</string>
+    <string name="settings_podcasts_title_downloads">Téléchargements</string>
+    <string name="settings_podcasts_title_general">Général</string>
+    <string name="settings_podcasts_title_playback">Lecture</string>
+    <string name="settings_podcasts_title_display">Afficher</string>
+    <string name="settings_podcasts_title_playlists">Playlists</string>
+    <string name="settings_podcasts_title_updates">Mises à jour</string>
+    <string name="settings_podcasts_settings_title_downloads">Paramètres de téléchargement</string>
+    <string name="settings_podcasts_settings_title_general">réglages généraux</string>
+    <string name="settings_podcasts_settings_title_display">Paramètres d\'affichage</string>
+    <string name="settings_podcasts_settings_title_playback">Paramètres de lecture</string>
+    <string name="settings_podcasts_settings_title_playlist">Paramètres de la playlist</string>
+    <string name="settings_podcasts_settings_updates_display">Mettre à jour les paramètres</string>
+    <string name="settings_podcasts_label_sync_podcasts">Cliquez pour synchroniser les podcasts</string>
+    <string name="settings_podcasts_label_hide_nonew_podcasts">Masquer les podcasts sans nouveaux épisodes</string>
+    <string name="settings_podcasts_label_playlists_hide_empty">Masquer les playlists vides</string>
+    <string name="settings_podcasts_label_display_paging_indicator">Masquer l\'indicateur de pagination</string>
+    <string name="settings_podcasts_label_playlist_sort">Épisode Ordre de tri</string>
+    <string name="settings_podcasts_label_episodes_sort">Ordre de tri de la playlist</string>
+    <string name="settings_podcasts_label_podcast_sort">Podcast List Ordre de tri</string>
+    <string name="settings_podcasts_label_home_screen">\'Écran d\'accueil</string>
+    <string name="settings_podcasts_label_sync_thumbnails">Cliquez pour synchroniser les vignettes</string>
+    <string name="settings_podcasts_label_sync_startup">Synchronisation au démarrage</string>
+    <string name="settings_podcasts_label_updates_enabled">Activer les mises à jour</string>
+    <string name="settings_podcasts_label_updates_interval">Intervalle de mise à jour</string>
+    <string name="settings_podcasts_label_updates_charging">Mettre à jour en chargeant seulement</string>
+    <string name="settings_podcasts_label_updates_sound">Jouer le son quand de nouveaux épisodes sont trouvés</string>
+    <string name="settings_podcasts_label_updates_enabled_summary">Fonctionne uniquement lorsque l\'appareil est en charge</string>
+    <string name="settings_podcasts_label_auto_delete">Supprimer les fichiers téléchargés lorsque vous avez terminé</string>
+    <string name="settings_podcasts_label_downloads_restart_failed">Redémarrer un téléchargement automatiquement s\'il échoue</string>
+    <string name="settings_podcasts_label_disable_bluetooth">Désactiver Bluetooth lors du téléchargement</string>
+    <string name="settings_podcasts_label_download_complete_sound">Lire le son lorsque le téléchargement est terminé</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_start">Désactiver le son de</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_end">Désactiver le son pour</string>
+    <string name="settings_podcasts_label_hide_empty_podcasts">Masquer les podcasts sans épisode nouveau ou non diffusé</string>
+    <string name="settings_podcasts_label_playback_speed">Vitesse de lecture</string>
+    <string name="settings_podcasts_label_playback_skip_back">Sauter Retour</string>
+    <string name="settings_podcasts_label_playback_skip_forward">Sauter en avant</string>
+    <string name="settings_podcasts_label_playback_playlists">Supprimer les épisodes de la playlist lorsque vous avez terminé</string>
+    <string name="settings_podcasts_label_hardware_button">Contrôlez la lecture avec le bouton matériel</string>
+    <string name="settings_podcasts_label_hardware_buttons">Contrôlez la lecture avec les boutons matériels</string>
+    <string name="settings_podcasts_label_hardware_buttons_1_summary">Lecture / Pause (ne fonctionne que sur l\'écran de lecture)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Haut de page: Skip Back\nMilieu: Lecture / Pause\nBas: Passer en avant\n(ne fonctionne que sur l\'écran de lecture)</string>
+    <string name="settings_podcasts_label_high_bandwidth">Vérifier le réseau à haute bande passante</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Avant de diffuser ou de télécharger</string>
+    <string name="settings_podcasts_label_downloads_delete_all">Cliquez pour supprimer tous les téléchargements (%d)</string>
+    <string name="settings_podcasts_label_downloads_thumbs_all">Cliquez pour supprimer toutes les vignette (%d)</string>
+
+    <string name="settings_podcasts_entries_title_header_color">Couleur de l\'en-tête</string>
+    <string name="settings_podcasts_entries_header_color_blue">Bleu</string>
+    <string name="settings_podcasts_entries_header_color_dark_gray">Gris foncé</string>
+    <string name="settings_podcasts_entries_header_color_green">vert</string>
+    <string name="settings_podcasts_entries_header_color_orange">Orange</string>
+    <string name="settings_podcasts_entries_header_color_red">rouge</string>
+    <string name="settings_podcasts_entries_header_color_purple">Violet</string>
+    <string name="settings_podcasts_entries_header_color_gray">Gris</string>
+    <string name="settings_podcasts_entries_header_color_dark_blue">Bleu foncé</string>
+    <string name="settings_podcasts_entries_header_color_lite_blue">Bleu clair</string>
+    <string name="settings_podcasts_entries_header_color_dark_green">Vert foncé</string>
+    <string name="settings_podcasts_entries_header_color_dark_orange">Orange sombre</string>
+
+    <string name="settings_podcasts_entries_title_home_screen">Écran d\'accueil</string>
+    <string name="settings_podcasts_home_screen_default">Défaut</string>
+    <string name="settings_podcasts_home_screen_local">Local</string>
+    <string name="settings_podcasts_home_screen_inprogress">En cours</string>
+    <string name="settings_podcasts_home_screen_downloads">Téléchargements</string>
+    <string name="settings_podcasts_home_screen_upnext">Suivant</string>
+
+    <string name="settings_podcasts_entries_title_themes">Thèmes</string>
+    <string name="settings_podcasts_sort_order_themes_default">Défaut</string>
+    <string name="settings_podcasts_sort_order_themes_dark">Foncé</string>
+    <string name="settings_podcasts_sort_order_themes_light">Lumière</string>
+    <string name="settings_podcasts_sort_order_themes_amoled">AMOLED</string>
+    <string name="settings_podcasts_sort_order_themes_dynamic">Dynamique</string>
+
+    <string name="settings_podcasts_updates_interval_1_hours">1 heure</string>
+    <string name="settings_podcasts_updates_interval_3_hours">3 heures</string>
+    <string name="settings_podcasts_updates_interval_6_hours">6 heures</string>
+    <string name="settings_podcasts_updates_interval_12_hours">12 heures</string>
+
+    <string name="settings_podcasts_sort_order_name_asc">Nom (A-Z)</string>
+    <string name="settings_podcasts_sort_order_name_desc">Nom (Z-A)</string>
+    <string name="settings_podcasts_sort_order_date_asc">Date (le plus ancien sur le dessus)</string>
+    <string name="settings_podcasts_sort_order_date_desc">Date (plus récent en haut)</string>
+    <string name="settings_podcasts_sort_order_new_episodes">Nombre de nouveaux épisodes</string>
+    <string name="settings_podcasts_sort_order_latest_episodes">Derniers épisodes (plus récent en haut)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_desc">Date de téléchargement (plus récent en haut)</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_asc">Date de téléchargement (le plus ancien sur le dessus)</string>
+    <string name="settings_podcasts_sort_order_dateadded_desc">Date d\'ajout (Le plus récent en haut)</string>
+    <string name="settings_podcasts_sort_order_dateadded_asc">Date d\'ajout (le plus ancien sur le dessus)</string>
+    <string name="settings_podcasts_sort_order_progress">Progrès (le plus en haut)</string>
+
+    <string name="settings_podcasts_label_skip_start_time">Démarrer le podcast à</string>
+    <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
+    <string name="settings_podcasts_label_skip_start_time_10_seconds">10 secondes</string>
+    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 secondes</string>
+    <string name="settings_podcasts_label_skip_start_time_30_seconds">30 secondes</string>
+    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 secondes</string>
+    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minute</string>
+    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 restant</string>
+
+    <string name="settings_podcasts_label_finish_end_time">Terminer le podcast avec</string>
+    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
+    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 secondes restantes</string>
+    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 secondes restantes</string>
+    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 Minutes restant</string>
+
+    <string name="setting_podcasts_playback_skip_10_seconds">10 secondes</string>
+    <string name="setting_podcasts_playback_skip_20_seconds">20 secondes</string>
+    <string name="setting_podcasts_playback_skip_30_seconds">30 secondes</string>
+    <string name="setting_podcasts_playback_skip_40_seconds">40 secondes</string>
+    <string name="setting_podcasts_playback_skip_50_seconds">50 secondes</string>
+    <string name="setting_podcasts_playback_skip_60_seconds">60 secondes</string>
+
+    <string name="menu_main_title_settings">Paramètres</string>
+
+    <string name="menu_main_title_download">Télécharger</string>
+    <string name="menu_main_title_download_delete">Supprimer Télécharger</string>
+    <string name="menu_main_title_download_cancel">Annuler Télécharger</string>
+    <string name="menu_main_title_playlist_add">Ajouter à la playlist</string>
+
+    <string name="menu_episodes_mark_all_played">Marquer tout joué</string>
+    <string name="menu_episodes_mark_all_unplayed">Marquer tous les non joués</string>
+    <string name="menu_episodes_add_playlist">Ajouter tout à la playlist</string>
+
+    <string name="menu_episodes_delete_all">Supprimer tout</string>
+    <string name="menu_episodes_finish_all">Terminer tout</string>
+
+    <string name="tips_swipe_left">Balayez vers la gauche pour afficher les listes de lecture automatiques</string>
+    <string name="tips_swipe_long_press">Appuyez longuement sur un podcast pour les options</string>
+
+    <string name="nav_directory_resync">Resync</string>
+    <string name="alert_directory_resync">Êtes-vous sûr de vouloir resynchroniser?</string>
+    <string name="nav_main_discover">Découvrez les podcasts</string>
+    <string name="nav_main_settings">Paramètres</string>
+
+    <string name="nav_add_refresh">Rafraîchir</string>
+
+    <string name="confirm_yes">OUI</string>
+    <string name="confirm_no">NON</string>
+
+    <string name="playlist_title_inprogress">En cours</string>
+    <string name="playlist_title_downloads">Téléchargements</string>
+    <string name="playlist_title_unplayed">Unplayed</string>
+    <string name="playlist_title_local">Local</string>
+
+    <string name="text_episode_no_media">Impossible de trouver un média pour la lecture. Supprimer et rajouter ou contacter le fournisseur de podcast.</string>
+    <string name="alert_podcast_added">Ajoutée</string>
+    <string name="alert_episode_playlist_added">Ajouté à %s</string>
+    <string name="alert_episodes_playlist_added">Ajoutée %d épisodes à %s</string>
+    <string name="alert_search_empty">Entrez un terme de recherche</string>
+    <string name="alert_refreshing_thumb">Vignette rafraîchissante…</string>
+
+    <string name="alert_locating_network">En attente de réseau…</string>
+    <string name="alert_locating_network_notfound">Impossible de localiser un réseau</string>
+    <string name="alert_sync_started">La synchronisation a commencé</string>
+    <string name="alert_sync_finished">Synchronisation terminée</string>
+    <string name="alert_disable_bluetooth_disabled_start">Désactiver Bluetooth…</string>
+    <string name="alert_unsubscribing">Se désinscrire…</string>
+    <string name="alert_disable_bluetooth_disabled_end">Bluetooth désactivé</string>
+    <string name="alert_disable_bluetooth_enabled">Bluetooth activé</string>
+    <string name="alert_episode_download_start">Téléchargement…</string>
+    <string name="alert_episode_network_search">Recherche de réseau à haute bande passante…</string>
+    <string name="alert_episode_network_notfound">Aucun réseau trouvé. Voulez-vous ouvrir les paramètres WiFi?</string>
+    <string name="alert_episode_network_no_high_bandwidth">Pas de réseau à bande passante élevée trouvé. Voulez-vous ouvrir les paramètres WiFi?</string>
+    <string name="alert_playlist_delete">Êtes-vous sûr?</string>
+
+    <string name="alert_download_error_noresume">Impossible de reprendre le téléchargement. Veuillez réessayer</string>
+    <string name="alert_download_error_device_not_found">Appareil non trouvé</string>
+    <string name="alert_download_error_file_exists">Le fichier existe déjà</string>
+    <string name="alert_download_error_file_error">Erreur de fichier</string>
+    <string name="alert_download_error_data_error">Erreur de données HTTP</string>
+    <string name="alert_download_error_low_disk">Espace insuffisant</string>
+    <string name="alert_download_error_redirects">Trop de redirections</string>
+    <string name="alert_download_error_unhandled_http">Code http non géré</string>
+    <string name="alert_download_error_unknown">Erreur inconnue. Veuillez réessayer</string>
+    <string name="alert_download_error_not_found">Podcast non trouvé</string>
+    <string name="alert_download_error_default">Une erreur est survenue. Veuillez réessayer</string>
+    <string name="alert_download_error_restart">Échec du téléchargement. Redémarrage…</string>
+    <string name="alert_download_error_failed">Le téléchargement n\'a pas pu être redémarré.</string>
+
+    <string name="alert_error_sorting_latest_episodes">Une erreur s\'est produite lors du tri par les derniers épisodes. Cela signifie généralement une mauvaise date pour un podcast.</string>
+
+    <string name="alert_network_waiting">en attente de réseau…</string>
+
+    <string name="alert_file_none_deleted">Aucun fichier supprimé</string>
+    <string name="alert_file_deleted">1 fichier supprimé</string>
+    <string name="alert_files_deleted">%d fichiers supprimés</string>
+
+    <string name="validation_podcast_rename_title">Entrez un titre</string>
+    <string name="validation_podcast_rename_length">La longueur du titre est trop grande</string>
+
+    <string name="plurals_single_new_episode">1 new episode</string>
+    <string name="plurals_multiple_new_episodes">%d nouveaux épisodes</string>
+    <string name="new_episodes_alert">Nouveaux épisodes</string>
+
+    <string name="notification_download_count">%d téléchargements</string>
+
+    <string name="tts_audio_skip_next">jouer suivant</string>
+    <string name="tts_audio_skip_previous">jouer précédent</string>
+
+    <string name="dropdown_playlist_select">[ Ajouter à la playlist ]</string>
+    <string name="button_mark_played">Marquer comme joué</string>
+    <string name="button_mark_unplayed">Marquer comme non joué</string>
+    <string name="alert_marked_unplayed">Marqué comme non joué</string>
+    <string name="alert_marked_played">Marqué comme joué</string>
+    <string name="alert_streaming">Diffusion…</string>
+
+</resources>

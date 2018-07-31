@@ -1,0 +1,43 @@
+<resources>
+    <dimen name="episode_list_thumb_title_margin_bottom">0dp</dimen>
+
+    <dimen name="episode_list_title_margin_top">-10dp</dimen>
+    <dimen name="episode_list_padding">10dp</dimen>
+
+    <dimen name="thumb_with_podcast_list_xhdpi">40dp</dimen>
+    <dimen name="thumb_with_podcast_list_hdpi">40dp</dimen>
+    <dimen name="thumb_with_podcast_list_default">40dp</dimen>
+
+    <dimen name="thumb_width_add_list_default">40dp</dimen>
+    <dimen name="thumb_width_add_list_hdpi">40dp</dimen>
+    <dimen name="thumb_width_add_list_xhdpi">50dp</dimen>
+
+    <dimen name="thumb_width_playlist_list_default">50dp</dimen>
+    <dimen name="thumb_width_playlist_list_hdpi">40dp</dimen>
+    <dimen name="thumb_width_playlist_list_xhdpi">40dp</dimen>
+
+    <dimen name="thumbs_width_episode_list_title_hdpi_square">55dp</dimen>
+    <dimen name="thumbs_width_episode_list_title_hdpi_round">70dp</dimen>
+    <dimen name="thumbs_width_episode_list_title_xhdpi">90dp</dimen>
+    <dimen name="thumbs_width_episode_list_title_default">80dp</dimen>
+
+    <item name="ldpi" format="float" type="dimen">.75</item>
+    <item name="mdpi" format="float" type="dimen">1.0</item>
+    <item name="hdpi" format="float" type="dimen">1.5</item>
+    <item name="xhdpi" format="float" type="dimen">2.0</item>
+    <item name="xxhdpi" format="float" type="dimen">3.0</item>
+    <item name="xxxhdpi" format="float" type="dimen">4.0</item>
+    <!--
+    Because the window insets on round devices are larger than 15dp, this padding only applies
+    to square screens.
+    -->
+    <dimen name="box_inset_layout_padding">0dp</dimen>
+
+    <!--
+    This padding applies to both square and round screens. The total padding between the buttons
+    and the window insets is box_inset_layout_padding (above variable) on square screens and
+    inner_frame_layout_padding (below variable) on round screens.
+    -->
+    <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+</resources>

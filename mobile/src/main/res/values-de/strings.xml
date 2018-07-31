@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">Spielen</string>
+    <string name="tab_add">Hinzufügen</string>
+    <string name="tab_premium">Prämie</string>
+
+    <string name="validation_invalid_url">Enter a valid url</string>
+    <string name="validation_empty_url">Gib eine gültige URL ein</string>
+
+    <string name="copyright">Copyright © %s</string>
+    <string name="version">Version: %s</string>
+
+    <string name="tip_1">Akzeptieren Sie vor dem Importieren von Podcasts Berechtigungen für Ihr tragbares Gerät.</string>
+    <string name="tip_2">Tipp: Verwenden Sie die Share-Funktion von Android, um RSS-URLs an diese App zu senden.</string>
+
+    <string name="upload_file_summary_unlocked">Beim Senden von Dateien wird auf Ihrem Wear-Gerät eine automatische Wiedergabeliste erstellt (&lt;20 MB empfohlen).</string>
+    <string name="upload_file_summary_locked">PRÄMIE: Beim Senden von Dateien wird auf Ihrem Wear-Gerät eine automatische Wiedergabeliste erstellt (&lt;20 MB empfohlen).</string>
+
+    <string name="error_no_episode">Die von Ihnen eingegebene URL gab keine Podcasts zurück.\nKlicken Sie hier, um zu überprüfen, ob es sich um einen gültigen RSS-Feed handelt</string>
+
+    <string name="form_add_hint_podcast_title">Podcast-Titel (optional)</string>
+    <string name="form_add_hint_podcast_url">Podcast RSS-URL</string>
+
+    <string name="button_text_import_podcast">An Watch senden</string>
+    <string name="button_text_import_opml">OPML importieren</string>
+    <string name="button_text_upload_file">Datei senden</string>
+    <string name="button_text_no_device">Kein Verschleißgerät gefunden</string>
+    <string name="button_text_searching_device">Suchen nach Verschleißgerät…</string>
+    <string name="button_text_unlock_premium">Premium\nentsperren\nEigenschaften</string>
+    <string name="button_text_resync_premium">Resync\nPremium\nFunktionen</string>
+    <string name="button_text_resync_premium_waiting">Auf Rückantwort warten…</string>
+
+    <string name="button_text_playlists_readd">Neu hinzufügen\n%d Wiedergabelisten</string>
+    <string name="button_text_playlists_purchase">Kauf\nWiedergabelisten</string>
+    <string name="alert_playlists_purchased">Playlisten wurden erfolgreich erstellt.\nVerwalte Playlists unter den Einstellungen deiner Uhr. Möglicherweise ist ein Neustart der App auf Ihrer Uhr erforderlich.</string>
+
+
+    <string name="menu_text_about">Über</string>
+    <string name="menu_text_directory">Entdecken</string>
+
+    <string name="page_title_search_results">Ergebnisse</string>
+
+    <string name="text_importing_opml_sending">Senden von Podcasts an Ihr Verschleißgerät…</string>
+    <string name="text_importing_opml_parsing">Parsen von OPML (kann je nach Anzahl der Podcasts eine Weile dauern)…</string>
+    <string name="alert_get_directory_error">Fehler beim Abrufen von Podcasts Verzeichnis</string>
+
+    <string name="alert_podcast_added">%s gesendet zu sehen.</string>
+    <string name="alert_episode_added">Wird zum Herunterladen der Playlist auf der Uhr gesendet.</string>
+    <string name="alert_episode_import_first">Diese Episode wird an Ihre Uhr gesendet und heruntergeladen</string>
+    <string name="alert_playlist_purchased">%d erstellt.</string>
+    <string name="text_file_uploaded">Die Datei wurde erfolgreich gesendet. Es kann zu einer Verzögerung kommen, bevor die Datei auf der Uhr angezeigt wird.</string>
+    <string name="text_file_upload_start">Datei wird gesendet…</string>
+    <string name="alert_playlists_quantity_none">Wählen Sie eine Menge</string>
+    <string name="alert_playlists_purchase_disclaimer">Beim Kauf von Playlists werden alle derzeit auf der Uhr befindlichen Playlists gelöscht.</string>
+    <string name="alert_playlists_readd_disclaimer">Durch das erneute Hinzufügen von Wiedergabelisten werden alle derzeit auf der Uhr gespeicherten Wiedergabelisten gelöscht.</string>
+    <string name="alert_purchased">Sie haben das bereits gekauft.</string>
+
+    <string name="plurals_single_podcast_added">podcast hinzugefügt</string>
+    <string name="plurals_multiple_podcasts_added">%d podcasts hinzugefügt</string>
+
+    <string name="confirm_import_opml">Wenn Sie es noch nicht getan haben, akzeptieren Sie die Berechtigungen für Ihr Verschleißgerät.</string>
+
+    <string name="error_opml_import">Beim Importieren des OPML ist ein Fehler aufgetreten. Überprüfen Sie, ob das Format korrekt ist.</string>
+</resources>

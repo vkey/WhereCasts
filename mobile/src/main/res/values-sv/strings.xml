@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">Spela</string>
+    <string name="tab_add">Lägg till</string>
+    <string name="tab_premium">Premie</string>
+
+    <string name="validation_invalid_url">Ange en giltig webbadress</string>
+    <string name="validation_empty_url">Ange en RSS-adress</string>
+
+    <string name="copyright">upphovsrätt © %s</string>
+    <string name="version">Version: %s</string>
+
+    <string name="tip_1">Godkänn behörigheter på din slitage enhet innan du importerar podcaster.</string>
+    <string name="tip_2">Tips! Använd Androids delfunktionalitet för att skicka RSS-adresser till den här appen.</string>
+
+    <string name="upload_file_summary_unlocked">Överföring av filer skapar en automatisk spellista med dem på din Slitage enhet (&lt;20 MB rekommenderad).</string>
+    <string name="upload_file_summary_locked">PREMIE: Överföring av filer skapar en automatisk spellista med dem på din Slitage enhet (&lt;20 MB rekommenderad).</string>
+
+    <string name="error_no_episode">Den webbadress du angav gav inte några podcaster.\nKlicka här för att verifiera att det är ett giltigt RSS-flöde</string>
+
+    <string name="form_add_hint_podcast_title">Podcast titel (valfritt)</string>
+    <string name="form_add_hint_podcast_url">Podcast RSS-url</string>
+
+    <string name="button_text_import_podcast">Skicka till Watch</string>
+    <string name="button_text_import_opml">Importera OPML</string>
+    <string name="button_text_upload_file">Skicka Fil</string>
+    <string name="button_text_no_device">No Wear Device Found</string>
+    <string name="button_text_searching_device">Letar efter slitage enhet…</string>
+    <string name="button_text_unlock_premium">Lås upp\nPremium\nFunktioner</string>
+    <string name="button_text_resync_premium">Resync\nPremium\nFunktioner</string>
+    <string name="button_text_resync_premium_waiting">Väntar på svar…</string>
+
+    <string name="button_text_playlists_readd">Lägger till\n%d spellistor</string>
+    <string name="button_text_playlists_purchase">Inköp\nspellistor</string>
+    <string name="alert_playlists_purchased">Spellistor skapades framgångsrikt.\nHantera spellistor under inställningarna på din klocka. Om du vill starta om appen på klockan kan det krävas.</string>
+
+    <string name="menu_text_about">Handla om</string>
+    <string name="menu_text_directory">Upptäck</string>
+
+    <string name="page_title_search_results">Resultat</string>
+
+    <string name="text_importing_opml_sending">Skickar podcaster till din slitage enhet…</string>
+    <string name="text_importing_opml_parsing">Parsing OPML (kan ta ett tag beroende på antal podsändningar)…</string>
+    <string name="alert_get_directory_error">Misslyckades med att hämta podcaster katalog</string>
+
+    <string name="alert_podcast_added">%s skickad för att titta på.</string>
+    <string name="alert_episode_added">Skickat för att ladda ner spellistan på klockan.</string>
+    <string name="alert_episode_import_first">Det här avsnittet skickas till din klocka och laddas ner</string>
+    <string name="alert_playlist_purchased">%d skapad.</string>
+    <string name="text_file_uploaded">Filen skickades framgångsrikt. Det kan finnas en fördröjning innan filerna visas på klockan.</string>
+    <string name="text_file_upload_start">Skickar fil…</string>
+    <string name="alert_playlists_quantity_none">Välj en mängd</string>
+    <string name="alert_playlists_purchase_disclaimer">När du köper spellistor raderas alla spellistor som finns på din klocka.</string>
+    <string name="alert_playlists_readd_disclaimer">Om du lägger till spellistor raderas alla spellistor som finns på din klocka.</string>
+    <string name="alert_purchased">Du har redan köpt det här.</string>
+
+    <string name="plurals_single_podcast_added">podcast importeras framgångsrikt</string>
+    <string name="plurals_multiple_podcasts_added">%d podsändningar importerades framgångsrikt</string>
+
+    <string name="confirm_import_opml">Om du inte redan har accepterat behörigheter på din slitage enhet.</string>
+
+    <string name="error_opml_import">Det gick inte att importera din OPML. Dubbelkontrollera det är i rätt format.</string>
+
+</resources>

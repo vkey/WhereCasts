@@ -1,0 +1,30 @@
+<resources>
+    <string name="retrieving_podcasts">ポッドキャストディレクトリの取得…</string>
+    <string name="retrieving_search_results">検索結果…</string>
+    <string name="today">今日</string>
+    <string name="yesterday">昨日</string>
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="alert_no_network">利用可能なネットワークがありません</string>
+    <string name="privacy_policy">個人情報保護方針</string>
+    <string name="play">遊びます</string>
+    <string name="pause">一時停止</string>
+    <string name="general_error">エラーが発生しました。 もう一度お試しください.</string>
+    <string name="confirm_directory_first_import">送信に成功しました\n時計にファイルが表示されるまでに時間がかかることがあります\nメイン画面で左にスワイプする</string>
+    <string name="last_updated">最終更新</string>
+    <string name="syncing">同期…</string>
+    <string name="success">成功</string>
+    <string name="search">サーチ</string>
+    <string name="searching">検索…</string>
+    <string name="no_results">結果が見つかりません</string>
+    <string name="save">セーブ</string>
+    <string name="added">追加された</string>
+    <string name="add">追加</string>
+    <string name="renamed">名前が変更されました</string>
+    <string name="rename">名前を変更する</string>
+    <string name="delete">削除</string>
+    <string name="none">なし</string>
+    <string name="select">選択</string>
+    <string name="never">絶対に</string>
+
+</resources>

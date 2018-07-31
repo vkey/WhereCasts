@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <Button
+        android:id="@+id/btn_unlock_premium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:text="@string/button_text_unlock_premium"
+        style="@style/Button"
+        />
+
+    <Button
+        android:id="@+id/btn_playlists_readd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_text_playlists_readd"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible"
+        style="@style/Button"
+        />
+
+    <Spinner
+        android:id="@+id/playlist_buy_qty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/inapp_playlists_sku"
+        android:layout_below="@+id/btn_unlock_premium"
+       />
+
+    <Button
+        android:id="@+id/btn_playlist_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_text_playlists_purchase"
+        android:layout_marginBottom="50dp"
+        android:layout_below="@+id/btn_unlock_premium"
+        android:layout_toEndOf="@+id/playlist_buy_qty"
+        style="@style/Button"
+        />
+
+    <TextView
+        android:id="@+id/premium_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginBottom="40dp"
+        android:visibility="gone"
+        android:text="@string/alert_playlists_purchased"
+        android:textColor="@color/wc_general_green"
+        android:layout_below="@+id/btn_playlist_buy"
+        />
+
+    <TextView
+        android:id="@+id/upload_file_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/premium_instructions"
+        android:textSize="15sp"
+        android:text="@string/upload_file_summary_locked"
+        android:layout_marginTop="15dp"
+        />
+
+    <Button
+        android:id="@+id/btn_upload_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_text_upload_file"
+        android:layout_below="@+id/upload_file_summary"
+        android:enabled="false"
+        style="@style/Button"
+        />
+
+     <ProgressBar
+        android:id="@+id/upload_file_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+         android:layout_centerHorizontal="true"
+         android:visibility="gone"
+        android:paddingTop="15dp"
+        android:layout_below="@+id/btn_upload_file"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+        />
+
+</RelativeLayout>

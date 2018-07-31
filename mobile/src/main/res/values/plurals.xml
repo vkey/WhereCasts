@@ -1,0 +1,8 @@
+<resources>
+    <plurals
+        name="podcasts_added">
+        <item quantity="one">@string/plurals_single_podcast_added</item>
+        <item quantity="other">@string/plurals_multiple_podcasts_added</item>
+    </plurals>
+
+</resources>

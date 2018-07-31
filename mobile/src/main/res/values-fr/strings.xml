@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">Jouer</string>
+    <string name="tab_add">Ajouter</string>
+    <string name="tab_premium">Prime</string>
+
+    <string name="validation_invalid_url">Entrez une URL valide</string>
+    <string name="validation_empty_url">Entrez une URL RSS</string>
+
+    <string name="copyright">droits d\'auteur © %s</string>
+    <string name="version">Version: %s</string>
+
+    <string name="tip_1">Acceptez les autorisations sur votre appareil d\'usure avant d\'importer des podcasts.</string>
+    <string name="tip_2">Astuce: utilisez la fonctionnalité Partage Android pour envoyer des URL RSS à cette application.</string>
+
+    <string name="upload_file_summary_unlocked">Le téléchargement de fichiers créera une liste de lecture automatique sur votre appareil Wear (&lt;20 MB conseillé).</string>
+    <string name="upload_file_summary_locked">PRIME: Le téléchargement de fichiers créera une liste de lecture automatique sur votre appareil Wear (&lt;20 MB conseillé).</string>
+
+    <string name="error_no_episode">LL\'URL que vous avez entré n\'a renvoyé aucun podcast.\nCliquez ici pour vérifier qu'il s\'agit d'un flux RSS valide</string>
+
+    <string name="form_add_hint_podcast_title">Titre du podcast (facultatif)</string>
+    <string name="form_add_hint_podcast_url">Podcast RSS url</string>
+
+    <string name="button_text_import_podcast">Envoyer à regarder</string>
+    <string name="button_text_import_opml">Importer OPML</string>
+    <string name="button_text_upload_file">Envoyer\nle fichier</string>
+    <string name="button_text_no_device">Aucun appareil d\'usure trouvé</string>
+    <string name="button_text_searching_device">Vous cherchez un appareil d\'usure…</string>
+    <string name="button_text_unlock_premium">Débloquer\nPremium\nCaractéristiques</string>
+    <string name="button_text_resync_premium">Resync\nPremium\nCaractéristiques</string>
+    <string name="button_text_resync_premium_waiting">En attente d\'une réponse…</string>
+
+    <string name="button_text_playlists_readd">Re-ajouter\n%d Playlists</string>
+    <string name="button_text_playlists_purchase">achat\nPlaylists</string>
+    <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l'application sur votre montre peut être nécessaire.</string>
+
+    <string name="menu_text_about">Sur</string>
+    <string name="menu_text_directory">Découvrir</string>
+
+    <string name="page_title_search_results">Résultats</string>
+
+    <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>
+    <string name="text_importing_opml_parsing">Analyser OPML (peut prendre un certain temps en fonction du nombre de podcasts)…</string>
+    <string name="alert_get_directory_error">Impossible d\'extraire le répertoire podcasts</string>
+
+    <string name="alert_podcast_added">%s envoyé à regarder.</string>
+    <string name="alert_episode_added">Envoyé pour télécharger la playlist sur la montre.</string>
+    <string name="alert_episode_import_first">Cet épisode sera envoyé à votre montre et téléchargé</string>
+    <string name="alert_playlist_purchased">%d créé.</string>
+    <string name="text_file_uploaded">Fichier envoyé avec succès. Il peut y avoir un délai avant que les fichiers ne soient diffusés.</string>
+    <string name="text_file_upload_start">Envoi de fichier…</string>
+    <string name="alert_playlists_quantity_none">Sélectionnez une quantité</string>
+    <string name="alert_playlists_purchase_disclaimer">L\'achat de playlists supprimera toutes les playlists actuellement sur votre montre.</string>
+    <string name="alert_playlists_readd_disclaimer">La ré-ajout de playlists supprimera toutes les playlists actuellement sur votre montre.</string>
+    <string name="alert_purchased">Vous l\'avez déjà acheté.</string>
+
+    <string name="plurals_single_podcast_added">podcast importé avec succès</string>
+    <string name="plurals_multiple_podcasts_added">%d podcasts importés avec succès</string>
+
+    <string name="confirm_import_opml">Si vous ne l\'avez pas déjà, acceptez les autorisations sur votre appareil d\'usure.</string>
+
+    <string name="error_opml_import">Une erreur s\'est produite lors de l\'importation de votre fichier OPML. Vérifiez qu\'il est au bon format.</string>
+
+</resources>

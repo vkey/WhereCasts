@@ -1,0 +1,63 @@
+<resources>
+    <string name="tab_play">प्ले</string>
+    <string name="tab_add">जोड़ना</string>
+    <string name="tab_premium">प्रीमियम</string>
+
+    <string name="validation_invalid_url">मान्य यूआरएल दर्ज करें</string>
+    <string name="validation_empty_url">एक आरएसएस यूआरएल दर्ज करें</string>
+
+    <string name="copyright">कॉपीराइट © %s</string>
+    <string name="version">संस्करण: %s</string>
+
+    <string name="tip_1">पॉडकास्ट आयात करने से पहले अपने पहनने के उपकरण पर अनुमतियां स्वीकार करें.</string>
+    <string name="tip_2">युक्ति: इस ऐप्लिकेशन में आरएसएस यूआरएल भेजने के लिए एंड्रॉइड की साझा कार्यक्षमता का प्रयोग करें.</string>
+
+    <string name="upload_file_summary_unlocked">फ़ाइलें अपलोड करने से वेयर डिवाइस पर स्वयं-प्लेलिस्ट बनाए जाएंगे। (&lt;20 MB की सिफारिश की).</string>
+    <string name="upload_file_summary_locked">प्रीमियम: फ़ाइलें अपलोड करने से वेयर डिवाइस पर स्वयं-प्लेलिस्ट बनाए जाएंगे। (&lt;20 MB की सिफारिश की).</string>
+
+    <string name="error_no_episode">आपके द्वारा दर्ज किए गए URL में कोई पॉडकास्ट नहीं आया था.\nयह सत्यापित करने के लिए यहां क्लिक करें यह एक वैध आरएसएस फ़ीड है</string>
+
+    <string name="form_add_hint_podcast_title">Podcast title (optional)</string>
+    <string name="form_add_hint_podcast_url">पॉडकास्ट आरएसएस यूआरएल</string>
+
+    <string name="button_text_import_podcast">देखने के लिए भेजें</string>
+    <string name="button_text_import_opml">आयात OPML</string>
+    <string name="button_text_upload_file">फाइल भेज</string>
+    <string name="button_text_no_device">कोई पहनें डिवाइस नहीं मिला</string>
+    <string name="button_text_searching_device">पहनें डिवाइस की तलाश में…</string>
+    <string name="button_text_unlock_premium">प्रीमियम\nअनलॉक करें\nविशेषताएं</string>
+    <string name="button_text_resync_premium">Resync\nप्रीमियम\nविशेषताएं</string>
+    <string name="button_text_resync_premium_waiting">प्रतिक्रिया के लिए इंतजार…</string>
+
+    <string name="button_text_playlists_readd">दोबारा जोड़ो\n%d प्लेलिस्ट</string>
+    <string name="button_text_playlists_purchase">खरीद फरोख्त\nप्लेलिस्ट</string>
+    <string name="alert_playlists_purchased">प्लेलिस्ट सफलतापूर्वक बनाई गईं.\nअपनी घड़ी पर सेटिंग्स के तहत प्लेलिस्ट प्रबंधित करें। आपकी घड़ी पर ऐप को पुनरारंभ करना आवश्यक हो सकता है.</string>
+
+    <string name="menu_text_about">के बारे में</string>
+    <string name="menu_text_directory">डिस्कवर</string>
+
+    <string name="page_title_search_results">परिणाम</string>
+
+    <string name="text_importing_opml_sending">अपने पहनने के उपकरण में पॉडकास्ट भेज रहा है…</string>
+    <string name="text_importing_opml_parsing">OPML पार्सिंग (पॉडकास्ट की संख्या के आधार पर कुछ समय लग सकता है)…</string>
+    <string name="alert_get_directory_error">पॉडकास्ट निर्देशिका लाने में विफल</string>
+
+    <string name="alert_podcast_added">%s देखने के लिए भेजा गया.</string>
+    <string name="alert_episode_added">घड़ी पर प्लेलिस्ट डाउनलोड करने के लिए भेजा गया.</string>
+    <string name="alert_episode_import_first">यह एपिसोड आपकी घड़ी पर भेजा जाएगा और डाउनलोड किया जाएगा</string>
+    <string name="alert_playlist_purchased">%d बनाया था.</string>
+    <string name="text_file_uploaded">फ़ाइल को सफलतापूर्वक भेजा गया घड़ी पर फ़ाइल दिखाने से पहले विलंब हो सकता है.</string>
+    <string name="text_file_upload_start">फ़ाइल भेज रहा है…</string>
+    <string name="alert_playlists_quantity_none">मात्रा का चयन करें</string>
+    <string name="alert_playlists_purchase_disclaimer">खरीद प्लेलिस्ट वर्तमान में आपकी घड़ी पर किसी भी प्लेलिस्ट को हटा देंगे.</string>
+    <string name="alert_playlists_readd_disclaimer">प्लेलिस्ट को दोबारा जोड़ने से आपकी घड़ी पर वर्तमान में कोई भी प्लेलिस्ट हटा दी जाएगी.</string>
+    <string name="alert_purchased">आपने इसे पहले से ही खरीदा है.</string>
+
+    <string name="plurals_single_podcast_added">पॉडकास्ट सफलतापूर्वक आयात किया गया</string>
+    <string name="plurals_multiple_podcasts_added">%d पॉडकास्ट सफलतापूर्वक आयात किया गया</string>
+
+    <string name="confirm_import_opml">यदि आप पहले से ही नहीं हैं, तो अपने पहनने के उपकरण पर अनुमतियां स्वीकार करें.</string>
+
+    <string name="error_opml_import">आपके OPML को आयात करने में एक त्रुटि हुई यह जांचें कि यह सही प्रारूप में है.</string>
+
+</resources>

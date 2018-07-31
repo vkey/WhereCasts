@@ -1,0 +1,315 @@
+<resources>
+    <string name="menu_episode_title_upnext">追加する</string>
+    <string name="playlist_title_upnext">次</string>
+    <string name="confirm_remove_upnext">削除しますか?</string>
+    <string name="confirm_remove_local">削除?</string>
+    <string name="notification_updating_status">更新中…</string>
+    <string name="notification_channel_media_service">メディアサービス</string>
+    <string name="notification_channel_media_playing">メディア再生通知</string>
+    <string name="notification_channel_newepisodes">新しいエピソードの通知</string>
+
+    <string name="rate_app_reminder">このアプリを評価しますか? （YESをクリックすると、携帯電話のストアページが開きます）.</string>
+
+    <string name="text_loading_episodes">読み込み中…</string>
+    <string name="text_loading_episodes_playlist">リフレッシュ…</string>
+    <string name="text_loading_podcasts">あなたのポッドキャストを読み込む…</string>
+    <string name="text_no_search_results">結果が見つかりません</string>
+    <string name="text_settings_playlists_empty">電話アプリの[プレミアム]タブで再生リストを取得する</string>
+
+    <string name="playlists_title_default">プレイリスト %d</string>
+
+    <string name="premium_locked_playback_speed">プレミアム、電話アプリからロック解除.</string>
+
+    <string name="empty_episode_list">スワイプしてリフレッシュする</string>
+    <string name="empty_episode_list_search_results">結果がありません\n下にスワイプしてすべてを表示する</string>
+
+    <string name="empty_podcast_list">電話アプリでポッドキャストをインポートするか、プルダウンしてポッドキャストを発見する</string>
+    <string name="empty_podcast_list2">自動再生リストのために左にスワイプする\n電話アプリでさらにプレイリストを入手する</string>
+    <string name="text_playlists_add_empty">再生リストが見つかりません\n\n電話アプリでカスタムプレイリストを追加する\ n（[プレミアム]タブ）</string>
+
+    <string name="confirm_mark_finished">終了してマークする?</string>
+    <string name="confirm_delete_download">ダウンロードを削除する?</string>
+    <string name="confirm_delete_file">ファイルを削除する?</string>
+    <string name="confirm_delete_all_downloads">すべてのダウンロードを削除する?</string>
+    <string name="confirm_delete_all_thumbs">すべてのサムネイルを削除?</string>
+    <string name="confirm_cancel_download">ダウンロードをキャンセルする?</string>
+
+    <string name="confirm_initial_download_title">警告！</string>
+
+    <string name="confirm_mark_all_finished">マークはすべて終了しましたか?</string>
+    <string name="confirm_delete_all_download">すべてのダウンロードを削除しますか?</string>
+
+    <string name="confirm_delete_episode_download">このエピソードのダウンロードを削除しますか?</string>
+    <string name="confirm_delete_podcast">このポッドキャストの購読を停止するには?</string>
+
+    <string name="confirm_initial_download_message">WiFiまたは携帯電話でのダウンロードをお勧めします.ダウンロードするたびにBluetoothを無効にしますか？これは設定で変更できます.?</string>
+
+    <string name="confirm_mark_played">演奏としてマークしますか?</string>
+    <string name="confirm_mark_unplayed">再生されていないとマークしますか?</string>
+
+    <string name="confirm_mark_all_played">すべての試合にマークを付ける?</string>
+    <string name="confirm_mark_all_unplayed">すべて未表示にしますか?</string>
+
+    <string name="settings_podcast_title">ポッドキャスト設定</string>
+    <string name="settings_podcast_sort_order_global">[グローバル]</string>
+    <string name="settings_podcast_label_autodownload">自動ダウンロード最新エピソード</string>
+    <string name="settings_podcast_label_download_next">次のエピソードをダウンロード</string>
+    <string name="settings_podcast_label_download_next_summary">あなたが聞いているものが終わると</string>
+    <string name="settings_podcast_label_download_next_alert">オフラインの場合、ダウンロードはキューに入れられます</string>
+    <string name="settings_podcast_label_download_sort_order">ソート順（グローバルソート順を上書きする）</string>
+    <string name="settings_podcast_label_downloads_saved">自動クリーンアップのダウンロード</string>
+    <string name="settings_podcast_label_downloads_saved_summary">この番号を超えるダウンロードは自動的に削除されます</string>
+    <string name="settings_podcast_label_hideplayed">再生されたエピソードを非表示</string>
+    <string name="settings_podcast_label_delete_podcast">退会する</string>
+    <string name="settings_podcast_label_assign_playlist">プレイリストに割り当てる</string>
+
+    <string name="settings_podcasts_label_header_color">ヘッダーカラー</string>
+    <string name="settings_podcasts_label_header_theme">テーマ</string>
+
+    <string name="settings_podcasts_title">設定</string>
+    <string name="settings_podcasts_title_downloads">ダウンロード</string>
+    <string name="settings_podcasts_title_general">一般</string>
+    <string name="settings_podcasts_title_playback">再生</string>
+    <string name="settings_podcasts_title_display">表示</string>
+    <string name="settings_podcasts_title_playlists">プレイリスト</string>
+    <string name="settings_podcasts_title_updates">アップデート</string>
+    <string name="settings_podcasts_settings_title_downloads">ダウンロード設定</string>
+    <string name="settings_podcasts_settings_title_general">一般設定</string>
+    <string name="settings_podcasts_settings_title_playback">再生設定</string>
+    <string name="settings_podcasts_settings_title_playlist">プレイリストの設定</string>
+    <string name="settings_podcasts_settings_title_display">ディスプレイの設定</string>
+    <string name="settings_podcasts_settings_updates_display">設定を更新</string>
+    <string name="settings_podcasts_label_sync_podcasts">クリックしてポッドキャストを同期する</string>
+    <string name="settings_podcasts_label_hide_nonew_podcasts">新しいエピソードのないポッドキャストを隠す</string>
+    <string name="settings_podcasts_label_playlists_hide_empty">空のプレイリストを隠す</string>
+    <string name="settings_podcasts_label_display_paging_indicator">ページングインジケータを隠す</string>
+    <string name="settings_podcasts_label_playlist_sort">プレイリストの並び順</string>
+    <string name="settings_podcasts_label_episodes_sort">エピソードソート順</string>
+    <string name="settings_podcasts_label_podcast_sort">ポッドキャストリストの並べ替え順序</string>
+    <string name="settings_podcasts_label_home_screen">\'ホーム画面</string>
+    <string name="settings_podcasts_label_sync_thumbnails">クリックしてサムネイルを同期する</string>
+    <string name="settings_podcasts_label_sync_startup">起動時に同期する</string>
+    <string name="settings_podcasts_label_updates_enabled">更新を有効にする</string>
+    <string name="settings_podcasts_label_updates_interval">更新間隔</string>
+    <string name="settings_podcasts_label_updates_charging">充電中のみ更新</string>
+    <string name="settings_podcasts_label_updates_sound">新しいエピソードが見つかったらサウンドを再生する</string>
+\    <string name="settings_podcasts_label_updates_enabled_summary">デバイスが充電中のときにのみ実行されます</string>
+    <string name="settings_podcasts_label_auto_delete">終了時にダウンロードしたファイルを削除する</string>
+    <string name="settings_podcasts_label_downloads_restart_failed">ダウンロードが失敗した場合は自動的に再起動します</string>
+    <string name="settings_podcasts_label_disable_bluetooth">ダウンロード中にBluetoothを無効にする</string>
+    <string name="settings_podcasts_label_download_complete_sound">ダウンロードが完了したらサウンドを再生する</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_start">からのサウンドを無効にする</string>
+    <string name="settings_podcasts_label_download_complete_sound_disable_end">サウンドを無効にする</string>
+    <string name="settings_podcast_episode_limit_title">表示するエピソードの数</string>
+    <string name="settings_podcast_episode_limit_all">すべて</string>
+
+    <string name="settings_podcasts_label_playback_speed">再生速度</string>
+    <string name="settings_podcasts_label_playback_skip_back">スキップバック</string>
+    <string name="settings_podcasts_label_playback_skip_forward">スキップフォワード</string>
+    <string name="settings_podcasts_label_playback_playlists">終了時にプレイリストからエピソードを削除する</string>
+    <string name="settings_podcasts_label_hardware_button">ハードウェアボタンで再生をコントロールする</string>
+    <string name="settings_podcasts_label_hardware_buttons">ハードウェアボタンによる再生の制御</string>
+    <string name="settings_podcasts_label_hardware_buttons_1_summary">再生/一時停止（再生画面でのみ機能する）</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Top：スキップバック\n中間：再生/一時停止\nボトム：スキップフォワード\n(再生画面でのみ機能する)</string>
+    <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">ストリーミングまたはダウンロードする前に</string>
+    <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>
+    <string name="settings_podcasts_label_downloads_thumbs_all">すべてのサムネイルを削除するにはクリックしてください (%d)</string>
+
+    <string name="settings_podcasts_entries_title_header_color">ヘッダーカラー</string>
+    <string name="settings_podcasts_entries_header_color_blue">青</string>
+    <string name="settings_podcasts_entries_header_color_dark_gray">暗灰色</string>
+    <string name="settings_podcasts_entries_header_color_green">緑</string>
+    <string name="settings_podcasts_entries_header_color_orange">オレンジ</string>
+    <string name="settings_podcasts_entries_header_color_red">赤</string>
+    <string name="settings_podcasts_entries_header_color_purple">紫の</string>
+    <string name="settings_podcasts_entries_header_color_gray">グレー</string>
+    <string name="settings_podcasts_entries_header_color_dark_blue">濃紺</string>
+    <string name="settings_podcasts_entries_header_color_lite_blue">ライトブルー</string>
+    <string name="settings_podcasts_entries_header_color_dark_green">濃い緑色</string>
+    <string name="settings_podcasts_entries_header_color_dark_orange">ダークオレンジ</string>
+
+    <string name="settings_podcasts_entries_title_home_screen">ホーム画面</string>
+    <string name="settings_podcasts_home_screen_default">デフォルト</string>
+    <string name="settings_podcasts_home_screen_local">地元</string>
+    <string name="settings_podcasts_home_screen_inprogress">進行中</string>
+    <string name="settings_podcasts_home_screen_downloads">ダウンロード</string>
+    <string name="settings_podcasts_home_screen_upnext">次に</string>
+
+    <string name="settings_podcasts_entries_title_themes">テーマ</string>
+    <string name="settings_podcasts_sort_order_themes_default">デフォルト</string>
+    <string name="settings_podcasts_sort_order_themes_dark">ダーク</string>
+    <string name="settings_podcasts_sort_order_themes_light">光</string>
+    <string name="settings_podcasts_sort_order_themes_amoled">AMOLED</string>
+    <string name="settings_podcasts_sort_order_themes_dynamic">動的</string>
+
+    <string name="settings_podcasts_updates_interval_1_hours">1 時間</string>
+    <string name="settings_podcasts_updates_interval_3_hours">3 時間</string>
+    <string name="settings_podcasts_updates_interval_6_hours">6 時間</string>
+    <string name="settings_podcasts_updates_interval_12_hours">12 時間</string>
+
+    <string name="settings_podcasts_sort_order_name_asc">名前（A〜Z）</string>
+    <string name="settings_podcasts_sort_order_name_desc">名前（Z-A）</string>
+    <string name="settings_podcasts_sort_order_date_asc">日付（最長最長）</string>
+    <string name="settings_podcasts_sort_order_date_desc">日付（上に最新）</string>
+    <string name="settings_podcasts_sort_order_new_episodes">新しいエピソードの数</string>
+    <string name="settings_podcasts_sort_order_latest_episodes">最新エピソード（最新版）</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_desc">ダウンロードした日付（最新版）</string>
+    <string name="settings_podcasts_sort_order_datedownloaded_asc">ダウンロード日（最長最長）</string>
+    <string name="settings_podcasts_sort_order_dateadded_desc">追加された日付（上の最新版）</string>
+    <string name="settings_podcasts_sort_order_dateadded_asc">追加された日付（最長最長）</string>
+    <string name="settings_podcasts_sort_order_progress">進歩（一番遠い）</string>
+
+    <string name="settings_podcasts_label_skip_start_time">ポッドキャストを開始する</string>
+    <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
+    <string name="settings_podcasts_label_skip_start_time_10_seconds">10 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_30_seconds">30 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_1_minute">1 分</string>
+    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 分</string>
+    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 分</string>
+    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 分</string>
+    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 分</string>
+    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 分</string>
+    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 分</string>
+    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 分</string>
+    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 分</string>
+    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 分</string>
+    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 分</string>
+
+    <string name="settings_podcasts_label_finish_end_time">エンドポッドキャスト</string>
+    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
+    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 秒残った</string>
+    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 秒残った</string>
+    <string name="setting_podcasts_label_finish_end_time_1_minute">1 分前</string>
+    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 分</string>
+    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 分</string>
+    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 分</string>
+    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 分</string>
+    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 分</string>
+    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 分</string>
+    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 分</string>
+    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 分</string>
+    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 分</string>
+
+    <string name="setting_podcasts_playback_skip_10_seconds">10 秒</string>
+    <string name="setting_podcasts_playback_skip_20_seconds">20 秒</string>
+    <string name="setting_podcasts_playback_skip_30_seconds">30 秒</string>
+    <string name="setting_podcasts_playback_skip_40_seconds">40 秒</string>
+    <string name="setting_podcasts_playback_skip_50_seconds">50 秒</string>
+    <string name="setting_podcasts_playback_skip_60_seconds">60 秒</string>
+
+    <string name="menu_main_title_settings">設定</string>
+
+    <string name="menu_main_title_download">ダウンロード</string>
+    <string name="menu_main_title_download_delete">ダウンロードを削除する</string>
+    <string name="menu_main_title_download_cancel">ダウンロードをキャンセルする</string>
+    <string name="menu_main_title_playlist_add">プレイリストに追加する</string>
+
+    <string name="menu_episodes_mark_all_played">すべての試合をマークする</string>
+    <string name="menu_episodes_mark_all_unplayed">すべてを表示しない</string>
+    <string name="menu_episodes_add_playlist">プレイリストにすべてを追加する</string>
+
+    <string name="menu_episodes_delete_all">すべてを削除</string>
+    <string name="menu_episodes_finish_all">フィニッシュオール</string>
+
+    <string name="tips_swipe_left">自動再生リストを表示するには左にスワイプする</string>
+    <string name="tips_swipe_long_press">オプションでポッドキャストを長く押す</string>
+
+    <string name="nav_directory_resync">再同期</string>
+    <string name="alert_directory_resync">再同期してもよろしいですか?</string>
+    <string name="nav_main_discover">ポッドキャストを発見する</string>
+    <string name="nav_main_settings">設定</string>
+
+    <string name="nav_add_refresh">Refresh</string>
+
+    <string name="confirm_yes">はい</string>
+    <string name="confirm_no">NO</string>
+
+    <string name="playlist_title_inprogress">進行中</string>
+    <string name="playlist_title_downloads">ダウンロード</string>
+    <string name="playlist_title_unplayed">再生されていない</string>
+    <string name="playlist_title_local">地元</string>
+
+    <string name="text_episode_no_media">再生するメディアが見つかりません.ポッドキャストプロバイダを削除して再追加または連絡してください.</string>
+    <string name="alert_podcast_added">追加された</string>
+    <string name="alert_episode_playlist_added">に追加 %s</string>
+    <string name="alert_episodes_playlist_added">追加された %d エピソード %s</string>
+    <string name="alert_search_empty">検索語を入力してください</string>
+    <string name="alert_refreshing_thumb">サムネイルをリフレッシュする…</string>
+
+    <string name="alert_locating_network">ネットワークを待っている…</string>
+    <string name="alert_locating_network_notfound">ネットワークを見つけることができません</string>
+    <string name="alert_sync_started">同期が開始されました</string>
+    <string name="alert_sync_finished">同期が完了しました</string>
+    <string name="alert_disable_bluetooth_disabled_start">Bluetoothを無効にする…</string>
+    <string name="alert_unsubscribing">サブスクライブ解除…</string>
+    <string name="alert_disable_bluetooth_disabled_end">Bluetoothが無効</string>
+    <string name="alert_disable_bluetooth_enabled">Bluetooth対応</string>
+    <string name="alert_episode_download_start">ダウンロード…</string>
+    <string name="alert_episode_network_search">高帯域幅ネットワークの検索…</string>
+    <string name="alert_episode_network_notfound">ネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
+    <string name="alert_episode_network_no_high_bandwidth">高帯域幅のネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
+    <string name="alert_playlist_delete">本気ですか?</string>
+
+    <string name="alert_download_error_noresume">ダウンロードを再開できません. もう一度お試しください</string>
+    <string name="alert_download_error_device_not_found">デバイスが見つかりません</string>
+    <string name="alert_download_error_file_exists">ファイルが既に存在します</string>
+    <string name="alert_download_error_file_error">ファイルエラー</string>
+    <string name="alert_download_error_data_error">HTTPデータエラー</string>
+    <string name="alert_download_error_low_disk">不十分なスペース</string>
+    <string name="alert_download_error_redirects">リダイレクトが多すぎます</string>
+    <string name="alert_download_error_unhandled_http">未処理のhttpコードe</string>
+    <string name="alert_download_error_unknown">不明なエラー. もう一度お試しください</string>
+    <string name="alert_download_error_not_found">ポッドキャストが見つかりません</string>
+    <string name="alert_download_error_default">エラーが発生しました. もう一度お試しください</string>
+    <string name="alert_download_error_restart">ダウンロードに失敗しました. 再起動する…</string>
+    <string name="alert_download_error_failed">ダウンロードを再開できませんでした.</string>
+
+    <string name="alert_error_sorting_latest_episodes">最新のエピソードでソートする際にエラーが発生しました. これは、通常、ポッドキャストの悪い日付を意味します.</string>
+
+    <string name="alert_network_waiting">ネットワークを待っている…</string>
+
+    <string name="alert_file_none_deleted">ファイルが削除されていない</string>
+    <string name="alert_file_deleted">1 ファイルを削除しました</string>
+    <string name="alert_files_deleted">%d ファイルが削除された</string>
+
+    <string name="validation_podcast_rename_title">タイトルを入力</string>
+    <string name="validation_podcast_rename_length">タイトルの長さが大きすぎます</string>
+
+    <string name="plurals_single_new_episode">1 新しいエピソード</string>
+    <string name="plurals_multiple_new_episodes">%d 新しいエピソード</string>
+    <string name="new_episodes_alert">新しいエピソード</string>
+
+    <string name="notification_download_count">%d ダウンロード</string>
+
+    <string name="tts_audio_skip_next">次の演奏</string>
+    <string name="tts_audio_skip_previous">前の演奏</string>
+
+    <string name="dropdown_playlist_select">[ プレイリストに追加する ]</string>
+    <string name="button_mark_played">演奏としてマークしますか</string>
+    <string name="button_mark_unplayed">再生されていないとマークしますか</string>
+    <string name="alert_marked_unplayed">再生されていないとマークされました</string>
+    <string name="alert_marked_played">プレーとしてマーク</string>
+    <string name="alert_streaming">ストリーミング…</string>
+
+</resources>

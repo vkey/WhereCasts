@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Wear Casts</string>
+    <string name="retrieving_podcasts">Retrieving podcasts directory…</string>
+    <string name="retrieving_search_results">Retrieving results…</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="alert_no_network">No network available</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="general_error">An error occurred. Please try again.</string>
+    <string name="confirm_directory_first_import">The initial loading of podcasts can take a minute or two.</string>
+    <string name="last_updated">Last updated</string>
+    <string name="syncing">Syncing…</string>
+    <string name="success">Success</string>
+    <string name="search">Search</string>
+    <string name="searching">Searching…</string>
+    <string name="no_results">No results found</string>
+    <string name="save">Save</string>
+    <string name="added">Added</string>
+    <string name="add">Add</string>
+    <string name="renamed">Renamed</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="none">None</string>
+    <string name="select">Select</string>
+    <string name="never">Never</string>
+</resources>

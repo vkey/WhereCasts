@@ -1,0 +1,58 @@
+<resources>
+    <string name="skip_start_time">@string/settings_podcasts_label_skip_start_time</string>
+    <string-array name="skip_start_time_text">
+        <item>@string/settings_podcasts_label_skip_start_time_0_seconds</item>
+        <item>@string/settings_podcasts_label_skip_start_time_10_seconds</item>
+        <item>@string/settings_podcasts_label_skip_start_time_20_seconds</item>
+        <item>@string/settings_podcasts_label_skip_start_time_30_seconds</item>
+        <item>@string/settings_podcasts_label_skip_start_time_45_seconds</item>
+        <item>@string/settings_podcasts_label_skip_start_time_1_minute</item>
+        <item>@string/settings_podcasts_label_skip_start_time_130_minute</item>
+        <item>@string/settings_podcasts_label_skip_start_time_2_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_25_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_3_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_35_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_4_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_45_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_5_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_55_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_6_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_65_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_7_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_75_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_8_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_85_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_9_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_95_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_10_minutes</item>
+        <item>@string/settings_podcasts_label_skip_start_time_15_minutes</item>
+    </string-array>
+
+    <string-array name="skip_start_time_values">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+        <item>150</item>
+        <item>180</item>
+        <item>210</item>
+        <item>240</item>
+        <item>270</item>
+        <item>300</item>
+        <item>330</item>
+        <item>360</item>
+        <item>390</item>
+        <item>420</item>
+        <item>450</item>
+        <item>480</item>
+        <item>510</item>
+        <item>540</item>
+        <item>570</item>
+        <item>600</item>
+        <item>900</item>
+    </string-array>
+</resources>

@@ -1,0 +1,39 @@
+<resources>
+    <string name="podcast_json_url">https://s3.amazonaws.com/aws-website-wearcasts-evoy3/podcasts_%s.json</string>
+    <string name="podcast_json_url_default">https://s3.amazonaws.com/aws-website-wearcasts-evoy3/podcasts_en.json</string>
+    <string name="bitcoin_addy">1EVPP5yNCU12ucs5W2pLSfDfdWbac7EvmU</string>
+    <string name="privacy_url">https://sites.google.com/view/wear-casts/home/privacy</string>
+    <string name="rss_validator_url">https://validator.w3.org/feed/</string>
+    <string name="google_play_url">https://play.google.com/store/apps/details?id=com.krisdb.wearcasts</string>
+
+    <string name="date_format_database">yyyy-MM-dd HH:mm:ss</string>
+    <string name="date_format_last_modified">E MMM dd HH:mm:ss z yyyy</string>
+
+    <string name="contact_email">krisdb@live.com</string>
+    <!--<string name="inapp_premium_product_id">android.test.purchased</string>-->
+    <string name="inapp_premium_product_id">premium_features</string>
+    <string name="inapp_playlist_prefix">playlist_</string>
+
+    <string-array name="inapp_playlists_sku">
+        <item>-- Select --</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string name="listennotes_api_key">rbQFb1CaETmshkKAgoiAPot1YqW0p1cvYXljsnHqjVf3E6rvvZ</string>
+    <string name="listennotes_rest">https://listennotes.p.mashape.com/api/v1/search?sort_by_date=0&amp;language=%1$s&amp;type=podcast&amp;q=%2$s</string>
+    <string name="ldpi">ldpi</string>
+    <string name="mdpi">mdpi</string>
+    <string name="hdpi">hdpi</string>
+    <string name="xhdpi">xhdpi</string>
+    <string name="xxhdpi">xxhdpi</string>
+    <string name="xxxhdpi">xxxhdpi</string>
+</resources>
