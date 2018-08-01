@@ -25,6 +25,7 @@ import android.os.PowerManager;
 import android.os.ResultReceiver;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -41,14 +42,19 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
+import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLogo;
 
@@ -58,7 +64,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private PodcastItem mEpisode;
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
-    private final MediaPositionHandler mMediaPositionHandler = new MediaPositionHandler(this);
+    private final MediaHandler mMediaHandler = new MediaHandler(this);
     private int mPlaylistID;
     private static int mNotificationID = 101;
     private String mLocalFile;
@@ -138,7 +144,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         clearMediaPlayer();
 
-        mMediaPositionHandler.removeCallbacksAndMessages(null);
+        mMediaHandler.removeCallbacksAndMessages(null);
 
         disableNoisyReceiver();
         stopForeground(true);
@@ -255,13 +261,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initNoisyReceiver();
 
-        showNotification(false);
+        showNotification(false, false);
 
         //mMediaPlayer.reset();
         mMediaPlayer.start();
         mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
 
-        mMediaPositionHandler.postDelayed(UpdateMediaPosition, 100);
+        mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
+        mMediaHandler.postDelayed(mUpdateNotification, 100);
 
         if (mLocalFile == null)
             SyncWithMobileDevice();
@@ -305,12 +312,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             disableNoisyReceiver();
 
             stopForeground(false);
-            showNotification(true);
+            showNotification(true, false);
 
             if (mLocalFile == null)
                 SyncWithMobileDevice();
 
-            mMediaPositionHandler.removeCallbacksAndMessages(null);
+            mMediaHandler.removeCallbacksAndMessages(null);
         }
     }
 
@@ -338,7 +345,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         initMediaSessionMetadata();
         initNoisyReceiver();
 
-        showNotification(false);
 
         if (mMediaPlayer != null)
             mMediaPlayer.reset();
@@ -353,12 +359,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
 
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            showNotification(false, false);
+            mMediaHandler.postDelayed(mUpdateNotification, 100);
 
+            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
-                public void onCompletion(MediaPlayer mp) {
-                    //completeMedia();
-                }
+                public void onCompletion(MediaPlayer mp) { }
             });
 
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -395,7 +401,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                         editor.apply();
                     }
 
-                    mMediaPositionHandler.postDelayed(UpdateMediaPosition, 100);
+                    mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
                     final Intent intentMediaCompleted = new Intent();
                     intentMediaCompleted.setAction("media_action");
@@ -537,7 +543,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     };
 
-    private void showNotification(Boolean pause) {
+    private void showNotification(final Boolean pause, final Boolean update) {
 
         final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -555,6 +561,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 .setContentText(mLocalFile != null ? mLocalFile : mEpisode.getTitle())
                 .setLocalOnly(true)
                 .setWhen(0)
+                .setOnlyAlertOnce(true)
+                .setPriority(PRIORITY_LOW)
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setContentIntent(PendingIntent.getActivity(mContext, mEpisode.getEpisodeId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT));
                 //.setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
@@ -584,10 +592,51 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             builder.setChannelId(String.valueOf(mNotificationID));
         }
 
-        if (pause)
+        if (update) {
+            builder.setProgress(mMediaPlayer.getDuration(), mMediaPlayer.getCurrentPosition(), false);
+            manager.notify(mNotificationID, builder.build());
+            mMediaHandler.postDelayed(mUpdateNotification, 100);
+        }
+        else if (pause)
             manager.notify(mNotificationID, builder.build());
         else
             startForeground(mNotificationID, builder.build());
+    }
+
+    private void initMediaSessionMetadata() {
+        final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
+        //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
+        final Bitmap roundedLogo = GetLogo(mContext, mEpisode);
+
+        if (roundedLogo != null) {
+            final Bitmap logo = CommonUtils.resizedBitmap(roundedLogo, 100, 100);
+
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, logo);
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, logo);
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, logo);
+        } else {
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+            metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        }
+
+        //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, new SimpleDateFormat("h:mm a", Locale.US).format(Calendar.getInstance().getTime()));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+        //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
+        mMediaHandler.postDelayed(mUpdateNotification, 100);
+
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name));
+
+        //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, 1);
+        //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
+
+        if (mMediaPlayer.isPlaying())
+            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mMediaPlayer.getDuration());
+
+        mMediaSessionCompat.setMetadata(metadataBuilder.build());
     }
 
     private void setMediaPlaybackState(final int state)
@@ -613,38 +662,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         playbackstateBuilder.setState(state, position, 0);
         mMediaSessionCompat.setPlaybackState(playbackstateBuilder.build());
     }
-
-      private void initMediaSessionMetadata() {
-          final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
-          //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
-          final Bitmap roundedLogo = GetLogo(mContext, mEpisode);
-
-          if (roundedLogo != null) {
-              final Bitmap logo = CommonUtils.resizedBitmap(roundedLogo, 100, 100);
-
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, logo);
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, logo);
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, logo);
-          } else {
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-              metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-          }
-
-          //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, new SimpleDateFormat("h:mm a", Locale.US).format(Calendar.getInstance().getTime()));
-          metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mEpisode.getChannel().getTitle());
-          metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
-          metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
-          metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name));
-
-          //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, 1);
-          //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
-
-          if (mMediaPlayer.isPlaying())
-              metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mMediaPlayer.getDuration());
-
-          mMediaSessionCompat.setMetadata(metadataBuilder.build());
-      }
 
    private void initMediaSession() {
         final ComponentName mediaButtonReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
@@ -717,10 +734,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     }
 
-    private static class MediaPositionHandler extends Handler {
+    private static class MediaHandler extends Handler {
         private final WeakReference<MediaPlayerService> mWeakReference;
 
-        private MediaPositionHandler(MediaPlayerService service) {
+        private MediaHandler(MediaPlayerService service) {
             mWeakReference = new WeakReference<>(service);
         }
 
@@ -732,7 +749,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     }
 
-    private Runnable UpdateMediaPosition = new Runnable() {
+    private Runnable mUpdateMediaPosition = new Runnable() {
         public void run() {
 
             final int position = mMediaPlayer.getCurrentPosition();
@@ -742,7 +759,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
             if (position >= finishTime) {
-                mMediaPositionHandler.removeCallbacksAndMessages(null);
+                mMediaHandler.removeCallbacksAndMessages(null);
                 completeMedia();
             }
             else {
@@ -750,8 +767,16 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 intentMediaPosition.setAction("media_position");
                 intentMediaPosition.putExtra("position", position);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
-                mMediaPositionHandler.postDelayed(UpdateMediaPosition, 100);
+                mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
+        }
+    };
+
+    private Runnable mUpdateNotification = new Runnable() {
+        public void run() {
+
+            initMediaSessionMetadata();
+            //showNotification(false, true);
         }
     };
 

@@ -171,7 +171,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mVolumeUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+                final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
                 audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
             }
         });
@@ -179,7 +179,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mVolumeDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+                final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
                 audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
             }
         });
@@ -187,7 +187,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mSkipBackImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = mSeekBar.getProgress() - (skipBack * 1000);
+                final int position = mSeekBar.getProgress() - (skipBack * 1000);
                 mSeekBar.setProgress(position);
                 MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
             }
@@ -196,7 +196,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mSkipForwardImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = mSeekBar.getProgress() + (skipForward * 1000);
+                final int position = mSeekBar.getProgress() + (skipForward * 1000);
                 mSeekBar.setProgress(position);
                 MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
             }
@@ -393,12 +393,16 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     public void onResume() {
         super.onResume();
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mDisableBluetooth = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_disable_bluetooth", false);
 
-        mDisableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
-
-       if (mMediaBrowserCompat != null && mMediaBrowserCompat.isConnected() == false)
-            mMediaBrowserCompat.connect();
+       if (mMediaBrowserCompat != null && mMediaBrowserCompat.isConnected() == false) {
+           try {
+               mMediaBrowserCompat.connect();
+           }
+           catch (Exception ex) {
+               mMediaBrowserCompat.disconnect();
+           }
+       }
         else
             SetContent();
     }
