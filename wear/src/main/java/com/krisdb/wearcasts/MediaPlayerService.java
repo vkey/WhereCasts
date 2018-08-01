@@ -268,7 +268,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
 
         mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
-        mMediaHandler.postDelayed(mUpdateNotification, 100);
 
         if (mLocalFile == null)
             SyncWithMobileDevice();
@@ -360,7 +359,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
 
             showNotification(false, false);
-            mMediaHandler.postDelayed(mUpdateNotification, 100);
 
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -595,7 +593,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (update) {
             builder.setProgress(mMediaPlayer.getDuration(), mMediaPlayer.getCurrentPosition(), false);
             manager.notify(mNotificationID, builder.build());
-            mMediaHandler.postDelayed(mUpdateNotification, 100);
         }
         else if (pause)
             manager.notify(mNotificationID, builder.build());
@@ -626,16 +623,18 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
-        mMediaHandler.postDelayed(mUpdateNotification, 100);
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DATE, mEpisode.getPubDate());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, mEpisode.getDescription());
 
         //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, 1);
         //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
 
-        if (mMediaPlayer.isPlaying())
+        if (mMediaPlayer.isPlaying()) {
             metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mMediaPlayer.getDuration());
+        }
 
         mMediaSessionCompat.setMetadata(metadataBuilder.build());
     }
@@ -768,16 +767,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 intentMediaPosition.setAction("media_position");
                 intentMediaPosition.putExtra("position", position);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
+                initMediaSessionMetadata();
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
-        }
-    };
-
-    private Runnable mUpdateNotification = new Runnable() {
-        public void run() {
-
-            initMediaSessionMetadata();
-            //showNotification(false, true);
         }
     };
 
