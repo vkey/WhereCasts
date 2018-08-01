@@ -621,10 +621,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, new SimpleDateFormat("h:mm a", Locale.US).format(Calendar.getInstance().getTime()));
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
 
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));
+        //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
         mMediaHandler.postDelayed(mUpdateNotification, 100);
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
