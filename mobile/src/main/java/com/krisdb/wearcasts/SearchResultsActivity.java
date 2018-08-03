@@ -142,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                         final ArrayList displayList = new ArrayList(set);
 
                         mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        mResultsList.setAdapter(new PodcastsAdapter(getApplicationContext(), displayList, true));
+                        mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, displayList, true));
                         mProgressBar.setVisibility(View.GONE);
                         mProgressText.setVisibility(View.GONE);
                     }

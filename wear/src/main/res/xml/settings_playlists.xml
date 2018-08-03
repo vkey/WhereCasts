@@ -4,7 +4,6 @@
 
     <PreferenceCategory android:key="playlist_settings" android:title="@string/settings_podcasts_settings_title_playlist">
 
-
         <ListPreference
             android:key="pref_display_playlist_sort_order"
             android:title="@string/settings_podcasts_label_playlist_sort"

@@ -324,16 +324,15 @@ public class AsyncTasks {
 
                         final String latestPubDate = podcastObj.getString("lastest_pub_date_ms") != null ? podcastObj.getString("lastest_pub_date_ms").toLowerCase() : "";
 
-                        if (latestPubDate.contains("a month ago") ||
+                        if (latestPubDate.contains("month") ||
                                 latestPubDate.contains("today") ||
                                 latestPubDate.contains("day") ||
                                 latestPubDate.contains("days") ||
-                                latestPubDate.contains("2 months ago") ||
                                 latestPubDate.contains("hours") ||
                                 latestPubDate.contains("hour") ||
                                 latestPubDate.contains("minutes") ||
                                 latestPubDate.contains("minute") ||
-                                latestPubDate.contains("3 months ago")
+                                latestPubDate.contains("months")
                                 )
                         {
                             final PodcastItem podcast = new PodcastItem();

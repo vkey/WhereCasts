@@ -381,7 +381,7 @@ public class AsyncTasks {
             else {
                 for (final PodcastItem podcast : podcasts)
                 {
-                    if (podcast.getChannel().getThumbnailName() != null) {
+                    if (podcast.getChannel() != null && podcast.getChannel().getThumbnailName() != null) {
                         final File thumb = new File(dirThumbs, podcast.getChannel().getThumbnailName());
 
                         if (thumb.exists())

@@ -25,7 +25,6 @@ import android.os.PowerManager;
 import android.os.ResultReceiver;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -48,10 +47,7 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;

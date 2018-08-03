@@ -1,6 +1,6 @@
 package com.krisdb.wearcasts;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +23,7 @@ import java.util.List;
 public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHolder> {
 
     private List<PodcastItem> mPodcasts;
-    private Context mContext;
+    private Activity mContext;
     private Boolean isConnected;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,7 +45,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
         }
     }
 
-    PodcastsAdapter(Context ctx, List<PodcastItem> podcasts, boolean connected) {
+    PodcastsAdapter(final Activity ctx, final List<PodcastItem> podcasts, final Boolean connected) {
         mPodcasts = podcasts;
         mContext = ctx;
         isConnected = connected;
@@ -70,7 +70,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
                                         episodes =  episodes.subList(0, 50);
 
                                     holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
-                                    holder.episodes.setAdapter(new EpisodesAdapter(mContext, episodes));
+                                    holder.episodes.setAdapter(new EpisodesAdapter(mContext, episodes, isConnected));
                                     holder.episodes.setVisibility(View.VISIBLE);
                                     holder.episodesProgress.setVisibility(View.GONE);
                                     holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_contract));
@@ -118,7 +118,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
                         notifyItemChanged(position);
                     }
                     else
-                        CommonUtils.showToast(mContext, "No Wear device connected");
+                        CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
                 }
             });
     }

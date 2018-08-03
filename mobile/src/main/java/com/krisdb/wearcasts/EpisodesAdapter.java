@@ -3,7 +3,6 @@ package com.krisdb.wearcasts;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
@@ -31,6 +30,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
 
     private List<PodcastItem> mEpisodes;
     private Context mContext;
+    private Boolean isConnected;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,9 +46,10 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         }
     }
 
-    EpisodesAdapter(final Context ctx, final List<PodcastItem> episodes) {
+    EpisodesAdapter(final Context ctx, final List<PodcastItem> episodes, final Boolean connected) {
         mContext = ctx;
         mEpisodes = episodes;
+        isConnected = connected;
     }
 
     @Override
@@ -69,34 +70,36 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         holder.sendEpisode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PodcastItem episode = mEpisodes.get(holder.getAdapterPosition());
+                if (isConnected) {
+                    final PodcastItem episode = mEpisodes.get(holder.getAdapterPosition());
 
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                if (prefs.getInt("episode_import", 0) == 0) {
+                    if (prefs.getInt("episode_import", 0) == 0) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
+                        alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendEpisode(holder.getAdapterPosition());
+                                dialog.dismiss();
+                            }
+                        });
 
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
-                    alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sendEpisode(holder.getAdapterPosition());
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alert.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                    final SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("episode_import", 1);
-                    editor.apply();
+                        alert.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("episode_import", 1);
+                        editor.apply();
+                    } else
+                        sendEpisode(holder.getAdapterPosition());
                 }
                 else
-                    sendEpisode(holder.getAdapterPosition());
+                    CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
             }
         });
 

@@ -1,19 +1,15 @@
 package com.krisdb.wearcasts;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.widget.ProgressBar;
 
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Locale;
 
 public class AsyncTasks {
     private static WeakReference<Context> mContext;

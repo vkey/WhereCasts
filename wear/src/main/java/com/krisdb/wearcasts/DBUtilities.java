@@ -390,7 +390,7 @@ public class DBUtilities {
 
     static List<PodcastItem> GetPodcasts(final Context ctx) {
         List<PodcastItem> podcasts = new ArrayList<>();
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
 
         final String cache = CacheUtils.getPodcastsCache(ctx);
 

@@ -29,9 +29,7 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
         mActivity = getActivity();
 
-        int count = 0;
-
-        List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity);
+        final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity);
 
         for(final PlaylistItem playlist : playlists) {
 

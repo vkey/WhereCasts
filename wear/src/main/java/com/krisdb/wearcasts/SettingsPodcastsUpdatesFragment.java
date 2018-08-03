@@ -230,7 +230,10 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                             new Interfaces.AsyncResponse(){
                                 @Override
                                 public void processFinish(
-                                ) {SetContent();}
+                                ) {
+                                    SetContent();
+                                    setDeleteThumbnailsTitle();
+                                }
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }

@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.internal.BaseImplementation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -307,6 +306,9 @@ public class CommonUtils {
         else
             rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), BitmapFactory.decodeResource(ctx.getResources(), defaultResource));
             //rbd.setCornerRadius(Math.max(src.getWidth(), src.getHeight()) / 2.0f);
+
+        if (rdb.getBitmap() == null)
+            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), BitmapFactory.decodeResource(ctx.getResources(), defaultResource));
 
         rdb.setCircular(true);
 
