@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -215,14 +219,17 @@ public class DBUtilities {
 
     public static Boolean HasNewEpisodes(final Context ctx, final int podcastId) {
 
-        final List<PodcastItem> episodes = GetEpisodes(ctx, podcastId, 0);
+        Boolean output;
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+        final Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [new] = 1 AND [pid] = ?", new String[]{String.valueOf(podcastId)});
 
-        for (PodcastItem episode : episodes) {
-            if (episode.getRead() == false)
-                return true;
-        }
+        output = cursor.moveToFirst();
 
-        return false;
+        cursor.close();
+        sdb.close();
+        db.close();
+        return  output;
     }
 
     public static class ColumnIndexCache {
@@ -382,79 +389,93 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetPodcasts(final Context ctx) {
-        final List<PodcastItem> podcasts = new ArrayList<>();
+        List<PodcastItem> podcasts = new ArrayList<>();
+        Gson gson = new Gson();
 
-        final DBPodcasts db = new DBPodcasts(ctx);
-        final SQLiteDatabase sdb = db.select();
+        final String cache = CacheUtils.getPodcastsCache(ctx);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+        if (cache == null) {
 
-        int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
+            final DBPodcasts db = new DBPodcasts(ctx);
+            final SQLiteDatabase sdb = db.select();
 
-        final String orderString = Utilities.GetOrderClause(orderId);
-        final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
 
-        final Cursor cursor = sdb.rawQuery("SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name] FROM [tbl_podcasts] ORDER BY ".concat(orderString), null);
+            int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
 
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
+            final String orderString = Utilities.GetOrderClause(orderId);
+            final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
 
-                if (hideEmpty && NewEpisodeCount(ctx, cursor.getInt(0)) == 0) {
+            final Cursor cursor = sdb.rawQuery("SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name] FROM [tbl_podcasts] ORDER BY ".concat(orderString), null);
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+
+                    if (hideEmpty && NewEpisodeCount(ctx, cursor.getInt(0)) == 0) {
+                        cursor.moveToNext();
+                        continue;
+                    }
+
+                    final PodcastItem podcast = new PodcastItem();
+                    podcast.setPodcastId(cursor.getInt(0));
+
+                    final ChannelItem channel = new ChannelItem();
+                    channel.setTitle(cursor.getString(1));
+                    channel.setRSSUrl(cursor.getString(2));
+                    if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                        channel.setThumbnailUrl(cursor.getString(3));
+                        channel.setThumbnailName(cursor.getString(4));
+                    }
+                    podcast.setChannel(channel);
+
+                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
+
+                    podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
+
+                    if (orderId == latestEpisodesSortOrderID)
+                        podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(0)));
+
+                    podcasts.add(podcast);
+
                     cursor.moveToNext();
-                    continue;
                 }
-
-                final PodcastItem podcast = new PodcastItem();
-                podcast.setPodcastId(cursor.getInt(0));
-
-                final ChannelItem channel = new ChannelItem();
-                channel.setTitle(cursor.getString(1));
-                channel.setRSSUrl(cursor.getString(2));
-                if (cursor.getString(3) != null && cursor.getString(4) != null) {
-                    channel.setThumbnailUrl(cursor.getString(3));
-                    channel.setThumbnailName(cursor.getString(4));
-                }
-                podcast.setChannel(channel);
-
-                podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
-
-                podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
-
-                if (orderId == latestEpisodesSortOrderID)
-                    podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(0)));
-
-                podcasts.add(podcast);
-
-                cursor.moveToNext();
             }
-        }
-        cursor.close();
-        db.close();
-        sdb.close();
+            cursor.close();
+            db.close();
+            sdb.close();
 
-        if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode()) {
-            Collections.sort(podcasts, new Comparator<PodcastItem>() {
-                @Override
-                public int compare(final PodcastItem item1, final PodcastItem item2) {
-                    return Integer.compare(item2.getNewCount(), item1.getNewCount());
-                }
-            });
-        }
-
-        if (orderId == latestEpisodesSortOrderID) {
-            try {
+            if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode()) {
                 Collections.sort(podcasts, new Comparator<PodcastItem>() {
                     @Override
                     public int compare(final PodcastItem item1, final PodcastItem item2) {
-                        return DateUtils.ConvertDate(item2.getLatestEpisode().getPubDate()).compareTo(DateUtils.ConvertDate(item1.getLatestEpisode().getPubDate()));
+                        return Integer.compare(item2.getNewCount(), item1.getNewCount());
                     }
                 });
             }
-            catch(Exception ex)
-            {
-                CommonUtils.showToast(ctx,ctx.getString(R.string.alert_error_sorting_latest_episodes));
+
+            if (orderId == latestEpisodesSortOrderID) {
+                try {
+                    Collections.sort(podcasts, new Comparator<PodcastItem>() {
+                        @Override
+                        public int compare(final PodcastItem item1, final PodcastItem item2) {
+                            return DateUtils.ConvertDate(item2.getLatestEpisode().getPubDate()).compareTo(DateUtils.ConvertDate(item1.getLatestEpisode().getPubDate()));
+                        }
+                    });
+                } catch (Exception ex) {
+                    CommonUtils.showToast(ctx, ctx.getString(R.string.alert_error_sorting_latest_episodes));
+                }
             }
+
+            final JsonElement element = gson.toJsonTree(podcasts, new TypeToken<List<PodcastItem>>() {
+            }.getType());
+            final JsonArray jsonArray = element.getAsJsonArray();
+            CacheUtils.savePodcastsCache(ctx, jsonArray.toString());
+        } else {
+            podcasts = gson.fromJson(cache, new TypeToken<List<PodcastItem>>() {
+            }.getType());
+            for (final PodcastItem podcast : podcasts)
+                podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
         }
 
         return podcasts;

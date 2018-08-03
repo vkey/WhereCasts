@@ -200,6 +200,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 final int podcastId = (int)new DBPodcasts(getApplicationContext()).insert(cv);
 
                 new AsyncTasks.GetPodcastEpisodes(getApplicationContext(), podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CacheUtils.deletePodcastsCache(this);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/opmlimport")) {
@@ -218,6 +219,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 final InputStream in = getFdForAssetResponse.getInputStream();
 
                 new DBPodcasts(getApplicationContext()).insert(OPMLParser.parse(this, in));
+                CacheUtils.deletePodcastsCache(this);
             }
         }
 

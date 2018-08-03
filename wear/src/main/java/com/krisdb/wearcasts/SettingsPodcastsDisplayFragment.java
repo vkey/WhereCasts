@@ -127,8 +127,10 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
             if (key.equals("pref_episode_limit"))
                 findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
 
-            if (key.equals("pref_display_podcasts_sort_order"))
-                findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference) findPreference("pref_display_podcasts_sort_order")).getEntry());
+                if (key.equals("pref_display_podcasts_sort_order")) {
+                    findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference) findPreference("pref_display_podcasts_sort_order")).getEntry());
+                    CacheUtils.deletePodcastsCache(mActivity);
+                }
 
             if (key.equals("pref_display_episodes_sort_order"))
                 findPreference("pref_display_episodes_sort_order").setSummary(((ListPreference) findPreference("pref_display_episodes_sort_order")).getEntry());

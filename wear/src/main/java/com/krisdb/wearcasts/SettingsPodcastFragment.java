@@ -76,6 +76,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 if (actionId == EditorInfo.IME_ACTION_DONE){
                     etRename.setText(v.getText().toString());
                     etRename.setTitle(v.getText().toString());
+                    CacheUtils.deletePodcastsCache(mActivity);
                     etRename.onClick(etRename.getDialog(), Dialog.BUTTON_POSITIVE);
                     etRename.getDialog().dismiss();
                     return true;

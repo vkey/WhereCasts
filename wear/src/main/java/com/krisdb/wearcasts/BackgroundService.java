@@ -133,6 +133,7 @@ public class BackgroundService extends JobService {
                                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                     mPlayer.start();
                                 }
+                                CacheUtils.deletePodcastsCache(ctx);
                             }
 
                             editor.putString("last_podcast_sync_date", new Date().toString());

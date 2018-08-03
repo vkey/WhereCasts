@@ -125,6 +125,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
                 final int podcastId = (int) new DBPodcasts(mContext).insert(cv);
                 new AsyncTasks.GetPodcastEpisodes(mContext, podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CacheUtils.deletePodcastsCache(mContext);
 
                 showToast(mContext, mContext.getString(R.string.alert_podcast_added));
             }

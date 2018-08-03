@@ -122,6 +122,7 @@ public class AsyncTasks {
             new DBPodcasts(ctx).delete(mPodcastID);
             Utilities.DeleteFiles(ctx, mPodcastID);
             new DBPodcastsEpisodes(ctx).unsubscribe(ctx, mPodcastID);
+            CacheUtils.deletePodcastsCache(ctx);
             return null;
         }
 

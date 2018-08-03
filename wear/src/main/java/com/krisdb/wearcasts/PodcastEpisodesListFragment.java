@@ -269,12 +269,14 @@ public class PodcastEpisodesListFragment extends Fragment {
                                 mStatus.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            final ContentValues cv = new ContentValues();
-                            cv.put("new", 0);
-
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.updateAll(cv, mPodcastId);
-                            db.close();
+                            if (DBUtilities.HasNewEpisodes(mActivity, mPodcastId)) {
+                                final ContentValues cv = new ContentValues();
+                                cv.put("new", 0);
+                                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                                db.updateAll(cv, mPodcastId);
+                                db.close();
+                                CacheUtils.deletePodcastsCache(mActivity);
+                            }
 
                             mStatus.setVisibility(TextView.GONE);
                         }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.internal.BaseImplementation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -299,21 +300,17 @@ public class CommonUtils {
     }
 
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem, int defaultResource) {
-        Bitmap src;
+        RoundedBitmapDrawable rdb;
 
         if (channelItem != null && channelItem.getThumbnailUrl() != null)
-            src = BitmapFactory.decodeFile(GetThumbnailDirectory() + channelItem.getThumbnailName());
-        else {
-            src = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
-        }
+            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), GetThumbnailDirectory() + channelItem.getThumbnailName());
+        else
+            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), BitmapFactory.decodeResource(ctx.getResources(), defaultResource));
+            //rbd.setCornerRadius(Math.max(src.getWidth(), src.getHeight()) / 2.0f);
 
-        if (src == null)
-            src = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
+        rdb.setCircular(true);
 
-        final RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(ctx.getResources(), src);
-        dr.setCornerRadius(Math.max(src.getWidth(), src.getHeight()) / 2.0f);
-
-        return dr;
+        return rdb;
     }
 
     public static Bitmap resizedBitmap(Bitmap bm, int newWidth, int newHeight) {
