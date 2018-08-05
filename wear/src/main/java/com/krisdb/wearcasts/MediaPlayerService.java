@@ -617,7 +617,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
 
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
@@ -629,6 +628,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
 
         if (mMediaPlayer.isPlaying()) {
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));
             metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mMediaPlayer.getDuration());
         }
 
