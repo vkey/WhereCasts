@@ -89,8 +89,12 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
     {
         return this.getReadableDatabase();
     }
+    public SQLiteDatabase insert()
+    {
+        return this.getWritableDatabase();
+    }
 
-    public void insert(final Context ctx, final List<PodcastItem> episodes) {
+    public void insertAll(final List<PodcastItem> episodes) {
 
         final SQLiteDatabase db = this.getWritableDatabase();
         final SQLiteStatement statement = db.compileStatement("INSERT INTO [tbl_podcast_episodes] ([pid], [title], [description], [mediaurl], [url], [dateAdded], [pubDate]) VALUES (?,?,?,?,?,?,?)");

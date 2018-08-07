@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -264,7 +265,11 @@ public class Utilities {
         final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         final Boolean hasBTAdapter = btAdapter != null;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-        int newEpisodes = 0, downloadCount = 0;
+        int newEpisodesCount = 0, downloadCount = 0;
+
+        final SQLiteDatabase db2 = db.insert();
+        final SQLiteStatement statement = db2.compileStatement("INSERT INTO [tbl_podcast_episodes] ([pid], [title], [description], [mediaurl], [url], [dateAdded], [pubDate], [duration]) VALUES (?,?,?,?,?,?,?,?)");
+        db2.beginTransaction();
 
         for (final PodcastItem episode : episodes)
         {
@@ -281,21 +286,19 @@ public class Utilities {
                     SystemClock.sleep(5000);
                 }
 
-                final ContentValues cv = new ContentValues();
-                cv.put("pid", episode.getPodcastId());
-                cv.put("title", episode.getTitle() != null ? episode.getTitle() : "");
-                cv.put("description", episode.getDescription());
+                statement.bindLong(1, episode.getPodcastId());
+                statement.bindString(2, episode.getTitle() != null ? episode.getTitle() : "");
+                statement.bindString(3, episode.getDescription());
 
                 if (episode.getMediaUrl() != null)
-                    cv.put("mediaurl", episode.getMediaUrl().toString());
-
+                statement.bindString(4, episode.getMediaUrl().toString());
                 if (episode.getEpisodeUrl() != null)
-                    cv.put("url", episode.getEpisodeUrl().toString());
-                cv.put("dateAdded", DateUtils.GetDate());
-                cv.put("pubDate", episode.getPubDate());
-                cv.put("duration", episode.getDuration());
+                statement.bindString(5, episode.getEpisodeUrl().toString());
+                statement.bindString(6, DateUtils.GetDate());
+                statement.bindString(7, episode.getPubDate());
+                statement.bindLong(8, episode.getDuration());
 
-                final long episodeId = db.insert(cv);
+                long episodeId = statement.executeInsert();
                 episode.setEpisodeId((int) episodeId);
 
                 if (assignPlaylist) {
@@ -307,13 +310,17 @@ public class Utilities {
                     downloadCount++;
                 }
 
-                newEpisodes++;
+                newEpisodesCount++;
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
         }
+        db2.setTransactionSuccessful();
+        db2.endTransaction();
+        db2.close();
+
         db.close();
 
         DBUtilities.TrimEpisodes(ctx, podcast);
@@ -326,7 +333,7 @@ public class Utilities {
             editor.apply();
         }
 
-        quantities[0] = newEpisodes;
+        quantities[0] = newEpisodesCount;
         quantities[1] = downloadCount;
 
         return quantities;
