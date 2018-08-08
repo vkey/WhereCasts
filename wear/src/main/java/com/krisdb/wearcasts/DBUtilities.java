@@ -619,19 +619,29 @@ public class DBUtilities {
         return name;
     }
 
-    static Boolean episodeExists(final Context ctx, final String url) {
+    static Boolean episodeExists(final String url, final SQLiteDatabase sdb) {
         Boolean exists;
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-        final SQLiteDatabase sdb = db.select();
         final Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [mediaurl] = ? ", new String[]{url});
 
         exists = cursor.moveToFirst();
 
         cursor.close();
+
+        return exists;
+    }
+
+    static Boolean episodeExists(final Context ctx, final String url) {
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        Boolean output;
+
+        output = episodeExists(url, sdb);
+
         sdb.close();
         db.close();
 
-        return exists;
+        return output;
     }
 
     static Boolean playlistExists(final Context ctx, final int playlistId) {

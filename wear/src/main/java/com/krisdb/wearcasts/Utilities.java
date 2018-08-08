@@ -278,7 +278,7 @@ public class Utilities {
 
                 final Date episodeDate = DateUtils.ConvertDate(episode.getPubDate(), "yyyy-MM-dd HH:mm:ss");
 
-                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(ctx, episode.getMediaUrl().toString()))
+                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(episode.getMediaUrl().toString(), db2))
                     continue;
 
                 if (autoDownload && hasBTAdapter && disabledBT && btAdapter.isEnabled()) {
