@@ -11,3 +11,4 @@ assests/Screenshot_1510684601.png
 *.apk
 mobile/release/output.json
 release/output.json
+.idea/caches/build_file_checksums.ser
