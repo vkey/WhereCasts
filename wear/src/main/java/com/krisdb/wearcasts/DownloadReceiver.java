@@ -84,6 +84,13 @@ public class DownloadReceiver extends BroadcastReceiver
                         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mPlayer.start();
                     }
+
+                    if (Utilities.downloadsCount() == 1)
+                    {
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("refresh_vp", true);
+                        editor.apply();
+                    }
                 }
                 else if (status == DownloadManager.STATUS_FAILED) {
                     //Log.d(context.getPackageName(), "Background service: Download Failed (" + episode.getTitle() + ")");

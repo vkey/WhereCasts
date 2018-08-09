@@ -33,34 +33,38 @@ import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 public class DBUtilities {
     private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download";
 
-    static List<PodcastItem> getPlaylistItems(final Context ctx, final int playlistId, final Boolean isLocal)
+    static Boolean playlistIsEmpty(final Context ctx, final int playlistId)
     {
-        List<PodcastItem> items;
+        Boolean output;
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
 
-        if (isLocal)
-            items = DBUtilities.GetEpisodes(ctx, 0, playlistId);
-        else
-            items = DBUtilities.GetLocalFiles(ctx);
+        final Cursor cursor = sdb.rawQuery("SELECT [id] FROM tbl_playlists_xref WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
 
-        return items;
+        output = !cursor.moveToFirst();
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return output;
+    }
+
+    static List<PodcastItem> getPlaylistItems(final Context ctx, final int playlistId, final Boolean isLocal) {
+        return (isLocal) ? DBUtilities.GetEpisodes(ctx, 0, playlistId) : DBUtilities.GetLocalFiles(ctx);
     }
 
     static List<PlaylistItem> getPlaylists(final Context ctx) {
-        return getPlaylists(ctx, true, false);
-    }
+        return getPlaylists(ctx, false);    }
 
-    static List<PlaylistItem> getPlaylists(final Context ctx, final Boolean upNext) {
-        return getPlaylists(ctx, upNext, false);
-    }
-
-     static List<PlaylistItem> getPlaylists(final Context ctx, final Boolean upNext, final Boolean hideEmpty)
+     static List<PlaylistItem> getPlaylists(final Context ctx, final Boolean hideEmpty)
     {
         final List<PlaylistItem> playlists = new ArrayList<>();
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
 
         String sql = hideEmpty ?
-                "SELECT tbl_playlists.playlist_id, tbl_playlists.name FROM tbl_playlists  JOIN tbl_playlists_xref ON tbl_playlists_xref.playlist_id = tbl_playlists.playlist_id GROUP BY tbl_playlists.playlist_id HAVING count(tbl_playlists_xref.playlist_id) > 0"  :
+                "SELECT tbl_playlists.playlist_id, tbl_playlists.name FROM tbl_playlists JOIN tbl_playlists_xref ON tbl_playlists_xref.playlist_id = tbl_playlists.playlist_id GROUP BY tbl_playlists.playlist_id HAVING count(tbl_playlists_xref.playlist_id) > 0"  :
                 "SELECT [playlist_id], [name] FROM tbl_playlists";
 
         final Cursor cursor = sdb.rawQuery(sql, null);

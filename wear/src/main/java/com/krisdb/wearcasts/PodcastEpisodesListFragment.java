@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
 import android.text.Spannable;
@@ -260,8 +261,12 @@ public class PodcastEpisodesListFragment extends Fragment {
                         if (isAdded() == false) return;
 
                         mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor);
-
                         mEpisodeList.setAdapter(mAdapter);
+
+                        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
+                            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes, mPlaylistId));
+                            itemTouchhelper.attachToRecyclerView(mEpisodeList);
+                        }
 
                         if (episodes != null && episodes.size() == 1) {
                             if (mPlaylistId == mActivity.getResources().getInteger(R.integer.playlist_default)) {

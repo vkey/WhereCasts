@@ -56,18 +56,19 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
                 final PlaylistItem playlist = (PlaylistItem) parent.getSelectedItem();
 
                 if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                    db.addEpisodeToPlaylist(playlist.getID(), episode.getEpisodeId());
-                    db.close();
 
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                    if (prefs.getBoolean("pref_hide_empty_playlists", false))
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
                     {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();
                     }
+
+                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                    db.addEpisodeToPlaylist(playlist.getID(), episode.getEpisodeId());
+                    db.close();
 
                     showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
                 }

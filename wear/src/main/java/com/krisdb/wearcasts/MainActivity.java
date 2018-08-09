@@ -129,7 +129,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
 
-            final List<PlaylistItem> playlists = DBUtilities.getPlaylists(ctx, false, hideEmpty);
+            final List<PlaylistItem> playlists = DBUtilities.getPlaylists(ctx, hideEmpty);
 
             for(final PlaylistItem playlist: playlists)
                 mPlayListIds.add(playlist.getID());

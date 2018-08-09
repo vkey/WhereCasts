@@ -161,7 +161,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                            if (prefs.getBoolean("pref_hide_empty_playlists", false))
+                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
                             {
                                 final SharedPreferences.Editor editor = prefs.edit();
                                 editor.putBoolean("refresh_vp", true);

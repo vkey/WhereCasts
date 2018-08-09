@@ -477,6 +477,14 @@ public class Utilities {
             file.delete();
     }
 
+    public static int downloadsCount()
+    {
+        final File episodesDirectory = new File(GetMediaDirectory());
+        final String[] episodes = episodesDirectory.list();
+
+        return episodes.length;
+    }
+
     public static long getFilesSize(final String path)
     {
         long bytes = 0;
