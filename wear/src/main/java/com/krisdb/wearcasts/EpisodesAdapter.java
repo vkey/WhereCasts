@@ -485,6 +485,15 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             mContext.startActivity(intent);
     }
 
+    public void refreshList(final List<PodcastItem> episodes)
+    {
+        mEpisodes = episodes;
+        notifyDataSetChanged();
+        //List<PodcastItem> episodes = DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
+        //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new EpisodesDiffCallback(this.mEpisodes, episodes));
+        //diffResult.dispatchUpdatesTo(this);
+    }
+
     public void refreshList(final int podcastId)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -492,12 +501,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final Boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
         final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
-        mEpisodes = DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
-        notifyDataSetChanged();
-
-        //List<PodcastItem> episodes = DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
-        //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new EpisodesDiffCallback(this.mEpisodes, episodes));
-        //diffResult.dispatchUpdatesTo(this);
+        refreshList(DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null));
     }
 
     @Override

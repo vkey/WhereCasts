@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
 import android.view.LayoutInflater;
@@ -251,6 +252,9 @@ public class PodcastsListFragment extends Fragment {
         final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mActivity);
         mAdapter = new PodcastsAdapter(mActivity, podcasts, mPlaylistId);
         mPodcastsList.setAdapter(mAdapter);
+
+        //final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new PodcastsSwipeController(mActivity, mAdapter, podcasts));
+        //itemTouchhelper.attachToRecyclerView(mPodcastsList);
 
         showCopy(podcasts.size());
     }
