@@ -7,13 +7,11 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
+
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-
-import static android.view.Gravity.LEFT;
-import static android.view.Gravity.RIGHT;
 
 public class PodcastsSwipeController extends Callback {
 

@@ -2,22 +2,14 @@ package com.krisdb.wearcasts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-
-import static android.view.Gravity.BOTTOM;
-import static android.view.Gravity.CENTER;
-import static android.view.Gravity.LEFT;
-import static android.view.Gravity.RIGHT;
-import static android.view.Gravity.TOP;
 
 public class EpisodesSwipeController extends Callback {
 
