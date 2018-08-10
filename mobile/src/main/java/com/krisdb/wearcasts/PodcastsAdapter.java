@@ -62,13 +62,10 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
             public void onClick(View v) {
                 if (holder.episodes.getVisibility() == View.GONE) {
                     holder.episodesProgress.setVisibility(View.VISIBLE);
-                    new AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()),
+                    new AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 50,
                             new Interfaces.PodcastsResponse() {
                                 @Override
                                 public void processFinish(List<PodcastItem> episodes) {
-                                    if (episodes.size() > 50)
-                                        episodes =  episodes.subList(0, 50);
-
                                     holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
                                     holder.episodes.setAdapter(new EpisodesAdapter(mContext, episodes, isConnected));
                                     holder.episodes.setVisibility(View.VISIBLE);
