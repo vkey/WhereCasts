@@ -141,10 +141,17 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                         final ArrayList displayList = new ArrayList(set);
 
-                        mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, displayList, true));
-                        mProgressBar.setVisibility(View.GONE);
-                        mProgressText.setVisibility(View.GONE);
+                        new AsyncTasks.WatchConnected(getApplicationContext(),
+                                new Interfaces.BooleanResponse() {
+                                    @Override
+                                    public void processFinish(final Boolean connected) {
+                                        mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                        mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, displayList, connected));
+                                        mProgressBar.setVisibility(View.GONE);
+                                        mProgressText.setVisibility(View.GONE);
+                                    }
+                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

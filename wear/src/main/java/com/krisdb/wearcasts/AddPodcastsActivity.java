@@ -104,7 +104,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         new AsyncTasks.GetDirectory(this, mForceRefresh, false, mProgressBar,
                 new Interfaces.DirectoryResponse() {
                     @Override
-                    public void processFinish(final List<PodcastCategory> categories, final Boolean connected) {
+                    public void processFinish(final List<PodcastCategory> categories) {
 
                         if (categories.size() > 0) {
                             mNumberOfPages = categories.size();

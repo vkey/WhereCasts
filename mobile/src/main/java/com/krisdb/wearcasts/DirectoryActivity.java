@@ -49,21 +49,21 @@ public class DirectoryActivity extends AppCompatActivity {
         new AsyncTasks.GetDirectory(this,
                 new Interfaces.DirectoryResponse() {
                     @Override
-                    public void processFinish(final List<PodcastCategory> categories, final Boolean connected) {
-                        SetDirectory(categories, connected);
+                    public void processFinish(final List<PodcastCategory> categories) {
+                        SetDirectory(categories);
                         mProgressBar.setVisibility(View.GONE);
                         findViewById(R.id.main_progress_text).setVisibility(View.GONE);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void SetDirectory(final List<PodcastCategory> categories, final Boolean connected)
+    private void SetDirectory(final List<PodcastCategory> categories)
     {
         mNumberOfPages = categories.size();
         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
 
         for (final PodcastCategory category : categories)
-            adapter.addFrag(PodcastListFragment.newInstance(category.getPodcasts(), connected), category.getName());
+            adapter.addFrag(PodcastListFragment.newInstance(category.getPodcasts()), category.getName());
 
         mViewPager.setAdapter(adapter);
     }

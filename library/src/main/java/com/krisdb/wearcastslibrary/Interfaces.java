@@ -25,7 +25,7 @@ public class Interfaces {
     }
 
     public interface DirectoryResponse {
-        void processFinish(List<PodcastCategory> categories, Boolean connected);
+        void processFinish(List<PodcastCategory> categories);
     }
 
     public interface IntResponse {

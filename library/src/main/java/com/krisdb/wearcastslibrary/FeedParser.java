@@ -12,6 +12,10 @@ import static com.krisdb.wearcastslibrary.DateUtils.FormatDate;
 public class FeedParser {
 
     public static List<PodcastItem> parse(final PodcastItem podcast) {
+        return parse(podcast,  Integer.MAX_VALUE);
+    }
+
+        public static List<PodcastItem> parse(final PodcastItem podcast, final int count) {
         final List<PodcastItem> episodes = new ArrayList<>();
 
         try {
@@ -66,6 +70,7 @@ public class FeedParser {
                         break;
                 }
                 eventType = parser.next();
+                if (episodes.size() == count) break;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -37,6 +37,7 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 public class AsyncTasks {
 
     private static WeakReference<Context> mContext;
+
     public static class CacheDirectory extends AsyncTask<Void, Void, Void> {
 
         public CacheDirectory(final Context context) {
@@ -62,13 +63,39 @@ public class AsyncTasks {
         protected void onPostExecute(Void param) { }
     }
 
+    public static class WatchConnected extends AsyncTask<Void, Void, Void> {
+        private Boolean mWatchConnected = false;
+        private Interfaces.BooleanResponse mResponse;
+
+        public WatchConnected(final Context context, final Interfaces.BooleanResponse response) {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final Task<List<Node>> nodeListTask = Wearable.getNodeClient(mContext.get()).getConnectedNodes();
+
+            try {
+                List<Node> nodes = Tasks.await(nodeListTask);
+                mWatchConnected = nodes.size() > 0;
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void param) {
+            mResponse.processFinish(mWatchConnected);
+        }
+    }
+
     public static class GetDirectory extends AsyncTask<Void, Void, Void> {
 
         private Interfaces.DirectoryResponse mResponse;
         private List<PodcastCategory> mCategories;
         private Boolean mForceRefresh = false, mSaveThumbs = false;
         private static WeakReference<ProgressBar> mProgressBar;
-        private Boolean mWatchConnected = false;
 
         public GetDirectory(final Context context, final Interfaces.DirectoryResponse response)
         {
@@ -205,21 +232,12 @@ public class AsyncTasks {
                 Log.e(mContext.get().getPackageName(), ex.getLocalizedMessage());
             }
 
-            final Task<List<Node>> nodeListTask = Wearable.getNodeClient(mContext.get()).getConnectedNodes();
-
-            try {
-                List<Node> nodes = Tasks.await(nodeListTask);
-                mWatchConnected = nodes.size() > 0;
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            mResponse.processFinish(mCategories, mWatchConnected);
+            mResponse.processFinish(mCategories);
         }
     }
 
@@ -227,11 +245,18 @@ public class AsyncTasks {
         private Interfaces.PodcastsResponse mResponse;
         private PodcastItem mPodcast;
         private List<PodcastItem> mEpisodes;
+        private int mCount;
 
         public GetEpisodes(final PodcastItem podcast, final Interfaces.PodcastsResponse response)
         {
+            new GetEpisodes(podcast, Integer.MAX_VALUE, response);
+        }
+
+        public GetEpisodes(final PodcastItem podcast, final int count, final Interfaces.PodcastsResponse response)
+        {
             mPodcast = podcast;
             mResponse = response;
+            mCount = count;
         }
 
         @Override
@@ -240,7 +265,7 @@ public class AsyncTasks {
 
         @Override
         protected Void doInBackground(Void... params) {
-            mEpisodes = FeedParser.parse(mPodcast);
+            mEpisodes = FeedParser.parse(mPodcast, mCount);
             return null;
         }
 

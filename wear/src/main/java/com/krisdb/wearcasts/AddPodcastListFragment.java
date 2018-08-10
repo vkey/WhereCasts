@@ -15,8 +15,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
-
 public class AddPodcastListFragment extends Fragment {
 
     private Activity mActivity;
@@ -50,8 +48,8 @@ public class AddPodcastListFragment extends Fragment {
         final WearableRecyclerView rv = listView.findViewById(R.id.podcasts_list);
         rv.setLayoutManager(new LinearLayoutManager(mActivity));
 
-        for (final PodcastItem podcast : podcasts)
-            podcast.setDisplayThumbnail(GetRoundedLogo(mActivity, podcast.getChannel(), R.drawable.ic_thumb_default_add_podcasts));
+        //for (final PodcastItem podcast : podcasts)
+        //podcast.setDisplayThumbnail(GetRoundedLogo(mActivity, podcast.getChannel(), R.drawable.ic_thumb_default_add_podcasts));
 
         final int headerColor = Utilities.getHeaderColor(mActivity);
         final AddPodcastsAdapter adapter = new AddPodcastsAdapter(mActivity, podcasts, headerColor);
