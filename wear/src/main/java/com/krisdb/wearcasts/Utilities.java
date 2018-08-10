@@ -11,13 +11,13 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -246,7 +246,9 @@ public class Utilities {
 
     static int[] ProcessEpisodes(final Context ctx, final PodcastItem podcast) {
 
-        final List<PodcastItem> episodes = FeedParser.parse(podcast);
+        final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_episode_limit", "50"));
+
+        final List<PodcastItem> episodes = FeedParser.parse(podcast, limit);
         int[] quantities = new int[2];
 
         if (episodes == null || episodes.size() == 0) return quantities;
@@ -266,10 +268,6 @@ public class Utilities {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         int newEpisodesCount = 0, downloadCount = 0;
 
-        final SQLiteDatabase db2 = db.insert();
-        final SQLiteStatement statement = db2.compileStatement("INSERT INTO [tbl_podcast_episodes] ([pid], [title], [description], [mediaurl], [url], [dateAdded], [pubDate], [duration]) VALUES (?,?,?,?,?,?,?,?)");
-        db2.beginTransaction();
-
         for (final PodcastItem episode : episodes)
         {
             try {
@@ -277,7 +275,7 @@ public class Utilities {
 
                 final Date episodeDate = DateUtils.ConvertDate(episode.getPubDate(), "yyyy-MM-dd HH:mm:ss");
 
-                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(episode.getMediaUrl().toString(), db2))
+                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(ctx, episode.getMediaUrl().toString()))
                     continue;
 
                 if (autoDownload && hasBTAdapter && disabledBT && btAdapter.isEnabled()) {
@@ -285,19 +283,21 @@ public class Utilities {
                     SystemClock.sleep(5000);
                 }
 
-                statement.bindLong(1, episode.getPodcastId());
-                statement.bindString(2, episode.getTitle() != null ? episode.getTitle() : "");
-                statement.bindString(3, episode.getDescription());
+                final ContentValues cv = new ContentValues();
+                cv.put("pid", episode.getPodcastId());
+                cv.put("title", episode.getTitle() != null ? episode.getTitle() : "");
+                cv.put("description", episode.getDescription());
 
                 if (episode.getMediaUrl() != null)
-                statement.bindString(4, episode.getMediaUrl().toString());
-                if (episode.getEpisodeUrl() != null)
-                statement.bindString(5, episode.getEpisodeUrl().toString());
-                statement.bindString(6, DateUtils.GetDate());
-                statement.bindString(7, episode.getPubDate());
-                statement.bindLong(8, episode.getDuration());
+                    cv.put("mediaurl", episode.getMediaUrl().toString());
 
-                long episodeId = statement.executeInsert();
+                if (episode.getEpisodeUrl() != null)
+                    cv.put("url", episode.getEpisodeUrl().toString());
+                cv.put("dateAdded", DateUtils.GetDate());
+                cv.put("pubDate", episode.getPubDate());
+                cv.put("duration", episode.getDuration());
+
+                final long episodeId = db.insert(cv);
                 episode.setEpisodeId((int) episodeId);
 
                 if (assignPlaylist) {
@@ -316,12 +316,7 @@ public class Utilities {
                 ex.printStackTrace();
             }
         }
-        db2.setTransactionSuccessful();
-        db2.endTransaction();
-        db2.close();
-
         db.close();
-
         DBUtilities.TrimEpisodes(ctx, podcast);
 
         if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false)

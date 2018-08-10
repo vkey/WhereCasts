@@ -62,10 +62,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         //final SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubdate] DESC LIMIT 1)");
-   /*
-        final SQLiteDatabase sdb = DatabaseHelper.select(this);
-        sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
 
+        //final SQLiteDatabase sdb = DatabaseHelper.select(this);
+        //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
+/*
         final ContentValues cv = new ContentValues();
         cv.put("title", "P3 Dokumentär");
         cv.put("url", "https://api.sr.se/rss/pod/3966");

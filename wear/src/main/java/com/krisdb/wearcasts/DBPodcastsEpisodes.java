@@ -89,31 +89,33 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
     {
         return this.getReadableDatabase();
     }
+
     public SQLiteDatabase insert()
     {
         return this.getWritableDatabase();
     }
 
-    public void insertAll(final List<PodcastItem> episodes) {
+    public void insertAll(final List<PodcastItem> episodes, final Boolean assignPlaylist, final Boolean download) {
 
         final SQLiteDatabase db = this.getWritableDatabase();
-        final SQLiteStatement statement = db.compileStatement("INSERT INTO [tbl_podcast_episodes] ([pid], [title], [description], [mediaurl], [url], [dateAdded], [pubDate]) VALUES (?,?,?,?,?,?,?)");
+        final SQLiteStatement statement = db.compileStatement("INSERT INTO [tbl_podcast_episodes] ([pid], [title], [description], [mediaurl], [url], [dateAdded], [pubDate], [duration]) VALUES (?,?,?,?,?,?,?,?)");
 
         db.beginTransaction();
 
         try {
             for (PodcastItem episode : episodes) {
                 statement.bindLong(1, episode.getPodcastId());
-                statement.bindString(2, episode.getTitle());
+                statement.bindString(2, episode.getTitle() != null ? episode.getTitle() : "");
                 statement.bindString(3, episode.getDescription());
                 if (episode.getMediaUrl() != null)
                     statement.bindString(4, episode.getMediaUrl().toString());
-                if (episode.getChannel().getRSSUrl() != null)
-                    statement.bindString(5, episode.getChannel().getRSSUrl().toString());
+                if (episode.getEpisodeUrl() != null)
+                    statement.bindString(5, episode.getEpisodeUrl().toString());
                 statement.bindString(6, DateUtils.GetDate());
-                statement.bindString(7, episode.getPubDate().toString());
+                statement.bindString(7, episode.getPubDate());
+                statement.bindLong(8, episode.getDuration());
 
-                long episodeId = statement.executeInsert();
+                int epidodeId = (int)statement.executeInsert();
 
             }
             db.setTransactionSuccessful();

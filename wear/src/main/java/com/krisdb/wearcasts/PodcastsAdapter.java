@@ -92,25 +92,13 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
         final PodcastItem podcast = mPodcasts.get(position);
 
+        if (podcast == null || podcast.getChannel() == null) return;
+
         viewHolder.thumbnail.setImageDrawable(podcast.getDisplayThumbnail());
-        viewHolder.title.setText(podcast.getChannel().getTitle());
 
-        /*
-        long fontSize = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_font_size", String.valueOf(mContext.getResources().getInteger(R.integer.default_font_size))));
+        if (podcast.getChannel().getTitle() != null)
+            viewHolder.title.setText(podcast.getChannel().getTitle());
 
-        if (fontSize == Enums.FontSize.SMALL.getFontSizeID()) {
-            viewHolder.title.setTextSize(10);
-            viewHolder.count.setTextSize(6);
-        }
-        else if (fontSize == Enums.FontSize.LARGE.getFontSizeID()) {
-            viewHolder.title.setTextSize(18);
-            viewHolder.count.setTextSize(14);
-        }
-        else {
-            viewHolder.title.setTextSize(14);
-            viewHolder.count.setTextSize(10);
-        }
-        */
         if (podcast.getNewCount() > 0) {
             viewHolder.count.setText(String.valueOf(podcast.getNewCount()));
             viewHolder.count.setVisibility(View.VISIBLE);
