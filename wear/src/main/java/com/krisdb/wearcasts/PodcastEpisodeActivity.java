@@ -271,9 +271,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     {
         mWearableActionDrawer.setEnabled(true);
 
-        if (mCurrentState == STATE_PLAYING)
-            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
-
         final Boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play

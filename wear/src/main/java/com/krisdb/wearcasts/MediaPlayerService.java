@@ -275,14 +275,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-
             if (mLocalFile == null)
             {
                 DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", mMediaPlayer.getCurrentPosition());
 
                 final ContentValues cvPlaying = new ContentValues();
                 cvPlaying.put("playing", 0);
-                new DBPodcastsEpisodes(mContext).updateAll(cvPlaying);
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+                db.updateAll(cvPlaying);
+                db.close();
             }
             else
             {
