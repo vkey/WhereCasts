@@ -9,10 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -395,11 +391,12 @@ public class DBUtilities {
 
     static List<PodcastItem> GetPodcasts(final Context ctx) {
         List<PodcastItem> podcasts = new ArrayList<>();
-        final Gson gson = new Gson();
+        //final Gson gson = new Gson();
 
-        final String cache = CacheUtils.getPodcastsCache(ctx);
+        //final String cache = CacheUtils.getPodcastsCache(ctx);
 
-        if (cache == null) {
+        //if (cache == null)
+        {
 
             final DBPodcasts db = new DBPodcasts(ctx);
             final SQLiteDatabase sdb = db.select();
@@ -472,16 +469,15 @@ public class DBUtilities {
                 }
             }
 
-            final JsonElement element = gson.toJsonTree(podcasts, new TypeToken<List<PodcastItem>>() {
-            }.getType());
-            final JsonArray jsonArray = element.getAsJsonArray();
-            CacheUtils.savePodcastsCache(ctx, jsonArray.toString());
-        } else {
-            podcasts = gson.fromJson(cache, new TypeToken<List<PodcastItem>>() {
-            }.getType());
-            for (final PodcastItem podcast : podcasts)
-                podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
+            //final JsonElement element = gson.toJsonTree(podcasts, new TypeToken<List<PodcastItem>>() { }.getType());
+            //final JsonArray jsonArray = element.getAsJsonArray();
+            //CacheUtils.savePodcastsCache(ctx, jsonArray.toString());
         }
+        //else {
+        //podcasts = gson.fromJson(cache, new TypeToken<List<PodcastItem>>() {}.getType());
+        //for (final PodcastItem podcast : podcasts)
+        //podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
+        //}
 
         return podcasts;
     }
