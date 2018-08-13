@@ -77,12 +77,10 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             public void onClick(View v) {
                 if (holder.episodes.getVisibility() == View.GONE) {
                     holder.episodesProgress.setVisibility(View.VISIBLE);
-                    new com.krisdb.wearcastslibrary.AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()),
+                    new com.krisdb.wearcastslibrary.AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 10,
                             new Interfaces.PodcastsResponse() {
                                 @Override
                                 public void processFinish(List<PodcastItem> episodes) {
-                                    if (episodes.size() > 10)
-                                        episodes =  episodes.subList(0, 10);
 
                                     holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
                                     holder.episodes.setAdapter(new EpisodesPreviewAdapter(mContext, episodes));

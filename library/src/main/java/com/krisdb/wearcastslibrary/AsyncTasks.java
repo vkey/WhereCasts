@@ -247,20 +247,11 @@ public class AsyncTasks {
         private List<PodcastItem> mEpisodes;
         private int mCount;
 
-        public GetEpisodes(final PodcastItem podcast, final Interfaces.PodcastsResponse response)
-        {
-            new GetEpisodes(podcast, Integer.MAX_VALUE, response);
-        }
-
         public GetEpisodes(final PodcastItem podcast, final int count, final Interfaces.PodcastsResponse response)
         {
             mPodcast = podcast;
-            mResponse = response;
             mCount = count;
-        }
-
-        @Override
-        protected void onPreExecute() {
+            mResponse = response;
         }
 
         @Override
