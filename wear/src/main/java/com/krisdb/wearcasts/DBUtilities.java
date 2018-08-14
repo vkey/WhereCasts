@@ -390,6 +390,10 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetPodcasts(final Context ctx) {
+        return GetPodcasts(ctx, false);
+    }
+
+        static List<PodcastItem> GetPodcasts(final Context ctx, final Boolean hideEmpty) {
         List<PodcastItem> podcasts = new ArrayList<>();
         //final Gson gson = new Gson();
 
@@ -402,13 +406,11 @@ public class DBUtilities {
             final SQLiteDatabase sdb = db.select();
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
 
             int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
 
             final String orderString = Utilities.GetOrderClause(orderId);
             final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
-            final int newEpisodesSortOrderID = Enums.SortOrder.NEWEPISODES.getSorderOrderCode();
 
             final Cursor cursor = sdb.rawQuery("SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name] FROM [tbl_podcasts] ORDER BY ".concat(orderString), null);
 
@@ -432,9 +434,7 @@ public class DBUtilities {
                     }
                     podcast.setChannel(channel);
 
-                    if (orderId == newEpisodesSortOrderID)
-                        podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
-
+                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
                     podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
 
                     if (orderId == latestEpisodesSortOrderID)

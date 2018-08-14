@@ -2,7 +2,9 @@ package com.krisdb.wearcasts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.wear.widget.WearableRecyclerView;
 import android.view.LayoutInflater;
@@ -46,7 +48,9 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
     public int refreshContent()
     {
-        mPodcasts = DBUtilities.GetPodcasts(mContext);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+        mPodcasts = DBUtilities.GetPodcasts(mContext, hideEmpty);
         notifyDataSetChanged();
         return mPodcasts.size();
     }

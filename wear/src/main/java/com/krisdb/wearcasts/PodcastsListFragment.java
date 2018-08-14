@@ -98,7 +98,7 @@ public class PodcastsListFragment extends Fragment {
             handleNetwork();
 
         RefreshContent();
-        return listView;
+       return listView;
     }
 
     private void handleNetwork()
@@ -248,14 +248,20 @@ public class PodcastsListFragment extends Fragment {
     private void RefreshContent() {
         if (isAdded() == false) return;
 
-        final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mActivity);
-        mAdapter = new PodcastsAdapter(mActivity, podcasts, mPlaylistId);
-        mPodcastsList.setAdapter(mAdapter);
+        new AsyncTasks.DisplayPodcasts(mActivity,
+                new Interfaces.PodcastsResponse() {
+                    @Override
+                    public void processFinish(final List<PodcastItem> podcasts) {
+                        mAdapter = new PodcastsAdapter(mActivity, podcasts, mPlaylistId);
+                        mPodcastsList.setAdapter(mAdapter);
+                        showCopy(podcasts.size());
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
         //final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new PodcastsSwipeController(mActivity, mAdapter, podcasts));
         //itemTouchhelper.attachToRecyclerView(mPodcastsList);
 
-        showCopy(podcasts.size());
     }
 
     private void showCopy(final int number)

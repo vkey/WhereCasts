@@ -256,7 +256,7 @@ public class PodcastEpisodesListFragment extends Fragment {
         new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mPlaylistId, mQuery,
                 new Interfaces.PodcastsResponse() {
                     @Override
-                    public void processFinish(List<PodcastItem> episodes) {
+                    public void processFinish(final List<PodcastItem> episodes) {
 
                         if (isAdded() == false) return;
 

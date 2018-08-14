@@ -191,6 +191,33 @@ public class AsyncTasks {
         }
     }
 
+    public static class DisplayPodcasts extends AsyncTask<Void, Void, Void> {
+        private Interfaces.PodcastsResponse mResponse;
+        private List<PodcastItem> mPodcasts;
+
+        DisplayPodcasts(final Context context, final Interfaces.PodcastsResponse response) {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+       }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            final Context ctx = mContext.get();
+
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+
+            mPodcasts = DBUtilities.GetPodcasts(ctx, hideEmpty);
+
+            return null;
+        }
+
+        protected void onPostExecute(Void param) {
+            mResponse.processFinish(mPodcasts);
+        }
+    }
+
     public static class DisplayEpisodes extends AsyncTask<Void, Void, Void> {
         private int mPodcastId, mPlayListId;
         private Interfaces.PodcastsResponse mResponse;
@@ -228,32 +255,6 @@ public class AsyncTasks {
             mResponse.processFinish(mEpisodes);
         }
     }
-
-    public static class DisplayPodcasts extends AsyncTask<Void, Void, Void> {
-        private Interfaces.PodcastsResponse mResponse;
-        private List<PodcastItem> mPodcasts;
-
-        DisplayPodcasts(final Context context, final Interfaces.PodcastsResponse response) {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-       }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            mPodcasts = DBUtilities.GetPodcasts(mContext.get());
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            mResponse.processFinish(mPodcasts);
-        }
-    }
-
 
     public static class SyncPodcasts extends AsyncTask<Void, Void, Void> {
         private int mPodcastId, mNewEpisodes, mDownloadCount;
