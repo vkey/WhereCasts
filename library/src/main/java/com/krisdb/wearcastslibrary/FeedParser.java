@@ -5,6 +5,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.krisdb.wearcastslibrary.DateUtils.FormatDate;
@@ -75,6 +77,15 @@ public class FeedParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+            try {
+                Collections.sort(episodes, new Comparator<PodcastItem>() {
+                    @Override
+                    public int compare(final PodcastItem item1, final PodcastItem item2) {
+                        return DateUtils.ConvertDate(item2.getPubDate()).compareTo(DateUtils.ConvertDate(item1.getPubDate()));
+                    }
+                });
+            } catch (Exception ignored) {}
 
         return episodes;
     }

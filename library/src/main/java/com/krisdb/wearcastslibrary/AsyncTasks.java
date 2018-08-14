@@ -26,6 +26,8 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -340,16 +342,13 @@ public class AsyncTasks {
 
                         final String latestPubDate = podcastObj.getString("lastest_pub_date_ms") != null ? podcastObj.getString("lastest_pub_date_ms").toLowerCase() : "";
 
-                        if (latestPubDate.contains("month") ||
-                                latestPubDate.contains("today") ||
-                                latestPubDate.contains("day") ||
-                                latestPubDate.contains("days") ||
-                                latestPubDate.contains("hours") ||
-                                latestPubDate.contains("hour") ||
-                                latestPubDate.contains("minutes") ||
-                                latestPubDate.contains("minute") ||
-                                latestPubDate.contains("months")
-                                )
+                        final Calendar calendarEpisode = Calendar.getInstance(Locale.ENGLISH);
+                        calendarEpisode.setTimeInMillis(Long.valueOf(latestPubDate));
+
+                        final Calendar calendarNow = Calendar.getInstance(Locale.ENGLISH);
+                        calendarNow.setTime(new Date());
+
+                        if (DateUtils.daysBetween(calendarEpisode, calendarNow) < 365)
                         {
                             final PodcastItem podcast = new PodcastItem();
                             final ChannelItem channel = new ChannelItem();
