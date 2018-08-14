@@ -85,7 +85,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                 if (link.length() > 0) {
                     link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
                     if (isValidUrl(link)) {
-
                         new FetchPodcast(title, link, new Interfaces.FetchPodcastResponse() {
                             @Override
                             public void processFinish(final PodcastItem podcast) {
@@ -94,7 +93,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                                     @Override
                                     public void processFinish(int response) {
                                         final TextView tvTip = mView.findViewById(R.id.main_tip);
-                                        if (response > 0) {
+                                        if (response == 1) {
                                             Utilities.SendToWatch(mActivity, podcast);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);
@@ -179,6 +178,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         if (getArguments() != null) {
             mWatchConnected = getArguments().getBoolean("connected");
+            mWatchConnected= true;
         }
 
         if (mWatchConnected) {

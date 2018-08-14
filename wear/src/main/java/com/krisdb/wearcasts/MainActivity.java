@@ -182,7 +182,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             final int visits = prefs.getInt("visits", 0) + 1;
 
-            if (PreferenceManager.getDefaultSharedPreferences(ctx).getInt("visits", 0) == 0)
+            if (prefs.getInt("visits", 0) == 0)
                 new AsyncTasks.CacheDirectory(ctx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             if (visits == 1) {
@@ -191,8 +191,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mNavDrawer.get().getController().peekDrawer();
             }
 
-            if (visits == 2)
+            if (visits >= 2 && prefs.getBoolean("long_press_tip_shown", false) == false && DBUtilities.GetPodcasts(ctx).size() > 0) {
                 showToast(ctx, mActivity.get().getString(R.string.tips_swipe_long_press));
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("long_press_tip_shown", true);
+                editor.apply();
+            }
 
             if (visits == 30) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);

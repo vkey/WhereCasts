@@ -408,6 +408,7 @@ public class DBUtilities {
 
             final String orderString = Utilities.GetOrderClause(orderId);
             final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
+            final int newEpisodesSortOrderID = Enums.SortOrder.NEWEPISODES.getSorderOrderCode();
 
             final Cursor cursor = sdb.rawQuery("SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name] FROM [tbl_podcasts] ORDER BY ".concat(orderString), null);
 
@@ -431,7 +432,8 @@ public class DBUtilities {
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
+                    if (orderId == newEpisodesSortOrderID)
+                        podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
 
                     podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
 
