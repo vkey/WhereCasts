@@ -35,6 +35,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -48,6 +49,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     private View mView;
     private ProgressBar mProgressOPML;
     private Boolean mWatchConnected = false;
+    private TextView mTipView;
 
     public static UserAddFragment newInstance(final Boolean connected) {
 
@@ -73,6 +75,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
         mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
         final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
+        mTipView = mView.findViewById(R.id.main_tip);
 
         btnImportPodcast.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,30 +95,29 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                                 new AsyncTasks.EpisodeCount(mActivity, podcast, new Interfaces.IntResponse() {
                                     @Override
                                     public void processFinish(int response) {
-                                        final TextView tvTip = mView.findViewById(R.id.main_tip);
                                         if (response == 1) {
                                             Utilities.SendToWatch(mActivity, podcast);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);
-                                            tvTip.setText(getString(R.string.tip_2));
-                                            tvTip.setTextSize(14);
-                                            tvTip.setTextColor(ContextCompat.getColor(mActivity, R.color.dark_grey));
+                                            mTipView.setText(getString(R.string.tip_2));
+                                            mTipView.setTextSize(14);
+                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.dark_grey));
                                         }
                                         else
                                         {
                                             final SpannableString content = new SpannableString(getString(R.string.error_no_episode));
                                             content.setSpan(new UnderlineSpan(), 49, content.length(), 0);
-                                            tvTip.setText(content);
-                                            tvTip.setTextSize(16);
+                                            mTipView.setText(content);
+                                            mTipView.setTextSize(16);
 
-                                            tvTip.setOnClickListener(new View.OnClickListener() {
+                                            mTipView.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.rss_validator_url))));
                                                 }
                                             });
 
-                                            tvTip.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
                                         }
                                     }
                                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -193,8 +195,34 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         final Intent intent = mActivity.getIntent();
 
-        if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null)
-            ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+        if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
+            ArrayList<String> shareData = intent.getExtras().getStringArrayList(Intent.EXTRA_TEXT);
+
+            if (shareData != null)
+            {
+                String identifier = shareData.get(0);
+                String url = shareData.get(1);
+                String title = shareData.get(2);
+                String description = shareData.get(3);
+                String date = shareData.get(4);
+
+                PodcastItem episode = new PodcastItem();
+                episode.setTitle(title);
+                episode.setMediaUrl(url);
+                episode.setDescription(description);
+                episode.setPubDate(date);
+
+                if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id))))
+                    episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+
+                Utilities.sendEpisode(mActivity, episode);
+
+                mTipView.setText(title.concat(" has been sent to your watch"));
+                mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_general_green));
+            }
+            else
+                ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+        }
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -202,10 +230,10 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
         final int visits = prefs.getInt("visits", 0) + 1;
 
         if (visits == 1) {
-            ((TextView) mView.findViewById(R.id.main_tip)).setText(getString(R.string.tip_1));
-            ((TextView) mView.findViewById(R.id.main_tip)).setTextColor(mActivity.getColor(R.color.red));
+            mTipView.setText(getString(R.string.tip_1));
+            mTipView.setTextColor(mActivity.getColor(R.color.red));
         } else
-            ((TextView) mView.findViewById(R.id.main_tip)).setText(getString(R.string.tip_2));
+            mTipView.setText(getString(R.string.tip_2));
 
         //stop tracking at 100 visits
         if (visits < 100)

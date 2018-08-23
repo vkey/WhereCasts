@@ -71,7 +71,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 if (isConnected) {
-                    final PodcastItem episode = mEpisodes.get(holder.getAdapterPosition());
+                    final int position = holder.getAdapterPosition();
 
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
@@ -81,7 +81,9 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
                         alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                sendEpisode(holder.getAdapterPosition());
+                                Utilities.sendEpisode(mContext, mEpisodes.get(position));
+                                mEpisodes.get(position).setIsSenttoWatch(true);
+                                notifyItemChanged(position);
                                 dialog.dismiss();
                             }
                         });
@@ -95,8 +97,11 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putInt("episode_import", 1);
                         editor.apply();
-                    } else
-                        sendEpisode(holder.getAdapterPosition());
+                    } else {
+                        Utilities.sendEpisode(mContext, mEpisodes.get(position));
+                        mEpisodes.get(position).setIsSenttoWatch(true);
+                        notifyItemChanged(position);
+                    }
                 }
                 else
                     CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
@@ -104,27 +109,6 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         });
 
         return holder;
-    }
-
-    private void sendEpisode(final int position)
-    {
-        final PodcastItem episode = mEpisodes.get(position);
-
-        final PutDataMapRequest dataMap = PutDataMapRequest.create("/episodeimport");
-        dataMap.getDataMap().putString("title", episode.getTitle());
-        dataMap.getDataMap().putString("description", episode.getDescription());
-        if (episode.getMediaUrl() != null)
-            dataMap.getDataMap().putString("mediaurl", episode.getMediaUrl().toString());
-        if (episode.getEpisodeUrl() != null)
-            dataMap.getDataMap().putString("url", episode.getEpisodeUrl().toString());
-        dataMap.getDataMap().putString("pubDate", episode.getPubDate());
-        dataMap.getDataMap().putInt("duration", episode.getDuration());
-        dataMap.getDataMap().putLong("time", new Date().getTime());
-
-        CommonUtils.DeviceSync(mContext, dataMap, mContext.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
-
-        mEpisodes.get(position).setIsSenttoWatch(true);
-        notifyItemChanged(position);
     }
 
     @Override

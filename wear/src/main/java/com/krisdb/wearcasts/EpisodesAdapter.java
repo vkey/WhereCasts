@@ -400,7 +400,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             alert.setMessage(mContext.getString(R.string.confirm_mark_finished));
         else if (mPlaylistId == mPlaylistDownloads)
             alert.setMessage(mContext.getString(R.string.confirm_delete_download));
-        else if (mPlaylistId == mResources.getInteger(R.integer.playlist_upnext) || mPlaylistId > mResources.getInteger(R.integer.playlist_default))
+        else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default) || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
             alert.setMessage(mContext.getString(R.string.confirm_remove_upnext));
         else if (mPlaylistId == mPlaylistLocal)
             alert.setMessage(mContext.getString(R.string.confirm_remove_local));
@@ -423,7 +423,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
                 else if (mPlaylistId == mPlaylistDownloads)
                     Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
+                else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default) || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
                     new DBPodcastsEpisodes(mContext).deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                 else if (mPlaylistId == mPlaylistLocal)
                     deleteLocal(position);

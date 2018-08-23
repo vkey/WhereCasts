@@ -10,7 +10,7 @@ public class PodcastItem implements Serializable
 {
     private String title, description, pubDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
     private URL mediaurl, episodeUrl;
-    private int pid, eid, position, duration, newCount;
+    private int pid, eid, position, duration, newCount, playlistid;
     private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded;
     private ChannelItem channel;
     private PodcastItem latestEpisode;
@@ -165,6 +165,10 @@ public class PodcastItem implements Serializable
     public void setPodcastId(final int id) { this.pid = id; }
 
     public int getPosition() { return position; }
+
+    public void setPlaylistId(final int id) { this.playlistid = id; }
+
+    public int getPlaylistId() { return playlistid; }
 
     public void setPosition(final int position) { this.position = position; }
 

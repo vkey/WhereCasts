@@ -211,6 +211,8 @@ public class PodcastEpisodesListFragment extends Fragment {
                 title = getString(R.string.playlist_title_inprogress);
             else if (mPlaylistId == resources.getInteger(R.integer.playlist_downloads))
                 title = getString(R.string.playlist_title_downloads);
+            else if (mPlaylistId == resources.getInteger(R.integer.playlist_playerfm)) //third party
+                title = getString(R.string.playlist_title_playerfm);
             else if (mPlaylistId == resources.getInteger(R.integer.playlist_upnext))
                 title = getString(R.string.playlist_title_upnext);
             else if (mPlaylistId == resources.getInteger(R.integer.playlist_local))

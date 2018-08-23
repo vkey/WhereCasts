@@ -93,9 +93,13 @@ public class ImportService extends WearableListenerService implements DataClient
 
                     final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
                     final long episodeId = db.insert(cv);
-                    db.close();
 
                     episode.setEpisodeId((int)episodeId);
+
+                    if (dataMapItem.getDataMap().getInt("playlistid") < 0)
+                        db.addEpisodeToPlaylist(dataMapItem.getDataMap().getInt("playlistid"), episode.getEpisodeId());
+
+                    db.close();
                 }
 
                 Utilities.startDownload(this, episode);
@@ -189,8 +193,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     new com.krisdb.wearcastslibrary.AsyncTasks.SaveLogo(this, thumbnailUrl, fileName,
                             new Interfaces.AsyncResponse() {
                                 @Override
-                                public void processFinish() {
-                                }
+                                public void processFinish() {}
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
 

@@ -1,9 +1,11 @@
 package com.krisdb.wearcasts;
 
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
@@ -467,7 +469,7 @@ public class DBUtilities {
                         }
                     });
                 } catch (Exception ex) {
-                    CommonUtils.showToast(ctx, ctx.getString(R.string.alert_error_sorting_latest_episodes));
+                    //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_error_sorting_latest_episodes));
                 }
             }
 
@@ -684,6 +686,8 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId, final boolean hidePlayed, final int limit, String query, final String orderBy) {
+        final Resources resources = ctx.getResources();
+
         List<PodcastItem> episodes = new ArrayList<>();
 
         final PodcastItem titleItem = new PodcastItem();
@@ -691,13 +695,15 @@ public class DBUtilities {
         titleItem.setIsTitle(true);
         ChannelItem channelItem = new ChannelItem();
 
-        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_downloads))
+        if (playlistId == resources.getInteger(R.integer.playlist_downloads))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_downloads));
-        else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress))
+        else if (playlistId == resources.getInteger(R.integer.playlist_playerfm)) //third party
+            channelItem.setTitle(ctx.getString(R.string.playlist_title_playerfm));
+        else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_inprogress));
-        else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_upnext))
+        else if (playlistId == resources.getInteger(R.integer.playlist_upnext))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_upnext));
-        else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_unplayed))
+        else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_unplayed));
         else if (playlistId > ctx.getResources().getInteger(R.integer.playlist_default) && DBUtilities.playlistExists(ctx, playlistId))
             channelItem.setTitle(getPlaylistName(ctx, playlistId));
@@ -712,7 +718,7 @@ public class DBUtilities {
         titleItem.setChannel(channelItem);
         episodes.add(titleItem);
 
-        if (playlistId != ctx.getResources().getInteger(R.integer.playlist_local)) {
+        if (playlistId != resources.getInteger(R.integer.playlist_local)) {
 
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             final SQLiteDatabase sdb = db.select();
@@ -722,7 +728,7 @@ public class DBUtilities {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             int order;
 
-            if (playlistId == ctx.getResources().getInteger(R.integer.playlist_default)) {
+            if (playlistId == resources.getInteger(R.integer.playlist_default)) {
                 final int podcastOrder = Integer.valueOf(prefs.getString("pref_" + podcastId + "_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_sort_order))));
                 if (podcastOrder != 0)
                     order = podcastOrder;
@@ -734,7 +740,7 @@ public class DBUtilities {
 
         final String orderString = orderBy == null ?  Utilities.GetOrderClause(order) : orderBy;
 
-        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_default)) //regular episodes
+        if (playlistId == resources.getInteger(R.integer.playlist_default)) //regular episodes
             {
                 if (hidePlayed)
                     cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 AND [pid] = ? ORDER BY ".concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
@@ -745,13 +751,13 @@ public class DBUtilities {
                 else
                     cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? ORDER BY ".concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
             }
-            else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_downloads)) //downloads can also be in progress, so need separate query for downloads
+            else if (playlistId == resources.getInteger(R.integer.playlist_downloads)) //downloads can also be in progress, so need separate query for downloads
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0 ORDER BY ".concat(orderString)), null);
-            else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_unplayed))
+            else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
-            else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress))
+            else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0 ORDER BY ".concat(orderString)), null);
-            else if (playlistId > ctx.getResources().getInteger(R.integer.playlist_default))
+            else if (playlistId > resources.getInteger(R.integer.playlist_default) || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ? ORDER BY ".concat(orderString)), new String[]{String.valueOf(playlistId)});
             else
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [upnext] = 1 ORDER BY ".concat(orderString)), null);
@@ -762,12 +768,12 @@ public class DBUtilities {
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 
-                    if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress) && episode.getPosition() > 0) //in progress
+                    if (playlistId == resources.getInteger(R.integer.playlist_inprogress) && episode.getPosition() > 0) //in progress
                         episode.setTitle(episode.getTitle().concat(" (").concat(DateUtils.FormatPositionTime(episode.getPosition())).concat(")"));
 
                     episode.setChannel(GetChannel(ctx, cursor.getInt(1)));
 
-                    if (playlistId != ctx.getResources().getInteger(R.integer.playlist_default))
+                    if (playlistId != resources.getInteger(R.integer.playlist_default))
                         episode.setDisplayThumbnail(GetRoundedLogo(ctx, episode.getChannel(), R.drawable.ic_thumb_playlist_default));
 
                     episodes.add(episode);

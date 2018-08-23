@@ -249,6 +249,7 @@
     <string name="confirm_yes">YES</string>
     <string name="confirm_no">NO</string>
 
+    <string name="playlist_title_playerfm">Player FM</string>
     <string name="playlist_title_inprogress">In Progress</string>
     <string name="playlist_title_downloads">Downloads</string>
     <string name="playlist_title_unplayed">Unplayed</string>

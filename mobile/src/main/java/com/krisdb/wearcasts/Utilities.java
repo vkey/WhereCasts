@@ -25,6 +25,24 @@ import java.util.List;
 
 public class Utilities {
 
+    static void sendEpisode(final Context ctx, final PodcastItem episode)
+    {
+        final PutDataMapRequest dataMap = PutDataMapRequest.create("/episodeimport");
+        dataMap.getDataMap().putString("title", episode.getTitle());
+        dataMap.getDataMap().putString("description", episode.getDescription());
+        if (episode.getMediaUrl() != null)
+            dataMap.getDataMap().putString("mediaurl", episode.getMediaUrl().toString());
+        if (episode.getEpisodeUrl() != null)
+            dataMap.getDataMap().putString("url", episode.getEpisodeUrl().toString());
+        dataMap.getDataMap().putString("pubDate", episode.getPubDate());
+        dataMap.getDataMap().putInt("duration", episode.getDuration());
+        dataMap.getDataMap().putLong("time", new Date().getTime());
+        dataMap.getDataMap().putInt("playlistid", episode.getPlaylistId());
+
+        if (episode.getPlaylistId() == 0)
+            CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
+   }
+
     static void SendToWatch(final Context ctx, final PodcastItem podcast)
     {
         SendToWatch(ctx, podcast, true);

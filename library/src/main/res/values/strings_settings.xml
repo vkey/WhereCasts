@@ -14,6 +14,12 @@
     <string name="inapp_premium_product_id">premium_features</string>
     <string name="inapp_playlist_prefix">playlist_</string>
 
+
+    <string name="third_party_episode_unique_id">.wearcasts.episode</string>
+    <!--third party-->
+    <!--<string name="package_id_player_fm">fm.player</string> -->
+    <string name="package_id_player_fm">com.example.android.permissionrequest</string>
+
     <string-array name="inapp_playlists_sku">
         <item>-- Select --</item>
         <item>1</item>

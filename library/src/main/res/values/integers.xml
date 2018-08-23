@@ -4,4 +4,7 @@
     <integer name="podcast_art_download_width">300</integer>
     <integer name="search_results_day_limit">-120</integer>
     <integer name="directory_resync_amount">20</integer>
+
+    <integer name="playlist_playerfm">-7</integer>
+
 </resources>
