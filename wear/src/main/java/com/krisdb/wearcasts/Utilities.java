@@ -243,7 +243,6 @@ public class Utilities {
         return "local_file_duration_".concat(CommonUtils.CleanString(name));
     }
 
-
     static int[] ProcessEpisodes(final Context ctx, final PodcastItem podcast) {
 
         final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_episode_limit", "50"));

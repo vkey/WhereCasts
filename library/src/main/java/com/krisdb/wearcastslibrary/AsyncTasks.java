@@ -518,8 +518,7 @@ public class AsyncTasks {
 
         @Override
         protected Void doInBackground(Void... args) {
-            final List<PodcastItem> episodes = FeedParser.parse(mPodcast, 1);
-            mOutput = episodes.size();
+            mOutput = FeedParser.parse(mPodcast, 1).size();
             return null;
         }
 

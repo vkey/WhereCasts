@@ -91,7 +91,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                         new FetchPodcast(title, link, new Interfaces.FetchPodcastResponse() {
                             @Override
                             public void processFinish(final PodcastItem podcast) {
-
                                 new AsyncTasks.EpisodeCount(mActivity, podcast, new Interfaces.IntResponse() {
                                     @Override
                                     public void processFinish(int response) {
@@ -196,32 +195,42 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
         final Intent intent = mActivity.getIntent();
 
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
-            ArrayList<String> shareData = intent.getExtras().getStringArrayList(Intent.EXTRA_TEXT);
+            if (mWatchConnected) {
+                ArrayList<String> shareData = intent.getExtras().getStringArrayList(Intent.EXTRA_TEXT);
 
-            if (shareData != null)
-            {
-                String identifier = shareData.get(0);
-                String url = shareData.get(1);
-                String title = shareData.get(2);
-                String description = shareData.get(3);
-                String date = shareData.get(4);
+                if (shareData != null) {
+                    String identifier = shareData.get(0);
+                    String url = shareData.get(1);
+                    String title = shareData.get(2);
+                    String description = shareData.get(3);
+                    String date = shareData.get(4);
 
-                PodcastItem episode = new PodcastItem();
-                episode.setTitle(title);
-                episode.setMediaUrl(url);
-                episode.setDescription(description);
-                episode.setPubDate(date);
+                    PodcastItem episode = new PodcastItem();
+                    episode.setTitle(title);
+                    episode.setMediaUrl(url);
+                    episode.setDescription(description);
+                    episode.setPubDate(date);
 
-                if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id))))
-                    episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+                    String message = null;
 
-                Utilities.sendEpisode(mActivity, episode);
+                    Utilities.sendEpisode(mActivity, episode);
 
-                mTipView.setText(title.concat(" has been sent to your watch"));
-                mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_general_green));
+                    //third party
+                    if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
+                        episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+                        message = "Hello, Player FM user! \"" + title + "\" has been sent to your watch and will be visible under the Player FM playlist";
+                    }
+
+                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
+                    mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                } else
+                    ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
             }
             else
-                ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+            {
+                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("No watch detected.");
+                mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+            }
         }
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
