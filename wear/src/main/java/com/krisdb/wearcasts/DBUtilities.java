@@ -674,7 +674,7 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId) {
-            return GetEpisodes(ctx, podcastId, playlistId, false, 300, null);
+            return GetEpisodes(ctx, podcastId, playlistId, false, Integer.MAX_VALUE, null);
     }
 
     static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId, final boolean hidePlayed, final int limit, final String orderBy) {
@@ -682,7 +682,7 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> SearchEpisodes(final Context ctx, final int podcastId, final String query) {
-            return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), false, 300, query, null);
+            return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), false, Integer.MAX_VALUE, query, null);
     }
 
     static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId, final boolean hidePlayed, final int limit, String query, final String orderBy) {

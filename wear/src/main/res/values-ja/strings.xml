@@ -115,6 +115,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">ストリーミングまたはダウンロードする前に</string>
     <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">すべてのサムネイルを削除するにはクリックしてください (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">すべてのダウンロードをキャンセルする</string>
 
     <string name="settings_podcasts_entries_title_header_color">ヘッダーカラー</string>
     <string name="settings_podcasts_entries_header_color_blue">青</string>
@@ -257,6 +258,7 @@
     <string name="alert_search_empty">検索語を入力してください</string>
     <string name="alert_refreshing_thumb">サムネイルをリフレッシュする…</string>
 
+    <string name="alert_downloads_all_cancelled">すべてのダウンロードをキャンセルしました</string>
     <string name="alert_locating_network">ネットワークを待っている…</string>
     <string name="alert_locating_network_notfound">ネットワークを見つけることができません</string>
     <string name="alert_sync_started">同期が開始されました</string>

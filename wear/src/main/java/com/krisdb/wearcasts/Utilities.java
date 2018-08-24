@@ -349,6 +349,29 @@ public class Utilities {
         return downloadId;
     }
 
+    static void cancelAllDownloads(final Context ctx) {
+        final DownloadManager manager = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+
+        final SQLiteDatabase sdb = db.select();
+
+        final Cursor cursor = sdb.rawQuery("SELECT [id],[downloadid] FROM [tbl_podcast_episodes] WHERE [downloadid] <> 0", null);
+        final ContentValues cv = new ContentValues();
+        cv.put("download", 0);
+        cv.put("downloadid", 0);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                manager.remove(cursor.getInt(1));
+                db.update(cv, cursor.getInt(0));
+                cursor.moveToNext();
+            }
+        }
+
+        sdb.close();
+        db.close();
+    }
+
     static int getDownloadId(final Context ctx, final int episodeId)
     {
         int downloadId = 0;

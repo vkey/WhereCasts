@@ -116,6 +116,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">स्ट्रीमिंग या डाउनलोड करने से पहले</string>
     <string name="settings_podcasts_label_downloads_delete_all">सभी डाउनलोड हटाने के लिए क्लिक करें (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">सभी थंबनेल हटाने के लिए क्लिक करें (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">सभी डाउनलोड रद्द करें</string>
 
     <string name="settings_podcasts_entries_title_header_color">हैडर का रंग</string>
     <string name="settings_podcasts_entries_header_color_blue">नीला</string>
@@ -258,6 +259,7 @@
     <string name="alert_search_empty">एक खोज शब्द दर्ज करें</string>
     <string name="alert_refreshing_thumb">ताज़ा थंबनेल…</string>
 
+    <string name="alert_downloads_all_cancelled">सभी डाउनलोड रद्द कर दिया गया</string>
     <string name="alert_locating_network">नेटवर्क की प्रतीक्षा कर रहा है…</string>
     <string name="alert_locating_network_notfound">कोई नेटवर्क नहीं ढूँढा जा सकता</string>
     <string name="alert_sync_started">सिंकिंग प्रारंभ हुआ</string>

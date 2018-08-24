@@ -116,6 +116,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">Avant de diffuser ou de télécharger</string>
     <string name="settings_podcasts_label_downloads_delete_all">Cliquez pour supprimer tous les téléchargements (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Cliquez pour supprimer toutes les vignette (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">Annuler tous les téléchargements</string>
 
     <string name="settings_podcasts_entries_title_header_color">Couleur de l\'en-tête</string>
     <string name="settings_podcasts_entries_header_color_blue">Bleu</string>
@@ -256,6 +257,7 @@
     <string name="alert_search_empty">Entrez un terme de recherche</string>
     <string name="alert_refreshing_thumb">Vignette rafraîchissante…</string>
 
+    <string name="alert_downloads_all_cancelled">Tous les téléchargements annulés</string>
     <string name="alert_locating_network">En attente de réseau…</string>
     <string name="alert_locating_network_notfound">Impossible de localiser un réseau</string>
     <string name="alert_sync_started">La synchronisation a commencé</string>

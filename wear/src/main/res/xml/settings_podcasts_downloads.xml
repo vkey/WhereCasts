@@ -53,5 +53,10 @@
 
         <Preference android:key="pref_delete_downloads" />
 
+        <Preference
+            android:key="pref_cancel_downloads"
+            android:title="@string/settings_podcasts_label_downloads_cancel"
+            />
+
     </PreferenceCategory>
 </PreferenceScreen>

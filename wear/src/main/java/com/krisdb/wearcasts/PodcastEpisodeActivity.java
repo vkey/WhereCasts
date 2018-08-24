@@ -920,7 +920,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         final ContentValues cv = new ContentValues();
         cv.put("download", 0);
         cv.put("downloadid", 0);
-        new DBPodcastsEpisodes(mActivity).update(cv, mEpisode.getEpisodeId());
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+        db.update(cv, mEpisode.getEpisodeId());
+        db.close();
     }
 
     public void DeleteEpisode() {

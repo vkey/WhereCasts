@@ -112,6 +112,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">Before streaming or downloading</string>
     <string name="settings_podcasts_label_downloads_delete_all">Click to delete all downloads (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Click to delete all thumbnails (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">Cancel all downloads</string>
 
     <string name="settings_podcasts_entries_title_header_color">Header Color</string>
     <string name="settings_podcasts_entries_header_color_blue">Blue</string>
@@ -262,6 +263,7 @@
     <string name="alert_search_empty">Enter a search term</string>
     <string name="alert_refreshing_thumb">Refreshing thumbnail…</string>
 
+    <string name="alert_downloads_all_cancelled">All downloads cancelled</string>
     <string name="alert_locating_network">Waiting for network…</string>
     <string name="alert_locating_network_notfound">Cannot locate a network</string>
     <string name="alert_sync_started">Syncing started</string>

@@ -114,6 +114,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">流媒體或下載之前</string>
     <string name="settings_podcasts_label_downloads_delete_all">點擊刪除所有下載 (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">點擊刪除所有縮略圖 (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">取消所有下載</string>
 
     <string name="settings_podcasts_entries_title_header_color">標題顏色</string>
     <string name="settings_podcasts_entries_header_color_blue">藍色</string>
@@ -256,6 +257,7 @@
     <string name="alert_search_empty">輸入一個搜索詞</string>
     <string name="alert_refreshing_thumb">刷新縮略圖…</string>
 
+    <string name="alert_downloads_all_cancelled">所有下載均已取消</string>
     <string name="alert_locating_network">等待網絡…</string>
     <string name="alert_locating_network_notfound">找不到網絡</string>
     <string name="alert_sync_started">正在開始同步</string>

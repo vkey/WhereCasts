@@ -116,6 +116,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">Antes de la transmisión o descarga</string>
     <string name="settings_podcasts_label_downloads_delete_all">Haga clic para eliminar todas las descargas (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Haga clic para eliminar todas las miniaturas (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">Cancelar todas las descargas</string>
 
     <string name="settings_podcasts_entries_title_header_color">Color del encabezado</string>
     <string name="settings_podcasts_entries_header_color_blue">Azul</string>
@@ -257,6 +258,7 @@
     <string name="alert_search_empty">Ingrese un término de búsqueda</string>
     <string name="alert_refreshing_thumb">Miniatura refrescante…</string>
 
+    <string name="alert_downloads_all_cancelled">Todas las descargas canceladas</string>
     <string name="alert_locating_network">Esperando red…</string>
     <string name="alert_locating_network_notfound">No se puede ubicar una red</string>
     <string name="alert_sync_started">La sincronización comenzó</string>

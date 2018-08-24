@@ -16,8 +16,10 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
+import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.GetMediaDirectory;
 
@@ -98,6 +100,14 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
                    }
                });
                alert.show();
+               return false;
+           }
+       });
+
+       findPreference("pref_cancel_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+           public boolean onPreferenceClick(Preference preference) {
+                Utilities.cancelAllDownloads(getActivity());
+                CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
                return false;
            }
        });

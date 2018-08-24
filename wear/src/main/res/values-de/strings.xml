@@ -116,6 +116,7 @@
     <string name="settings_podcasts_label_high_bandwidth_summary">Vor dem Streaming oder Herunterladen</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicken Sie hier, um alle Downloads zu löschen (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Klicken Sie, um alle Miniaturansichten zu löschen (%d)</string>
+    <string name="settings_podcasts_label_downloads_cancel">Alle Downloads abbrechen</string>
 
     <string name="settings_podcasts_entries_title_header_color">Kopfzeilenfarbe</string>
     <string name="settings_podcasts_entries_header_color_blue">Blau</string>
@@ -258,6 +259,7 @@
     <string name="alert_search_empty">Geben Sie einen Suchbegriff ein</string>
     <string name="alert_refreshing_thumb">Erfrischendes Thumbnail…</string>
 
+    <string name="alert_downloads_all_cancelled">Alle Downloads wurden abgebrochen</string>
     <string name="alert_locating_network">Warte auf Netzwerk…</string>
     <string name="alert_locating_network_notfound">Kann kein Netzwerk finden</string>
     <string name="alert_sync_started">Synchronisierung gestartet</string>
