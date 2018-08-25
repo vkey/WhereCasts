@@ -138,13 +138,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
 
             //third party
-            if (DBUtilities.GetEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)).size() > 1)
+            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 
-            if (hideEmpty == false || DBUtilities.GetEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)).size() > 1)
+            if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_inprogress));
 
-            if (hideEmpty == false || DBUtilities.GetEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)).size() > 1)
+            if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
 
             //if (hideEmpty == false || DBUtilities.GetEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_upnext)).size() > 1)

@@ -400,9 +400,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             alert.setMessage(mContext.getString(R.string.confirm_mark_finished));
         else if (mPlaylistId == mPlaylistDownloads)
             alert.setMessage(mContext.getString(R.string.confirm_delete_download));
-        else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default) || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
+        else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
             alert.setMessage(mContext.getString(R.string.confirm_remove_upnext));
-        else if (mPlaylistId == mPlaylistLocal)
+        else if (mPlaylistId == mPlaylistLocal || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
             alert.setMessage(mContext.getString(R.string.confirm_remove_local));
         else
             alert.setMessage(mEpisodes.get(position).getFinished() ? mContext.getString(R.string.confirm_mark_unplayed) : mContext.getString(R.string.confirm_mark_played));
@@ -411,20 +411,27 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //final int position = holder.getAdapterPosition();
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+
+
                 if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress)) //in progress
                 {
                     final ContentValues cv = new ContentValues();
                     cv.put("position", 0);
                     cv.put("finished", 1);
 
-                    new DBPodcastsEpisodes(mContext).update(cv, mEpisodes.get(position).getEpisodeId());
+                    db.update(cv, mEpisodes.get(position).getEpisodeId());
                 }
                 else if (mPlaylistId == mPlaylistDownloads)
                     Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default) || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
-                    new DBPodcastsEpisodes(mContext).deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
+                else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
+                {
+                    db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
+                    db.delete(mEpisodes.get(position).getEpisodeId());
+                }
+                else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
+                    db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                 else if (mPlaylistId == mPlaylistLocal)
                     deleteLocal(position);
                 else
@@ -437,6 +444,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 else
                     refreshList(mEpisodes.get(position).getPodcastId());
 
+                db.close();
                 dialog.dismiss();
             }
         });

@@ -96,13 +96,16 @@ public class ImportService extends WearableListenerService implements DataClient
 
                     episode.setEpisodeId((int)episodeId);
 
+                    //only add third parties to playlist
                     if (dataMapItem.getDataMap().getInt("playlistid") < 0)
                         db.addEpisodeToPlaylist(dataMapItem.getDataMap().getInt("playlistid"), episode.getEpisodeId());
 
                     db.close();
                 }
 
-                Utilities.startDownload(this, episode);
+                //auto download for non-third party episodes
+                if (dataMapItem.getDataMap().getInt("playlistid") == 0)
+                    Utilities.startDownload(this, episode);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {

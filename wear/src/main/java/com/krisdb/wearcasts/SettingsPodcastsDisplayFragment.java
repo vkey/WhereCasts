@@ -26,12 +26,25 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         addPreferencesFromResource(R.xml.settings_podcasts_display);
 
         mActivity = getActivity();
+        final Resources resources = getResources();
+
         final PreferenceCategory category = (PreferenceCategory)findPreference("display_settings");
 
         final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity, false);
-        final int size = playlists.size();
-        final CharSequence entryValues[] = new String[size + 4];
-        final CharSequence entryText[] = new String[size + 4];
+        int size = playlists.size();
+
+        //third party
+        final Boolean thirdPartyPlayerFM = DBUtilities.HasEpisodes(mActivity, 0, resources.getInteger(R.integer.playlist_playerfm));
+
+        int limit;
+
+        if (thirdPartyPlayerFM)
+            limit = size + 5;
+        else
+            limit = size + 4;
+
+        final CharSequence entryValues[] = new String[limit];
+        final CharSequence entryText[] = new String[limit];
 
         final List<PlaylistItem> playlistsArray = DBUtilities.getPlaylists(mActivity);
 
@@ -43,17 +56,19 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
             entryText[p] = playlists.get(p-1).getName();
         }
 
-        final Resources resources = getResources();
 
         entryValues[size + 1] = String.valueOf(resources.getInteger(R.integer.playlist_local));
         entryValues[size + 2] = String.valueOf(resources.getInteger(R.integer.playlist_inprogress));
         entryValues[size + 3] = String.valueOf(resources.getInteger(R.integer.playlist_downloads));
-        //entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.playlist_upnext));
+
+        if (thirdPartyPlayerFM)
+            entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.playlist_playerfm));
 
         entryText[size + 1] = getString(R.string.settings_podcasts_home_screen_local);
         entryText[size + 2] = getString(R.string.settings_podcasts_home_screen_inprogress);
         entryText[size + 3] = getString(R.string.settings_podcasts_home_screen_downloads);
-        //entryText[size + 4] = getString(R.string.settings_podcasts_home_screen_upnext);
+        if (thirdPartyPlayerFM)
+            entryText[size + 4] = getString(R.string.third_party_title_playerfm);
 
         final ListPreference lpHomeScreen = new ListPreference(mActivity);
         lpHomeScreen.setTitle(R.string.settings_podcasts_label_home_screen);

@@ -213,13 +213,13 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
                     String message = null;
 
-                    Utilities.sendEpisode(mActivity, episode);
-
                     //third party
                     if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
                         episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
-                        message = "Hello, Player FM user! \"" + title + "\" has been sent to your watch and will be visible under the Player FM playlist";
+                        message = "Hello, " + getString(R.string.third_party_title_playerfm) + " user! \"" + title + "\" has been sent to your watch and will be visible under the " + getString(R.string.third_party_title_playerfm) + " playlist";
                     }
+
+                    Utilities.sendEpisode(mActivity, episode);
 
                     ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
                     mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);

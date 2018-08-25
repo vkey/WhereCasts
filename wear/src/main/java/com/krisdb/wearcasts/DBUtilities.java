@@ -673,6 +673,28 @@ public class DBUtilities {
         return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), hidePlayed, numberOfEpisode, null);
     }
 
+
+    static Boolean HasEpisodes(final Context ctx, final int podcastId, final int playlistId) {
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        Boolean output;
+
+        Cursor cursor;
+
+        if (playlistId != 0)
+            cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
+        else
+            cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [pid] = ?", new String[]{String.valueOf(podcastId)});
+
+        output = cursor.moveToFirst();
+
+        sdb.close();
+        db.close();
+
+        return output;
+    }
+
     static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId) {
             return GetEpisodes(ctx, podcastId, playlistId, false, Integer.MAX_VALUE, null);
     }
@@ -698,7 +720,7 @@ public class DBUtilities {
         if (playlistId == resources.getInteger(R.integer.playlist_downloads))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_downloads));
         else if (playlistId == resources.getInteger(R.integer.playlist_playerfm)) //third party
-            channelItem.setTitle(ctx.getString(R.string.playlist_title_playerfm));
+            channelItem.setTitle(ctx.getString(R.string.third_party_title_playerfm));
         else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_inprogress));
         else if (playlistId == resources.getInteger(R.integer.playlist_upnext))

@@ -41,6 +41,8 @@ public class Utilities {
 
         if (episode.getPlaylistId() == 0)
             CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
+        else
+            CommonUtils.DeviceSync(ctx, dataMap, null, Toast.LENGTH_SHORT);
    }
 
     static void SendToWatch(final Context ctx, final PodcastItem podcast)
