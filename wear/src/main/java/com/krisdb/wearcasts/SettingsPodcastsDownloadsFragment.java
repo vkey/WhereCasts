@@ -16,10 +16,8 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
-import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.GetMediaDirectory;
 

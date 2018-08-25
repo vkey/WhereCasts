@@ -55,8 +55,11 @@ public class SyncService extends WearableListenerService implements DataClient.O
                 intentMediaSynced.setAction("media_action");
                 intentMediaSynced.putExtra("media_synced", true);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intentMediaSynced);
-            } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/rateapp"))
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url))));
+            } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/rateapp")) {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/fileuploadprogress")) {
 
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());

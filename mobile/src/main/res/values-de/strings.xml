@@ -33,11 +33,14 @@
     <string name="button_text_playlists_purchase">Kauf\nWiedergabelisten</string>
     <string name="alert_playlists_purchased">Playlisten wurden erfolgreich erstellt.\nVerwalte Playlists unter den Einstellungen deiner Uhr. Möglicherweise ist ein Neustart der App auf Ihrer Uhr erforderlich.</string>
 
-
     <string name="menu_text_about">Über</string>
     <string name="menu_text_directory">Entdecken</string>
 
     <string name="page_title_search_results">Ergebnisse</string>
+
+    <string name="text_third_party_greeting">Hallo, %1$s Benutzer! \"%2$s\" wurde an Ihre Uhr gesendet und wird unter der angezeigt %1$s Wiedergabeliste</string>
+    <string name="text_third_party_auto_download">Auto-Download Podcast auf der Uhr</string>
+    <string name="text_third_party_no_watch">Keine Uhr erkannt</string>
 
     <string name="text_importing_opml_sending">Senden von Podcasts an Ihr Verschleißgerät…</string>
     <string name="text_importing_opml_parsing">Parsen von OPML (kann je nach Anzahl der Podcasts eine Weile dauern)…</string>

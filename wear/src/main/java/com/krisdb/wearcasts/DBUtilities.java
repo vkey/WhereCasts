@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts;
 
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
 import com.krisdb.wearcastslibrary.ChannelItem;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -682,7 +680,9 @@ public class DBUtilities {
 
         Cursor cursor;
 
-        if (playlistId != 0)
+        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_downloads))
+            cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0", null);
+        else if (playlistId != 0)
             cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
         else
             cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [pid] = ?", new String[]{String.valueOf(podcastId)});

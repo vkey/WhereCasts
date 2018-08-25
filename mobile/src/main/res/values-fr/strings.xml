@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">Résultats</string>
 
+    <string name="text_third_party_greeting">Bonjour, %1$s utilisateur! \"%2$s\" a été envoyé à votre montre et sera visible sous le %1$s playlist</string>
+    <string name="text_third_party_auto_download">Podcast de téléchargement automatique sur montre</string>
+    <string name="text_third_party_no_watch">Aucune montre détectée</string>
+
     <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>
     <string name="text_importing_opml_parsing">Analyser OPML (peut prendre un certain temps en fonction du nombre de podcasts)…</string>
     <string name="alert_get_directory_error">Impossible d\'extraire le répertoire podcasts</string>

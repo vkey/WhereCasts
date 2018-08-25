@@ -59,7 +59,6 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         entryValues[size + 1] = String.valueOf(resources.getInteger(R.integer.playlist_local));
         entryValues[size + 2] = String.valueOf(resources.getInteger(R.integer.playlist_inprogress));
         entryValues[size + 3] = String.valueOf(resources.getInteger(R.integer.playlist_downloads));
-
         if (thirdPartyPlayerFM)
             entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.playlist_playerfm));
 

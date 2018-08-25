@@ -181,7 +181,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         if (getArguments() != null) {
             mWatchConnected = getArguments().getBoolean("connected");
-            mWatchConnected= true;
         }
 
         if (mWatchConnected) {
@@ -221,7 +220,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                     //third party
                     if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
                         episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
-                        message = "Hello, " + getString(R.string.third_party_title_playerfm) + " user! \"" + title + "\" has been sent to your watch and will be visible under the " + getString(R.string.third_party_title_playerfm) + " playlist";
+                        message = getString(R.string.text_third_party_greeting, getString(R.string.third_party_title_playerfm), title);
                     }
 
                     Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
@@ -234,7 +233,8 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
             }
             else
             {
-                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("No watch detected.");
+                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(getString(R.string.text_third_party_no_watch));
+                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
                 mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
             }
         }

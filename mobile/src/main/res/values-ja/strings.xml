@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">結果</string>
 
+    <string name="text_third_party_greeting">こんにちは, %1$s ユーザー! \"%2$s\" あなたの時計に送信され、その下に表示されます %1$s プレイリスト</string>
+    <string name="text_third_party_auto_download">時計のPodcastを自動ダウンロードする</string>
+    <string name="text_third_party_no_watch">時計が検出されなかった</string>
+
     <string name="text_importing_opml_sending">あなたのウェアデバイスにポッドキャストを送信する…</string>
     <string name="text_importing_opml_parsing">OPMLの解析（Podcastの数に応じてしばらく時間がかかります）…</string>
     <string name="alert_get_directory_error">Podcastディレクトリを取得できませんでした</string>

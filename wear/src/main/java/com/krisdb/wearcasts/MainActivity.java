@@ -65,6 +65,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         //final SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
+
+        //final SQLiteDatabase sdb = DatabaseHelper.select(this);
+        //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = -7");
 /*
         final ContentValues cv = new ContentValues();
         cv.put("title", "P3 Dokumentär");
@@ -137,18 +140,15 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             if (localFiles)
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
 
-            //third party
-            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
-
             if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_inprogress));
 
             if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
 
-            //if (hideEmpty == false || DBUtilities.GetEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_upnext)).size() > 1)
-            //mPlayListIds.add(resources.getInteger(R.integer.playlist_upnext));
+            //third party
+            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
+                mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 
             mNumberOfPages = mPlayListIds.size();
 
@@ -203,7 +203,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            if (visits == 30) {
+            if (visits == 50)
+            {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                 alert.setMessage(ctx.getString(R.string.rate_app_reminder));
                 alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {

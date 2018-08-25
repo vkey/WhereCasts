@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">Results</string>
 
+    <string name="text_third_party_greeting">Hello, %1$s user! \"%2$s\" has been sent to your watch and will be visible under the %1$s playlist</string>
+    <string name="text_third_party_auto_download">Auto-download podcast on watch</string>
+    <string name="text_third_party_no_watch">No watch detected</string>
+
     <string name="text_importing_opml_sending">Sending podcasts to your wear device…</string>
     <string name="text_importing_opml_parsing">Parsing OPML (could take awhile depending on number of podcasts)…</string>
     <string name="alert_get_directory_error">Failed to fetch podcasts directory</string>

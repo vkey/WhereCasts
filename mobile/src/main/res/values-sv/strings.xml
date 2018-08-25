@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">Resultat</string>
 
+    <string name="text_third_party_greeting">Hallå, %1$s användare! \"%2$s\" har skickats till din klocka och kommer att synas under %1$s Spellista</string>
+    <string name="text_third_party_auto_download">Ladda ner podcast automatiskt på klockan</string>
+    <string name="text_third_party_no_watch">Ingen klocka upptäckt</string>
+
     <string name="text_importing_opml_sending">Skickar podcaster till din slitage enhet…</string>
     <string name="text_importing_opml_parsing">Parsing OPML (kan ta ett tag beroende på antal podsändningar)…</string>
     <string name="alert_get_directory_error">Misslyckades med att hämta podcaster katalog</string>

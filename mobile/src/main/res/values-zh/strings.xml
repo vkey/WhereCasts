@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">結果</string>
 
+    <string name="text_third_party_greeting">你好, %1$s 用戶! \"%2$s\" 已發送到您的手錶，將在下面顯示 %1$s 播放列表</string>
+    <string name="text_third_party_auto_download">在手錶上自動下載播客</string>
+    <string name="text_third_party_no_watch">沒有檢測到手錶</string>
+
     <string name="text_importing_opml_sending">將播客發送到您的穿戴設備…</string>
     <string name="text_importing_opml_parsing">解析OPML（可能需要一段時間，取決於播客的數量）…</string>
     <string name="alert_get_directory_error">無法獲取播客目錄</string>

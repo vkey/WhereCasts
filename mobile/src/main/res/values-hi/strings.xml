@@ -38,6 +38,10 @@
 
     <string name="page_title_search_results">परिणाम</string>
 
+    <string name="text_third_party_greeting">नमस्ते, %1$s उपयोगकर्ता! \"%2$s\" आपकी घड़ी में भेजा गया है और इसके तहत दिखाई देगा %1$s प्लेलिस्ट</string>
+    <string name="text_third_party_auto_download">घड़ी पर पॉडकास्ट स्वतः डाउनलोड करें</string>
+    <string name="text_third_party_no_watch">कोई घड़ी नहीं मिली</string>
+
     <string name="text_importing_opml_sending">अपने पहनने के उपकरण में पॉडकास्ट भेज रहा है…</string>
     <string name="text_importing_opml_parsing">OPML पार्सिंग (पॉडकास्ट की संख्या के आधार पर कुछ समय लग सकता है)…</string>
     <string name="alert_get_directory_error">पॉडकास्ट निर्देशिका लाने में विफल</string>
