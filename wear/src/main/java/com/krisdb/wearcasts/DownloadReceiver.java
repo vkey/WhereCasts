@@ -116,6 +116,7 @@ public class DownloadReceiver extends BroadcastReceiver
 
                         if (count < 10) {
                             showToast(context, context.getString(R.string.alert_download_error_restart));
+                            Utilities.DeleteMediaFile(context, episode);
                             Utilities.startDownload(context, episode);
                             editor.putInt("downloads_" + episode.getEpisodeId(), count + 1);
                         } else {

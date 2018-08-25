@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.FetchPodcast;
@@ -27,22 +28,29 @@ public class Utilities {
 
     static void sendEpisode(final Context ctx, final PodcastItem episode)
     {
-        final PutDataMapRequest dataMap = PutDataMapRequest.create("/episodeimport");
-        dataMap.getDataMap().putString("title", episode.getTitle());
-        dataMap.getDataMap().putString("description", episode.getDescription());
+        sendEpisode(ctx, episode, false);
+    }
+
+    static void sendEpisode(final Context ctx, final PodcastItem episode, final Boolean autoDownload)
+    {
+        final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/episodeimport");
+        final DataMap dataMap = dataMapRequest.getDataMap();
+        dataMap.putString("title", episode.getTitle());
+        dataMap.putString("description", episode.getDescription());
         if (episode.getMediaUrl() != null)
-            dataMap.getDataMap().putString("mediaurl", episode.getMediaUrl().toString());
+            dataMap.putString("mediaurl", episode.getMediaUrl().toString());
         if (episode.getEpisodeUrl() != null)
-            dataMap.getDataMap().putString("url", episode.getEpisodeUrl().toString());
-        dataMap.getDataMap().putString("pubDate", episode.getPubDate());
-        dataMap.getDataMap().putInt("duration", episode.getDuration());
-        dataMap.getDataMap().putLong("time", new Date().getTime());
-        dataMap.getDataMap().putInt("playlistid", episode.getPlaylistId());
+            dataMap.putString("url", episode.getEpisodeUrl().toString());
+        dataMap.putString("pubDate", episode.getPubDate());
+        dataMap.putInt("duration", episode.getDuration());
+        dataMap.putLong("time", new Date().getTime());
+        dataMap.putInt("playlistid", episode.getPlaylistId());
+        dataMap.putBoolean("auto_download", autoDownload);
 
         if (episode.getPlaylistId() == 0)
-            CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
+            CommonUtils.DeviceSync(ctx, dataMapRequest, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
         else
-            CommonUtils.DeviceSync(ctx, dataMap, null, Toast.LENGTH_SHORT);
+            CommonUtils.DeviceSync(ctx, dataMapRequest, null, Toast.LENGTH_SHORT);
    }
 
     static void SendToWatch(final Context ctx, final PodcastItem podcast)

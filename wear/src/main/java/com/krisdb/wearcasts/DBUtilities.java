@@ -689,6 +689,7 @@ public class DBUtilities {
 
         output = cursor.moveToFirst();
 
+        cursor.close();
         sdb.close();
         db.close();
 

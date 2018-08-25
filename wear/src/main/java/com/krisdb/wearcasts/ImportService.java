@@ -103,8 +103,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     db.close();
                 }
 
-                //auto download for non-third party episodes
-                if (dataMapItem.getDataMap().getInt("playlistid") == 0)
+                if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download"))
                     Utilities.startDownload(this, episode);
             }
 

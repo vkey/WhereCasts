@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +51,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     private ProgressBar mProgressOPML;
     private Boolean mWatchConnected = false;
     private TextView mTipView;
+    private CheckBox mThirdPartyAutoDownload;
 
     public static UserAddFragment newInstance(final Boolean connected) {
 
@@ -73,6 +75,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         mView = inflater.inflate(R.layout.fragment_user_add, container, false);
         mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
+        mThirdPartyAutoDownload = mView.findViewById(R.id.user_add_third_party_auto_download);
         final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
         mTipView = mView.findViewById(R.id.main_tip);
@@ -176,7 +179,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
             }
         });
 
-
         if (getArguments() != null) {
             mWatchConnected = getArguments().getBoolean("connected");
             mWatchConnected= true;
@@ -191,6 +193,9 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
             btnImportPodcast.setText(getString(R.string.button_text_no_device));
             btnImportOPML.setText(getString(R.string.button_text_no_device));
         }
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+        mThirdPartyAutoDownload.setChecked(prefs.getBoolean("third_party_audo_download", false));
 
         final Intent intent = mActivity.getIntent();
 
@@ -219,10 +224,11 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                         message = "Hello, " + getString(R.string.third_party_title_playerfm) + " user! \"" + title + "\" has been sent to your watch and will be visible under the " + getString(R.string.third_party_title_playerfm) + " playlist";
                     }
 
-                    Utilities.sendEpisode(mActivity, episode);
+                    Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
 
                     ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
                     mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                    mThirdPartyAutoDownload.setVisibility(View.VISIBLE);
                 } else
                     ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
             }
@@ -233,8 +239,15 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
             }
         }
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
         final SharedPreferences.Editor editor = prefs.edit();
+
+        mThirdPartyAutoDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editor.putBoolean("third_party_audo_download", mThirdPartyAutoDownload.isChecked());
+                editor.apply();
+            }
+        });
 
         final int visits = prefs.getInt("visits", 0) + 1;
 
