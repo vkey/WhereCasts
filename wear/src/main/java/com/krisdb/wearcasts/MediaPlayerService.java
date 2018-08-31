@@ -41,7 +41,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -53,6 +52,7 @@ import java.util.Objects;
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLogo;
+import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
 public class MediaPlayerService extends MediaBrowserServiceCompat implements AudioManager.OnAudioFocusChangeListener {
     private static String mPackage = null;
@@ -134,7 +134,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         NotificationManagerCompat.from(this).cancel(mNotificationID);
 
         if (mLocalFile == null && mMediaPlayer != null) {
-            DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", mMediaPlayer.getCurrentPosition());
+            DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
             SyncWithMobileDevice();
         }
 
@@ -154,7 +154,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            int position = mMediaPlayer.getCurrentPosition() - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
 
             if (position > 0)
                 mMediaPlayer.seekTo(position);
@@ -165,7 +165,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             super.onSkipToNext();
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = mMediaPlayer.getCurrentPosition() + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
             if (position < mMediaPlayer.getDuration())
                 mMediaPlayer.seekTo(position);
         }
@@ -174,7 +174,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onRewind() {
             super.onRewind();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = mMediaPlayer.getCurrentPosition() - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
 
             mMediaPlayer.seekTo(position);
         }
@@ -183,7 +183,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onFastForward() {
             super.onFastForward();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = mMediaPlayer.getCurrentPosition() + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
             mMediaPlayer.seekTo(position);
         }
 
@@ -242,7 +242,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             cv.put("playing", 1);
             cv.put("finished", 0);
 
-            new DBPodcastsEpisodes(mContext).update(cv, mEpisode.getEpisodeId());
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+            db.update(cv, mEpisode.getEpisodeId());
         }
 
         if (mTelephonyManager != null)
@@ -277,7 +278,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             if (mLocalFile == null)
             {
-                DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", mMediaPlayer.getCurrentPosition());
+                DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
 
                 final ContentValues cvPlaying = new ContentValues();
                 cvPlaying.put("playing", 0);
@@ -289,7 +290,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 final SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), mMediaPlayer.getCurrentPosition());
+                editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), getCurrentPosition(mMediaPlayer));
                 editor.apply();
             }
 
@@ -340,7 +341,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initMediaSessionMetadata();
         initNoisyReceiver();
-
 
         if (mMediaPlayer != null)
             mMediaPlayer.reset();
@@ -588,7 +588,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         if (update) {
-            builder.setProgress(mMediaPlayer.getDuration(), mMediaPlayer.getCurrentPosition(), false);
+            builder.setProgress(mMediaPlayer.getDuration(), getCurrentPosition(mMediaPlayer), false);
             manager.notify(mNotificationID, builder.build());
         }
         else if (pause)
@@ -615,9 +615,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, new SimpleDateFormat("h:mm a", Locale.US).format(Calendar.getInstance().getTime()));
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
-        //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
-
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
@@ -629,8 +628,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         //metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
 
         if (mMediaPlayer.isPlaying()) {
-            try {metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));}
-            catch(Exception ignored){}
+            //try {metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, DateUtils.FormatPositionTime(mMediaPlayer.getDuration() - mMediaPlayer.getCurrentPosition()));}
+            //catch(Exception ignored){}
             metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mMediaPlayer.getDuration());
         }
 
@@ -750,7 +749,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Runnable mUpdateMediaPosition = new Runnable() {
         public void run() {
 
-            final int position = mMediaPlayer.getCurrentPosition();
+            final int position = getCurrentPosition(mMediaPlayer);
 
             final int specifiedTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_finish_end_time)))) * 1000;
 
@@ -765,7 +764,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 intentMediaPosition.setAction("media_position");
                 intentMediaPosition.putExtra("position", position);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
-                initMediaSessionMetadata();
+                //initMediaSessionMetadata();
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
         }

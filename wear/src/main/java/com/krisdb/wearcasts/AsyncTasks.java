@@ -22,6 +22,7 @@ import java.util.List;
 import static com.krisdb.wearcasts.Utilities.ProcessEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class AsyncTasks {
@@ -344,7 +345,8 @@ public class AsyncTasks {
                 dataMap.getDataMap().putString("episode_url", mEpisode.getMediaUrl().toString());
 
             dataMap.getDataMap().putString("episode_title", mEpisode.getTitle());
-            dataMap.getDataMap().putInt("position", mMediaPlayer.getCurrentPosition());
+
+            dataMap.getDataMap().putInt("position", getCurrentPosition(mMediaPlayer));
             dataMap.getDataMap().putInt("duration", mMediaPlayer.getDuration());
             dataMap.getDataMap().putInt("id", mFinished ? 0 : mEpisode.getEpisodeId());
             dataMap.getDataMap().putLong("time", new Date().getTime());

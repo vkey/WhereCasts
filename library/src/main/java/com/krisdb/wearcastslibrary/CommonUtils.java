@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.PowerManager;
@@ -62,12 +63,13 @@ public class CommonUtils {
     {
         if (ctx instanceof Activity && ((Activity)ctx).isFinishing()) return;
 
-        final Toast toast = Toast.makeText(ctx, message, length);
-        final View view = toast.getView();
-        final TextView text = view.findViewById(android.R.id.message);
-        text.setBackgroundColor(Color.TRANSPARENT);
-
-        toast.show();
+        try {
+            final Toast toast = Toast.makeText(ctx, message, length);
+            final View view = toast.getView();
+            final TextView text = view.findViewById(android.R.id.message);
+            text.setBackgroundColor(Color.TRANSPARENT);
+            toast.show();
+        }catch (Exception ignored){}
     }
 
     public static String getRedirectUrl(final String url) {
@@ -101,6 +103,21 @@ public class CommonUtils {
     public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap)
     {
         DeviceSync(ctx, dataMap, null, Toast.LENGTH_SHORT);
+    }
+
+    public static int getCurrentPosition(final MediaPlayer mp)
+    {
+        int output = 0;
+        try
+        {
+            output = mp.getCurrentPosition();
+        }
+        catch (IllegalStateException ex)
+        {
+            mp.reset();
+        }
+
+        return output;
     }
 
     public static InputStream getRemoteStream(final String url) {
@@ -249,6 +266,7 @@ public class CommonUtils {
         str = str.replace("&quot;","\"");
         str = str.replace("&#039;","'");
         str = str.replace("&nbsp;"," ");
+        str = str.replace("&amp;","&");
         return str;
     }
 

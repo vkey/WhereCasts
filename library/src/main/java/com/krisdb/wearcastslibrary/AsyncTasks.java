@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -163,7 +162,7 @@ public class AsyncTasks {
                 editor.apply();
 
             } catch (Exception e) {
-                Log.e(ctx.getPackageName(), e.getLocalizedMessage());
+                e.printStackTrace();
             }
 
             try {
@@ -172,10 +171,8 @@ public class AsyncTasks {
 
                 final int podcastsLength = podcastsArray.length();
 
-                if (mProgressBar != null) {
+                if (mProgressBar != null)
                     mProgressBar.get().setMax(podcastsLength);
-                    mProgressBar.get().setIndeterminate(false);
-                }
 
                 for (int p = 0; p < podcastsLength; p++) {
 
@@ -231,7 +228,7 @@ public class AsyncTasks {
             }
             catch (Exception ex)
             {
-                Log.e(mContext.get().getPackageName(), ex.getLocalizedMessage());
+                ex.printStackTrace();
             }
 
             return null;

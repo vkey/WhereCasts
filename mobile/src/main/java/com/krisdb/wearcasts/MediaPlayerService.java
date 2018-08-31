@@ -41,6 +41,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.List;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
+import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
 public class MediaPlayerService extends MediaBrowserServiceCompat implements AudioManager.OnAudioFocusChangeListener {
     private static String mPackage = null;
@@ -121,7 +122,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mMediaPlayer != null) {
             SyncWithWearDevice();
-            editor.putInt("position", mMediaPlayer.getCurrentPosition());
+            editor.putInt("position", getCurrentPosition(mMediaPlayer));
             mMediaPlayer.stop();
             mMediaPlayer.reset();
             mMediaPlayer.release();
@@ -212,7 +213,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("position", mMediaPlayer.getCurrentPosition());
+            editor.putInt("position", getCurrentPosition(mMediaPlayer));
             editor.putBoolean("isplaying", false);
             editor.apply();
 
@@ -240,7 +241,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         final PutDataMapRequest dataMap = PutDataMapRequest.create("/syncwear");
-        dataMap.getDataMap().putInt("position", finished ? 0 : mMediaPlayer.getCurrentPosition());
+        dataMap.getDataMap().putInt("position", finished ? 0 : getCurrentPosition(mMediaPlayer));
         dataMap.getDataMap().putBoolean("finished", finished);
         dataMap.getDataMap().putInt("id", prefs.getInt("id", 0));
 
@@ -548,7 +549,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             Intent intentMediaPosition = new Intent();
             intentMediaPosition.setAction("media_action");
             intentMediaPosition.putExtra("media_position", true);
-            intentMediaPosition.putExtra("position", mMediaPlayer.getCurrentPosition());
+            intentMediaPosition.putExtra("position", getCurrentPosition(mMediaPlayer));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
 
             mMediaTimeHandler.postDelayed(this, 100);
