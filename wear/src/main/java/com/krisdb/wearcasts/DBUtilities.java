@@ -682,6 +682,8 @@ public class DBUtilities {
 
         if (playlistId == ctx.getResources().getInteger(R.integer.playlist_downloads))
             cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0", null);
+        else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress))
+            cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [position] > 0", null);
         else if (playlistId != 0)
             cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
         else
