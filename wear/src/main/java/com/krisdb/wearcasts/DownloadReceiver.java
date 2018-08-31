@@ -16,7 +16,7 @@ import android.preference.PreferenceManager;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,18 +65,13 @@ public class DownloadReceiver extends BroadcastReceiver
                     db.update(cvSuccess, episode.getEpisodeId());
                     db.close();
 
-                    final int disableStart = Integer.valueOf(prefs.getString("pref_download_sound_disable_start", "0"));
-                    final  int disableEnd = Integer.valueOf(prefs.getString("pref_download_sound_disable_end", "0"));
-
-                    final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                    final String disableStart = prefs.getString("pref_download_sound_disable_start", "0");
+                    final String disableEnd = prefs.getString("pref_download_sound_disable_end", "0");
 
                     Boolean playSound = prefs.getBoolean("pref_download_complete_sound", true);
 
-                    if (disableStart != 0 && disableEnd != 0)
-                    {
-                        if (hour >= disableStart && hour <= disableEnd)
-                            playSound = false;
-                    }
+                    if (playSound && DateUtils.isTimeBetweenTwoTime(disableStart, disableEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
+                        playSound = false;
 
                     if (playSound)
                     {
@@ -85,7 +80,7 @@ public class DownloadReceiver extends BroadcastReceiver
                         mPlayer.start();
                     }
 
-                    if (Utilities.downloadsCount() == 1)
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && Utilities.downloadsCount() == 1)
                     {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("refresh_vp", true);

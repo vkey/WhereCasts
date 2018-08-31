@@ -18,10 +18,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class BackgroundService extends JobService {
 
     private void doWork(JobParameters jobParameters) {
         final Context ctx = getApplicationContext();
-        //Log.d(this.getPackageName(), "Updated Started");
+        //Log.d(getPackageName(), "Updated Started");
         final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(ctx);
 
         if (podcasts.size() > 0) {
@@ -114,21 +114,15 @@ public class BackgroundService extends JobService {
                                 editor.putInt("new_episode_count", episodeCount);
                                 editor.putInt("new_downloads_count", downloadCount);
 
-                                final int disableStart = Integer.valueOf(prefs.getString("pref_updates_new_episodes_disable_start", "0"));
-                                final  int disableEnd = Integer.valueOf(prefs.getString("pref_updates_new_episodes_disable_end", "0"));
-
-                                final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                                final String disableStart = prefs.getString("pref_updates_new_episodes_disable_start", "0");
+                                final String disableEnd = prefs.getString("pref_updates_new_episodes_disable_end", "0");
 
                                 Boolean playSound = prefs.getBoolean("pref_updates_new_episodes_sound", true);
 
-                                if (disableStart != 0 && disableEnd != 0)
-                                {
-                                    if (hour >= disableStart && hour <= disableEnd)
-                                        playSound = false;
-                                }
+                                if (playSound && DateUtils.isTimeBetweenTwoTime(disableStart, disableEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
+                                    playSound = false;
 
-                                if (playSound)
-                                {
+                                if (playSound) {
                                     final MediaPlayer mPlayer = MediaPlayer.create(ctx, R.raw.new_episodes);
                                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                     mPlayer.start();

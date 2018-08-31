@@ -26,6 +26,63 @@ public class DateUtils {
         }
     }
 
+    public static boolean isTimeBetweenTwoTime(String argStartTime, String argEndTime, String argCurrentTime){
+        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+
+        boolean valid = false;
+
+        if (argStartTime.matches(reg) && argEndTime.matches(reg) && argCurrentTime.matches(reg)) {
+            try {
+                // Start Time
+                java.util.Date startTime = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).parse(argStartTime);
+                Calendar startCalendar = Calendar.getInstance();
+                startCalendar.setTime(startTime);
+
+                // Current Time
+                java.util.Date currentTime = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).parse(argCurrentTime);
+                Calendar currentCalendar = Calendar.getInstance();
+                currentCalendar.setTime(currentTime);
+
+                // End Time
+                java.util.Date endTime = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).parse(argEndTime);
+                Calendar endCalendar = Calendar.getInstance();
+                endCalendar.setTime(endTime);
+
+                if (currentTime.compareTo(endTime) < 0) {
+                    currentCalendar.add(Calendar.DATE, 1);
+                    currentTime = currentCalendar.getTime();
+                }
+
+                if (startTime.compareTo(endTime) < 0) {
+                    startCalendar.add(Calendar.DATE, 1);
+                    startTime = startCalendar.getTime();
+                }
+
+                if (currentTime.before(startTime)) {
+                    valid = false;
+                } else {
+                    if (currentTime.after(endTime)) {
+                        endCalendar.add(Calendar.DATE, 1);
+                        endTime = endCalendar.getTime();
+                    }
+
+                    if (currentTime.before(endTime)) {
+                        valid = true;
+                    } else {
+                        valid = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                valid = false;
+            }
+
+        }
+        return valid;
+
+    }
+
     public static String GetTime(final Date date)
     {
         final DateFormat time = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
@@ -74,6 +131,12 @@ public class DateUtils {
 
     public static String FormatDate(final String date) {
         return FormatDate(date, "EEE, dd MMM yyyy HH:mm:ss zzz", dateFormat);
+    }
+
+    public static String FormatDate(final Date date, final String pattern) {
+        final DateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+
+        return dateFormat.format(date);
     }
 
     public static String FormatDate(final String dateStr, String patternFrom, String patternTo) {
