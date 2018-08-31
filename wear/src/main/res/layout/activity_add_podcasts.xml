@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:indeterminate="true"
+            android:indeterminate="false"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="5dp"

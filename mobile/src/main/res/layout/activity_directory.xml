@@ -46,7 +46,7 @@
         android:paddingTop="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:indeterminate="true"
+        android:indeterminate="false"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         />
 
