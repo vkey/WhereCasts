@@ -102,6 +102,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         return theme;
     }
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAmbientEnabled();
@@ -110,7 +111,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mContext = getApplicationContext();
         mActivity = this;
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mNavItems = Utilities.getNavItems(this);
