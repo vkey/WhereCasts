@@ -123,9 +123,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mMediaPlayer != null) {
             SyncWithWearDevice();
             editor.putInt("position", getCurrentPosition(mMediaPlayer));
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
+            //mMediaPlayer.stop();
+            //mMediaPlayer.reset();
+            //mMediaPlayer.release();
         }
 
         editor.apply();

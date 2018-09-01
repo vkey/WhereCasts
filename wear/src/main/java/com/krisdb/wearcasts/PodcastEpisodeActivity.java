@@ -784,8 +784,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                                     dialog.dismiss();
                                 }
                             }).show();
-
                         }
+                        else
+                            CommonUtils.showToast(mContext, getString(R.string.general_error));
+
                         break;
                 }
             }
@@ -816,24 +818,26 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     StreamEpisode();
             }
         } else {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
-            alert.setMessage(getString(R.string.alert_episode_network_notfound));
-            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+            if (!mActivity.isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkDownloadCallback) ? 1 : 2);
+                        dialog.dismiss();
+                    }
+                });
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkDownloadCallback) ? 1 : 2);
-                    dialog.dismiss();
-                }
-            });
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            } else
+                CommonUtils.showToast(mContext, getString(R.string.general_error));
         }
     }
 

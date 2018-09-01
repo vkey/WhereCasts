@@ -120,7 +120,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         final ContentValues cv = new ContentValues();
         cv.put("playing", 0);
-        new DBPodcastsEpisodes(mContext).updateAll(cv);
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+        db.updateAll(cv);
+        db.close();
 
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
@@ -138,7 +140,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             SyncWithMobileDevice();
         }
 
-        clearMediaPlayer();
+        //clearMediaPlayer();
 
         mMediaHandler.removeCallbacksAndMessages(null);
 
@@ -154,7 +156,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            final int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
 
             if (position > 0)
                 mMediaPlayer.seekTo(position);
@@ -165,7 +167,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             super.onSkipToNext();
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            final int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
             if (position < mMediaPlayer.getDuration())
                 mMediaPlayer.seekTo(position);
         }
@@ -174,7 +176,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onRewind() {
             super.onRewind();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            final int position = getCurrentPosition(mMediaPlayer) - (Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
 
             mMediaPlayer.seekTo(position);
         }
@@ -183,7 +185,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onFastForward() {
             super.onFastForward();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+            final int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
             mMediaPlayer.seekTo(position);
         }
 
@@ -749,7 +751,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Runnable mUpdateMediaPosition = new Runnable() {
         public void run() {
 
-            final int position = getCurrentPosition(mMediaPlayer);
+            final int position = mMediaPlayer.getCurrentPosition();
 
             final int specifiedTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_finish_end_time)))) * 1000;
 
