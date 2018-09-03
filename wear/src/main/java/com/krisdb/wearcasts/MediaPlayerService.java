@@ -246,6 +246,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
             db.update(cv, mEpisode.getEpisodeId());
+            db.close();
         }
 
         if (mTelephonyManager != null)
@@ -333,22 +334,33 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaStart);
 
         if (mLocalFile == null) {
-            final ContentValues cv = new ContentValues();
-            cv.put("playing", 1);
-            cv.put("finished", 0);
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
-            db.update(cv, mEpisode.getEpisodeId());
+
+            final ContentValues cvPlayingReset = new ContentValues();
+            cvPlayingReset.put("playing", 0);
+            db.updateAll(cvPlayingReset);
+
+            final ContentValues cvPlaying = new ContentValues();
+            cvPlaying.put("playing", 1);
+            cvPlaying.put("finished", 0);
+            db.update(cvPlaying, mEpisode.getEpisodeId());
             db.close();
         }
 
         initMediaSessionMetadata();
         initNoisyReceiver();
 
-        if (mMediaPlayer != null)
-            mMediaPlayer.reset();
+            //if (mMediaPlayer != null)
+            //mMediaPlayer.reset();
 
-        try {
-            mMediaPlayer.setDataSource(uri.toString());
+            try {
+                try {
+                    mMediaPlayer.setDataSource(uri.toString());
+                }
+                catch (IllegalStateException ex) {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.setDataSource(uri.toString());
+                }
 
             if (uri.toString().startsWith("http"))
                 mMediaPlayer.prepareAsync();
@@ -804,7 +816,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                         intentMediaCompleted.putExtra("media_completed", true);
                         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
                         stopForeground(false);
-                        SystemClock.sleep(650);
+                        SystemClock.sleep(500);
                         playlistSkip(Enums.SkipDirection.NEXT, playlistItems);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -812,7 +824,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void clearMediaPlayer()
     {
-        if (mMediaPlayer != null)
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying())
         {
             mMediaPlayer.stop();
             mMediaPlayer.reset();
