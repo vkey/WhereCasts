@@ -34,6 +34,9 @@ import com.krisdb.wearcastslibrary.FetchPodcast;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -200,20 +203,25 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
             if (mWatchConnected) {
-                ArrayList<String> shareData = intent.getExtras().getStringArrayList(Intent.EXTRA_TEXT);
+                String json = intent.getStringExtra(Intent.EXTRA_TEXT);
+                try {
 
-                if (shareData != null) {
-                    String identifier = shareData.get(0);
-                    String url = shareData.get(1);
-                    String title = shareData.get(2);
-                    String description = shareData.get(3);
-                    String date = shareData.get(4);
+                    final JSONObject obj = new JSONObject(json);
 
-                    PodcastItem episode = new PodcastItem();
+                if (obj != null) {
+                    String identifier = getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id));
+                    String url = (String)obj.get("url");
+                    String title = (String)obj.get("title");
+                    String description = (String)obj.get("description");
+                    String date = (String)obj.get("publishedAt");
+                    Integer duration =  Integer.valueOf((String)obj.get("duration"));
+
+                    final PodcastItem episode = new PodcastItem();
                     episode.setTitle(title);
                     episode.setMediaUrl(url);
                     episode.setDescription(description);
                     episode.setPubDate(date);
+                    episode.setDuration(duration);
 
                     String message = null;
 
@@ -230,6 +238,13 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                     mThirdPartyAutoDownload.setVisibility(View.VISIBLE);
                 } else
                     ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                }
+                catch (Exception ex)
+                {
+                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("Invalid data, try again"); //TODO: localize
+                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                    mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                }
             }
             else
             {
