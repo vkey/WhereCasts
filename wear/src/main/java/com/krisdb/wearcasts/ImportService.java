@@ -67,6 +67,7 @@ public class ImportService extends WearableListenerService implements DataClient
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/episodeimport")) {
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
 
                 PodcastItem episode = DBUtilities.GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
 
@@ -91,17 +92,15 @@ public class ImportService extends WearableListenerService implements DataClient
                     cv.put("duration", episode.getDuration());
                     cv.put("dateAdded", DateUtils.GetDate());
 
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
                     final long episodeId = db.insert(cv);
-
                     episode.setEpisodeId((int)episodeId);
-
-                    //only add third parties to playlist
-                    if (dataMapItem.getDataMap().getInt("playlistid") < 0)
-                        db.addEpisodeToPlaylist(dataMapItem.getDataMap().getInt("playlistid"), episode.getEpisodeId());
-
-                    db.close();
                 }
+
+                //add third parties to their playlist
+                if (dataMapItem.getDataMap().getInt("playlistid") < 0)
+                    db.addEpisodeToPlaylist(dataMapItem.getDataMap().getInt("playlistid"), episode.getEpisodeId());
+
+                db.close();
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download"))
                     Utilities.startDownload(this, episode);

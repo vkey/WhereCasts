@@ -30,6 +30,7 @@ import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FetchPodcast;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -40,6 +41,8 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -208,40 +211,44 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
                     final JSONObject obj = new JSONObject(json);
 
-                if (obj != null) {
-                    String identifier = getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id));
-                    String url = (String)obj.get("url");
-                    String title = (String)obj.get("title");
-                    String description = (String)obj.get("description");
-                    String date = (String)obj.get("publishedAt");
-                    Integer duration =  Integer.valueOf((String)obj.get("duration"));
+                    if (obj.length() > 0) {
+                        String identifier = getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id));
+                        String url = (String) obj.get("url");
+                        String title = (String) obj.get("title");
+                        String description = (String) obj.get("description");
+                        String date = (String) obj.get("publishedAt");
+                        final Integer duration = Integer.valueOf((String) obj.get("duration"));
 
-                    final PodcastItem episode = new PodcastItem();
-                    episode.setTitle(title);
-                    episode.setMediaUrl(url);
-                    episode.setDescription(description);
-                    episode.setPubDate(date);
-                    episode.setDuration(duration);
+                        Date date2 = new Date(Long.valueOf(date) * 1000);
 
-                    String message = null;
+                        String dateString = DateUtils.FormatDate(date2, "EEE, dd MMM yyyy HH:mm:ss zzz");
 
-                    //third party
-                    if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
-                        episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
-                        message = getString(R.string.text_third_party_greeting, getString(R.string.third_party_title_playerfm), title);
-                    }
+                        String pubDate = DateUtils.FormatDate(dateString);
 
-                    Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
+                        final PodcastItem episode = new PodcastItem();
+                        episode.setTitle(title);
+                        episode.setMediaUrl(url);
+                        episode.setDescription(description);
+                        episode.setPubDate(pubDate);
+                        episode.setDuration(duration);
 
-                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
-                    mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
-                    mThirdPartyAutoDownload.setVisibility(View.VISIBLE);
-                } else
-                    ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
-                }
-                catch (Exception ex)
-                {
-                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("Invalid data, try again"); //TODO: localize
+                        String message = null;
+
+                        //third party
+                        if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
+                            episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+                            message = getString(R.string.text_third_party_greeting, getString(R.string.third_party_title_playerfm), title);
+                        }
+
+                        Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
+
+                        ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
+                        mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                        mThirdPartyAutoDownload.setVisibility(View.VISIBLE);
+                    } else
+                        ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                } catch (Exception ex) {
+                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("Invalid data, please try again"); //TODO: localize
                     ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
                     mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
                 }

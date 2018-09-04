@@ -39,7 +39,7 @@
     <string name="page_title_search_results">Resultat</string>
 
     <string name="text_third_party_greeting">Hallå, %1$s användare! \"%2$s\" har skickats till din klocka och kommer att synas under %1$s Spellista</string>
-    <string name="text_third_party_auto_download">Ladda ner podcast automatiskt på klockan</string>
+    <string name="text_third_party_auto_download">Autodownload podcast episod på klocka (gäller för nästa tillagda)</string>
     <string name="text_third_party_no_watch">Ingen klocka upptäckt</string>
 
     <string name="text_importing_opml_sending">Skickar podcaster till din slitage enhet…</string>
