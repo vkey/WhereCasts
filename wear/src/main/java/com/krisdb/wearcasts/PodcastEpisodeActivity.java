@@ -418,6 +418,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         else if (episodeId > -1)
             mEpisode = DBUtilities.GetEpisode(mActivity, episodeId);
 
+        //third party
+        if (mPlaylistID == getResources().getInteger(R.integer.playlist_playerfm))
+            mEpisode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+
         mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel(), R.drawable.ic_thumb_default));
 
         mThemeID = Utilities.getThemeOptionId(this);

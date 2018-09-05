@@ -783,13 +783,16 @@ public class DBUtilities {
             else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId > resources.getInteger(R.integer.playlist_default) || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
-                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ? ORDER BY ".concat(orderString)), new String[]{String.valueOf(playlistId)});
+                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ? ORDER BY ".concat(orderString)), new String[]{String.valueOf(playlistId)});
             else
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [upnext] = 1 ORDER BY ".concat(orderString)), null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     PodcastItem episode = SetPodcastEpisode(cursor);
+
+                    if (playlistId <= resources.getInteger(R.integer.playlist_playerfm))
+                        episode.setPlaylistId(cursor.getInt(12));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 

@@ -2,9 +2,11 @@ package com.krisdb.wearcasts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
@@ -204,9 +208,9 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         final Intent intent = mActivity.getIntent();
 
-        if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
+        if (intent.getType() != null && Intent.ACTION_SEND.equals(intent.getAction())) {
             if (mWatchConnected) {
-                String json = intent.getStringExtra(Intent.EXTRA_TEXT);
+                final String json = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
 
                     final JSONObject obj = new JSONObject(json);

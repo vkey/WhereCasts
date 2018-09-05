@@ -1,6 +1,10 @@
 package com.krisdb.wearcasts;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -32,11 +36,13 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
 public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener {
 
+    private Context mContext;
     @Override
     public void onCreate()
     {
         super.onCreate();
         Wearable.getDataClient(this).addListener(this);
+        mContext = this;
     }
 
     @Override
@@ -102,8 +108,23 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 db.close();
 
-                if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download"))
-                    Utilities.startDownload(this, episode);
+                if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
+                        final PodcastItem finalEpisode = episode;
+                        new AsyncTasks.DisableBluetooth(this,
+                                new Interfaces.AsyncResponse() {
+                                    @Override
+                                    public void processFinish() {
+                                        if (Utilities.IsNetworkConnected(mContext) == false)
+                                            CommonUtils.showToast(mContext, getString(R.string.alert_no_network));
+                                        else
+                                            Utilities.startDownload(mContext, finalEpisode);
+                                    }
+                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    else
+                        Utilities.startDownload(this, episode);
+                }
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {

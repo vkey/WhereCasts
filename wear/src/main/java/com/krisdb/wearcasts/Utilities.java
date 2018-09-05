@@ -440,30 +440,6 @@ public class Utilities {
         return ctx.getString(R.string.alert_download_error_default);
     }
 
-     public static void ShowPlayingNotification(final Context ctx, final PodcastItem episode) {
-         PodcastItem podcast = DBUtilities.GetPodcast(ctx, episode.getPodcastId());
-
-         Intent notificationIntent = new Intent(ctx, PodcastEpisodeActivity.class);
-         notificationIntent.setFlags(Notification.FLAG_ONGOING_EVENT);
-         notificationIntent.setFlags(Notification.FLAG_NO_CLEAR);
-         notificationIntent.setFlags(Notification.FLAG_FOREGROUND_SERVICE);
-
-         Bundle bundle = new Bundle();
-         bundle.putInt("eid", episode.getEpisodeId());
-         notificationIntent.putExtras(bundle);
-
-         NotificationCompat.Builder notificationBuilder =
-                 new NotificationCompat.Builder(ctx)
-                         .setSmallIcon(R.drawable.ic_notification)
-                         .setContentTitle(podcast.getTitle())
-                         .setContentText(episode.getTitle())
-                         .setOngoing(true)
-                         .setAutoCancel(false)
-                         .setContentIntent(PendingIntent.getActivity(ctx, episode.getEpisodeId(), notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-
-         NotificationManagerCompat.from(ctx).notify(100, notificationBuilder.build());
-     }
-
     static boolean IsNetworkConnected(final Context ctx) {
         final ConnectivityManager cm = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -472,7 +448,7 @@ public class Utilities {
 
     static void DeleteMediaFile(final Context ctx, final PodcastItem episode)
     {
-        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id))
+        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id) && episode.getPlaylistId() > ctx.getResources().getInteger(R.integer.playlist_playerfm))
         {
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             db.delete(episode.getEpisodeId());
@@ -482,8 +458,6 @@ public class Utilities {
             DBUtilities.SaveEpisodeValue(ctx, episode, "download", 0);
 
         String fileName = Utilities.GetMediaFile(ctx, episode);
-
-        if (fileName == null) return;
 
         fileName = fileName.replace("file://","");
 
