@@ -416,11 +416,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mEpisode.setTitle(mLocalFile);
         }
         else if (episodeId > -1)
-            mEpisode = DBUtilities.GetEpisode(mActivity, episodeId);
-
-        //third party
-        if (mPlaylistID == getResources().getInteger(R.integer.playlist_playerfm))
-            mEpisode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+            mEpisode = DBUtilities.GetEpisode(mActivity, episodeId, mPlaylistID);
 
         mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel(), R.drawable.ic_thumb_default));
 
@@ -1126,7 +1122,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 if (extras.getString("local_file") != null)
                     mLocalFile = extras.getString("local_file");
                 else
-                    mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"));
+                    mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
                 SetContent(extras.getInt("id"));
             }
             else

@@ -142,7 +142,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                 int episodeId = mEpisodes.get(position).getEpisodeId();
 
-                final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId);
+                final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId, mPlaylistId);
 
                 final int downloadId = Utilities.getDownloadId(mContext, episodeId);
 

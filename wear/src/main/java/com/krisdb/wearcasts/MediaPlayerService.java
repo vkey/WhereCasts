@@ -205,9 +205,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onPlayFromUri(final Uri uri, final Bundle extras) {
             super.onPlayFromUri(uri, extras);
 
-            mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"));
             mPlaylistID = extras.getInt("playlistid");
             mLocalFile = extras.getString("local_file");
+            mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
 
             StartStream(uri);
         }

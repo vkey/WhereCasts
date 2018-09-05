@@ -46,6 +46,23 @@ public class DBUtilities {
         return output;
     }
 
+    static Boolean assignedToPlaylist(final Context ctx, final int episodeId)
+    {
+        Boolean output;
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        final Cursor cursor = sdb.rawQuery("SELECT [id] FROM tbl_playlists_xref WHERE [episode_id] = ?", new String[]{String.valueOf(episodeId)});
+
+        output = cursor.moveToFirst();
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return output;
+    }
+
     static List<PodcastItem> getPlaylistItems(final Context ctx, final int playlistId, final Boolean isLocal) {
         return (isLocal) ? DBUtilities.GetEpisodes(ctx, 0, playlistId) : DBUtilities.GetLocalFiles(ctx);
     }
@@ -483,8 +500,11 @@ public class DBUtilities {
 
         return podcasts;
     }
+    static PodcastItem GetEpisode(final Context ctx, final int episodeId) {
+        return GetEpisode(ctx, episodeId, Integer.MAX_VALUE);
+    }
 
-    static PodcastItem GetEpisode(final Context ctx, final int episodeId)
+    static PodcastItem GetEpisode(final Context ctx, final int episodeId, final int playlistId)
     {
         PodcastItem episode = new PodcastItem();
 
@@ -500,6 +520,10 @@ public class DBUtilities {
             episode = SetPodcastEpisode(cursor);
 
         episode.setChannel(DBUtilities.GetChannel(ctx, episode.getPodcastId()));
+
+        //third party
+        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_playerfm))
+            episode.setPlaylistId(ctx.getResources().getInteger(R.integer.playlist_playerfm));
 
         cursor.close();
         db.close();

@@ -448,7 +448,9 @@ public class Utilities {
 
     static void DeleteMediaFile(final Context ctx, final PodcastItem episode)
     {
-        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id) && episode.getPlaylistId() > ctx.getResources().getInteger(R.integer.playlist_playerfm))
+        //episodes sent from the phone app shouldn't be assigned to any playlist, so delete those.  This
+        //prevent third-party episodes from being deleted
+        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id) && DBUtilities.assignedToPlaylist(ctx, episode.getEpisodeId()) == false)
         {
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             db.delete(episode.getEpisodeId());
