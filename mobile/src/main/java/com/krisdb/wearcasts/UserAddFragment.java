@@ -217,14 +217,15 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                 final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
                     final JSONObject json = new JSONObject(text);
-                    final PodcastItem episode = new PodcastItem();
 
                     String url = null, title = null, description = null, message = null, pubDate = null;
                     Integer duration = 0;
-                    ImageView logo = mView.findViewById(R.id.user_add_third_party_logo);
+                    final ImageView logo = mView.findViewById(R.id.user_add_third_party_logo);
 
-                    //third party
-                    //if (json.has("platform") && (json.get("platform")).equals("fm.player"))
+                    final PodcastItem episode = new PodcastItem();
+
+                    //PLAYER FM
+                    if (json.has("platform") && (json.get("platform")).equals("fm.player"))
                     {
                         url = (String) json.get("url");
                         title = (String) json.get("title");
@@ -240,6 +241,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                         episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
                         logo.setImageDrawable(mActivity.getDrawable(R.drawable.ic_thirdparty_logos_playerfm));
                     }
+                    //third party: add to conditional populating title,url,description,pubdate,duration
 
                     episode.setTitle(title);
                     episode.setMediaUrl(url);

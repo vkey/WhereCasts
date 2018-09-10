@@ -33,7 +33,7 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity, false);
         int size = playlists.size();
 
-        //third party
+        //third party: check if playlist has episodes
         final Boolean thirdPartyPlayerFM = DBUtilities.HasEpisodes(mActivity, 0, resources.getInteger(R.integer.playlist_playerfm));
 
         int limit;
@@ -59,13 +59,13 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         entryValues[size + 1] = String.valueOf(resources.getInteger(R.integer.playlist_local));
         entryValues[size + 2] = String.valueOf(resources.getInteger(R.integer.playlist_inprogress));
         entryValues[size + 3] = String.valueOf(resources.getInteger(R.integer.playlist_downloads));
-        if (thirdPartyPlayerFM)
+        if (thirdPartyPlayerFM) //third party: if third party playlist had episodes add it to drop down
             entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.playlist_playerfm));
 
         entryText[size + 1] = getString(R.string.settings_podcasts_home_screen_local);
         entryText[size + 2] = getString(R.string.settings_podcasts_home_screen_inprogress);
         entryText[size + 3] = getString(R.string.settings_podcasts_home_screen_downloads);
-        if (thirdPartyPlayerFM)
+        if (thirdPartyPlayerFM) //third party: if third party playlist had episodes add it to drop down
             entryText[size + 4] = getString(R.string.third_party_title_playerfm);
 
         final ListPreference lpHomeScreen = new ListPreference(mActivity);

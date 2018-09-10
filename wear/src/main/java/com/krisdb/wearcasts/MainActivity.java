@@ -132,7 +132,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
 
-            //third party
+            //third party: add check for playlist
             if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 

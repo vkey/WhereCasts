@@ -521,7 +521,7 @@ public class DBUtilities {
 
         episode.setChannel(DBUtilities.GetChannel(ctx, episode.getPodcastId()));
 
-        //third party
+        //third party: add playlist
         if (playlistId == ctx.getResources().getInteger(R.integer.playlist_playerfm))
             episode.setPlaylistId(ctx.getResources().getInteger(R.integer.playlist_playerfm));
 
@@ -746,7 +746,7 @@ public class DBUtilities {
 
         if (playlistId == resources.getInteger(R.integer.playlist_downloads))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_downloads));
-        else if (playlistId == resources.getInteger(R.integer.playlist_playerfm)) //third party
+        else if (playlistId == resources.getInteger(R.integer.playlist_playerfm)) //third party: title
             channelItem.setTitle(ctx.getString(R.string.third_party_title_playerfm));
         else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_inprogress));
