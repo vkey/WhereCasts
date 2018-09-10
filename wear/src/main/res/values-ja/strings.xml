@@ -7,6 +7,7 @@
     <string name="notification_channel_media_service">メディアサービス</string>
     <string name="notification_channel_media_playing">メディア再生通知</string>
     <string name="notification_channel_newepisodes">新しいエピソードの通知</string>
+    <string name="notification_channel_import_service">輸入サービス</string>
 
     <string name="rate_app_reminder">このアプリを評価しますか? （YESをクリックすると、携帯電話のストアページが開きます）.</string>
 

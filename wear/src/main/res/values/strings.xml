@@ -5,6 +5,7 @@
     <string name="confirm_remove_local">Delete?</string>
     <string name="notification_updating_status">Updating…</string>
     <string name="notification_channel_media_service">Media Service</string>
+    <string name="notification_channel_import_service">Import Service</string>
     <string name="notification_channel_media_playing">Media Playing Notification</string>
     <string name="notification_channel_newepisodes">New Episodes Notification</string>
 

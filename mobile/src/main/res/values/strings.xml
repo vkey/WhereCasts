@@ -38,7 +38,7 @@
 
     <string name="page_title_search_results">Results</string>
 
-    <string name="text_third_party_greeting">Hello, %1$s user! \"%2$s\" has been sent to your watch and will be visible under the %1$s playlist</string>
+    <string name="text_third_party_greeting">\"%2$s\" has been sent to your watch and will be visible under the %1$s playlist.</string>
     <string name="text_third_party_auto_download">Auto-download podcast episode on watch (applies to next added)</string>
     <string name="text_third_party_no_watch">No watch detected</string>
 

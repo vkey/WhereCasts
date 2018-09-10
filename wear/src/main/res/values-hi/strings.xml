@@ -7,6 +7,7 @@
     <string name="notification_channel_media_service">मीडिया सेवा</string>
     <string name="notification_channel_media_playing">मीडिया बजाना अधिसूचना</string>
     <string name="notification_channel_newepisodes">नया एपिसोड अधिसूचना</string>
+    <string name="notification_channel_import_service">सेवा आयात करें</string>
 
     <string name="rate_app_reminder">क्या आप इस ऐप को रेट करना चाहेंगे? (हां क्लिक करने पर आपके फोन पर स्टोर पेज खुल जाएगा).</string>
 

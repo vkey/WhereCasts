@@ -7,6 +7,7 @@
     <string name="notification_channel_media_service">媒體服務</string>
     <string name="notification_channel_media_playing">媒體播放通知</string>
     <string name="notification_channel_newepisodes">新的情節通知</string>
+    <string name="notification_channel_import_service">進口服務</string>
 
     <string name="rate_app_reminder">你想評價這個應用程序? （點擊YES會打開手機上的商店頁面）.</string>
 

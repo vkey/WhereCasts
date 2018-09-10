@@ -31,15 +31,15 @@
 
     <string name="button_text_playlists_readd">Re-ajouter\n%d Playlists</string>
     <string name="button_text_playlists_purchase">achat\nPlaylists</string>
-    <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l'application sur votre montre peut être nécessaire.</string>
+    <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l\'application sur votre montre peut être nécessaire.</string>
 
     <string name="menu_text_about">Sur</string>
     <string name="menu_text_directory">Découvrir</string>
 
     <string name="page_title_search_results">Résultats</string>
 
-    <string name="text_third_party_greeting">Bonjour, %1$s utilisateur! \"%2$s\" a été envoyé à votre montre et sera visible sous le %1$s playlist</string>
-    <string name="text_third_party_auto_download">Téléchargement automatique de l'épisode de podcast sous surveillance (s'applique au prochain ajout)</string>
+    <string name="text_third_party_greeting">\"%2$s\" a été envoyé à votre montre et sera visible sous le %1$s playlist</string>
+    <string name="text_third_party_auto_download">Téléchargement automatique de l\'épisode de podcast sous surveillance (s'applique au prochain ajout)</string>
     <string name="text_third_party_no_watch">Aucune montre détectée</string>
 
     <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>

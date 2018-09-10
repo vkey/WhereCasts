@@ -1,13 +1,18 @@
 package com.krisdb.wearcasts;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -38,17 +43,29 @@ public class ImportService extends WearableListenerService implements DataClient
 
     private Context mContext;
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         Wearable.getDataClient(this).addListener(this);
         mContext = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final NotificationChannel channel = new NotificationChannel(getPackageName().concat(".import.service"), getString(R.string.notification_channel_import_service), NotificationManager.IMPORTANCE_DEFAULT);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+            final Notification notification = new NotificationCompat.Builder(this, getPackageName().concat(".import.service"))
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(getString(R.string.notification_channel_import_service))
+                    .setSmallIcon(R.drawable.ic_notification).build();
+
+            startForeground(10, notification);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Wearable.getDataClient(this).removeListener(this);
+        stopForeground(true);
     }
 
     @Override

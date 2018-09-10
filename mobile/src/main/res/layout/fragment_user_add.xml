@@ -57,29 +57,46 @@
             style="@style/Button"
             />
 
-        <TextView
-            android:id="@+id/user_add_third_party_message"
+        <RelativeLayout
+            android:id="@+id/user_add_third_party_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:paddingTop="30dp"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
             android:paddingBottom="20dp"
-            android:textColor="@color/wc_general_green"
-            android:textSize="16sp"
-            android:visibility="gone"
-            />
+            android:visibility="gone">
 
-        <CheckBox
-            android:id="@+id/user_add_third_party_auto_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="14sp"
-            android:text="@string/text_third_party_auto_download"
-            android:visibility="gone"
-            />
+                <ImageView
+                    android:id="@+id/user_add_third_party_logo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingEnd="5dp"
+                    android:scaleType="fitCenter"
+                    />
+
+                <TextView
+                    android:id="@+id/user_add_third_party_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@+id/user_add_third_party_logo"
+                    />
+                <CheckBox
+                    android:id="@+id/user_add_third_party_auto_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="15sp"
+                    android:paddingTop="10dp"
+                    android:text="@string/text_third_party_auto_download"
+                    android:layout_below="@+id/user_add_third_party_message"
+                    />
+        </RelativeLayout>
+
+
+
 
         <TextView
             android:id="@+id/import_opml_text"

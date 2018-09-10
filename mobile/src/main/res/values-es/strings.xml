@@ -39,7 +39,7 @@
 
     <string name="page_title_search_results">Resultados</string>
 
-    <string name="text_third_party_greeting">Hola, %1$s usuario! \"%2$s\" ha sido enviado a su reloj y será visible debajo del %1$s lista de reproducción</string>
+    <string name="text_third_party_greeting">\"%2$s\" ha sido enviado a su reloj y será visible debajo del %1$s lista de reproducción</string>
     <string name="text_third_party_auto_download">Descargar automáticamente el episodio de podcast de servicio (se aplica al próximo agregado)</string>
     <string name="text_third_party_no_watch">No se detectó ningún reloj</string>
 

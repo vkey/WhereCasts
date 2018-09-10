@@ -7,6 +7,7 @@
     <string name="notification_channel_media_service">Mediatjänst</string>
     <string name="notification_channel_media_playing">Media Playing Notification</string>
     <string name="notification_channel_newepisodes">New Episodes Notification</string>
+    <string name="notification_channel_import_service">Importtjänst</string>
 
     <string name="rate_app_reminder">Vill du betygsätta den här appen? (klicka på JA öppnar butikssidan på din telefon).</string>
 

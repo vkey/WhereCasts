@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +63,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     private View mView;
     private ProgressBar mProgressOPML;
     private Boolean mWatchConnected = false;
-    private TextView mTipView;
+    private TextView mTipView, mThirdPartyView;
     private CheckBox mThirdPartyAutoDownload;
 
     public static UserAddFragment newInstance(final Boolean connected) {
@@ -86,6 +89,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
         mView = inflater.inflate(R.layout.fragment_user_add, container, false);
         mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
         mThirdPartyAutoDownload = mView.findViewById(R.id.user_add_third_party_auto_download);
+        mThirdPartyView = mView.findViewById(R.id.user_add_third_party_message);
         final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
         mTipView = mView.findViewById(R.id.main_tip);
@@ -210,58 +214,53 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
 
         if (intent.getType() != null && Intent.ACTION_SEND.equals(intent.getAction())) {
             if (mWatchConnected) {
-                final String json = intent.getStringExtra(Intent.EXTRA_TEXT);
+                final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
+                    final JSONObject json = new JSONObject(text);
+                    final PodcastItem episode = new PodcastItem();
 
-                    final JSONObject obj = new JSONObject(json);
+                    String url = null, title = null, description = null, message = null, pubDate = null;
+                    Integer duration = 0;
+                    ImageView logo = mView.findViewById(R.id.user_add_third_party_logo);
 
-                    if (obj.length() > 0) {
-                        String identifier = getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id));
-                        String url = (String) obj.get("url");
-                        String title = (String) obj.get("title");
-                        String description = (String) obj.get("description");
-                        String date = (String) obj.get("publishedAt");
-                        final Integer duration = Integer.valueOf((String) obj.get("duration"));
+                    //third party
+                    //if (json.has("platform") && (json.get("platform")).equals("fm.player"))
+                    {
+                        url = (String) json.get("url");
+                        title = (String) json.get("title");
+                        description = (String) json.get("description");
+                        duration = Integer.valueOf((String)json.get("duration"));
 
-                        Date date2 = new Date(Long.valueOf(date) * 1000);
+                        final String jsonDate = (String) json.get("publishedAt");
+                        final Date jsonDate2 = new Date(Long.valueOf(jsonDate) * 1000);
+                        final String date = DateUtils.FormatDate(jsonDate2, "EEE, dd MMM yyyy HH:mm:ss zzz");
+                        pubDate = DateUtils.FormatDate(date);
 
-                        String dateString = DateUtils.FormatDate(date2, "EEE, dd MMM yyyy HH:mm:ss zzz");
+                        message = getString(R.string.text_third_party_greeting, getString(R.string.third_party_title_playerfm), title);
+                        episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
+                        logo.setImageDrawable(mActivity.getDrawable(R.drawable.ic_thirdparty_logos_playerfm));
+                    }
 
-                        String pubDate = DateUtils.FormatDate(dateString);
+                    episode.setTitle(title);
+                    episode.setMediaUrl(url);
+                    episode.setDescription(description);
+                    episode.setPubDate(pubDate);
+                    episode.setDuration(duration);
 
-                        final PodcastItem episode = new PodcastItem();
-                        episode.setTitle(title);
-                        episode.setMediaUrl(url);
-                        episode.setDescription(description);
-                        episode.setPubDate(pubDate);
-                        episode.setDuration(duration);
+                    Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
 
-                        String message = null;
-
-                        //third party
-                        if (identifier.equals(getString(R.string.package_id_player_fm).concat(getString(R.string.third_party_episode_unique_id)))) {
-                            episode.setPlaylistId(getResources().getInteger(R.integer.playlist_playerfm));
-                            message = getString(R.string.text_third_party_greeting, getString(R.string.third_party_title_playerfm), title);
-                        }
-
-                        Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
-
-                        ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(message);
-                        mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
-                        mThirdPartyAutoDownload.setVisibility(View.VISIBLE);
-                    } else
-                        ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                    mThirdPartyView.setText(message);
+                    mView.findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
                 } catch (Exception ex) {
-                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText("Invalid data, please try again"); //TODO: localize
-                    ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
-                    mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                    ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
                 }
             }
             else
             {
-                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setText(getString(R.string.text_third_party_no_watch));
-                ((TextView) mView.findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
-                mView.findViewById(R.id.user_add_third_party_message).setVisibility(View.VISIBLE);
+                mThirdPartyView.setText(getString(R.string.text_third_party_no_watch));
+                mThirdPartyView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                mView.findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
+                mThirdPartyAutoDownload.setVisibility(View.GONE);
             }
         }
 

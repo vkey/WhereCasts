@@ -5,6 +5,7 @@
     <string name="confirm_remove_local">Löschen?</string>
     <string name="notification_updating_status">Aktualisierung…</string>
     <string name="notification_channel_media_service">Medienservice</string>
+    <string name="notification_channel_import_service">Dienst importieren</string>
     <string name="notification_channel_media_playing">Medienwiedergabe-Benachrichtigung</string>
     <string name="notification_channel_newepisodes">Benachrichtigung bei neuen Episoden</string>
 

@@ -38,7 +38,7 @@
 
     <string name="page_title_search_results">Ergebnisse</string>
 
-    <string name="text_third_party_greeting">Hallo, %1$s Benutzer! \"%2$s\" wurde an Ihre Uhr gesendet und wird unter der angezeigt %1$s Wiedergabeliste</string>
+    <string name="text_third_party_greeting">\"%2$s\" wurde an Ihre Uhr gesendet und wird unter der angezeigt %1$s Wiedergabeliste</string>
     <string name="text_third_party_auto_download">Podcast-Episode automatisch auf die Uhr herunterladen (gilt für das nächste hinzugefügt)</string>
     <string name="text_third_party_no_watch">Keine Uhr erkannt</string>
 

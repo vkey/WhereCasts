@@ -66,7 +66,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //final SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
 
-        //final SQLiteDatabase sdb = DatabaseHelper.select(this);
+        //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = -7");
 /*
         final ContentValues cv = new ContentValues();
@@ -132,6 +132,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
 
+            //third party
+            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
+                mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
+
             final List<PlaylistItem> playlists = DBUtilities.getPlaylists(ctx, hideEmpty);
 
             for(final PlaylistItem playlist: playlists)
@@ -145,10 +149,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
-
-            //third party
-            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 
             mNumberOfPages = mPlayListIds.size();
 

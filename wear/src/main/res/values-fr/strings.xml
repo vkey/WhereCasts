@@ -7,6 +7,7 @@
     <string name="notification_channel_media_service">Service de médias</string>
     <string name="notification_channel_media_playing">Notification de lecture de média</string>
     <string name="notification_channel_newepisodes">Nouvelle notification d\'épisodes</string>
+    <string name="notification_channel_import_service">Service d\'importation</string>
 
     <string name="rate_app_reminder">Voulez-vous évaluer cette application? (cliquer OUI ouvrira la page du magasin sur votre téléphone).</string>
 

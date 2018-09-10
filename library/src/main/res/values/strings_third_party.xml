@@ -1,8 +1,7 @@
 <resources>
 
-    <string name="third_party_episode_unique_id">.wearcasts.episode</string>
     <!--third party-->
-    <string name="package_id_player_fm">fm.player</string>
+    <string name="third_party_id_player_fm">fm.player</string>
     <!--<string name="package_id_player_fm">com.example.android.permissionrequest</string> -->
     <string name="third_party_title_playerfm">Player FM</string>
 </resources>
