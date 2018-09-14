@@ -271,7 +271,8 @@ public class DBUtilities {
 
         final String numberOfEpisode = PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_episode_limit", ctx.getString(R.string.episode_list_default));
 
-        sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = ? ORDER BY [pubdate] DESC LIMIT 1000 OFFSET ".concat(numberOfEpisode).concat(")"),
+        //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = ? ORDER BY [pubdate] DESC LIMIT 1000 OFFSET ".concat(numberOfEpisode).concat(")"),
+        sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = ? AND downloadid = 0 AND download = 0 AND position = 0 AND playing = 0 ORDER BY [pubdate] DESC LIMIT 1000 OFFSET ".concat(numberOfEpisode).concat(") AND [id] NOT IN (SELECT pe.id FROM tbl_podcast_episodes AS pe JOIN tbl_playlists_xref AS pex ON pe.id == pex.episode_id WHERE pe.pid = 49)"),
                 new String[]{String.valueOf(podcast.getPodcastId())});
     }
 

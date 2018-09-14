@@ -67,8 +67,26 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
 
         //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
-        //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = -7");
-/*
+        //db.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = 1");
+
+        /*
+        final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
+
+       final Cursor cursor = sdb.rawQuery("SELECT pe.id,pe.title FROM tbl_podcast_episodes AS pe RIGHT JOIN tbl_playlists_xref AS pex ON pe.id = pex.episode_id ",null);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                Integer id = cursor.getInt(0);
+                String title = cursor.getString(1);
+
+                String test = "123";
+            }
+        }
+
+        */
+
+
+        /*
         final ContentValues cv = new ContentValues();
         cv.put("title", "P3 Dokumentär");
         cv.put("url", "https://api.sr.se/rss/pod/3966");

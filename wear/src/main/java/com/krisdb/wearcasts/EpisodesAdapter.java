@@ -414,7 +414,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
 
-
                 if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress)) //in progress
                 {
                     final ContentValues cv = new ContentValues();
