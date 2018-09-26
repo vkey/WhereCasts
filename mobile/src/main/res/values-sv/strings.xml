@@ -3,6 +3,8 @@
     <string name="tab_add">Lägg till</string>
     <string name="tab_premium">Premie</string>
 
+    <string name="notification_channel_sync_service">Synkroniseringstjänst</string>
+
     <string name="validation_invalid_url">Ange en giltig webbadress</string>
     <string name="validation_empty_url">Ange en RSS-adress</string>
 

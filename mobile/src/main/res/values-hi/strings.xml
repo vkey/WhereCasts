@@ -3,6 +3,8 @@
     <string name="tab_add">जोड़ना</string>
     <string name="tab_premium">प्रीमियम</string>
 
+    <string name="notification_channel_sync_service">सेवा सिंक करें</string>
+
     <string name="validation_invalid_url">मान्य यूआरएल दर्ज करें</string>
     <string name="validation_empty_url">एक आरएसएस यूआरएल दर्ज करें</string>
 

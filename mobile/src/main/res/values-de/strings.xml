@@ -3,6 +3,8 @@
     <string name="tab_add">Hinzufügen</string>
     <string name="tab_premium">Prämie</string>
 
+    <string name="notification_channel_sync_service">Synchronisierungsdienst</string>
+
     <string name="validation_invalid_url">Enter a valid url</string>
     <string name="validation_empty_url">Gib eine gültige URL ein</string>
 

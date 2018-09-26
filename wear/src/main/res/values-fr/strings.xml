@@ -25,8 +25,8 @@
     <string name="empty_episode_list_search_results">Aucun résultat\nBalayez vers le bas pour afficher tout</string>
 
     <string name="empty_podcast_list">Importer des podcasts via l\'application téléphonique ou dérouler pour découvrir des podcasts</string>
-    <string name="empty_podcast_list2">Balayez vers la gauche pour les playlists automatiques\nObtenez plus de playlists dans l'application téléphonique</string>
-    <string name="text_playlists_add_empty">Aucune liste de lecture trouvée\n\nAjouter des listes de lecture personnalisées dans l\'application Téléphone \ n (sous l'onglet Premium)</string>
+    <string name="empty_podcast_list2">Balayez vers la gauche pour les playlists automatiques\nObtenez plus de playlists dans l\'application téléphonique</string>
+    <string name="text_playlists_add_empty">Aucune liste de lecture trouvée\n\nAjouter des listes de lecture personnalisées dans l\'application Téléphone \n (sous l\'onglet Premium)</string>
 
     <string name="confirm_mark_finished">Marquer comme fini?</string>
     <string name="confirm_delete_download">Supprimer Télécharger?</string>
