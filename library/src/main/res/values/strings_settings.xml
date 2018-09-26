@@ -10,8 +10,8 @@
     <string name="date_format_last_modified">E MMM dd HH:mm:ss z yyyy</string>
 
     <string name="contact_email">krisdb@live.com</string>
-    <!--<string name="inapp_premium_product_id">android.test.purchased</string>-->
-    <string name="inapp_premium_product_id">premium_features</string>
+    <string name="inapp_premium_product_id">android.test.purchased</string>
+    <!--<string name="inapp_premium_product_id">premium_features</string>-->
     <string name="inapp_playlist_prefix">playlist_</string>
 
     <string-array name="inapp_playlists_sku">

@@ -3,6 +3,8 @@
     <string name="tab_add">Ajouter</string>
     <string name="tab_premium">Prime</string>
 
+    <string name="notification_channel_sync_service">Service de synchronisation</string>
+
     <string name="validation_invalid_url">Entrez une URL valide</string>
     <string name="validation_empty_url">Entrez une URL RSS</string>
 
@@ -15,7 +17,7 @@
     <string name="upload_file_summary_unlocked">Le téléchargement de fichiers créera une liste de lecture automatique sur votre appareil Wear (&lt;20 MB conseillé).</string>
     <string name="upload_file_summary_locked">PRIME: Le téléchargement de fichiers créera une liste de lecture automatique sur votre appareil Wear (&lt;20 MB conseillé).</string>
 
-    <string name="error_no_episode">LL\'URL que vous avez entré n\'a renvoyé aucun podcast.\nCliquez ici pour vérifier qu'il s\'agit d'un flux RSS valide</string>
+    <string name="error_no_episode">LL\'URL que vous avez entré n\'a renvoyé aucun podcast.\nCliquez ici pour vérifier qu\'il s\'agit d\'un flux RSS valide</string>
 
     <string name="form_add_hint_podcast_title">Titre du podcast (facultatif)</string>
     <string name="form_add_hint_podcast_url">Podcast RSS url</string>
@@ -39,7 +41,7 @@
     <string name="page_title_search_results">Résultats</string>
 
     <string name="text_third_party_greeting">\"%2$s\" a été envoyé à votre montre et sera visible sous le %1$s playlist</string>
-    <string name="text_third_party_auto_download">Téléchargement automatique de l\'épisode de podcast sous surveillance (s'applique au prochain ajout)</string>
+    <string name="text_third_party_auto_download">Téléchargement automatique de l\'épisode de podcast sous surveillance (s\'applique au prochain ajout)</string>
     <string name="text_third_party_no_watch">Aucune montre détectée</string>
 
     <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>

@@ -3,6 +3,8 @@
     <string name="tab_add">Add</string>
     <string name="tab_premium">Premium</string>
 
+    <string name="notification_channel_sync_service">Sync Service</string>
+
     <string name="validation_invalid_url">Enter a valid url</string>
     <string name="validation_empty_url">Enter a RSS url</string>
 

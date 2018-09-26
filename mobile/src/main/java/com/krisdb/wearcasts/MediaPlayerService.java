@@ -110,7 +110,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("isplaying", false);
-        SyncWithWearDevice();
 
         final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -121,7 +120,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         NotificationManagerCompat.from(this).cancel(mNotificationID);
 
         if (mMediaPlayer != null) {
-            SyncWithWearDevice();
             editor.putInt("position", getCurrentPosition(mMediaPlayer));
             //mMediaPlayer.stop();
             //mMediaPlayer.reset();

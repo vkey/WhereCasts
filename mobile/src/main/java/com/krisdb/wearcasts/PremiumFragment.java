@@ -127,14 +127,13 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
                     }).show();
                 }
                 else
-                {
                     showPlaylistPurchase();
-                }
             }
         });
         if (getArguments() != null) {
             mWatchConnected = getArguments().getBoolean("connected");
         }
+
         mView.findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,14 +221,12 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IInAppBillingService.Stub.asInterface(service);
 
-            /*
             //removes purchase for testing
              try {
                 int response = mService.consumePurchase(3, mActivity.getPackageName(), "inapp:" + mActivity.getPackageName() + ":android.test.purchased");
-            } catch (RemoteException e) {
+            } catch (android.os.RemoteException e) {
                 e.printStackTrace();
             }
-            */
 
             new AsyncTasks.HasUnlockedPremium(mActivity, mService,
                     new Interfaces.PremiumResponse(){
@@ -275,7 +272,7 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
     private void SetPremiumContent()
     {
         boolean isDebuggable =  ( 0 != ( mActivity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
-
+        isDebuggable = false;
         if (isDebuggable)
             mPlaylistPurchasedCount = 5;
 
@@ -319,17 +316,22 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
     public void onResume() {
         super.onResume();
         mBroadcastManger.registerReceiver(mFileUploadReceiver, new IntentFilter("file_uploaded"));
-        mBroadcastManger.registerReceiver(mPremiumConfirm, new IntentFilter("premiumconfirm"));
+        mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
         Wearable.getDataClient(mActivity).addListener(this);
         Wearable.getCapabilityClient(mActivity).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
         SetPremiumContent();
     }
 
-    private BroadcastReceiver mPremiumConfirm = new BroadcastReceiver() {
+    private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            CommonUtils.showToast(context, context.getString(R.string.success));
-            mProgressFileUpload.get().setVisibility(View.GONE);
+            if (intent.getExtras().getBoolean("premium")) {
+                CommonUtils.showToast(context, context.getString(R.string.success));
+                mProgressFileUpload.get().setVisibility(View.GONE);
+            }
+            else if (intent.getExtras().getBoolean("episode")) {
+
+            }
         }
     };
 
@@ -399,7 +401,7 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
 
                     SetPremiumContent();
 
-                    Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked);
+                    Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, true);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -465,7 +467,7 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
     @Override
     public void onPause() {
         mBroadcastManger.unregisterReceiver(mFileUploadReceiver);
-        mBroadcastManger.unregisterReceiver(mPremiumConfirm);
+        mBroadcastManger.unregisterReceiver(mWatchResponse);
         Wearable.getDataClient(mActivity).removeListener(this);
         Wearable.getCapabilityClient(mActivity).removeListener(this);
         super.onPause();

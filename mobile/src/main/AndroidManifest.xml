@@ -77,6 +77,10 @@
                     android:host="*"
                     android:pathPrefix="/fileuploadprogress"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/episoderesponse"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 

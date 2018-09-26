@@ -1,9 +1,15 @@
 package com.krisdb.wearcasts;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.wearable.DataClient;
@@ -20,12 +26,27 @@ public class SyncService extends WearableListenerService implements DataClient.O
     {
         super.onCreate();
         Wearable.getDataClient(this).addListener(this);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final NotificationChannel channel = new NotificationChannel(getPackageName().concat(".sync.service"), getString(R.string.notification_channel_sync_service), NotificationManager.IMPORTANCE_DEFAULT);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+            final Notification notification = new NotificationCompat.Builder(this, getPackageName().concat(".sync.service"))
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(getString(R.string.notification_channel_sync_service))
+                    .setSmallIcon(R.drawable.ic_notification).build();
+
+            startForeground(10, notification);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Wearable.getDataClient(this).removeListener(this);
+
+        stopForeground(true);
     }
 
     @Override
@@ -79,8 +100,15 @@ public class SyncService extends WearableListenerService implements DataClient.O
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intentFileUploaded);
             } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/premiumconfirm")) {
                 final Intent intentPremiumConfirm = new Intent();
-                intentPremiumConfirm.setAction("premiumconfirm");
+                intentPremiumConfirm.setAction("watchresponse");
+                intentPremiumConfirm.putExtra("premium", true);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intentPremiumConfirm);
+            }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/episoderesponse")) {
+                final Intent intent = new Intent();
+                intent.setAction("watchresponse");
+                intent.putExtra("episode", true);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         }
     }

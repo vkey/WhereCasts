@@ -87,6 +87,10 @@ public class ImportService extends WearableListenerService implements DataClient
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/episodeimport")) {
+
+                final PutDataMapRequest dataMap = PutDataMapRequest.create("/episoderesponse");
+                CommonUtils.DeviceSync(this, dataMap);
+
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
 
                 PodcastItem episode = DBUtilities.GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
