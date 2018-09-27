@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -34,12 +33,7 @@ import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.CapabilityClient;
-import com.google.android.gms.wearable.CapabilityInfo;
-import com.google.android.gms.wearable.DataClient;
-import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.Wearable;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -427,6 +421,22 @@ public class PremiumFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
+
+            /*
+            final Task<List<Node>> nodeListTask = Wearable.getNodeClient(mActivity.get()).getConnectedNodes();
+
+            try {
+                List<Node> nodes = Tasks.await(nodeListTask);
+
+                Task<ChannelClient.Channel> task = Wearable.getChannelClient(mActivity.get()).openChannel(nodes.get(0).getId(),"");
+
+                Task<Void> task2 = Wearable.getChannelClient(mActivity.get()).sendFile(task.getResult(), mUri);
+
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+*/
             final PutDataMapRequest dataMapUpload = PutDataMapRequest.create("/uploadfile");
 
             final Asset asset = Asset.createFromUri(mUri);
@@ -447,6 +457,7 @@ public class PremiumFragment extends Fragment {
             dataMapUpload.getDataMap().putString("local_filename", localFileName);
 
             CommonUtils.DeviceSync(mActivity.get(), dataMapUpload);
+
             return null;
         }
 

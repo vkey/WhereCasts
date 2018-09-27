@@ -24,19 +24,13 @@ import android.support.v4.view.ViewPager;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.wearable.DataClient;
-import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
