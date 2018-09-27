@@ -79,7 +79,7 @@
                     android:scheme="wear" />
                 <data
                     android:host="*"
-                    android:pathPrefix="/episoderesponse"
+                    android:pathPrefix="/thirdparty"
                     android:scheme="wear" />
             </intent-filter>
         </service>

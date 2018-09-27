@@ -6,19 +6,27 @@ import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -31,38 +39,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
-public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener {
+public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener {
 
     private Context mContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        Wearable.getDataClient(this).addListener(this);
         mContext = this;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final NotificationChannel channel = new NotificationChannel(getPackageName().concat(".import.service"), getString(R.string.notification_channel_import_service), NotificationManager.IMPORTANCE_DEFAULT);
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-
-            final Notification notification = new NotificationCompat.Builder(this, getPackageName().concat(".import.service"))
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.notification_channel_import_service))
-                    .setSmallIcon(R.drawable.ic_notification).build();
-
-            startForeground(10, notification);
-        }
+        Wearable.getDataClient(mContext).addListener(this);
+        Wearable.getCapabilityClient(mContext).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Wearable.getDataClient(this).removeListener(this);
-        stopForeground(true);
+        Wearable.getDataClient(mContext).removeListener(this);
+        Wearable.getCapabilityClient(mContext).removeListener(this);
     }
 
     @Override
@@ -77,19 +76,17 @@ public class ImportService extends WearableListenerService implements DataClient
             path = event.getDataItem().getUri().getPath();
             type = event.getType();
 
-             if (type == DataEvent.TYPE_CHANGED && path.equals("/premium")) {
+              if (type == DataEvent.TYPE_CHANGED && path.equals("/premium")) {
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("premium", dataMapItem.getDataMap().getBoolean("unlock"));
                 editor.apply();
 
-                if (dataMapItem.getDataMap().getBoolean("confirm"))
+                if (dataMapItem.getDataMap().getBoolean("confirm")) {
                     CommonUtils.DeviceSync(this, PutDataMapRequest.create("/premiumconfirm"));
+                }
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/episodeimport")) {
-
-                final PutDataMapRequest dataMap = PutDataMapRequest.create("/episoderesponse");
-                CommonUtils.DeviceSync(this, dataMap);
 
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
 
@@ -120,9 +117,13 @@ public class ImportService extends WearableListenerService implements DataClient
                     episode.setEpisodeId((int)episodeId);
                 }
 
+                final int playlist = dataMapItem.getDataMap().getInt("playlistid");
+
                 //add third parties to their playlist
-                if (dataMapItem.getDataMap().getInt("playlistid") < 0)
-                    db.addEpisodeToPlaylist(dataMapItem.getDataMap().getInt("playlistid"), episode.getEpisodeId());
+                if (playlist < 0) {
+                    CommonUtils.DeviceSync(this, PutDataMapRequest.create("/thirdparty"));
+                    db.addEpisodeToPlaylist(playlist, episode.getEpisodeId());
+                }
 
                 db.close();
 

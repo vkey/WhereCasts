@@ -53,7 +53,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-public class PremiumFragment extends Fragment implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener  {
+public class PremiumFragment extends Fragment {
 
     private Activity mActivity;
     private static final int UPLOAD_REQUEST_CODE = 43;
@@ -221,12 +221,14 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IInAppBillingService.Stub.asInterface(service);
 
+            /*
             //removes purchase for testing
              try {
                 int response = mService.consumePurchase(3, mActivity.getPackageName(), "inapp:" + mActivity.getPackageName() + ":android.test.purchased");
             } catch (android.os.RemoteException e) {
                 e.printStackTrace();
             }
+            */
 
             new AsyncTasks.HasUnlockedPremium(mActivity, mService,
                     new Interfaces.PremiumResponse(){
@@ -272,7 +274,7 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
     private void SetPremiumContent()
     {
         boolean isDebuggable =  ( 0 != ( mActivity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
-        isDebuggable = false;
+
         if (isDebuggable)
             mPlaylistPurchasedCount = 5;
 
@@ -317,8 +319,7 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
         super.onResume();
         mBroadcastManger.registerReceiver(mFileUploadReceiver, new IntentFilter("file_uploaded"));
         mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
-        Wearable.getDataClient(mActivity).addListener(this);
-        Wearable.getCapabilityClient(mActivity).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+
         SetPremiumContent();
     }
 
@@ -328,9 +329,6 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
             if (intent.getExtras().getBoolean("premium")) {
                 CommonUtils.showToast(context, context.getString(R.string.success));
                 mProgressFileUpload.get().setVisibility(View.GONE);
-            }
-            else if (intent.getExtras().getBoolean("episode")) {
-
             }
         }
     };
@@ -468,17 +466,6 @@ public class PremiumFragment extends Fragment implements DataClient.OnDataChange
     public void onPause() {
         mBroadcastManger.unregisterReceiver(mFileUploadReceiver);
         mBroadcastManger.unregisterReceiver(mWatchResponse);
-        Wearable.getDataClient(mActivity).removeListener(this);
-        Wearable.getCapabilityClient(mActivity).removeListener(this);
         super.onPause();
-    }
-
-    @Override
-    public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
-    }
-
-    @Override
-    public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
-
     }
 }

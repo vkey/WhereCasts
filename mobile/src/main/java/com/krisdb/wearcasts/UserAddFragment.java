@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -52,14 +53,14 @@ import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class UserAddFragment extends Fragment implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener  {
+public class UserAddFragment extends Fragment {
 
     private Activity mActivity;
     private static final int OPML_REQUEST_CODE = 42;
     private View mView;
     private ProgressBar mProgressOPML;
     private Boolean mWatchConnected = false;
-    private TextView mTipView, mThirdPartyView;
+    private TextView mTipView;
     private CheckBox mThirdPartyAutoDownload;
     private LocalBroadcastManager mBroadcastManger;
 
@@ -86,7 +87,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
         mView = inflater.inflate(R.layout.fragment_user_add, container, false);
         mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
         mThirdPartyAutoDownload = mView.findViewById(R.id.user_add_third_party_auto_download);
-        mThirdPartyView = mView.findViewById(R.id.user_add_third_party_message);
+        final TextView mThirdPartyView = mView.findViewById(R.id.user_add_third_party_message);
         final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
         mTipView = mView.findViewById(R.id.main_tip);
@@ -214,6 +215,7 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
             if (mWatchConnected) {
                 final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
+                    mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.VISIBLE);
                     final JSONObject json = new JSONObject(text);
 
                     String url = null, title = null, description = null, message = null, pubDate = null;
@@ -248,10 +250,19 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
                     episode.setDuration(duration);
 
                     Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
-
                     mThirdPartyView.setText(message);
+
+                    new CountDownTimer(5000, 100) {
+                        public void onTick(long millisUntilFinished) {}
+
+                        public void onFinish() {
+                            if (mView.findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE)
+                                mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+                        }
+                    }.start();
                 } catch (Exception ex) {
                     ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                    mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
                 }
             }
             else
@@ -300,9 +311,9 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-             if (intent.getExtras().getBoolean("episode")) {
+             if (intent.getExtras().getBoolean("thirdparty")) {
                  mView.findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
-            }
+                 mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);            }
         }
     };
 
@@ -310,9 +321,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     public void onResume() {
         super.onResume();
         mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
-
-        Wearable.getDataClient(mActivity).addListener(this);
-        Wearable.getCapabilityClient(mActivity).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
     }
 
     @Override
@@ -407,17 +415,6 @@ public class UserAddFragment extends Fragment implements DataClient.OnDataChange
     @Override
     public void onPause() {
         mBroadcastManger.unregisterReceiver(mWatchResponse);
-        Wearable.getDataClient(mActivity).removeListener(this);
-        Wearable.getCapabilityClient(mActivity).removeListener(this);
         super.onPause();
-    }
-
-    @Override
-    public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
-    }
-
-    @Override
-    public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
-
     }
 }
