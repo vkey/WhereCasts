@@ -383,7 +383,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         super.onNewIntent(intent);
         setIntent(intent);
 
-        mEpisode = DBUtilities.GetEpisode(mActivity, intent.getExtras().getInt("eid"));
+        //mEpisode = DBUtilities.GetEpisode(mActivity, intent.getExtras().getInt("eid"));
+        SetContent(intent.getExtras().getInt("eid"));
     }
 
     @Override

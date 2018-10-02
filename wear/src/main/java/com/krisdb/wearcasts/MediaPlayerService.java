@@ -3,6 +3,7 @@ package com.krisdb.wearcasts;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -554,8 +555,31 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void showNotification(final Boolean pause, final Boolean update) {
 
-        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        /*
+        final Intent mainIntent = new Intent(mContext, MainActivity.class);
 
+        final Bundle bundleListing = new Bundle();
+        bundleListing.putInt("podcastId", mEpisode.getPodcastId());
+        bundleListing.putInt("playlistId", mPlaylistID);
+
+        final Intent listingIntent = new Intent(mContext, PodcastEpisodeListActivity.class);
+        listingIntent.putExtras(bundleListing);
+
+        final Bundle bundleEpisode = new Bundle();
+        bundleEpisode.putInt("eid", mEpisode.getEpisodeId());
+        bundleEpisode.putInt("podcastId", mEpisode.getPodcastId());
+        bundleEpisode.putInt("playlistId", mPlaylistID);
+
+        final Intent episodeIntent = new Intent(mContext, PodcastEpisodeActivity.class);
+        episodeIntent.putExtras(bundleEpisode);
+
+        final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
+                .addNextIntent(mainIntent)
+                .addNextIntent(listingIntent)
+                .addNextIntent(episodeIntent);
+
+      final PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+      */
         final Bundle bundle = new Bundle();
         bundle.putInt("eid", mEpisode.getEpisodeId());
 
@@ -573,7 +597,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 .setOnlyAlertOnce(true)
                 .setPriority(PRIORITY_LOW)
                 .setVisibility(VISIBILITY_PUBLIC)
-                .setContentIntent(PendingIntent.getActivity(mContext, mEpisode.getEpisodeId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                .setContentIntent(PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT));
                 //.setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
 
         if (pause) {
@@ -585,6 +609,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setMediaSession(mMediaSessionCompat.getSessionToken()).setShowActionsInCompactView(0));
+
+        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

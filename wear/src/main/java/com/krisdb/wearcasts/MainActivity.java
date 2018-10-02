@@ -311,7 +311,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (prefs.getBoolean("refresh_vp", false)) {
-
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("refresh_vp", false);
             editor.apply();

@@ -53,7 +53,7 @@ public class UserAddFragment extends Fragment {
     private View mView;
     private ProgressBar mProgressOPML;
     private Boolean mWatchConnected = false;
-    private TextView mTipView;
+    private TextView mTipView, mOPMLView;
     private CheckBox mThirdPartyAutoDownload;
     private LocalBroadcastManager mBroadcastManger;
 
@@ -80,6 +80,7 @@ public class UserAddFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_user_add, container, false);
         mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
         mThirdPartyAutoDownload = mView.findViewById(R.id.user_add_third_party_auto_download);
+        mOPMLView = mView.findViewById(R.id.import_opml_text);
         final TextView mThirdPartyView = mView.findViewById(R.id.user_add_third_party_message);
         final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
@@ -249,8 +250,13 @@ public class UserAddFragment extends Fragment {
                         public void onTick(long millisUntilFinished) {}
 
                         public void onFinish() {
-                            if (mView.findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE)
+                            if (mView.findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE) {
                                 mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+                                mOPMLView.setText(R.string.general_error);
+                                mOPMLView.setVisibility(View.VISIBLE);
+                                mOPMLView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                                mOPMLView.setTextSize(14);
+                            }
                         }
                     }.start();
                 } catch (Exception ex) {
@@ -338,10 +344,10 @@ public class UserAddFragment extends Fragment {
                                 public void run() {
                                     mProgressOPML.setVisibility(View.VISIBLE);
                                     mProgressOPML.setIndeterminate(true);
-                                    ((TextView) mView.findViewById(R.id.import_opml_text)).setGravity(Gravity.START);
-                                    mView.findViewById(R.id.import_opml_text).setVisibility(View.VISIBLE);
-                                    ((TextView) mView.findViewById(R.id.import_opml_text)).setText(mActivity.getString(R.string.text_importing_opml_parsing));
-                                    ((TextView) mView.findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.dark_grey));
+                                    mOPMLView.setGravity(Gravity.START);
+                                    mOPMLView.setVisibility(View.VISIBLE);
+                                    mOPMLView.setText(mActivity.getString(R.string.text_importing_opml_parsing));
+                                    mOPMLView.setTextColor(mActivity.getColor(R.color.dark_grey));
                                 }
                             });
 
