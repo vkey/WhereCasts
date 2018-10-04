@@ -14,8 +14,8 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 339
-        versionName "1.29.01"
+        versionCode 340
+        versionName "1.29.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.android.support:animated-vector-drawable:28.0.0'
     implementation 'com.android.support:support-media-compat:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.google.android.gms:play-services-wearable:16.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
     implementation 'com.google.android.support:wearable:2.3.0'
     implementation('com.android.billingclient:billing:1.0')
     compileOnly 'com.google.android.wearable:wearable:2.3.0'

@@ -9,8 +9,8 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 439
-        versionName "1.29.01"
+        versionCode 440
+        versionName "1.29.02"
     }
     buildTypes {
         release {
@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.android.support:wear:28.0.0'
     implementation 'com.android.support:percent:28.0.0'
     implementation 'com.android.support:design:28.0.0'
-    implementation 'com.google.android.gms:play-services-wearable:16.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
     implementation 'com.google.android.support:wearable:2.3.0'
     compileOnly 'com.google.android.wearable:wearable:2.3.0'
 
