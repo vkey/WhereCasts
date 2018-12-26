@@ -47,7 +47,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private List<PodcastItem> mEpisodes;
     private Activity mContext;
-    private int mPlaylistId, mPlaylistDefault, mPlaylistDownloads, mPlaylistLocal, mTextColor, mHeaderColor;
+    private int mPlaylistId, mPlaylistDefault, mPlaylistDownloads, mPlaylistLocal, mPlaylistRadio, mTextColor, mHeaderColor;
     private String mDensityName;
     private Resources mResources;
     private boolean isRound;
@@ -77,6 +77,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mPlaylistId = playlistId;
         mResources = mContext.getResources();
         mPlaylistDefault = mResources.getInteger(R.integer.playlist_default);
+        mPlaylistRadio = mResources.getInteger(R.integer.playlist_radio);
         mPlaylistDownloads = mResources.getInteger(R.integer.playlist_downloads);
         mPlaylistLocal = mResources.getInteger(R.integer.playlist_local);
         mDensityName = CommonUtils.getDensityName(mContext);
@@ -424,6 +425,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
                 else if (mPlaylistId == mPlaylistDownloads)
                     Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+                else if (mPlaylistId == mResources.getInteger(R.integer.playlist_radio))
+                    db.delete(mEpisodes.get(position).getEpisodeId());
                 else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
                 {
                     db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
@@ -524,7 +527,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
         final ViewGroup.MarginLayoutParams paramsDate = (ViewGroup.MarginLayoutParams)date.getLayoutParams();
 
-        if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
+        if (mPlaylistId == mPlaylistRadio)
+            download.setVisibility(View.INVISIBLE);
+        else if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
         else
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));

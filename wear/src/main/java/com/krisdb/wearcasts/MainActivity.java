@@ -69,6 +69,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
         //db.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = 1");
 
+        //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
+        //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE title = 'NPR'");
+
         /*
         final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
 
@@ -95,22 +98,21 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         final int podcastId = (int) new DBPodcasts(this).insert(cv);
         new AsyncTasks.GetPodcastEpisodes(this, podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
-        new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(0);
-        new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(1);
-        new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(2);
-        new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(3);
-        new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Comedy");
-        new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Gaming");
-        new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Videos");
-        new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Business");
-        Utilities.resetHomeScreen(this);
         */
+
+        //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(0);
+        //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(1);
+        //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(2);
+        //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(3);
+        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Next");
+        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Comedy");
+        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Videos");
+        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Business");
+        //Utilities.resetHomeScreen(this);
 
         mShowPodcastList = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("new_episodes");
 
-        new Init(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
         mNavItems = Utilities.getNavItems(this);
         mNavDrawer = new WeakReference<>((WearableNavigationDrawerView)findViewById(R.id.drawer_nav_main));
@@ -158,6 +160,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             for(final PlaylistItem playlist: playlists)
                 mPlayListIds.add(playlist.getID());
+
+            //if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_radio)))
+                //mPlayListIds.add(resources.getInteger(R.integer.playlist_radio));
 
             if (localFiles)
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));

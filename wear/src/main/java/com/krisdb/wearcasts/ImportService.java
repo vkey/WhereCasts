@@ -77,6 +77,7 @@ public class ImportService extends WearableListenerService implements DataClient
             if (type == DataEvent.TYPE_CHANGED && path.equals("/episodeimport")) {
 
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
+                final Boolean isRadio = dataMapItem.getDataMap().getBoolean("radio");
 
                 PodcastItem episode = DBUtilities.GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
 
@@ -92,7 +93,8 @@ public class ImportService extends WearableListenerService implements DataClient
                     final ContentValues cv = new ContentValues();
                     cv.put("pid", episode.getPodcastId());
                     cv.put("title", episode.getTitle());
-                    cv.put("description", episode.getDescription());
+                    if (!isRadio)
+                        cv.put("description", episode.getDescription());
                     if (episode.getMediaUrl() != null)
                         cv.put("mediaurl", episode.getMediaUrl().toString());
                     if (episode.getEpisodeUrl() != null)
@@ -100,6 +102,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     cv.put("pubDate", episode.getPubDate());
                     cv.put("duration", episode.getDuration());
                     cv.put("dateAdded", DateUtils.GetDate());
+                    cv.put("radio", isRadio);
 
                     final long episodeId = db.insert(cv);
                     episode.setEpisodeId((int)episodeId);
@@ -115,7 +118,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 db.close();
 
-                if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
+                if (!isRadio && (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download"))) {
                     if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
                         final PodcastItem finalEpisode = episode;
                         new AsyncTasks.DisableBluetooth(this,

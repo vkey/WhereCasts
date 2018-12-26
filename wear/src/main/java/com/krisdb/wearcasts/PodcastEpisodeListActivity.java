@@ -57,7 +57,6 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                 final Fragment fragment = new PodcastEpisodesListFragment().newInstance(getResources().getInteger(R.integer.playlist_default), mPodcastId, query);
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
-
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

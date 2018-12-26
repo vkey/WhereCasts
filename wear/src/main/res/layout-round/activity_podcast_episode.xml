@@ -116,7 +116,6 @@
                     />
             </RelativeLayout>
 
-
             <ProgressBar
                 android:id="@+id/podcast_episode_progress_circle"
                 android:layout_width="120dp"

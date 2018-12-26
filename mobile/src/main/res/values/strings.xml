@@ -1,6 +1,7 @@
 <resources>
     <string name="tab_play">Play</string>
     <string name="tab_add">Add</string>
+    <string name="tab_radio">Radio</string>
     <string name="tab_premium">Premium</string>
 
     <string name="notification_channel_sync_service">Sync Service</string>
@@ -50,6 +51,7 @@
 
     <string name="alert_podcast_added">%s sent to watch.</string>
     <string name="alert_episode_added">Sent to download playlist on watch.</string>
+    <string name="alert_episode_radio_added">Sent to radio playlist on watch.</string> <!--TODO: Localiz-->
     <string name="alert_episode_import_first">This episode will be sent to your watch and downloaded</string>
     <string name="alert_playlist_purchased">%d created.</string>
     <string name="text_file_uploaded">Sent successfully.\nThere may be a delay before file(s) show up on watch.\nSwipe left on the main screen.</string>

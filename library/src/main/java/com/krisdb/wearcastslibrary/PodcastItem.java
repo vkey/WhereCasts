@@ -11,7 +11,7 @@ public class PodcastItem implements Serializable
     private String title, description, pubDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
     private URL mediaurl, episodeUrl;
     private int pid, eid, position, duration, newCount, playlistid;
-    private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded;
+    private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded, isRadio = false;
     private ChannelItem channel;
     private PodcastItem latestEpisode;
     private transient Drawable thumb;
@@ -68,6 +68,14 @@ public class PodcastItem implements Serializable
     }
     public Boolean getRead() {
         return read;
+    }
+
+    public void setIsRadio(final Boolean radio)
+    {
+        this.isRadio = radio;
+    }
+    public Boolean getIsRadio() {
+        return isRadio;
     }
 
     public void setIsDownloaded(final Boolean downloaded)

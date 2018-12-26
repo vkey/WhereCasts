@@ -77,6 +77,7 @@ public class ChannelItem implements Serializable {
             e.printStackTrace();
         }
     }
+
     public String getDescription() {
         return description;
     }
@@ -84,5 +85,4 @@ public class ChannelItem implements Serializable {
     public void setDescription(String description) {
         this.description = description.trim();
     }
-
 }

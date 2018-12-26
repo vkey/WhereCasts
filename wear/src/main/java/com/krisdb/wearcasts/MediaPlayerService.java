@@ -353,8 +353,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             //if (mMediaPlayer != null)
             //mMediaPlayer.reset();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
             try {
+
                 try {
                     mMediaPlayer.setDataSource(uri.toString());
                 }
@@ -363,10 +365,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mMediaPlayer.setDataSource(uri.toString());
                 }
 
-            if (uri.toString().startsWith("http"))
-                mMediaPlayer.prepareAsync();
-            else
-                mMediaPlayer.prepare();
+                if (uri.toString().startsWith("http"))
+                    mMediaPlayer.prepareAsync();
+                else
+                    mMediaPlayer.prepare();
 
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
 
@@ -428,7 +430,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                                                           @Override
                                                           public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                      //Intent intentMediaBuffering = new Intent();
+                        //Intent intentMediaBuffering = new Intent();
                       //intentMediaBuffering.setAction("media_buffering");
                       //intentMediaBuffering.putExtra("percent", percent);
                       //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
@@ -659,7 +661,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
 
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
+        if (mLocalFile != null)
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mEpisode.getChannel().getTitle());
+
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name));
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DATE, mEpisode.getPubDate());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, mEpisode.getDescription());

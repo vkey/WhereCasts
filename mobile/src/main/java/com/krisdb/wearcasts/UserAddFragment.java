@@ -104,7 +104,7 @@ public class UserAddFragment extends Fragment {
                                 new AsyncTasks.EpisodeCount(mActivity, podcast, new Interfaces.IntResponse() {
                                     @Override
                                     public void processFinish(int response) {
-                                        if (response == 1) {
+                                        if (response != 1) {
                                             Utilities.SendToWatch(mActivity, podcast);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);

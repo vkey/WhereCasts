@@ -253,6 +253,7 @@
 
     <string name="playlist_title_inprogress">In Progress</string>
     <string name="playlist_title_downloads">Downloads</string>
+    <string name="playlist_title_radio">Radio</string> <!--TODO: Localize-->
     <string name="playlist_title_unplayed">Unplayed</string>
     <string name="playlist_title_local">Local</string>
 

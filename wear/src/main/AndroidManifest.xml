@@ -124,6 +124,10 @@
                     android:host="*"
                     android:pathPrefix="/addplaylists"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/radioimport"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 
