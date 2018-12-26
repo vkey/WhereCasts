@@ -48,6 +48,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private NavigationAdapter mNavAdapter;
+    private static WeakReference<MainActivity> mActivityRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         setContentView(R.layout.activity_main);
 
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
+        mActivityRef = new WeakReference<>(this);
 
         final NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(102);
@@ -226,27 +228,29 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            if (visits == 50)
+            if (visits == 40)
             {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                alert.setMessage(ctx.getString(R.string.rate_app_reminder));
-                alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                    alert.setMessage(ctx.getString(R.string.rate_app_reminder));
+                    alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
-                        CommonUtils.DeviceSync(ctx, dataMap);
-                        dialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
+                            CommonUtils.DeviceSync(ctx, dataMap);
+                            dialog.dismiss();
+                        }
+                    });
 
-                alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
             }
 
             if (visits > 20 && prefs.getBoolean("updatesEnabled", true) && prefs.getBoolean("updatesRefactor", true)) {

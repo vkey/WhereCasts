@@ -61,6 +61,7 @@ import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
@@ -92,6 +93,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private ConnectivityManager mConnectivityManager;
     private android.support.v4.widget.NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
+    private WeakReference<PodcastEpisodeActivity> mActivityRef;
 
     @Override
     public Resources.Theme getTheme() {
@@ -111,6 +113,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mContext = getApplicationContext();
         mActivity = this;
+
+        mActivityRef = new WeakReference<>(this);
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mNavItems = Utilities.getNavItems(this);
@@ -600,9 +605,11 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     public void onNothingSelected(AdapterView<?> parent) {}
                 });
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeActivity.this);
-                builder.setView(playlistAddView);
-                builder.create().show();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                    builder.setView(playlistAddView);
+                    builder.create().show();
+                }
                 break;
             case R.id.menu_drawer_episode_download:
                 final int writeStorage = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -613,35 +620,38 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     if (Utilities.BluetoothEnabled()) {
                         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
                         if (prefs.getBoolean("initialDownload", true)) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
-                            alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //disable bluetooth and enable setting
-                                    final SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putBoolean("pref_disable_bluetooth", true);
-                                    editor.apply();
+                            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
 
-                                    new AsyncTasks.DisableBluetooth(mContext,
-                                            new Interfaces.AsyncResponse() {
-                                                @Override
-                                                public void processFinish() {
-                                                    handleNetwork(mNetworkDownloadCallback);
-                                                }
-                                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //disable bluetooth and enable setting
+                                        final SharedPreferences.Editor editor = prefs.edit();
+                                        editor.putBoolean("pref_disable_bluetooth", true);
+                                        editor.apply();
 
-                                    dialog.dismiss();
-                                }
-                            });
-                            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    handleNetwork(mNetworkDownloadCallback);
-                                    dialog.dismiss();
-                                }
-                            });
-                            alert.show();
+                                        new AsyncTasks.DisableBluetooth(mContext,
+                                                new Interfaces.AsyncResponse() {
+                                                    @Override
+                                                    public void processFinish() {
+                                                        handleNetwork(mNetworkDownloadCallback);
+                                                    }
+                                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                                        dialog.dismiss();
+                                    }
+                                });
+                                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        handleNetwork(mNetworkDownloadCallback);
+                                        dialog.dismiss();
+                                    }
+                                });
+                                alert.show();
+                            }
                             final SharedPreferences.Editor editor = prefs.edit();
                             editor.putBoolean("initialDownload", false);
                             editor.apply();
@@ -767,7 +777,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mConnectivityManager.unregisterNetworkCallback(callback);
                         mNetworkHandler.removeMessages(1);
 
-                        if(!mActivity.isFinishing()) {
+                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
                             alert.setMessage(getString(R.string.alert_episode_network_notfound));
                             alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
@@ -820,7 +830,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     StreamEpisode();
             }
         } else {
-            if (!mActivity.isFinishing()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
@@ -933,33 +943,35 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     }
 
     public void DeleteEpisode() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
-        alert.setMessage(getString(R.string.confirm_delete_episode_download));
-        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+            alert.setMessage(getString(R.string.confirm_delete_episode_download));
+            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final ContentValues cv = new ContentValues();
-                cv.put("download", 0);
-                cv.put("downloadid", 0);
-                new DBPodcastsEpisodes(mActivity).update(cv, mEpisode.getEpisodeId());
-                Utilities.DeleteMediaFile(mActivity, mEpisode);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final ContentValues cv = new ContentValues();
+                    cv.put("download", 0);
+                    cv.put("downloadid", 0);
+                    new DBPodcastsEpisodes(mActivity).update(cv, mEpisode.getEpisodeId());
+                    Utilities.DeleteMediaFile(mActivity, mEpisode);
 
-                new DBPodcastsEpisodes(mActivity).update(cv, mEpisode.getEpisodeId());
-                final Menu menu = mWearableActionDrawer.getMenu();
-                menu.clear();
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_download, menu);
-                dialog.dismiss();
-            }
-        });
+                    new DBPodcastsEpisodes(mActivity).update(cv, mEpisode.getEpisodeId());
+                    final Menu menu = mWearableActionDrawer.getMenu();
+                    menu.clear();
+                    getMenuInflater().inflate(R.menu.menu_drawer_episode_download, menu);
+                    dialog.dismiss();
+                }
+            });
 
-        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }
     }
 
     @Override

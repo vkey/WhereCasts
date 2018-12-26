@@ -33,6 +33,7 @@ import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,6 +52,7 @@ public class PodcastEpisodesListFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EpisodesAdapter mAdapter;
     private String mQuery;
+    private WeakReference<Activity> mActivityRef;
 
     public static PodcastEpisodesListFragment newInstance(final int playlistId, final int podcastId, final String query) {
 
@@ -69,6 +71,7 @@ public class PodcastEpisodesListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
+        mActivityRef = new WeakReference<>(mActivity);
     }
 
     @Override
@@ -128,22 +131,24 @@ public class PodcastEpisodesListFragment extends Fragment {
                                 }
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                    alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
-                            dialog.dismiss();
-                        }
-                    });
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                        alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                                dialog.dismiss();
+                            }
+                        });
 
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
