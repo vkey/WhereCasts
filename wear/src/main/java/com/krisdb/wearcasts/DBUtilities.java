@@ -452,7 +452,7 @@ public class DBUtilities {
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, podcast.getPodcastId()));
+                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, cursor.getInt(0)));
                     podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
 
                     if (orderId == latestEpisodesSortOrderID)
@@ -709,6 +709,8 @@ public class DBUtilities {
             cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0", null);
         else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress))
             cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [position] > 0", null);
+        //else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_radio))
+            //cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [radio] > 0", null);
         else if (playlistId != 0)
             cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
         else
@@ -751,6 +753,8 @@ public class DBUtilities {
             channelItem.setTitle(ctx.getString(R.string.third_party_title_playerfm));
         else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_inprogress));
+        //else if (playlistId == resources.getInteger(R.integer.playlist_radio))
+            //channelItem.setTitle(ctx.getString(R.string.playlist_title_radio));
         else if (playlistId == resources.getInteger(R.integer.playlist_upnext))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_upnext));
         else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
@@ -807,6 +811,8 @@ public class DBUtilities {
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0 ORDER BY ".concat(orderString)), null);
+            //else if (playlistId == resources.getInteger(R.integer.playlist_radio))
+            //cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [radio] = 1 ORDER BY ".concat(orderString)), null);
             else if (playlistId > resources.getInteger(R.integer.playlist_default) || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ? ORDER BY ".concat(orderString)), new String[]{String.valueOf(playlistId)});
             else
@@ -816,7 +822,7 @@ public class DBUtilities {
                 while (!cursor.isAfterLast()) {
                     PodcastItem episode = SetPodcastEpisode(cursor);
 
-                    if (playlistId <= resources.getInteger(R.integer.playlist_playerfm))
+                    if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
@@ -871,6 +877,7 @@ public class DBUtilities {
         episode.setDuration(cursor.getInt(cache.getColumnIndex(cursor, "duration")));
         episode.setDisplayDuration(DateUtils.FormatPositionTime(cursor.getInt(cache.getColumnIndex(cursor, "duration"))));
         episode.setIsDownloaded(cursor.getInt(cache.getColumnIndex(cursor, "download")) == 1);
+        //episode.setIsRadio(cursor.getInt(cache.getColumnIndex(cursor, "radio")) == 1);
 
         return episode;
     }

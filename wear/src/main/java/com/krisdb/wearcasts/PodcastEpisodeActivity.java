@@ -384,7 +384,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         setIntent(intent);
 
         //mEpisode = DBUtilities.GetEpisode(mActivity, intent.getExtras().getInt("eid"));
-        SetContent(intent.getExtras().getInt("eid"));
+        if (intent.getExtras() != null)
+            SetContent(intent.getExtras().getInt("eid"));
     }
 
     @Override
@@ -1126,22 +1127,22 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
                 SetContent(extras.getInt("id"));
             }
-            else
-                {
+            else {
                 int duration;
 
                 if (mLocalFile != null)
-                    duration = (int)PreferenceManager.getDefaultSharedPreferences(mContext).getLong(Utilities.GetLocalDurationKey(mLocalFile), 0);
+                    duration = (int) PreferenceManager.getDefaultSharedPreferences(mContext).getLong(Utilities.GetLocalDurationKey(mLocalFile), 0);
                 else
                     duration = DBUtilities.GetEpisodeValue(mContext, mEpisode, "duration");
 
-                    mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                    //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
+                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
 
                 mProgressBar.setVisibility(ProgressBar.GONE);
                 mInfoLayout.setVisibility(View.VISIBLE);
                 mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
+
                 mSeekBar.setMax(duration);
                 mSeekBar.setVisibility(View.VISIBLE);
                 mSkipForwardImage.setVisibility(View.VISIBLE);
@@ -1151,6 +1152,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
                 mDurationView.setVisibility(View.VISIBLE);
                 mPositionView.setVisibility(View.VISIBLE);
+
                 mWearableActionDrawer.setEnabled(true);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
