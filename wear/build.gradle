@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 28
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.krisdb.wearcasts"
         minSdkVersion 24
@@ -31,8 +31,8 @@ dependencies {
     implementation 'com.android.support:percent:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
-    implementation 'com.google.android.support:wearable:2.3.0'
-    compileOnly 'com.google.android.wearable:wearable:2.3.0'
+    implementation 'com.google.android.support:wearable:2.4.0'
+    compileOnly 'com.google.android.wearable:wearable:2.4.0'
 
     implementation project(':library')
 }
