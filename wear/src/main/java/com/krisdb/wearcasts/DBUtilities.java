@@ -648,6 +648,9 @@ public class DBUtilities {
     }
 
     static Boolean episodeExists(final Context ctx, final String url) {
+
+        if (url == null) return false;
+
         Boolean exists;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
