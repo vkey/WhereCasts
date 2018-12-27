@@ -597,7 +597,6 @@ public class AsyncTasks {
                         if (sku.toLowerCase().contains(mContext.get().getString(R.string.inapp_playlist_prefix))) {
                             final String[] skuArray = sku.split("_");
                             mPlaylistCount = Integer.valueOf(skuArray[1]);
-                            break;
                         }
                     }
 

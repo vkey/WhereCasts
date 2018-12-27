@@ -229,7 +229,7 @@ public class PremiumFragment extends Fragment {
                         @Override
                         public void processFinish(final Boolean purchased, int playlistCount) {
                             mPremiumUnlocked = purchased;
-                            mPlaylistPurchasedCount= playlistCount;
+                            mPlaylistPurchasedCount = playlistCount;
                             SetPremiumContent();
                             if (mWatchConnected)
                                 Utilities.TogglePremiumOnWatch(mActivity, purchased);
@@ -267,14 +267,14 @@ public class PremiumFragment extends Fragment {
 
     private void SetPremiumContent()
     {
-        boolean isDebuggable =  ( 0 != ( mActivity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+        boolean isDebuggable = ( 0 != ( mActivity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
         if (isDebuggable)
             mPlaylistPurchasedCount = 5;
 
-        if (isDebuggable || mPremiumUnlocked || mPlaylistPurchasedCount  > 0) {
-            mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
-            if (isDebuggable || mPremiumUnlocked) {
+        mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
+
+        if (isDebuggable || mPremiumUnlocked || mPlaylistPurchasedCount > 0) {
                 mView.findViewById(R.id.btn_upload_file).setEnabled(true);
                 tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
                 mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
@@ -286,7 +286,6 @@ public class PremiumFragment extends Fragment {
                         Utilities.TogglePremiumOnWatch(mActivity, true, true);
                     }
                 });
-            }
         }
         else {
             mView.findViewById(R.id.btn_upload_file).setEnabled(false);
@@ -314,7 +313,7 @@ public class PremiumFragment extends Fragment {
         mBroadcastManger.registerReceiver(mFileUploadReceiver, new IntentFilter("file_uploaded"));
         mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
 
-        SetPremiumContent();
+        //SetPremiumContent();
     }
 
     private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {

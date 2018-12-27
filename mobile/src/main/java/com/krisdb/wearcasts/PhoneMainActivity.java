@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhoneMainActivity extends AppCompatActivity {
-    private static int mNumberOfPages = 2;
+    private static int mNumberOfPages = 1;
     private ViewPager mViewPager;
     private Context mContext;
 
@@ -58,7 +58,7 @@ public class PhoneMainActivity extends AppCompatActivity {
                         }
 
                         adapter.addFrag(UserAddFragment.newInstance(connected), getString(R.string.tab_add));
-                        adapter.addFrag(RadioFragment.newInstance(connected), getString(R.string.tab_radio));
+                        //adapter.addFrag(RadioFragment.newInstance(connected), getString(R.string.tab_radio));
                         adapter.addFrag(PremiumFragment.newInstance(connected), getString(R.string.tab_premium));
 
                         mViewPager.setAdapter(adapter);
