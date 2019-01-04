@@ -7,7 +7,7 @@
         <SwitchPreference
             android:key="pref_auto_delete"
             android:title="@string/settings_podcasts_label_auto_delete"
-            android:defaultValue="false"
+            android:defaultValue="true"
             />
 
         <SwitchPreference

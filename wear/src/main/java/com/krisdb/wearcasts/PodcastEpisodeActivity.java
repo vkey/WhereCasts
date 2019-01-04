@@ -388,9 +388,12 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         super.onNewIntent(intent);
         setIntent(intent);
 
-        //mEpisode = DBUtilities.GetEpisode(mActivity, intent.getExtras().getInt("eid"));
-        if (intent.getExtras() != null)
-            SetContent(intent.getExtras().getInt("eid"));
+        try {
+            if (intent.getExtras() != null)
+                SetContent(intent.getExtras().getInt("eid"));
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -620,8 +623,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     if (Utilities.BluetoothEnabled()) {
                         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
                         if (prefs.getBoolean("initialDownload", true)) {
-                            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
 
+                            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
                                 alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
                                 alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {

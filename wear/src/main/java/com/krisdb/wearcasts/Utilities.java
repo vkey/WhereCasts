@@ -19,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -240,6 +241,7 @@ public class Utilities {
     static int[] ProcessEpisodes(final Context ctx, final PodcastItem podcast) {
 
         final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_episode_limit", "50"));
+        Log.d(ctx.getPackageName(), "Processing: " + podcast.getChannel().getTitle());
 
         final List<PodcastItem> episodes = FeedParser.parse(podcast, limit);
         int[] quantities = new int[2];
@@ -311,6 +313,7 @@ public class Utilities {
         }
         db.close();
         DBUtilities.TrimEpisodes(ctx, podcast);
+        Log.d(ctx.getPackageName(), "Processing: New Episodes = " + newEpisodesCount);
 
         if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false)
         {

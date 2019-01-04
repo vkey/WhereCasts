@@ -71,7 +71,7 @@ public class AsyncTasks {
                 cv.put("position", 0);
                 db.update(cv, mEpisode.getEpisodeId());
 
-                if (prefs.getBoolean("pref_auto_delete", false))
+                if (prefs.getBoolean("pref_auto_delete", true))
                     Utilities.DeleteMediaFile(ctx, mEpisode);
 
                 if (prefs.getBoolean("pref_remove_playlist_onend", false))
@@ -81,7 +81,7 @@ public class AsyncTasks {
             }
             else
             {
-                if (prefs.getBoolean("pref_auto_delete", false))
+                if (prefs.getBoolean("pref_auto_delete", true))
                 {
                     final File localFile = new File(GetLocalDirectory().concat(mLocalFile));
 
