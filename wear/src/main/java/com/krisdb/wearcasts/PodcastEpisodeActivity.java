@@ -391,7 +391,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         try {
             if (intent.getExtras() != null)
                 SetContent(intent.getExtras().getInt("eid"));
-        } catch (NullPointerException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
