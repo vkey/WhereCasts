@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">फ़ोन ऐप के माध्यम से पॉडकास्ट आयात करें या पॉडकास्ट खोजने के लिए नीचे खींचें</string>
     <string name="empty_podcast_list2">ऑटो-प्लेलिस्ट के लिए बाएं स्वाइप करें\nफोन ऐप में और प्लेलिस्ट प्राप्त करें</string>
     <string name="text_playlists_add_empty">कोई प्लेलिस्ट नहीं मिली\n\nफोन ऐप में कस्टम प्लेलिस्ट जोड़ें \ n (प्रीमियम टैब के तहत)</string>
+    <string name="text_playlists_pref_empty_title">कोई कस्टम प्लेलिस्ट नहीं मिली</string>
+    <string name="text_playlists_pref_empty_summary">फोन ऐप में प्रीमियम टैब के तहत खरीद</string>
 
     <string name="confirm_mark_finished">पूरा होने के रूप में चिह्नित करें?</string>
     <string name="confirm_delete_download">डाउनलोड हटाएं?</string>

@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">Import podcasts via phone app or pull down to discover podcasts</string>
     <string name="empty_podcast_list2">Swipe left for playlists\nGet more playlists in phone app</string>
     <string name="text_playlists_add_empty">No playlists found\n\nAdd custom playlists in phone app\n(under Premium tab)</string>
+    <string name="text_playlists_pref_empty_title">No custom playlists found</string>
+    <string name="text_playlists_pref_empty_summary">Purchase under Premium tab in phone app</string>
 
     <string name="confirm_mark_finished">Mark as finished?</string>
     <string name="confirm_delete_download">Delete Download?</string>

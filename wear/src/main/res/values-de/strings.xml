@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">Importieren Sie Podcasts per Telefon-App oder ziehen Sie nach unten, um Podcasts zu entdecken</string>
     <string name="empty_podcast_list2">Streichen Sie nach links für automatische Wiedergabelisten\nErhalte mehr Playlists in der Telefon-App</string>
     <string name="text_playlists_add_empty">Keine Wiedergabelisten gefunden\n\nHinzufügen von benutzerdefinierten Wiedergabelisten in der Telefon-App \ n (unter der Registerkarte "Premium")</string>
+    <string name="text_playlists_pref_empty_title">Keine benutzerdefinierten Wiedergabelisten gefunden</string>
+    <string name="text_playlists_pref_empty_summary">Kaufen Sie unter der Registerkarte Premium in der Telefon-App</string>
 
     <string name="confirm_mark_finished">Als fertig markieren?</string>
     <string name="confirm_delete_download">Download löschen?</string>

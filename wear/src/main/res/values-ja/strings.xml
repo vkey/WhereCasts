@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">電話アプリでポッドキャストをインポートするか、プルダウンしてポッドキャストを発見する</string>
     <string name="empty_podcast_list2">自動再生リストのために左にスワイプする\n電話アプリでさらにプレイリストを入手する</string>
     <string name="text_playlists_add_empty">再生リストが見つかりません\n\n電話アプリでカスタムプレイリストを追加する\ n（[プレミアム]タブ）</string>
+    <string name="text_playlists_pref_empty_title">カスタムプレイリストが見つかりません</string>
+    <string name="text_playlists_pref_empty_summary">電話アプリの[プレミアム]タブで購入する</string>
 
     <string name="confirm_mark_finished">終了してマークする?</string>
     <string name="confirm_delete_download">ダウンロードを削除する?</string>

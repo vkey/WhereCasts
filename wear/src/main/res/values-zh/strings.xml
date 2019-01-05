@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">通過電話應用導入播客或下拉以發現播客</string>
     <string name="empty_podcast_list2">向左滑動自動播放列表\n在手機應用中獲得更多播放列表</string>
     <string name="text_playlists_add_empty">未找到播放列表\n\n在手機應用中添加自定義播放列表\ n（在“付費”標籤下）</string>
+    <string name="text_playlists_pref_empty_title">找不到自定義播放列表</string>
+    <string name="text_playlists_pref_empty_summary">在手機應用程序的高級選項卡下購買</string>
 
     <string name="confirm_mark_finished">標記為完成?</string>
     <string name="confirm_delete_download">刪除下載?</string>

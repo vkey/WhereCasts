@@ -31,40 +31,47 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
 
         final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity);
 
-        for(final PlaylistItem playlist : playlists) {
+        if (playlists.size() == 0) {
+            findPreference("pref_playlists_empty").setTitle(R.string.text_playlists_pref_empty_title);
+            findPreference("pref_playlists_empty").setSummary(R.string.text_playlists_pref_empty_summary);
+        }
+        else {
+            category.removePreference(findPreference("pref_playlists_empty"));
+            for (final PlaylistItem playlist : playlists) {
+                final EditTextPreference et = new EditTextPreference(mActivity);
+                et.setText(playlist.getName());
+                et.setTitle(playlist.getName());
+                et.setSummary(R.string.rename);
+                et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-            final EditTextPreference et = new EditTextPreference(mActivity);
-            et.setText(playlist.getName());
-            et.setTitle(playlist.getName());
-            et.setSummary(R.string.rename);
-            et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
+                et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            final String text = v.getText().toString();
 
-            et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        final String text = v.getText().toString();
+                            if (text.length() == 0) {
+                                CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+                                return true;
+                            }
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
 
-                        if (text.length() == 0) {
-                            CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+                            db.updatePlaylist(text, playlist.getID());
+                            db.close();
+
+                            et.setText(text);
+                            et.setTitle(text);
+                            et.onClick(et.getDialog(), Dialog.BUTTON_POSITIVE);
+                            et.getDialog().dismiss();
                             return true;
                         }
-                        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-
-                        db.updatePlaylist(text, playlist.getID());
-                        db.close();
-
-                        et.setText(text);
-                        et.setTitle(text);
-                        et.onClick(et.getDialog(), Dialog.BUTTON_POSITIVE);
-                        et.getDialog().dismiss();
-                        return true;
+                        return false;
                     }
-                    return false;
-                }
-            });
-            category.addPreference(et);
+                });
+                category.addPreference(et);
+            }
         }
+
         findPreference("pref_display_playlist_sort_order").setSummary(((ListPreference)findPreference("pref_display_playlist_sort_order")).getEntry());
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

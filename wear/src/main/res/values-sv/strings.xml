@@ -27,6 +27,8 @@
     <string name="empty_podcast_list">Importera podcaster via telefonapp eller dra ner för att upptäcka podcaster</string>
     <string name="empty_podcast_list2">Dra åt vänster för auto-spellistor\nFå fler spellistor i telefonapp</string>
     <string name="text_playlists_add_empty">Inga spellistor hittades\n\nLägg till anpassade spellistor i telefonappen \ n (under fliken Premium)</string>
+    <string name="text_playlists_pref_empty_title">Inga anpassade spellistor hittades</string>
+    <string name="text_playlists_pref_empty_summary">Köp under Premium-fliken i telefonapp</string>
 
     <string name="confirm_mark_finished">Markera som färdig?</string>
     <string name="confirm_delete_download">Radera nedladdning?</string>
