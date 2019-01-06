@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,13 +21,15 @@ import android.widget.TextView;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 
 public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSettingsAdapter.ViewHolder> {
 
     private List<PlaylistItem> mPlaylists;
-    private Context mContext;
+    private Activity mContext;
+    private WeakReference<Activity> mActivityRef;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,9 +43,10 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
         }
     }
 
-    PlaylistsSettingsAdapter(final Context context, final List<PlaylistItem> playlists) {
+    PlaylistsSettingsAdapter(final Activity context, final List<PlaylistItem> playlists) {
         mPlaylists = playlists;
         mContext = context;
+        mActivityRef = new WeakReference<>(mContext);
     }
 
     @NonNull
@@ -82,48 +86,50 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setMessage(mContext.getString(R.string.alert_playlist_delete));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final int position = holder.getAdapterPosition();
-                        final int playlistId = mPlaylists.get(position).getID();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                    alert.setMessage(mContext.getString(R.string.alert_playlist_delete));
+                    alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final int position = holder.getAdapterPosition();
+                            final int playlistId = mPlaylists.get(position).getID();
 
-                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                        if (Integer.valueOf(prefs.getString("pref_display_home_screen", "0")) == playlistId)
-                            Utilities.resetHomeScreen(mContext);
+                            if (Integer.valueOf(prefs.getString("pref_display_home_screen", "0")) == playlistId)
+                                Utilities.resetHomeScreen(mContext);
 
-                        db.deletePlaylist(playlistId);
-                        mPlaylists = DBUtilities.getPlaylists(mContext, false);
+                            db.deletePlaylist(playlistId);
+                            mPlaylists = DBUtilities.getPlaylists(mContext, false);
 
-                        final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mContext);
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
+                            final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mContext);
+                            final SharedPreferences.Editor editor = prefs.edit();
+                            final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
 
-                        for (final PodcastItem podcast : podcasts) {
-                            final int autoAssignId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
+                            for (final PodcastItem podcast : podcasts) {
+                                final int autoAssignId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
 
-                            if (autoAssignId == playlistId)
-                                editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
+                                if (autoAssignId == playlistId)
+                                    editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
+                            }
+
+                            editor.putBoolean("refresh_vp", true);
+                            editor.apply();
+
+                            notifyDataSetChanged();
                         }
+                    });
 
-                        editor.putBoolean("refresh_vp", true);
-                        editor.apply();
+                    alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                        notifyDataSetChanged();
-                    }
-                });
-
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alert.show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
+                }
             }
         });
 

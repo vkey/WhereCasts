@@ -26,6 +26,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
     private Activity mActivity;
     private int mPodcastId;
     private PodcastItem mPodcast;
+    private static WeakReference<Activity> mActivityRef;
 
     public static SettingsPodcastFragment newInstance(int podcastId) {
 
@@ -52,6 +54,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         addPreferencesFromResource(R.xml.settings_podcast);
 
         mActivity = getActivity();
+        mActivityRef = new WeakReference<>(mActivity);
 
         final Resources resources = mActivity.getResources();
 
@@ -225,31 +228,33 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         pfUnsubscribe.setOrder(count++);
         pfUnsubscribe.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                alert.setMessage(getString(R.string.confirm_delete_podcast));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                    alert.setMessage(getString(R.string.confirm_delete_podcast));
+                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(final DialogInterface dialog, int which) {
-                        new AsyncTasks.Unsubscribe(mActivity, mPodcastId,
-                                new Interfaces.BooleanResponse() {
-                                    @Override
-                                    public void processFinish(Boolean done) {
-                                        dialog.dismiss();
-                                        mActivity.finish();
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                });
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, int which) {
+                            new AsyncTasks.Unsubscribe(mActivity, mPodcastId,
+                                    new Interfaces.BooleanResponse() {
+                                        @Override
+                                        public void processFinish(Boolean done) {
+                                            dialog.dismiss();
+                                            mActivity.finish();
+                                        }
+                                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                    });
+                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                alert.show();
+                    alert.show();
+                }
                 return false;
             }
         });

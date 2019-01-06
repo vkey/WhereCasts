@@ -20,6 +20,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
     private WearableNavigationDrawerView mNavDrawer;
     private static int WIFI_RESULT_CODE = 101;
     private Boolean mForceRefresh;
+    private static WeakReference<AddPodcastsActivity> mActivityRef;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         setContentView(R.layout.activity_add_podcasts);
 
         mContext = getApplicationContext();
+        mActivityRef = new WeakReference<>(this);
 
         mViewPager = findViewById(R.id.podcasts_add_pager);
         mProgressBar = findViewById(R.id.add_podcast_progress_bar);
@@ -75,7 +78,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
             }
         });
 
-        if (Utilities.IsNetworkConnected(this) == false) {
+        if (Utilities.IsNetworkConnected(this) == false && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
             alert.setMessage(getString(R.string.alert_episode_network_notfound));
             alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
@@ -143,29 +146,31 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 startActivity(new Intent(mContext, SearchDirectoryActivity.class));
                 break;
             case 1:
-                final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
-                alert.setMessage(getString(R.string.alert_directory_resync));
-                alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        {
-                            final Intent intent = getIntent();
-                            final Bundle bundle = new Bundle();
-                            bundle.putBoolean("refresh", true);
-                            intent.putExtras(bundle);
-                            finish();
-                            startActivity(intent);
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
+                    alert.setMessage(getString(R.string.alert_directory_resync));
+                    alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            {
+                                final Intent intent = getIntent();
+                                final Bundle bundle = new Bundle();
+                                bundle.putBoolean("refresh", true);
+                                intent.putExtras(bundle);
+                                finish();
+                                startActivity(intent);
+                            }
                         }
-                    }
-                });
-                alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                    });
+                    alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                alert.show();
+                    alert.show();
+                }
                 break;
         }
     }

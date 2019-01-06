@@ -19,6 +19,7 @@ import android.widget.Spinner;
 
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
@@ -29,6 +30,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
     private Activity mActivity;
     private int mPodcastId, mPlaylistId;
     private static int SEARCH_RESULTS_CODE = 131;
+    private static WeakReference<PodcastEpisodeListActivity> mActivityRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         setContentView(R.layout.podcast_episode_list_activity);
         mActivity = this;
+        mActivityRef = new WeakReference<>(this);
+
         mPodcastId = getIntent().getExtras().getInt("podcastId");
         mPlaylistId = getIntent().getExtras().getInt("playlistId");
 
@@ -72,59 +76,63 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
                 break;
             case R.id.menu_drawer_episode_list_markplayed:
-                final AlertDialog.Builder alertRead = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
-                alertRead.setMessage(getString(R.string.confirm_mark_all_played));
-                alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alertRead = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    alertRead.setMessage(getString(R.string.confirm_mark_all_played));
+                    alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final ContentValues cv = new ContentValues();
-                        cv.put("finished", 1);
-                        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                        db.updateAll(cv, mPodcastId);
-                        db.close();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ContentValues cv = new ContentValues();
+                            cv.put("finished", 1);
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                            db.updateAll(cv, mPodcastId);
+                            db.close();
 
-                        final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
-                    }
-                });
-                alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+                        }
+                    });
+                    alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                alertRead.show();
+                    alertRead.show();
+                }
                 break;
 
             case R.id.menu_drawer_episode_list_markunplayed:
-                final AlertDialog.Builder alertUnread = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
-                alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
-                alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alertUnread = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
+                    alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final ContentValues cv = new ContentValues();
-                        cv.put("finished", 0);
-                        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                        db.updateAll(cv, mPodcastId);
-                        db.close();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ContentValues cv = new ContentValues();
+                            cv.put("finished", 0);
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                            db.updateAll(cv, mPodcastId);
+                            db.close();
 
-                        final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
-                    }
-                });
-                alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+                        }
+                    });
+                    alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                alertUnread.show();
+                    alertUnread.show();
+                }
                 break;
             case R.id.menu_drawer_episode_list_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
@@ -176,9 +184,11 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                     public void onNothingSelected(AdapterView<?> parent) {}
                 });
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
-                builder.setView(playlistAddView);
-                builder.create().show();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    builder.setView(playlistAddView);
+                    builder.create().show();
+                }
             break;
         }
 

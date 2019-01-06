@@ -27,6 +27,7 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
@@ -38,46 +39,51 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     private ConnectivityManager mConnectivityManager;
     private Handler mNetworkHandler = new Handler();
     private Boolean mNoResume = false;
+    private static WeakReference<Activity> mActivityRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings_podcasts_updates);
+        mActivityRef = new WeakReference<>(getActivity());
 
         mActivity = getActivity();
         setDeleteThumbnailsTitle();
 
         findPreference("pref_delete_thumbs").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setMessage(getString(R.string.confirm_delete_all_thumbs));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int count = Utilities.deleteAllThumbnails();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
 
-                        String message;
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                    alert.setMessage(getString(R.string.confirm_delete_all_thumbs));
+                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int count = Utilities.deleteAllThumbnails();
 
-                        if (count == 0)
-                            message = getString(R.string.alert_file_none_deleted);
-                        else if (count == 1)
-                            message = getString(R.string.alert_file_deleted);
-                        else
-                            message = getString(R.string.alert_files_deleted, count);
+                            String message;
 
-                        CommonUtils.showToast(getActivity(), message);
+                            if (count == 0)
+                                message = getString(R.string.alert_file_none_deleted);
+                            else if (count == 1)
+                                message = getString(R.string.alert_file_deleted);
+                            else
+                                message = getString(R.string.alert_files_deleted, count);
 
-                        setDeleteThumbnailsTitle();
-                    }
-                });
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alert.show();
+                            CommonUtils.showToast(getActivity(), message);
+
+                            setDeleteThumbnailsTitle();
+                        }
+                    });
+                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
+                }
                 return false;
             }
         });
@@ -169,24 +175,26 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                         mConnectivityManager.unregisterNetworkCallback(callback);
                         mNetworkHandler.removeMessages(1);
 
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                            alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkCallbackPodcasts) ? 1 : 2);
-                                dialog.dismiss();
-                            }
-                        });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkCallbackPodcasts) ? 1 : 2);
+                                    dialog.dismiss();
+                                }
+                            });
 
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                        }
 
                         break;
                 }
@@ -240,24 +248,26 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         }
         else
         {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-            alert.setMessage(getString(R.string.alert_episode_network_notfound));
-            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkCallbackPodcasts) ? 1 : 2);
-                    dialog.dismiss();
-                }
-            });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), (callback == mNetworkCallbackPodcasts) ? 1 : 2);
+                        dialog.dismiss();
+                    }
+                });
 
-            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
         }
     }
 

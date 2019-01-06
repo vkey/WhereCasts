@@ -414,7 +414,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
 
         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-
             final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
             if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress))
                 alert.setMessage(mContext.getString(R.string.confirm_mark_finished));

@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
@@ -18,16 +19,19 @@ import android.preference.SwitchPreference;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 import static com.krisdb.wearcasts.Utilities.GetMediaDirectory;
 
 public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener  {
+    private static WeakReference<Activity> mActivityRef;
 
    @Override
     public void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
 
        addPreferencesFromResource(R.xml.settings_podcasts_downloads);
+       mActivityRef = new WeakReference<>(getActivity());
 
        final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_download_complete_sound");
        findPreference("pref_download_sound_disable_start").setEnabled(cbSound.isChecked());
@@ -53,51 +57,52 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
        findPreference("pref_delete_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
            public boolean onPreferenceClick(Preference preference) {
-               final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-               alert.setMessage(getString(R.string.confirm_delete_all_downloads));
-               alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       int count = Utilities.deleteAllDownloadedFiles();
+               if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                   final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                   alert.setMessage(getString(R.string.confirm_delete_all_downloads));
+                   alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           int count = Utilities.deleteAllDownloadedFiles();
 
-                       final DBPodcastsEpisodes db = new DBPodcastsEpisodes(getActivity());
-                       final ContentValues cv = new ContentValues();
-                       cv.put("downloadid", 0);
-                       cv.put("download", 0);
-                       cv.put("downloadurl", "");
+                           final DBPodcastsEpisodes db = new DBPodcastsEpisodes(getActivity());
+                           final ContentValues cv = new ContentValues();
+                           cv.put("downloadid", 0);
+                           cv.put("download", 0);
+                           cv.put("downloadurl", "");
 
-                       db.updateAll(cv);
-                       db.close();
+                           db.updateAll(cv);
+                           db.close();
 
-                       String message;
+                           String message;
 
-                       if (count == 0)
-                           message = getString(R.string.alert_file_none_deleted);
-                       else if (count == 1)
-                           message = getString(R.string.alert_file_deleted);
-                       else
-                           message = getString(R.string.alert_files_deleted, count);
+                           if (count == 0)
+                               message = getString(R.string.alert_file_none_deleted);
+                           else if (count == 1)
+                               message = getString(R.string.alert_file_deleted);
+                           else
+                               message = getString(R.string.alert_files_deleted, count);
 
-                       CommonUtils.showToast(getActivity(), message);
+                           CommonUtils.showToast(getActivity(), message);
 
-                       final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                           final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-                       if (prefs.getBoolean("pref_hide_empty_playlists", false))
-                       {
-                           final SharedPreferences.Editor editor = prefs.edit();
-                           editor.putBoolean("refresh_vp", true);
-                           editor.apply();
+                           if (prefs.getBoolean("pref_hide_empty_playlists", false)) {
+                               final SharedPreferences.Editor editor = prefs.edit();
+                               editor.putBoolean("refresh_vp", true);
+                               editor.apply();
+                           }
+                           setDeleteDownloadsTitle();
                        }
-                       setDeleteDownloadsTitle();
-                   }
-               });
-               alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       dialog.dismiss();
-                   }
-               });
-               alert.show();
+                   });
+                   alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           dialog.dismiss();
+                       }
+                   });
+                   alert.show();
+               }
                return false;
            }
        });
