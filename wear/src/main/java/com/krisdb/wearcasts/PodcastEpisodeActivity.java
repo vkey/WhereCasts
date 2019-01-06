@@ -329,7 +329,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         ((TextView)findViewById(R.id.podcast_episode_title)).setTextColor(ContextCompat.getColor(this, R.color.wc_text));
 
         findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
-        ((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
+        //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
 
         mScrollView.setBackgroundColor(getColor(R.color.wc_background_amoled));
 
@@ -340,8 +340,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
             findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_amoled));
         }
-        mLogo.setVisibility(View.INVISIBLE);
+        //mLogo.setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_forward).setVisibility(View.INVISIBLE);
+        findViewById(R.id.ic_podcast_playpause).setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_volume_down).setVisibility(View.INVISIBLE);
@@ -369,9 +370,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_dark));
         }
 
-        ((ImageView) findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_off), PorterDuff.Mode.SRC_IN);
-        mLogo.setVisibility(View.VISIBLE);
+        //((ImageView) findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_off), PorterDuff.Mode.SRC_IN);
+        //mLogo.setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.VISIBLE);
+        findViewById(R.id.ic_podcast_playpause).setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_forward).setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_volume_down).setVisibility(View.VISIBLE);
@@ -392,6 +394,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             if (intent.getExtras() != null)
                 SetContent(intent.getExtras().getInt("eid"));
         } catch (Exception ex) {
+            CommonUtils.showToast(this, getString(R.string.general_error));
             ex.printStackTrace();
         }
     }
