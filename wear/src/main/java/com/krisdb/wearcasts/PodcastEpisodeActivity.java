@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Network;

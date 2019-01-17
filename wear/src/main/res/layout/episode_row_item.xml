@@ -67,4 +67,17 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         />
+
+    <ProgressBar
+        android:id="@+id/episode_progress"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:progressTint="@color/wc_general_green"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_below="@+id/episode_row_item_title"
+        android:layout_alignParentBottom="true"
+        />
+
 </RelativeLayout>

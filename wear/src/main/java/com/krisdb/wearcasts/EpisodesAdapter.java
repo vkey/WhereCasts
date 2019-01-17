@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -59,6 +60,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         private final TextView title, date, duration;
         private final ImageView thumbnail, thumbnailTitle, download;
         private final RelativeLayout layout;
+        private final ProgressBar progressEpisode;
 
         ViewHolder(final View view) {
             super(view);
@@ -69,6 +71,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             thumbnailTitle = view.findViewById(R.id.episode_row_item_title_thumbnail);
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
+            progressEpisode = view.findViewById(R.id.episode_progress);
         }
     }
 
@@ -86,7 +89,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         isRound = mResources.getConfiguration().isScreenRound();
         mHeaderColor = headerColor;
         mActivityRef = new WeakReference<>(mContext);
-
     }
 
     @Override
@@ -633,6 +635,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 layout.setBackgroundColor(mHeaderColor);
                 title.setBackgroundColor(mHeaderColor);
             }
+
+            viewHolder.progressEpisode.setVisibility(View.GONE);
         }
         else //EPISODE
         {
@@ -641,12 +645,21 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             title.setPadding(0, 0, 40 ,0 );
             download.setVisibility(View.VISIBLE);
 
+            if (episode.getPosition() > 0)
+            {
+                viewHolder.progressEpisode.setVisibility(View.VISIBLE);
+                viewHolder.progressEpisode.setMax(episode.getDuration());
+                viewHolder.progressEpisode.setProgress(episode.getPosition());
+            }
+            else
+                viewHolder.progressEpisode.setVisibility(View.GONE);
             if (mPlaylistId == mPlaylistDefault && episode.getDuration() > 0) {
                 duration.setText(episode.getDisplayDuration());
                 duration.setVisibility(View.VISIBLE);
             }
-            else
+            else {
                 duration.setVisibility(View.GONE);
+            }
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));

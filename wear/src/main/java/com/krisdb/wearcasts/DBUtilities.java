@@ -830,8 +830,8 @@ public class DBUtilities {
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 
-                    if (playlistId == resources.getInteger(R.integer.playlist_inprogress) && episode.getPosition() > 0) //in progress
-                        episode.setTitle(episode.getTitle().concat(" (").concat(DateUtils.FormatPositionTime(episode.getPosition())).concat(")"));
+                    //if (playlistId == resources.getInteger(R.integer.playlist_inprogress) && episode.getPosition() > 0) //in progress
+                    //episode.setTitle(episode.getTitle().concat(" (").concat(DateUtils.FormatPositionTime(episode.getPosition())).concat(")"));
 
                     episode.setChannel(GetChannel(ctx, cursor.getInt(1)));
 
