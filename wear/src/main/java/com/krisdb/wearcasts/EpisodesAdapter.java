@@ -668,7 +668,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             if (mPlaylistId == mPlaylistDefault)
                 viewHolder.progressEpisode.setVisibility(View.GONE);
-            else
+            else if (episode.getPosition() > 0)
                 viewHolder.progressEpisode.setVisibility(View.VISIBLE);
 
             if (mPlaylistId == mPlaylistDefault) { //episode listing
