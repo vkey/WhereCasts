@@ -96,8 +96,15 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
         viewHolder.title.setText(podcast.getChannel().getTitle());
         viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
 
-        if (podcast.getChannel().getThumbnailUrl() != null)
-            Glide.with(mContext).load(podcast.getChannel().getThumbnailUrl().toString()).into(viewHolder.thumbnail);
+        if (podcast.getChannel().getThumbnailUrl() != null) {
+            try {
+                Glide.with(mContext).load(podcast.getChannel().getThumbnailUrl().toString()).into(viewHolder.thumbnail);
+            }
+            catch (IllegalArgumentException ex)
+            {
+                viewHolder.thumbnail.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_default));
+            }
+        }
         else
             viewHolder.thumbnail.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_default));
 

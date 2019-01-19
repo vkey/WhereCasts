@@ -468,8 +468,16 @@ public class PremiumFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mService != null)
-            mActivity.unbindService(mServiceConn);
+        if (mService != null) {
+
+            try {
+                mActivity.unbindService(mServiceConn);
+            }
+            catch (IllegalArgumentException ex)
+            {
+                ex.printStackTrace();
+            }
+        }
     }
 
     @Override
