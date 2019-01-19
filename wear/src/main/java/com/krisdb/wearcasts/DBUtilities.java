@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
@@ -298,18 +299,18 @@ public class DBUtilities {
     static int NewEpisodeCount(final Context ctx, final int podcastId) {
 
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-        final SQLiteDatabase sdb = db.select();
+        int count;
 
-        final Cursor cursor = sdb.rawQuery(
-                "SELECT [id] FROM [tbl_podcast_episodes] WHERE [new] = 1 AND [pid] = ?",
-                new String[]{String.valueOf(podcastId)
-                });
-
-        final int count = cursor.getCount();
-
-        cursor.close();
-        db.close();
-        sdb.close();
+        try (
+                SQLiteDatabase sdb = db.select();
+                Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [new] = 1 AND [pid] = ?", new String[]{String.valueOf(podcastId) }))
+        {
+            count = cursor.getCount();
+        } catch (SQLiteException ex) {
+            count = 0;
+        } finally {
+            db.close();
+        }
 
         return count;
     }
