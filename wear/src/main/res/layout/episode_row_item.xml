@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginBottom="8dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
@@ -71,13 +70,12 @@
     <ProgressBar
         android:id="@+id/episode_progress"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="0dp"
         android:progressTint="@color/wc_general_green"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_below="@+id/episode_row_item_title"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/episode_row_item_thumbnail"
         />
-
 </RelativeLayout>

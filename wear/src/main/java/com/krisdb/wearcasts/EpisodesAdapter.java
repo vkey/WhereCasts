@@ -666,6 +666,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             thumbTitle.setVisibility(View.GONE);
             thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
 
+            if (mPlaylistId == mPlaylistDefault)
+                viewHolder.progressEpisode.setVisibility(View.GONE);
+            else
+                viewHolder.progressEpisode.setVisibility(View.VISIBLE);
+
             if (mPlaylistId == mPlaylistDefault) { //episode listing
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
