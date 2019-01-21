@@ -11,6 +11,8 @@
     <string name="copyright">कॉपीराइट © %s</string>
     <string name="version">संस्करण: %s</string>
 
+    <string name="alert_users_add_fetching_feed">RSS फ़ीड प्राप्त करना…</string>
+
     <string name="tip_1">पॉडकास्ट आयात करने से पहले अपने पहनने के उपकरण पर अनुमतियां स्वीकार करें.</string>
     <string name="tip_2">युक्ति: इस ऐप्लिकेशन में आरएसएस यूआरएल भेजने के लिए एंड्रॉइड की साझा कार्यक्षमता का प्रयोग करें.</string>
 

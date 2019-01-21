@@ -11,6 +11,8 @@
     <string name="copyright">版權 © %s</string>
     <string name="version">版: %s</string>
 
+    <string name="alert_users_add_fetching_feed">獲取RSS提要…</string>
+
     <string name="tip_1">導入podcast之前，請在您的穿戴設備上接受權限.</string>
     <string name="tip_2">提示：使用Android的Share功能將RSS網址發送到這個應用程序.</string>
 

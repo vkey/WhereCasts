@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FetchPodcast;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +58,7 @@ public class UserAddFragment extends Fragment {
     private TextView mTipView, mOPMLView;
     private CheckBox mThirdPartyAutoDownload;
     private LocalBroadcastManager mBroadcastManger;
+    private WeakReference<Activity> mActivityRef;
 
     public static UserAddFragment newInstance(final Boolean connected) {
 
@@ -71,6 +74,7 @@ public class UserAddFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
+        mActivityRef = new WeakReference<>(mActivity);
     }
 
     @Override
@@ -98,13 +102,14 @@ public class UserAddFragment extends Fragment {
                 if (link.length() > 0) {
                     link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
                     if (isValidUrl(link)) {
+                        CommonUtils.showToast(mActivity, getString(R.string.alert_users_add_fetching_feed));
                         new FetchPodcast(title, link, new Interfaces.FetchPodcastResponse() {
                             @Override
                             public void processFinish(final PodcastItem podcast) {
                                 new AsyncTasks.EpisodeCount(mActivity, podcast, new Interfaces.IntResponse() {
                                     @Override
                                     public void processFinish(int response) {
-                                        if (response != 1) {
+                                        if (response != 0) {
                                             Utilities.SendToWatch(mActivity, podcast);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
                                             ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);
@@ -154,23 +159,24 @@ public class UserAddFragment extends Fragment {
                 final int imports = prefs.getInt("opml_imports", 0) + 1;
 
                 if (imports == 1) {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                        alert.setMessage(getString(R.string.confirm_import_opml));
 
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                    alert.setMessage(getString(R.string.confirm_import_opml));
+                        alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 
-                    alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                intent.setType("*/*");
+                                startActivityForResult(intent, OPML_REQUEST_CODE);
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("*/*");
-                            startActivityForResult(intent, OPML_REQUEST_CODE);
-
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
+                                dialog.dismiss();
+                            }
+                        });
+                        alert.show();
+                    }
                 } else {
                     final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);

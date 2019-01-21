@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhoneMainActivity extends AppCompatActivity {
-    private static int mNumberOfPages = 1;
+    private static int mNumberOfPages = 2;
     private ViewPager mViewPager;
     private Context mContext;
 
@@ -54,7 +54,7 @@ public class PhoneMainActivity extends AppCompatActivity {
 
                         if (prefs.getInt("id", 0) > 0) {
                             adapter.addFrag(PlayerFragment.newInstance(), getString(R.string.tab_play));
-                            mNumberOfPages = 2;
+                            mNumberOfPages = 3;
                         }
 
                         adapter.addFrag(UserAddFragment.newInstance(connected), getString(R.string.tab_add));
@@ -64,7 +64,8 @@ public class PhoneMainActivity extends AppCompatActivity {
                         mViewPager.setAdapter(adapter);
 
                         if (Intent.ACTION_SEND.equals(getIntent().getAction()) && getIntent().getType() != null)
-                            mViewPager.setCurrentItem(mNumberOfPages == 2 ? 1 : 0);
+                            mViewPager.setCurrentItem(mNumberOfPages == 3 ? 1 : 0);
+
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -94,7 +95,7 @@ public class PhoneMainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return mNumberOfPages+1;
+            return mNumberOfPages;
         }
     }
 

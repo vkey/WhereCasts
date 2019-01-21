@@ -12,6 +12,8 @@
     <string name="copyright">Copyright © %s</string>
     <string name="version">Version: %s</string>
 
+    <string name="alert_users_add_fetching_feed">Fetching RSS feed…</string>
+
     <string name="tip_1">Accept permissions on your wear device before importing podcasts.</string>
     <string name="tip_2">Tip: Use Android\'s Share functionality to send RSS urls to this app.</string>
 

@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
@@ -28,6 +30,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
     private List<PodcastItem> mEpisodes;
     private Context mContext;
     private Boolean isConnected;
+    private WeakReference<Activity> mActivityRef;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -43,10 +46,12 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         }
     }
 
-    EpisodesAdapter(final Context ctx, final List<PodcastItem> episodes, final Boolean connected) {
+    EpisodesAdapter(final Activity ctx, final List<PodcastItem> episodes, final Boolean connected) {
         mContext = ctx;
         mEpisodes = episodes;
         isConnected = connected;
+        mActivityRef = new WeakReference<>(ctx);
+
     }
 
     @Override
@@ -73,24 +78,26 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                     if (prefs.getInt("episode_import", 0) == 0) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
-                        alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Utilities.sendEpisode(mContext, mEpisodes.get(position));
-                                mEpisodes.get(position).setIsSenttoWatch(true);
-                                notifyItemChanged(position);
-                                dialog.dismiss();
-                            }
-                        });
+                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                            alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
+                            alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Utilities.sendEpisode(mContext, mEpisodes.get(position));
+                                    mEpisodes.get(position).setIsSenttoWatch(true);
+                                    notifyItemChanged(position);
+                                    dialog.dismiss();
+                                }
+                            });
 
-                        alert.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                            alert.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                        }
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putInt("episode_import", 1);
                         editor.apply();
