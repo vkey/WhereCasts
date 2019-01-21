@@ -62,6 +62,7 @@ public class PremiumFragment extends Fragment {
     private Button mPremiumButton, mPlaylistsReadd;
     private Spinner mPlaylistSkus;
     private int mPlaylistPurchasedCount = 0;
+    private WeakReference<Activity> mActivityRef;
 
     public static PremiumFragment newInstance(final Boolean connected) {
 
@@ -79,6 +80,8 @@ public class PremiumFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mActivity = getActivity();
+        mActivityRef = new WeakReference<>(mActivity);
+
         final Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         mActivity.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
@@ -104,21 +107,23 @@ public class PremiumFragment extends Fragment {
                     CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
                 else if (mPlaylistPurchasedCount > 0)
                 {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                    alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
-                    alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            showPlaylistPurchase();
-                        }
-                    });
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                        alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
+                        alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showPlaylistPurchase();
+                            }
+                        });
 
-                    alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                        alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                 }
                 else
                     showPlaylistPurchase();
@@ -240,21 +245,23 @@ public class PremiumFragment extends Fragment {
                                 mPlaylistsReadd.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                                        alert.setMessage(getString(R.string.alert_playlists_readd_disclaimer));
-                                        alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                sendPlaylistsToWatch(mPlaylistPurchasedCount);
-                                            }
-                                        });
+                                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                                            alert.setMessage(getString(R.string.alert_playlists_readd_disclaimer));
+                                            alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    sendPlaylistsToWatch(mPlaylistPurchasedCount);
+                                                }
+                                            });
 
-                                        alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
+                                            alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                        }
                                     }
                                 });
                             }
