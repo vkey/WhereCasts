@@ -10,6 +10,10 @@
     <string name="play">Spela</string>
     <string name="pause">Paus</string>
     <string name="general_error">Ett fel uppstod. Var god försök igen.</string>
+    <string name="error_playback_timeout">Podcasts hämtning avgick</string>
+    <string name="error_playback_notavailable">Podcast inte hittad</string>
+    <string name="error_playback_lowdisk">Lågt diskutrymme</string>
+    <string name="error_playback_other">Det finns ett problem med den här podcasten. Kontakta podcastleverantören</string>
     <string name="confirm_directory_first_import">Skickades framgångsfullt.\nDet kan finnas en fördröjning innan filerna visas på klockan\nDra åt vänster på huvudskärmen</string>
     <string name="last_updated">Senast uppdaterad</string>
     <string name="syncing">synkronisera…</string>

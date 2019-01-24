@@ -10,6 +10,10 @@
     <string name="play">遊びます</string>
     <string name="pause">一時停止</string>
     <string name="general_error">エラーが発生しました。 もう一度お試しください.</string>
+    <string name="error_playback_timeout">Podcastの取得がタイムアウトしました</string>
+    <string name="error_playback_notavailable">Podcastが見つかりません</string>
+    <string name="error_playback_lowdisk">ディスク空き容量が少ない</string>
+    <string name="error_playback_other">このポッドキャストには問題があります。 ポッドキャストプロバイダに連絡する</string>
     <string name="confirm_directory_first_import">送信に成功しました\n時計にファイルが表示されるまでに時間がかかることがあります\nメイン画面で左にスワイプする</string>
     <string name="last_updated">最終更新</string>
     <string name="syncing">同期…</string>

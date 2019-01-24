@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.krisdb.wearcastslibrary.DateUtils;
 
+import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
+
 public class PlayerFragment extends Fragment  {
 
     private Handler mPositionHandler = new Handler();
@@ -279,6 +281,28 @@ public class PlayerFragment extends Fragment  {
                 mDurationView.setVisibility(View.INVISIBLE);
                 mPositionView.setVisibility(View.INVISIBLE);
                 mPlayPauseImage.setEnabled(false);
+            }
+            else if (extras.getBoolean("media_error"))
+            {
+                String message = getString(R.string.general_error);
+
+                final int errorCode = extras.getInt("error_code");
+
+                if (errorCode == -11)
+                    message = getString(R.string.error_playback_timeout);
+                else if (errorCode == -15)
+                    message = getString(R.string.error_playback_notavailable);
+                else if (errorCode == -25)
+                    message = getString(R.string.error_playback_lowdisk);
+                else if (errorCode < 0)
+                    message = getString(R.string.error_playback_other);
+
+                showToast(mActivity, message);
+
+                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
+                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+                mInfoLayout.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
             }
             else if (extras.getBoolean("media_synced")) {
                 SetContent();

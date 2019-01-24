@@ -195,7 +195,7 @@ public class UserAddFragment extends Fragment {
         if (getArguments() != null) {
             mWatchConnected = getArguments().getBoolean("connected");
         }
-
+        mWatchConnected = true;
         if (mWatchConnected) {
             btnImportPodcast.setEnabled(true);
             btnImportOPML.setEnabled(true);
@@ -219,7 +219,7 @@ public class UserAddFragment extends Fragment {
                     final JSONObject json = new JSONObject(text);
 
                     String url = null, title = null, description = null, message = null, pubDate = null;
-                    Integer duration = 0;
+                    int duration = 0;
                     final ImageView logo = mView.findViewById(R.id.user_add_third_party_logo);
 
                     final PodcastItem episode = new PodcastItem();

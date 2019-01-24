@@ -10,7 +10,12 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
-    <string name="general_error">An error occurred. Please try again.</string>
+    <string name="general_error">An error occurred. Please try again</string>
+    <string name="error_playback_timeout">Podcast retrieval timed out</string>
+    <string name="error_playback_notavailable">Podcast not found</string>
+    <string name="error_playback_lowdisk">Low disk space</string>
+    <string name="error_playback_other">There is an issue with the podcast. Contact the podcast provider</string>
+
     <string name="confirm_directory_first_import">The initial loading of podcasts can take a minute or two.</string>
     <string name="last_updated">Last updated</string>
     <string name="syncing">Syncing…</string>

@@ -10,6 +10,10 @@
     <string name="play">Jouer</string>
     <string name="pause">Pause</string>
     <string name="general_error">Une erreur est survenue Veuillez réessayer.</string>
+    <string name="error_playback_timeout">Podcast retrieval timed out</string>
+    <string name="error_playback_notavailable">La récupération des podcasts a expiré</string>
+    <string name="error_playback_lowdisk">Podcast non trouvé</string>
+    <string name="error_playback_other">Il y a un problème avec ce podcast. Contactez le fournisseur de podcast</string>
     <string name="confirm_directory_first_import">Bien envoyé\nIl peut y avoir un délai avant que le (s) fichier (s) n\'apparaisse sur la montre\nBalayez vers la gauche sur l\'écran principal</string>
     <string name="last_updated">Dernière mise à jour</string>
     <string name="syncing">Synchronisation…</string>

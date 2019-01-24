@@ -339,9 +339,20 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     Intent intentMediaError = new Intent();
                     intentMediaError.setAction("media_error");
+                    intentMediaError.putExtra("error_code", what);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
 
                     Log.e(mPackage, "Service error: " + String.valueOf(what) + " " + String.valueOf(extra));
+
+                    if (mMediaPlayer != null) {
+                        if (mMediaPlayer.isPlaying())
+                            mMediaPlayer.stop();
+
+                        try {
+                            mMediaPlayer.reset();
+                        } catch (Exception ignored)
+                        {}
+                    }
 
                     return true;
                 }

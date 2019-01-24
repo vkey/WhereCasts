@@ -11,6 +11,10 @@
     <string name="play">abspielen</string>
     <string name="pause">Pause</string>
     <string name="general_error">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</string>
+    <string name="error_playback_timeout">Zeitüberschreitung beim Podcast-Abruf</string>
+    <string name="error_playback_notavailable">Podcast nicht gefunden</string>
+    <string name="error_playback_lowdisk">Geringer Speicherplatz</string>
+    <string name="error_playback_other">Es gibt ein Problem mit diesem Podcast. Wenden Sie sich an den Podcast-Anbieter</string>
     <string name="confirm_directory_first_import">Erfolgreich gesendet\nEs kann zu einer Verzögerung kommen, bevor Dateien auf der Uhr angezeigt werden\nStreichen Sie nach links auf dem Hauptbildschirm</string>
     <string name="last_updated">Letzte Aktualisierung</string>
     <string name="syncing">Synchronisierung…</string>

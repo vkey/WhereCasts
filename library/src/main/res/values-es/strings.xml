@@ -10,6 +10,10 @@
     <string name="play">Jugar</string>
     <string name="pause">Pausa</string>
     <string name="general_error">Ocurrió un error. Inténtalo de nuevo.</string>
+    <string name="error_playback_timeout">Se ha agotado el tiempo de espera de podcast</string>
+    <string name="error_playback_notavailable">Podcast no encontrado</string>
+    <string name="error_playback_lowdisk">Poco espacio en el disco</string>
+    <string name="error_playback_other">Hay un problema con este podcast. Póngase en contacto con el proveedor de podcast</string>
     <string name="confirm_directory_first_import">Enviado correctamente\nPuede haber un retraso antes de que aparezcan los archivos de servicio\nDeslice el dedo hacia la izquierda en la pantalla principal</string>
     <string name="last_updated">Última actualización</string>
     <string name="syncing">Sincronizando…</string>

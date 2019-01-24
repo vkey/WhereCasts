@@ -10,6 +10,10 @@
     <string name="play">玩</string>
     <string name="pause">暫停</string>
     <string name="general_error">發生錯誤。 請再試一次.</string>
+    <string name="error_playback_timeout">播客檢索超時</string>
+    <string name="error_playback_notavailable">播客未找到</string>
+    <string name="error_playback_lowdisk">磁盤空間不足</string>
+    <string name="error_playback_other">發生了一個錯誤. 請稍後重試</string>
     <string name="confirm_directory_first_import">發送成功\n文件顯示在手錶上可能會有延遲\n在主屏幕上向左滑動</string>
     <string name="last_updated">最近更新時間</string>
     <string name="syncing">同步…</string>

@@ -10,6 +10,10 @@
     <string name="play">प्ले</string>
     <string name="pause">ठहराव</string>
     <string name="general_error">एक त्रुटि पाई गई। कृपया पुन: प्रयास करें.</string>
+    <string name="error_playback_timeout">पोडकास्ट रिट्रीवल टाइम आउट हो गया</string>
+    <string name="error_playback_notavailable">पॉडकास्ट नहीं मिला</string>
+    <string name="error_playback_lowdisk">कम डिस्क स्थान</string>
+    <string name="error_playback_other">इस पॉडकास्ट के साथ एक मुद्दा है।</string>
     <string name="confirm_directory_first_import">सफलतापूर्वक भेज दिया।\nघड़ी पर दिखाई देने वाली फ़ाइल (फाइलें) के पहले विलंब हो सकता है\nमुख्य स्क्रीन पर बाएं स्वाइप करें</string>
     <string name="last_updated">आखरी अपडेट</string>
     <string name="syncing">सिंक कर रहा है…</string>
