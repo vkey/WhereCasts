@@ -16,11 +16,13 @@
             android:defaultValue="true"
             />
 
+        <!--
         <SwitchPreference
             android:key="pref_disable_bluetooth"
             android:title="@string/settings_podcasts_label_disable_bluetooth"
             android:defaultValue="false"
             />
+        -->
 
         <SwitchPreference
             android:key="pref_download_complete_sound"

@@ -10,7 +10,7 @@ public class PodcastItem implements Serializable
 {
     private String title, description, pubDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
     private URL mediaurl, episodeUrl;
-    private int pid, eid, position, duration, newCount, playlistid;
+    private int pid, eid, position, duration, newCount, playlistid, downloadProgress;
     private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded, isRadio = false;
     private ChannelItem channel;
     private PodcastItem latestEpisode;
@@ -23,6 +23,10 @@ public class PodcastItem implements Serializable
     public String getDisplayDuration() { return displayDuration; }
 
     public void setDisplayDuration(final String duration) { this.displayDuration = duration; }
+
+    public int getDownloadProgress() { return downloadProgress; }
+
+    public void setDownloadProgress(final int downloadProgress) { this.downloadProgress = downloadProgress; }
 
     public int getNewCount() { return newCount; }
 

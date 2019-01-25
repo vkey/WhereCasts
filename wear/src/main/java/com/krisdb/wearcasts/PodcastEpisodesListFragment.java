@@ -118,19 +118,8 @@ public class PodcastEpisodesListFragment extends Fragment {
                     RefreshContent();
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-                else if (Utilities.IsNetworkConnected(mActivity)) {
-                    mStatus.setVisibility(View.GONE);
-                    mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
-                            new Interfaces.BackgroundSyncResponse() {
-                                @Override
-                                public void processFinish(final int count, final int downloads) {
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                    RefreshContent();
-                                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
+                else if (CommonUtils.getActiveNetwork(mActivity) == null)
+                {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                         alert.setMessage(getString(R.string.alert_episode_network_notfound));
@@ -149,7 +138,40 @@ public class PodcastEpisodesListFragment extends Fragment {
                             }
                         }).show();
                     }
+                }
+                else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
+                {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                        alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
                     mSwipeRefreshLayout.setRefreshing(false);
+                } else {
+                    mStatus.setVisibility(View.GONE);
+                    mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
+                            new Interfaces.BackgroundSyncResponse() {
+                                @Override
+                                public void processFinish(final int count, final int downloads) {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                    RefreshContent();
+                                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                }
+                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });

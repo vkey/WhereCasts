@@ -115,7 +115,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Spela upp / Pausa (fungerar bara på spelskärmen)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Överst: Hoppa tillbaka\nMellan: Spela / Pausa\nBottom: Hoppa framåt\n(fungerar bara på spelskärmen)</string>
     <string name="settings_podcasts_label_high_bandwidth">Kontrollera nätverksnätverk med hög bandbredd</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Innan du strömmar eller hämtar</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Före synkronisering, streaming eller nedladdning</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicka för att radera alla miniatyrbilder (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Klicka för att radera alla nedladdningar (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Avbryt alla nedladdningar</string>

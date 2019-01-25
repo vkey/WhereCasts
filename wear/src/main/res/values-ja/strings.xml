@@ -115,7 +115,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">再生/一時停止（再生画面でのみ機能する）</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Top：スキップバック\n中間：再生/一時停止\nボトム：スキップフォワード\n(再生画面でのみ機能する)</string>
     <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">ストリーミングまたはダウンロードする前に</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">同期、ストリーミングまたはダウンロードの前に</string>
     <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">すべてのサムネイルを削除するにはクリックしてください (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">すべてのダウンロードをキャンセルする</string>

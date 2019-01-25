@@ -112,7 +112,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Play/Pause\n(works only on playing screen)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Top: Skip Back\nMiddle: Play/Pause\nBottom: Skip Forward\n(works only on playing screen)</string>
     <string name="settings_podcasts_label_high_bandwidth">Check for high-bandwidth network</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Before streaming or downloading</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Before syncing, streaming or downloading</string>
     <string name="settings_podcasts_label_downloads_delete_all">Click to delete all downloads (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Click to delete all thumbnails (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Cancel all downloads</string>

@@ -116,7 +116,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Lecture / Pause (ne fonctionne que sur l\'écran de lecture)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Haut de page: Skip Back\nMilieu: Lecture / Pause\nBas: Passer en avant\n(ne fonctionne que sur l\'écran de lecture)</string>
     <string name="settings_podcasts_label_high_bandwidth">Vérifier le réseau à haute bande passante</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Avant de diffuser ou de télécharger</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Avant la synchronisation, le streaming ou le téléchargement</string>
     <string name="settings_podcasts_label_downloads_delete_all">Cliquez pour supprimer tous les téléchargements (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Cliquez pour supprimer toutes les vignette (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Annuler tous les téléchargements</string>

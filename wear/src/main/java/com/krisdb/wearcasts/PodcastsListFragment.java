@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -38,8 +39,6 @@ public class PodcastsListFragment extends Fragment {
     private int mPlaylistId, mVisits;
     private Activity mActivity;
     private TextView mEmptyView;
-    private ConnectivityManager mConnectivityManager;
-    private Handler mNetworkHandler = new Handler();
     private PodcastsAdapter mAdapter;
     private WeakReference<Activity> mActivityRef;
 
@@ -106,89 +105,12 @@ public class PodcastsListFragment extends Fragment {
 
     private void handleNetwork()
     {
-        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_high_bandwidth", true) == false)
-        {
-            new AsyncTasks.SyncPodcasts(mActivity, 0, false,
-                    new Interfaces.BackgroundSyncResponse() {
-                        @Override
-                        public void processFinish(final int count, final int downloads) {
-                            RefreshContent();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            return;
-        }
-
-        mNetworkHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 1:
-                        mConnectivityManager.bindProcessToNetwork(null);
-                        mConnectivityManager.unregisterNetworkCallback(mNetworkCallback);
-                        mNetworkHandler.removeMessages(1);
-
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                            alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-
-                        break;
-                }
-            }
-        };
-
-        mConnectivityManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final Network activeNetwork = mConnectivityManager.getActiveNetwork();
-
-        if (activeNetwork != null) {
-            int bandwidth = mConnectivityManager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
-
-                if (bandwidth < getResources().getInteger(R.integer.minimum_bandwidth))
-            {
-                final NetworkRequest request = new NetworkRequest.Builder()
-                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                        .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                        .build();
-
-                mConnectivityManager.requestNetwork(request, mNetworkCallback);
-                showToast(mActivity.getApplicationContext(), getString(R.string.alert_episode_network_search));
-                mNetworkHandler.sendMessageDelayed( mNetworkHandler.obtainMessage(1), 10000);
-            }
-            else {
-                new AsyncTasks.SyncPodcasts(mActivity, 0, false,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int count, final int downloads) {
-                                RefreshContent();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        }
-        else
+        if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
@@ -197,7 +119,6 @@ public class PodcastsListFragment extends Fragment {
                 });
 
                 alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -205,6 +126,38 @@ public class PodcastsListFragment extends Fragment {
                 }).show();
             }
         }
+        else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        else
+        {
+            new AsyncTasks.SyncPodcasts(mActivity, 0, false,
+                    new Interfaces.BackgroundSyncResponse() {
+                        @Override
+                        public void processFinish(final int count, final int downloads) {
+                            RefreshContent();
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
     }
 
     @Override
@@ -222,29 +175,6 @@ public class PodcastsListFragment extends Fragment {
         }
     }
 
-    final ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
-        @Override
-        public void onAvailable(Network network) {
-            new AsyncTasks.SyncPodcasts(mActivity, 0, false,
-                    new Interfaces.BackgroundSyncResponse() {
-                        @Override
-                        public void processFinish(final int count, final int downloads) {
-                            RefreshContent();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            mNetworkHandler.removeMessages(1);
-        }
-    };
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mConnectivityManager != null) {
-            mConnectivityManager.bindProcessToNetwork(null);
-            try {mConnectivityManager.unregisterNetworkCallback(mNetworkCallback); }
-            catch(Exception ignored){}
-        }
-    }
 
     @Override
     public void onActivityCreated(final Bundle icicle) {

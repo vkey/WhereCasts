@@ -9,11 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.wear.widget.WearableRecyclerView;
@@ -54,13 +56,15 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private Resources mResources;
     private boolean isRound;
     private WeakReference<Activity> mActivityRef;
+    //private Handler mDownloadProgressHandler = new Handler();
+    private DownloadManager mDownloadManager;
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
         private final TextView title, date, duration;
         private final ImageView thumbnail, thumbnailTitle, download;
         private final RelativeLayout layout;
-        private final ProgressBar progressEpisode;
+        private final ProgressBar progressEpisode, progressEpisodeDownload;
 
         ViewHolder(final View view) {
             super(view);
@@ -72,6 +76,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
             progressEpisode = view.findViewById(R.id.episode_progress);
+            progressEpisodeDownload = view.findViewById(R.id.episode_progress);
         }
     }
 
@@ -89,6 +94,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         isRound = mResources.getConfiguration().isScreenRound();
         mHeaderColor = headerColor;
         mActivityRef = new WeakReference<>(mContext);
+        mDownloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
     }
 
     @Override
@@ -124,6 +130,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             public void onClick(View view) {
 
                 final int position = holder.getAdapterPosition();
+
+                //holder.progressEpisodeDownload.setVisibility(View.VISIBLE);
+
                 if (mPlaylistId == mPlaylistLocal && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                     alert.setMessage(mContext.getString(R.string.confirm_delete_file));
@@ -146,7 +155,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     return;
                 }
 
-
                 int episodeId = mEpisodes.get(position).getEpisodeId();
 
                 final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId, mPlaylistId);
@@ -165,6 +173,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                                 final DownloadManager manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
                                 if (manager != null)
                                     manager.remove(downloadId);
+
+                                holder.progressEpisodeDownload.setVisibility(View.GONE);
 
                                 DBUtilities.SaveEpisodeValue(mContext, episode, "downloadid", 0);
                                 Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
@@ -209,62 +219,54 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         });
                         alert.show();
                     }
-                } else {
-                    if (Utilities.IsNetworkConnected(mContext) == false)
-                    {
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                            alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-                        return;
-                    }
-
-                    final ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-                    final Network activeNetwork = manager.getActiveNetwork();
-
-                    if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_high_bandwidth", true) && manager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps() < mResources.getInteger(R.integer.minimum_bandwidth)) {
-
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                            alert.setMessage(mContext.getString(R.string.alert_episode_network_no_high_bandwidth));
-                            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    checkBluetooth(position, episode);
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-                    } else
-                        checkBluetooth(position, episode);
                 }
+                else if (CommonUtils.getActiveNetwork(mContext) == null)
+                {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
+                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                }
+                else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
+                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                } else
+                    downloadEpisode(position, episode);
             }
         });
+
 
         holder.date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,92 +316,61 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         return holder;
     }
 
-    private void checkBluetooth(final int position, final PodcastItem episode) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        final Boolean disableBT = prefs.getBoolean("pref_disable_bluetooth", false);
-
-        if (Utilities.BluetoothEnabled()) {
-            //device has bluetooth, check if this is first download
-            if (prefs.getBoolean("initialDownload", true)) {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                    alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //disable bluetooth and enable setting
-                            final SharedPreferences.Editor editor = prefs.edit();
-                            editor.putBoolean("pref_disable_bluetooth", true);
-                            editor.apply();
-
-                            new com.krisdb.wearcasts.AsyncTasks.DisableBluetooth(mContext,
-                                    new Interfaces.AsyncResponse() {
-                                        @Override
-                                        public void processFinish() {
-                                            downloadEpisode(position, episode);
-                                        }
-                                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            downloadEpisode(position, episode);
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                }
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("initialDownload", false);
-                editor.apply();
-            } else if (disableBT) //disable bluetooth first
-                new com.krisdb.wearcasts.AsyncTasks.DisableBluetooth(mContext,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                downloadEpisode(position, episode);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            else //download over bluetooth
-                downloadEpisode(position, episode);
-        } else //no bluetooth adapter
-            downloadEpisode(position, episode);
-    }
-
     private void downloadEpisode(final int position, final PodcastItem episode)
     {
-        if (Utilities.IsNetworkConnected(mContext) == false && mContext.isFinishing() == false)
-        {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        }
-        else {
             showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
 
-            Utilities.startDownload(mContext, episode);
+            long downloadId = Utilities.startDownload(mContext, episode);
             mEpisodes.get(position).setIsDownloaded(true);
             notifyItemChanged(position);
+            //final DownloadProgress prog = new DownloadProgress(episode, position, downloadId);
+            //mDownloadProgressHandler.postDelayed(prog, 1000);
+    }
+
+    private class DownloadProgress implements Runnable
+    {
+        private PodcastItem episode;
+        private int position;
+        private long downloadid;
+
+        public DownloadProgress(final PodcastItem episode, final int position, final long downloadId)
+        {
+            this.episode = episode;
+            this.position = position;
+            this.downloadid = downloadId;
+
+        }
+        @Override
+        public void run() {
+            final DownloadManager.Query query = new DownloadManager.Query();
+            //query.setFilterById(mDownloadId);
+            final Cursor cursor = mDownloadManager.query(query);
+            final DownloadProgress prog = new DownloadProgress(episode, position, downloadid);
+
+            if (cursor.moveToFirst()) {
+                final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
+                //Log.d(mContext.getPackageName(), "Status: " + status);
+                //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
+
+                switch (status) {
+                    case DownloadManager.STATUS_PAUSED:
+                    case DownloadManager.STATUS_RUNNING:
+                    case DownloadManager.STATUS_PENDING:
+                        final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                        //mDownloadProgressHandler.postDelayed(prog, 1000);
+                        break;
+                    case DownloadManager.STATUS_FAILED:
+                        //mDownloadManager.remove(mDownloadId);
+                        //mDownloadProgressHandler.removeCallbacksAndMessages(prog);
+                    case DownloadManager.STATUS_SUCCESSFUL:
+                        //mDownloadProgressHandler.removeCallbacksAndMessages(prog);
+                }
+            }
+            cursor.close();
         }
     }
 
@@ -544,8 +515,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
         final ViewGroup.MarginLayoutParams paramsDate = (ViewGroup.MarginLayoutParams)date.getLayoutParams();
 
-        if (mPlaylistId == mPlaylistRadio)
-            download.setVisibility(View.INVISIBLE);
+        if (episode.getDownloadProgress() > 0) {
+            viewHolder.progressEpisodeDownload.setVisibility(View.VISIBLE);
+            viewHolder.progressEpisodeDownload.setProgress(episode.getDownloadProgress());
+            viewHolder.progressEpisodeDownload.setMax(episode.getDuration());
+        }
         else if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
         else

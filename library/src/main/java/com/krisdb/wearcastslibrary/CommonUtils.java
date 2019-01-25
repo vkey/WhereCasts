@@ -12,9 +12,12 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -57,6 +60,31 @@ public class CommonUtils {
     public static void showToast(final Context ctx, final String message) {
 
         showToast(ctx, message, Toast.LENGTH_SHORT);
+    }
+
+    public static Network getActiveNetwork(final Context ctx) {
+        final ConnectivityManager cm = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetwork();
+    }
+
+
+    public static Boolean HighBandwidthNetwork(final Context ctx)
+    {
+        if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true) == false)
+            return true;
+
+        final ConnectivityManager manager = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);;
+
+        final Network activeNetwork = getActiveNetwork(ctx);
+
+        if (activeNetwork != null) {
+            final int bandwidth = manager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
+
+            return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth);
+        }
+
+        return false;
     }
 
     public static void showToast(final Context ctx, final String message, final int length)

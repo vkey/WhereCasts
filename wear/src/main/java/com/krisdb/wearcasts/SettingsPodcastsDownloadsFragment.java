@@ -47,11 +47,13 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
            findPreference("pref_download_sound_disable_end").setSummary("");
        }
 
+       /*
        if (BluetoothAdapter.getDefaultAdapter() == null)
        {
            PreferenceCategory category = (PreferenceCategory)findPreference("pref_general");
            category.removePreference(findPreference("pref_disable_bluetooth"));
        }
+       */
 
        setDeleteDownloadsTitle();
 

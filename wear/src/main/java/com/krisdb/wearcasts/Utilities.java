@@ -436,13 +436,6 @@ public class Utilities {
 
         return ctx.getString(R.string.alert_download_error_default);
     }
-
-    static boolean IsNetworkConnected(final Context ctx) {
-        final ConnectivityManager cm = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        return cm != null && cm.getActiveNetwork() != null;
-    }
-
     static void DeleteMediaFile(final Context ctx, final PodcastItem episode)
     {
         //episodes sent from the phone app shouldn't be assigned to any playlist, so delete those.  This
