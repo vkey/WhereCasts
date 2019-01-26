@@ -256,10 +256,7 @@ public class Utilities {
         final boolean autoDownload = prefs.getBoolean("pref_" + podcast.getPodcastId() + "_auto_download", false);
         final int autoAssignDefaultPlaylistId = ctx.getResources().getInteger(R.integer.default_playlist_select);
         final int autoAssignPlaylistId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
-        final Boolean assignPlaylist = autoAssignPlaylistId != autoAssignDefaultPlaylistId;
-        final Boolean disabledBT = prefs.getBoolean("pref_disable_bluetooth", false);
-        final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        final Boolean hasBTAdapter = btAdapter != null;
+        final boolean assignPlaylist = autoAssignPlaylistId != autoAssignDefaultPlaylistId;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         int newEpisodesCount = 0, downloadCount = 0;
 
@@ -272,11 +269,6 @@ public class Utilities {
 
                 if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(ctx, episode.getMediaUrl().toString()))
                     continue;
-
-                if (autoDownload && hasBTAdapter && disabledBT && btAdapter.isEnabled()) {
-                    btAdapter.disable();
-                    SystemClock.sleep(5000);
-                }
 
                 final ContentValues cv = new ContentValues();
                 cv.put("pid", episode.getPodcastId());

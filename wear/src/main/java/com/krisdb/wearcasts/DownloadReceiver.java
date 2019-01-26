@@ -126,9 +126,6 @@ public class DownloadReceiver extends BroadcastReceiver
 
             cursor.close();
 
-            if (BluetoothAdapter.getDefaultAdapter() != null && !BluetoothAdapter.getDefaultAdapter().isEnabled() && prefs.getBoolean("pref_disable_bluetooth", false) && !isCurrentDownload(context))
-                BluetoothAdapter.getDefaultAdapter().enable();
-
             if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
             {
                 final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(context);

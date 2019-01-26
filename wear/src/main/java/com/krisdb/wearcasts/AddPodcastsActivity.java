@@ -71,14 +71,13 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
             public void onPageSelected(int position) {
                 mNavDrawer.getController().closeDrawer();
             }
         });
 
-        if (Utilities.IsNetworkConnected(this) == false && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+        if (CommonUtils.getActiveNetwork(mContext) == null && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
             alert.setMessage(getString(R.string.alert_episode_network_notfound));
             alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {

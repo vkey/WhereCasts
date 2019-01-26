@@ -183,7 +183,7 @@ public class AsyncTasks {
         @Override
         protected void onPostExecute(Void result) {
 
-            if (Utilities.IsNetworkConnected(mContext.get()) == false) {
+            if (CommonUtils.getActiveNetwork(mContext.get()) == null) {
                 CommonUtils.showToast(mContext.get(), mContext.get().getString(R.string.alert_network_waiting));
                 SystemClock.sleep(5000);
             }

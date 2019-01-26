@@ -74,11 +74,11 @@ public class CommonUtils {
         if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true) == false)
             return true;
 
-        final ConnectivityManager manager = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);;
-
         final Network activeNetwork = getActiveNetwork(ctx);
 
         if (activeNetwork != null) {
+            final ConnectivityManager manager = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+
             final int bandwidth = manager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
 
             return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth);

@@ -104,7 +104,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     //cv.put("radio", isRadio);
 
                     final long episodeId = db.insert(cv);
-                    episode.setEpisodeId((int)episodeId);
+                    episode.setEpisodeId((int) episodeId);
                 }
 
                 final int playlist = dataMapItem.getDataMap().getInt("playlistid");
@@ -118,67 +118,56 @@ public class ImportService extends WearableListenerService implements DataClient
                 db.close();
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
-                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
-                        final PodcastItem finalEpisode = episode;
-                        new AsyncTasks.DisableBluetooth(this,
-                                new Interfaces.AsyncResponse() {
-                                    @Override
-                                    public void processFinish() {
-                                        if (Utilities.IsNetworkConnected(mContext) == false)
-                                            CommonUtils.showToast(mContext, getString(R.string.alert_no_network));
-                                        else
-                                            Utilities.startDownload(mContext, finalEpisode);
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
+                    if (CommonUtils.getActiveNetwork(mContext) == null)
+                        CommonUtils.showToast(mContext, getString(R.string.alert_no_network));
                     else
-                        Utilities.startDownload(this, episode);
+                        Utilities.startDownload(mContext, episode);
                 }
-            }
 
-            if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
+                if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
 
-                final File dirLocal = new File(GetLocalDirectory());
+                    final File dirLocal = new File(GetLocalDirectory());
 
-                if (dirLocal.exists() == false)
-                    dirLocal.mkdirs();
+                    if (dirLocal.exists() == false)
+                        dirLocal.mkdirs();
 
-                final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
-                final String fileName = dataMapItem.getDataMap().getString("local_filename");
+                    final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
+                    final String fileName = dataMapItem.getDataMap().getString("local_filename");
 
-                new com.krisdb.wearcastslibrary.AsyncTasks.ConvertFileToAsset(this, asset,
-                        new Interfaces.AssetResponse() {
-                            @Override
-                            public void processFinish(DataClient.GetFdForAssetResponse response) {
-                                final InputStream inputStream = response.getInputStream();
+                    new com.krisdb.wearcastslibrary.AsyncTasks.ConvertFileToAsset(this, asset,
+                            new Interfaces.AssetResponse() {
+                                @Override
+                                public void processFinish(DataClient.GetFdForAssetResponse response) {
+                                    final InputStream inputStream = response.getInputStream();
 
-                                try {
-                                    int size = 1024;
-                                    final File f = new File(GetLocalDirectory().concat(fileName));
-                                    final OutputStream outputStream = new FileOutputStream(f);
-                                    final byte buffer[] = new byte[size];
+                                    try {
+                                        int size = 1024;
+                                        final File f = new File(GetLocalDirectory().concat(fileName));
+                                        final OutputStream outputStream = new FileOutputStream(f);
+                                        final byte buffer[] = new byte[size];
 
-                                    int bytes, totalSize = inputStream.available();
-                                    long total = 0;
-                                    SendToDevice("started", 0, totalSize);
+                                        int bytes, totalSize = inputStream.available();
+                                        long total = 0;
+                                        SendToDevice("started", 0, totalSize);
 
-                                    while ((bytes = inputStream.read(buffer)) > 0) {
-                                        //total += bytes;
-                                        //int progress = (int)(total * 100 / totalSize);
-                                        outputStream.write(buffer, 0, bytes);
-                                        //SendToDevice("processing", 0, 0);
+                                        while ((bytes = inputStream.read(buffer)) > 0) {
+                                            //total += bytes;
+                                            //int progress = (int)(total * 100 / totalSize);
+                                            outputStream.write(buffer, 0, bytes);
+                                            //SendToDevice("processing", 0, 0);
+                                        }
+
+                                        SendToDevice("finished", 0, 0);
+
+                                        outputStream.close();
+                                        inputStream.close();
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-
-                                    SendToDevice("finished", 0, 0);
-
-                                    outputStream.close();
-                                    inputStream.close();
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/syncwear")) {
