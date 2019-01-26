@@ -10,6 +10,7 @@
             android:defaultValue="true"
             />
 
+
         <CheckBoxPreference
             android:key="pref_disable_bluetooth"
             android:title="@string/settings_podcasts_label_disable_bluetooth"

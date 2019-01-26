@@ -81,12 +81,11 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private int mPlaylistID;
     private long mDownloadId;
     private Handler mDownloadProgressHandler = new Handler();
-    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mVolumeDown, mLogo;
+    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
     private int mCurrentState, mThemeID;
     private MediaBrowserCompat mMediaBrowserCompat;
     private WearableActionDrawerView mWearableActionDrawer;
-    private boolean mDisableBluetooth;
     private String mLocalFile;
     private android.support.v4.widget.NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
@@ -137,7 +136,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mSkipBackImage = findViewById(R.id.ic_skip_back);
         mSkipForwardImage = findViewById(R.id.ic_skip_forward);
         mVolumeUp = findViewById(R.id.ic_volume_up);
-        mVolumeDown = findViewById(R.id.ic_volume_down);
+        //mVolumeDown = findViewById(R.id.ic_volume_down);
         mDurationView = findViewById(R.id.tv_podcast_duration);
         mPositionView = findViewById(R.id.tv_podcast_position);
         mInfoLayout = findViewById(R.id.podcast_episode_info_layout);
@@ -174,17 +173,19 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             @Override
             public void onClick(View view) {
                 final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
             }
         });
 
+        /*
         mVolumeDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
             }
         });
+        */
 
         mSkipBackImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,7 +293,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
                 mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeDown.setVisibility(View.VISIBLE);
+                //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
             }
             else
@@ -309,7 +310,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mProgressBar.setVisibility(View.GONE);
             mInfoLayout.setVisibility(View.GONE);
-            mVolumeDown.setVisibility(View.GONE);
+            //mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mSkipBackImage.setVisibility(View.INVISIBLE);
             mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -400,8 +401,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     public void onResume() {
         super.onResume();
 
-        mDisableBluetooth = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_disable_bluetooth", false);
-
        if (mMediaBrowserCompat != null && mMediaBrowserCompat.isConnected() == false) {
            try {
                mMediaBrowserCompat.connect();
@@ -469,7 +468,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
                 mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeDown.setVisibility(View.VISIBLE);
+                //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.VISIBLE);
@@ -480,7 +479,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_stop_dark : R.drawable.ic_action_episode_stop));
                 mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
+                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -493,7 +492,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mInfoLayout.setVisibility(View.GONE);
-            mVolumeDown.setVisibility(View.GONE);
+            //mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -620,7 +619,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 if (writeStorage != PackageManager.PERMISSION_GRANTED)
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 else
-                    DownloadEpisode();
+                    handleNetwork(true);
                 break;
             case R.id.menu_drawer_episode_download_delete:
                 DeleteEpisode();
@@ -676,7 +675,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mProgressCircle.setVisibility(View.GONE);
                         mInfoLayout.setVisibility(View.GONE);
                         mControlsLayout.setVisibility(View.VISIBLE);
-                        mVolumeDown.setVisibility(View.GONE);
+                        //mVolumeDown.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         final Menu menuFailed = mWearableActionDrawer.getMenu();
                         menuFailed.clear();
@@ -701,7 +700,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
-                        mVolumeDown.setVisibility(View.GONE);
+                        //.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mProgressCircle.setVisibility(View.GONE);
                         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
@@ -788,7 +787,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             public void run(){
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeDown.setVisibility(View.VISIBLE);
+                //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
                 CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
             }
@@ -814,11 +813,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mPlayPauseImage.setVisibility(View.VISIBLE);
         mSeekBar.setVisibility(View.GONE);
         mInfoLayout.setVisibility(View.GONE);
-        mVolumeDown.setVisibility(View.GONE);
+        //mVolumeDown.setVisibility(View.GONE);
         mVolumeUp.setVisibility(View.GONE);
         Utilities.DeleteMediaFile(mActivity, mEpisode);
-        if (mDisableBluetooth && Utilities.BluetoothEnabled() == false)
-            BluetoothAdapter.getDefaultAdapter().enable();
 
         final Menu menu = mWearableActionDrawer.getMenu();
         menu.clear();
@@ -950,7 +947,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mProgressBar.setIndeterminate(true);
                 mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
+                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
                 mSkipBackImage.setVisibility(View.INVISIBLE);
@@ -969,7 +966,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
                 mProgressBar.setVisibility(View.GONE);
                 mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
+                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mSkipBackImage.setVisibility(View.INVISIBLE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -1006,14 +1003,14 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
+                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
             }
             else if (extras.getBoolean("media_completed"))
             {
                 mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
+                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
@@ -1043,7 +1040,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 mProgressBar.setVisibility(ProgressBar.GONE);
                 mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeDown.setVisibility(View.VISIBLE);
+                //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
 
                 mSeekBar.setMax(duration);
