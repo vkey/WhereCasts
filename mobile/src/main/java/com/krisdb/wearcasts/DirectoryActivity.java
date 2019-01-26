@@ -4,8 +4,10 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,8 +37,7 @@ public class DirectoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_directory);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(getString(R.string.menu_text_directory));
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = findViewById(R.id.main_pager);
         mProgressBar = findViewById(R.id.main_progress_bar);
@@ -61,6 +62,13 @@ public class DirectoryActivity extends AppCompatActivity {
     {
         mNumberOfPages = categories.size();
         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getInt("id", 0) > 0) {
+            adapter.addFrag(PlayerFragment.newInstance(), getString(R.string.tab_play));
+            mNumberOfPages = mNumberOfPages + 1;
+        }
 
         for (final PodcastCategory category : categories)
             adapter.addFrag(PodcastListFragment.newInstance(category.getPodcasts()), category.getName());
@@ -117,11 +125,11 @@ public class DirectoryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item)
     {
+        if (item.getItemId() == R.id.menu_directory_import)
+            startActivity(new Intent(this, PhoneMainActivity.class));
+
         if (item.getItemId() == R.id.menu_about)
             startActivity(new Intent(this, AboutActivity.class));
-
-        if (item.getItemId() == android.R.id.home)
-            finish();
 
         return super.onOptionsItemSelected(item);
     }

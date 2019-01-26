@@ -38,6 +38,7 @@
     <string name="button_text_playlists_purchase">Purchase\nPlaylists</string>
     <string name="alert_playlists_purchased">Playlists created successfully.\nManage playlists under the settings on your watch. Restarting the app on your watch may be required.</string>
 
+    <string name="menu_text_import">Import</string>
     <string name="menu_text_about">About</string>
     <string name="menu_text_directory">Discover</string>
 

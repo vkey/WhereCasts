@@ -31,6 +31,8 @@ public class PhoneMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Import");//TODO: Localize
 
         mViewPager = findViewById(R.id.main_pager);
         mContext = getApplicationContext();
@@ -49,13 +51,6 @@ public class PhoneMainActivity extends AppCompatActivity {
                     @Override
                     public void processFinish(final Boolean connected) {
                         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
-
-                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-                        if (prefs.getInt("id", 0) > 0) {
-                            adapter.addFrag(PlayerFragment.newInstance(), getString(R.string.tab_play));
-                            mNumberOfPages = 3;
-                        }
 
                         adapter.addFrag(UserAddFragment.newInstance(connected), getString(R.string.tab_add));
                         //adapter.addFrag(RadioFragment.newInstance(connected), getString(R.string.tab_radio));
@@ -101,8 +96,8 @@ public class PhoneMainActivity extends AppCompatActivity {
 
     @Override
         public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -112,8 +107,8 @@ public class PhoneMainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_about)
             startActivity(new Intent(this, AboutActivity.class));
 
-        if (item.getItemId() == R.id.menu_directory)
-            startActivity(new Intent(this, DirectoryActivity.class));
+        if (item.getItemId() == android.R.id.home)
+            finish();
 
         return super.onOptionsItemSelected(item);
     }

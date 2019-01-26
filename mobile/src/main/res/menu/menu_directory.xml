@@ -8,4 +8,13 @@
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView" />
 
+    <item android:id="@+id/menu_directory_import"
+        android:title="@string/menu_text_import"
+        android:icon="@drawable/ic_action_import"
+        app:showAsAction="ifRoom"
+        />
+    <item android:id="@+id/menu_about"
+        android:title="@string/menu_text_about"
+        />
+
 </menu>
