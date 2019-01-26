@@ -128,142 +128,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                initDownload(holder, holder.getAdapterPosition());
+            }
+        });
 
-                final int position = holder.getAdapterPosition();
-
-                //holder.progressEpisodeDownload.setVisibility(View.VISIBLE);
-
-                if (mPlaylistId == mPlaylistLocal && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setMessage(mContext.getString(R.string.confirm_delete_file));
-                    alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        int position = holder.getAdapterPosition();
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteLocal(position);
-                            refreshList(mEpisodes.get(position).getPodcastId());
-                        }
-                    });
-                    alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                    return;
-                }
-
-                int episodeId = mEpisodes.get(position).getEpisodeId();
-
-                final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId, mPlaylistId);
-
-                final int downloadId = Utilities.getDownloadId(mContext, episodeId);
-
-                if (downloadId > 0) {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(mContext.getString(R.string.confirm_cancel_download));
-                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            int position = holder.getAdapterPosition();
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final DownloadManager manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-                                if (manager != null)
-                                    manager.remove(downloadId);
-
-                                holder.progressEpisodeDownload.setVisibility(View.GONE);
-
-                                DBUtilities.SaveEpisodeValue(mContext, episode, "downloadid", 0);
-                                Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                                mEpisodes.get(position).setIsDownloaded(false);
-                                notifyItemChanged(position);
-                            }
-                        });
-                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        alert.show();
-                    }
-
-                } else if (episode.getIsDownloaded()) {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(mContext.getString(R.string.confirm_delete_download));
-                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            int position = holder.getAdapterPosition();
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-
-                                if (mPlaylistId == mPlaylistDownloads)
-                                    refreshList(mEpisodes.get(position).getPodcastId());
-                                else {
-                                    mEpisodes.get(position).setIsDownloaded(false);
-                                    notifyItemChanged(position);
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        alert.show();
-                    }
-                }
-                else if (CommonUtils.getActiveNetwork(mContext) == null)
-                {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                                dialog.dismiss();
-                            }
-                        });
-
-                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-                }
-                else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                                dialog.dismiss();
-                            }
-                        });
-
-                        alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-                } else
-                    downloadEpisode(position, episode);
+        holder.duration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initDownload(holder, holder.getAdapterPosition());
             }
         });
 
@@ -314,6 +186,143 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         });
 
         return holder;
+    }
+
+    private void initDownload(final ViewHolder holder, final int position)
+    {
+        //holder.progressEpisodeDownload.setVisibility(View.VISIBLE);
+
+        if (mPlaylistId == mPlaylistLocal && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+            alert.setMessage(mContext.getString(R.string.confirm_delete_file));
+            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                int position = holder.getAdapterPosition();
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    deleteLocal(position);
+                    refreshList(mEpisodes.get(position).getPodcastId());
+                }
+            });
+            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+            return;
+        }
+
+        int episodeId = mEpisodes.get(position).getEpisodeId();
+
+        final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId, mPlaylistId);
+
+        final int downloadId = Utilities.getDownloadId(mContext, episodeId);
+
+        if (downloadId > 0) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_cancel_download));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    int position = holder.getAdapterPosition();
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final DownloadManager manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
+                        if (manager != null)
+                            manager.remove(downloadId);
+
+                        holder.progressEpisodeDownload.setVisibility(View.GONE);
+
+                        DBUtilities.SaveEpisodeValue(mContext, episode, "downloadid", 0);
+                        Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+                        mEpisodes.get(position).setIsDownloaded(false);
+                        notifyItemChanged(position);
+                    }
+                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }
+
+        } else if (episode.getIsDownloaded()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_delete_download));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    int position = holder.getAdapterPosition();
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+
+                        if (mPlaylistId == mPlaylistDownloads)
+                            refreshList(mEpisodes.get(position).getPodcastId());
+                        else {
+                            mEpisodes.get(position).setIsDownloaded(false);
+                            notifyItemChanged(position);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }
+        }
+        else if (CommonUtils.getActiveNetwork(mContext) == null)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        } else
+            downloadEpisode(position, episode);
     }
 
     private void downloadEpisode(final int position, final PodcastItem episode)
