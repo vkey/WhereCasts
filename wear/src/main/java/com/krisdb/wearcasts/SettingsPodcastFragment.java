@@ -103,10 +103,10 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                     return true;
                 }
 
-                final DBPodcasts db = new DBPodcasts(mActivity);
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                 final ContentValues cv = new ContentValues();
                 cv.put("title", value);
-                db.update(cv, mPodcast.getPodcastId());
+                db.updatePodcast(cv, mPodcast.getPodcastId());
                 db.close();
                 return true;
             }
@@ -117,6 +117,13 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         cbAutoDownload.setKey("pref_" + mPodcastId + "_auto_download");
         cbAutoDownload.setChecked(false);
         cbAutoDownload.setOrder(count++);
+
+        final ListPreference lpDownloadsCount = new ListPreference(mActivity);
+        lpDownloadsCount.setTitle("Number of downloaded episodes"); //TODO: Localize
+        lpDownloadsCount.setKey("pref_" + mPodcastId + "_downloaded_episodes_count");
+        lpDownloadsCount.setEntries(R.array.downloaded_episodes_count_text);
+        lpDownloadsCount.setEntryValues(R.array.downloaded_episodes_count_values);
+        lpDownloadsCount.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
 
         final ListPreference lpDownloadsSaved = new ListPreference(mActivity);
         lpDownloadsSaved.setTitle(R.string.settings_podcast_label_downloads_saved);
@@ -261,6 +268,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
         category.addPreference(etRename);
         category.addPreference(cbAutoDownload);
+        category.addPreference(lpDownloadsCount);
         category.addPreference(lpDownloadsSaved);
         category.addPreference(cbDownloadNext);
         //category.addPreference(lpDownloadNextCount);

@@ -35,9 +35,8 @@ public class DBPodcasts extends SQLiteOpenHelper
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-        db.execSQL("ALTER TABLE [tbl_podcasts] ADD COLUMN [site_url] TEXT null");
-        db.execSQL("ALTER TABLE [tbl_podcasts] ADD COLUMN [thumbnail_url] TEXT null");
-        db.execSQL("ALTER TABLE [tbl_podcasts] ADD COLUMN [thumbnail_name] TEXT null");
+
+
     }
 
     public SQLiteDatabase select()

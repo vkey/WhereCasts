@@ -317,7 +317,7 @@ public class DBUtilities {
 
        static PodcastItem GetPodcast(final Context ctx, final int podcastId) {
         final PodcastItem podcast = new PodcastItem();
-        final DBPodcasts db = new DBPodcasts(ctx);
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
 
         final Cursor cursor = sdb.rawQuery(
@@ -349,7 +349,7 @@ public class DBUtilities {
 
     static ChannelItem GetChannel(final Context ctx, final int podcastId) {
         final ChannelItem channel = new ChannelItem();
-        final DBPodcasts db = new DBPodcasts(ctx);
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
 
         final Cursor cursor = sdb.rawQuery(
@@ -421,7 +421,7 @@ public class DBUtilities {
         //if (cache == null)
         {
 
-            final DBPodcasts db = new DBPodcasts(ctx);
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             final SQLiteDatabase sdb = db.select();
 
             int downloadsPlaylistId = ctx.getResources().getInteger(R.integer.playlist_downloads);

@@ -120,7 +120,7 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            new DBPodcasts(ctx).delete(mPodcastID);
+            new DBPodcastsEpisodes(ctx).deletePodcast(mPodcastID);
             Utilities.DeleteFiles(ctx, mPodcastID);
             new DBPodcastsEpisodes(ctx).unsubscribe(ctx, mPodcastID);
             CacheUtils.deletePodcastsCache(ctx);

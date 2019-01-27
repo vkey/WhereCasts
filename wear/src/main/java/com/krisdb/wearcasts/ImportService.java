@@ -220,7 +220,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 cv.put("thumbnail_url", thumbnailUrl);
                 cv.put("thumbnail_name", fileName);
 
-                final int podcastId = (int)new DBPodcasts(getApplicationContext()).insert(cv);
+                final int podcastId = (int)new DBPodcastsEpisodes(getApplicationContext()).insertPodcast(cv);
 
                 new AsyncTasks.GetPodcastEpisodes(getApplicationContext(), podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 CacheUtils.deletePodcastsCache(this);
