@@ -430,41 +430,60 @@ public class DBUtilities {
 
             int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
 
-            final String orderString = Utilities.GetOrderClause(orderId);
+            final String orderString = Utilities.GetOrderClause(orderId, "tbl_podcasts");
             final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
 
-            final Cursor cursor = sdb.rawQuery("SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name] FROM [tbl_podcasts] ORDER BY ".concat(orderString), null);
+            String sql;
+            if (hideEmpty && showDownloaded)
+                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                        .concat("JOIN tbl_podcast_episodes ")
+                        .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                        .concat("WHERE tbl_podcast_episodes.new = 1 AND tbl_podcast_episodes.download = 1 ")
+                        .concat("GROUP BY tbl_podcast_episodes.pid ")
+                        .concat("ORDER BY ").concat(orderString);
+            else if (hideEmpty)
+                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                        .concat("JOIN tbl_podcast_episodes ")
+                        .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                        .concat("WHERE tbl_podcast_episodes.new = 1 ")
+                        .concat("GROUP BY tbl_podcast_episodes.pid ")
+                        .concat("ORDER BY ").concat(orderString);
+            else if (showDownloaded)
+                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                        .concat("JOIN tbl_podcast_episodes ")
+                        .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                        .concat("WHERE tbl_podcast_episodes.download = 1 ")
+                        .concat("GROUP BY tbl_podcast_episodes.pid ")
+                        .concat("ORDER BY ").concat(orderString);
+            else
+                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                        .concat("JOIN tbl_podcast_episodes ")
+                        .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                        .concat("GROUP BY tbl_podcast_episodes.pid ")
+                        .concat("ORDER BY ").concat(orderString);
+
+            final Cursor cursor = sdb.rawQuery(sql, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-
-                    if (hideEmpty && NewEpisodeCount(ctx, cursor.getInt(0)) == 0) {
-                        cursor.moveToNext();
-                        continue;
-                    }
-
-                    if (showDownloaded && DBUtilities.HasDownloadedFiles(ctx, cursor.getInt(0)) == false){
-                        cursor.moveToNext();
-                        continue;
-                    }
 
                     final PodcastItem podcast = new PodcastItem();
                     podcast.setPodcastId(cursor.getInt(0));
 
                     final ChannelItem channel = new ChannelItem();
-                    channel.setTitle(cursor.getString(1));
-                    channel.setRSSUrl(cursor.getString(2));
-                    if (cursor.getString(3) != null && cursor.getString(4) != null) {
-                        channel.setThumbnailUrl(cursor.getString(3));
-                        channel.setThumbnailName(cursor.getString(4));
+                    channel.setTitle(cursor.getString(2));
+                    channel.setRSSUrl(cursor.getString(3));
+                    if (cursor.getString(4) != null && cursor.getString(5) != null) {
+                        channel.setThumbnailUrl(cursor.getString(4));
+                        channel.setThumbnailName(cursor.getString(5));
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setNewCount(DBUtilities.NewEpisodeCount(ctx, cursor.getInt(0)));
+                    podcast.setNewCount(cursor.getInt(1));
                     podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
 
                     if (orderId == latestEpisodesSortOrderID)
-                        podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(0)));
+                        podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(1)));
 
                     podcasts.add(podcast);
 

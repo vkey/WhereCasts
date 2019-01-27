@@ -198,32 +198,39 @@ public class Utilities {
             jobScheduler.cancelAll();
     }
 
-    static String GetOrderClause(int orderId)
+    static String GetOrderClause(final int orderId) {
+        return  GetOrderClause(orderId, null);
+    }
+
+     static String GetOrderClause(final int orderId, final String db)
     {
         String orderString;
 
         if (orderId == Enums.SortOrder.NAMEASC.getSorderOrderCode())
-            orderString = "[title] ASC";
+            orderString = "title ASC";
         else if (orderId == Enums.SortOrder.NAMEDESC.getSorderOrderCode())
-            orderString = "[title] DESC";
+            orderString = "title DESC";
         else if (orderId == Enums.SortOrder.DATEASC.getSorderOrderCode())
-            orderString = "[pubDate] ASC";
+            orderString = "pubDate ASC";
         else if (orderId == Enums.SortOrder.DATEDESC.getSorderOrderCode())
-            orderString = "[pubDate] DESC";
+            orderString = "pubDate DESC";
         else if (orderId == Enums.SortOrder.DATEDOWNLOADED_DESC.getSorderOrderCode())
-            orderString = "[dateDownload] DESC";
+            orderString = "dateDownload DESC";
         else if (orderId == Enums.SortOrder.DATEDOWNLOADED_ASC.getSorderOrderCode())
-            orderString = "[dateDownload] ASC";
+            orderString = "dateDownload ASC";
         else if (orderId == Enums.SortOrder.DATEADDED_ASC.getSorderOrderCode())
-            orderString = "[dateAdded] ASC";
+            orderString = "dateAdded ASC";
         else if (orderId == Enums.SortOrder.DATEADDED_DESC.getSorderOrderCode())
-            orderString = "[dateAdded] DESC";
+            orderString = "dateAdded DESC";
         else if (orderId == Enums.SortOrder.PROGRESS.getSorderOrderCode())
-            orderString = "[position] DESC";
+            orderString = "position DESC";
         else if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode())
-            orderString = "[title] ASC";
+            orderString = "title ASC";
         else
-            orderString = "[title] ASC";
+            orderString = "title ASC";
+
+        if (db != null)
+            orderString = db.concat(".").concat(orderString);
 
         return orderString;
     }
