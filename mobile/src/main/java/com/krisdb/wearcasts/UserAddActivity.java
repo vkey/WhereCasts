@@ -13,15 +13,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -44,60 +43,44 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class UserAddFragment extends Fragment {
+public class UserAddActivity extends AppCompatActivity {
 
     private Activity mActivity;
     private static final int OPML_REQUEST_CODE = 42;
-    private View mView;
     private ProgressBar mProgressOPML;
-    private Boolean mWatchConnected = false;
     private TextView mTipView, mOPMLView;
     private CheckBox mThirdPartyAutoDownload;
     private LocalBroadcastManager mBroadcastManger;
     private WeakReference<Activity> mActivityRef;
 
-    public static UserAddFragment newInstance(final Boolean connected) {
-
-        final UserAddFragment f = new UserAddFragment();
-        final Bundle bundle = new Bundle();
-        bundle.putBoolean("connected", connected);
-        f.setArguments(bundle);
-
-       return f;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = getActivity();
+        setContentView(R.layout.activity_user_add);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Import"); //TODO: Localize
+
+        mActivity = this;
         mActivityRef = new WeakReference<>(mActivity);
-    }
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        setRetainInstance(true);
-
-        mView = inflater.inflate(R.layout.fragment_user_add, container, false);
-        mProgressOPML = mView.findViewById(R.id.import_opml_progress_bar);
-        mThirdPartyAutoDownload = mView.findViewById(R.id.user_add_third_party_auto_download);
-        mOPMLView = mView.findViewById(R.id.import_opml_text);
-        final TextView mThirdPartyView = mView.findViewById(R.id.user_add_third_party_message);
-        final Button btnImportPodcast = mView.findViewById(R.id.btn_import_podcast);
-        final Button btnImportOPML = mView.findViewById(R.id.btn_import_opml);
-        mTipView = mView.findViewById(R.id.main_tip);
+        mProgressOPML = findViewById(R.id.import_opml_progress_bar);
+        mThirdPartyAutoDownload = findViewById(R.id.user_add_third_party_auto_download);
+        mOPMLView = findViewById(R.id.import_opml_text);
+        final Button btnImportPodcast = findViewById(R.id.btn_import_podcast);
+        final Button btnImportOPML = findViewById(R.id.btn_import_opml);
+        mTipView = findViewById(R.id.main_tip);
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
 
         btnImportPodcast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                final String title = ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).getText() != null ?
-                        ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).getText().toString() : null;
-                String link = ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).getText().toString().trim();
+                final String title = ((TextView) findViewById(R.id.tv_import_podcast_title)).getText() != null ?
+                        ((TextView) findViewById(R.id.tv_import_podcast_title)).getText().toString() : null;
+                String link = ((TextView) findViewById(R.id.tv_import_podcast_link)).getText().toString().trim();
 
                 if (link.length() > 0) {
                     link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
@@ -111,8 +94,8 @@ public class UserAddFragment extends Fragment {
                                     public void processFinish(int response) {
                                         if (response != 0) {
                                             Utilities.SendToWatch(mActivity, podcast);
-                                            ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
-                                            ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);
+                                            ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
+                                            ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
                                             mTipView.setText(getString(R.string.tip_2));
                                             mTipView.setTextSize(14);
                                             mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.dark_grey));
@@ -192,35 +175,43 @@ public class UserAddFragment extends Fragment {
             }
         });
 
-        if (getArguments() != null) {
-            mWatchConnected = getArguments().getBoolean("connected");
-        }
-        mWatchConnected = true;
-        if (mWatchConnected) {
-            btnImportPodcast.setEnabled(true);
-            btnImportOPML.setEnabled(true);
-            btnImportPodcast.setText(getString(R.string.button_text_import_podcast));
-            btnImportOPML.setText(getString(R.string.button_text_import_opml));
+       new AsyncTasks.NodesConnected(this,
+                new Interfaces.BooleanResponse() {
+                    @Override
+                    public void processFinish(final Boolean connected) {
+                        SetContent(connected);
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void SetContent(final Boolean connected)
+    {
+        if (connected) {
+            findViewById(R.id.btn_import_podcast).setEnabled(true);
+            findViewById(R.id.btn_import_opml).setEnabled(true);
+
+            ((TextView)findViewById(R.id.btn_import_podcast)).setText(getString(R.string.button_text_import_podcast));
+            ((TextView)findViewById(R.id.btn_import_opml)).setText(getString(R.string.button_text_import_opml));
         } else {
-            btnImportPodcast.setText(getString(R.string.button_text_no_device));
-            btnImportOPML.setText(getString(R.string.button_text_no_device));
+            ((TextView)findViewById(R.id.btn_import_podcast)).setText(getString(R.string.button_text_no_device));
+            ((TextView)findViewById(R.id.btn_import_opml)).setText(getString(R.string.button_text_no_device));
         }
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-        mThirdPartyAutoDownload.setChecked(prefs.getBoolean("third_party_audo_download", false));
+        mThirdPartyAutoDownload.setChecked(prefs.getBoolean("third_party_auto_download", false));
 
         final Intent intent = mActivity.getIntent();
 
         if (intent.getType() != null && Intent.ACTION_SEND.equals(intent.getAction())) {
-            if (mWatchConnected) {
+            if (connected) {
                 final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
-                    mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.VISIBLE);
+                    findViewById(R.id.user_add_third_party_progress).setVisibility(View.VISIBLE);
                     final JSONObject json = new JSONObject(text);
 
                     String url = null, title = null, description = null, message = null, pubDate = null;
                     int duration = 0;
-                    final ImageView logo = mView.findViewById(R.id.user_add_third_party_logo);
+                    final ImageView logo = findViewById(R.id.user_add_third_party_logo);
 
                     final PodcastItem episode = new PodcastItem();
 
@@ -250,14 +241,14 @@ public class UserAddFragment extends Fragment {
                     episode.setDuration(duration);
 
                     Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
-                    mThirdPartyView.setText(message);
+                    ((TextView)findViewById(R.id.user_add_third_party_message)).setText(message);
 
                     new CountDownTimer(5000, 100) {
                         public void onTick(long millisUntilFinished) {}
 
                         public void onFinish() {
-                            if (mView.findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE) {
-                                mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+                            if (findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE) {
+                                findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
                                 mOPMLView.setText(R.string.general_error);
                                 mOPMLView.setVisibility(View.VISIBLE);
                                 mOPMLView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
@@ -266,15 +257,15 @@ public class UserAddFragment extends Fragment {
                         }
                     }.start();
                 } catch (Exception ex) {
-                    ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
-                    mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                    findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
                 }
             }
             else
             {
-                mThirdPartyView.setText(getString(R.string.text_third_party_no_watch));
-                mThirdPartyView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
-                mView.findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.user_add_third_party_message)).setText(getString(R.string.text_third_party_no_watch));
+                ((TextView)findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
                 mThirdPartyAutoDownload.setVisibility(View.GONE);
             }
         }
@@ -284,7 +275,7 @@ public class UserAddFragment extends Fragment {
         mThirdPartyAutoDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editor.putBoolean("third_party_audo_download", mThirdPartyAutoDownload.isChecked());
+                editor.putBoolean("third_party_auto_download", mThirdPartyAutoDownload.isChecked());
                 editor.apply();
             }
         });
@@ -303,22 +294,14 @@ public class UserAddFragment extends Fragment {
             editor.putInt("visits", visits);
             editor.apply();
         }
-
-        return mView;
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle icicle)
-    {
-        super.onActivityCreated(icicle);
     }
 
     private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
              if (intent.getExtras().getBoolean("thirdparty")) {
-                 mView.findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
-                 mView.findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);            }
+                 findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
+                 findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);            }
         }
     };
 
@@ -365,8 +348,8 @@ public class UserAddFragment extends Fragment {
                                     @Override
                                     public void processFinish(PodcastItem podcast) {
                                         Utilities.SendToWatch(mActivity, podcast);
-                                        ((TextView) mView.findViewById(R.id.tv_import_podcast_title)).setText(null);
-                                        ((TextView) mView.findViewById(R.id.tv_import_podcast_link)).setText(null);
+                                        ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
+                                        ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
                                     }
 
                                     @Override
@@ -378,8 +361,8 @@ public class UserAddFragment extends Fragment {
                                 mActivity.runOnUiThread(new Runnable() {
                                     public void run() {
                                         mProgressOPML.setVisibility(View.INVISIBLE);
-                                        ((TextView) mView.findViewById(R.id.import_opml_text)).setText(getString(R.string.error_opml_import));
-                                        ((TextView) mView.findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.red));
+                                        ((TextView) findViewById(R.id.import_opml_text)).setText(getString(R.string.error_opml_import));
+                                        ((TextView) findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.red));
                                     }
                                 });
                             }
@@ -395,8 +378,8 @@ public class UserAddFragment extends Fragment {
     private void sendToWatch(final List<PodcastItem> podcasts)
     {
         mProgressOPML.setIndeterminate(false);
-        ((TextView)mView.findViewById(R.id.import_opml_text)).setText(getString(R.string.text_importing_opml_sending));
-        ((TextView)mView.findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.dark_grey));
+        ((TextView)findViewById(R.id.import_opml_text)).setText(getString(R.string.text_importing_opml_sending));
+        ((TextView)findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.dark_grey));
 
         new com.krisdb.wearcasts.AsyncTasks.SendToWatch(mActivity, podcasts, mProgressOPML,
                 new Interfaces.PodcastsResponse() {
@@ -404,7 +387,7 @@ public class UserAddFragment extends Fragment {
                     public void processFinish(final List<PodcastItem> podcasts) {
                         mProgressOPML.setVisibility(View.INVISIBLE);
 
-                        final TextView opmlText = mView.findViewById(R.id.import_opml_text);
+                        final TextView opmlText = findViewById(R.id.import_opml_text);
                         opmlText.setText(getResources().getQuantityString(R.plurals.podcasts_added, podcasts.size(), podcasts.size()));
                         opmlText.setTextColor(mActivity.getColor(R.color.green));
                         opmlText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -413,13 +396,19 @@ public class UserAddFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onPause() {
         mBroadcastManger.unregisterReceiver(mWatchResponse);
         super.onPause();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

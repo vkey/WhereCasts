@@ -22,7 +22,9 @@ import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,13 +49,12 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-public class PremiumFragment extends Fragment {
+public class PremiumActivity extends AppCompatActivity {
 
     private Activity mActivity;
     private static final int UPLOAD_REQUEST_CODE = 43;
     public static final int PREMIUM_REQUEST_CODE = 100;
     public static final int PLAYLIST_REQUEST_CODE = 101;
-    private View mView;
     private TextView tvUploadSummary, mPremiumInstructionsText;
     private static WeakReference<ProgressBar> mProgressFileUpload;
     private IInAppBillingService mService;
@@ -62,45 +63,28 @@ public class PremiumFragment extends Fragment {
     private Button mPremiumButton, mPlaylistsReadd;
     private Spinner mPlaylistSkus;
     private int mPlaylistPurchasedCount = 0;
-    private WeakReference<Activity> mActivityRef;
-
-    public static PremiumFragment newInstance(final Boolean connected) {
-
-        final PremiumFragment f = new PremiumFragment();
-
-        final Bundle bundle = new Bundle();
-        bundle.putBoolean("connected", connected);
-        f.setArguments(bundle);
-
-        return f;
-    }
+    private WeakReference<PremiumActivity> mActivityRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_premium);
+        setTitle("Premium"); //TODO: Localize
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mActivity = getActivity();
-        mActivityRef = new WeakReference<>(mActivity);
+        mActivity = this;
 
-        final Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        mActivity.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-    }
+        mActivityRef = new WeakReference<>(this);
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        setRetainInstance(true);
-
-        mView = inflater.inflate(R.layout.fragment_premium, container, false);
-        mProgressFileUpload = new WeakReference<>((ProgressBar)mView.findViewById(R.id.upload_file_progress));
-        mPlaylistsReadd = mView.findViewById(R.id.btn_playlists_readd);
-        mPremiumInstructionsText = mView.findViewById(R.id.premium_instructions);
-        mPlaylistSkus = mView.findViewById(R.id.playlist_buy_qty);
+        mProgressFileUpload = new WeakReference<>((ProgressBar)findViewById(R.id.upload_file_progress));
+        mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
+        mPremiumInstructionsText = findViewById(R.id.premium_instructions);
+        mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
-        tvUploadSummary = mView.findViewById(R.id.upload_file_summary);
-        mPremiumButton = mView.findViewById(R.id.btn_unlock_premium);
+        tvUploadSummary = findViewById(R.id.upload_file_summary);
+        mPremiumButton = findViewById(R.id.btn_unlock_premium);
 
-        mView.findViewById(R.id.btn_playlist_buy).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_playlist_buy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mPlaylistSkus.getSelectedItemPosition() == 0)
@@ -129,11 +113,8 @@ public class PremiumFragment extends Fragment {
                     showPlaylistPurchase();
             }
         });
-        if (getArguments() != null) {
-            mWatchConnected = getArguments().getBoolean("connected");
-        }
 
-        mView.findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -151,7 +132,7 @@ public class PremiumFragment extends Fragment {
 
                     final Bundle bundle = mService.getBuyIntent(
                             mActivity.getResources().getInteger(com.krisdb.wearcastslibrary.R.integer.billing_apk_version),
-                            mActivity.getPackageName(),
+                            getPackageName(),
                             mActivity.getString(com.krisdb.wearcastslibrary.R.string.inapp_premium_product_id),
                             "inapp",
                             null
@@ -171,7 +152,7 @@ public class PremiumFragment extends Fragment {
             }
         });
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = prefs.edit();
 
         final int visits = prefs.getInt("visits", 0) + 1;
@@ -182,7 +163,9 @@ public class PremiumFragment extends Fragment {
             editor.apply();
         }
 
-        return mView;
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
     private void showPlaylistPurchase()
@@ -210,7 +193,7 @@ public class PremiumFragment extends Fragment {
         }
     }
 
-    final ServiceConnection mServiceConn = new ServiceConnection() {
+    ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mService = null;
@@ -220,7 +203,7 @@ public class PremiumFragment extends Fragment {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IInAppBillingService.Stub.asInterface(service);
 
-            /*
+                        /*
             //removes purchase for testing
              try {
                 int response = mService.consumePurchase(3, mActivity.getPackageName(), "inapp:" + mActivity.getPackageName() + ":android.test.purchased");
@@ -230,7 +213,7 @@ public class PremiumFragment extends Fragment {
             */
 
             new AsyncTasks.HasUnlockedPremium(mActivity, mService,
-                    new Interfaces.PremiumResponse(){
+                    new Interfaces.PremiumResponse() {
                         @Override
                         public void processFinish(final Boolean purchased, int playlistCount) {
                             mPremiumUnlocked = purchased;
@@ -241,21 +224,21 @@ public class PremiumFragment extends Fragment {
 
                             if (mPlaylistPurchasedCount > 0) {
                                 mPlaylistsReadd.setVisibility(View.VISIBLE);
-                                mPlaylistsReadd.setText(mActivity.getString(R.string.button_text_playlists_readd, playlistCount));
+                                mPlaylistsReadd.setText(getString(R.string.button_text_playlists_readd, playlistCount));
                                 mPlaylistsReadd.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                                             final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                                             alert.setMessage(getString(R.string.alert_playlists_readd_disclaimer));
-                                            alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                            alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     sendPlaylistsToWatch(mPlaylistPurchasedCount);
                                                 }
                                             });
 
-                                            alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                            alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     dialog.dismiss();
@@ -264,8 +247,7 @@ public class PremiumFragment extends Fragment {
                                         }
                                     }
                                 });
-                            }
-                            else
+                            } else
                                 mPlaylistsReadd.setVisibility(View.INVISIBLE);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -274,7 +256,7 @@ public class PremiumFragment extends Fragment {
 
     private void SetPremiumContent()
     {
-        boolean isDebuggable = ( 0 != ( mActivity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+        boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
         if (isDebuggable)
             mPlaylistPurchasedCount = 5;
@@ -282,7 +264,7 @@ public class PremiumFragment extends Fragment {
         mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
 
         if (isDebuggable || mPremiumUnlocked || mPlaylistPurchasedCount > 0) {
-                mView.findViewById(R.id.btn_upload_file).setEnabled(true);
+                findViewById(R.id.btn_upload_file).setEnabled(true);
                 tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
                 mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
                 mPremiumButton.setOnClickListener(new View.OnClickListener() {
@@ -295,15 +277,9 @@ public class PremiumFragment extends Fragment {
                 });
         }
         else {
-            mView.findViewById(R.id.btn_upload_file).setEnabled(false);
+            findViewById(R.id.btn_upload_file).setEnabled(false);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_locked));
         }
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle icicle)
-    {
-        super.onActivityCreated(icicle);
     }
 
     private void sendPlaylistsToWatch(final int count)
@@ -320,7 +296,7 @@ public class PremiumFragment extends Fragment {
         mBroadcastManger.registerReceiver(mFileUploadReceiver, new IntentFilter("file_uploaded"));
         mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
 
-        //SetPremiumContent();
+        SetPremiumContent();
     }
 
     private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
@@ -473,12 +449,23 @@ public class PremiumFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mService != null) {
 
             try {
-                mActivity.unbindService(mServiceConn);
+                unbindService(mServiceConn);
             }
             catch (IllegalArgumentException ex)
             {

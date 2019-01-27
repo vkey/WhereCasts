@@ -36,6 +36,8 @@ public class DirectoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Intent intent = getIntent();
+
         setContentView(R.layout.activity_directory);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -126,7 +128,10 @@ public class DirectoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item)
     {
         if (item.getItemId() == R.id.menu_directory_import)
-            startActivity(new Intent(this, PhoneMainActivity.class));
+            startActivity(new Intent(this, UserAddActivity.class));
+
+        if (item.getItemId() == R.id.menu_directory_premium)
+            startActivity(new Intent(this, PremiumActivity.class));
 
         if (item.getItemId() == R.id.menu_about)
             startActivity(new Intent(this, AboutActivity.class));

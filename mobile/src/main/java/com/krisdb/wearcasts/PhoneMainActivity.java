@@ -2,7 +2,6 @@ package com.krisdb.wearcasts;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.krisdb.wearcastslibrary.AsyncTasks;
@@ -52,9 +50,9 @@ public class PhoneMainActivity extends AppCompatActivity {
                     public void processFinish(final Boolean connected) {
                         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
 
-                        adapter.addFrag(UserAddFragment.newInstance(connected), getString(R.string.tab_add));
+                        //adapter.addFrag(UserAddActivity.newInstance(connected), getString(R.string.tab_add));
                         //adapter.addFrag(RadioFragment.newInstance(connected), getString(R.string.tab_radio));
-                        adapter.addFrag(PremiumFragment.newInstance(connected), getString(R.string.tab_premium));
+                        //adapter.addFrag(PremiumActivity.newInstance(connected), getString(R.string.tab_premium));
 
                         mViewPager.setAdapter(adapter);
 

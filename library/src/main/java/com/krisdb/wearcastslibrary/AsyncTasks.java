@@ -490,7 +490,6 @@ public class AsyncTasks {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
