@@ -103,7 +103,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setAmbientEnabled();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean("pref_display_ambient_disable", false) == false)
+            setAmbientEnabled();
 
         setContentView(R.layout.activity_podcast_episode);
 
@@ -112,7 +115,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mActivityRef = new WeakReference<>(this);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mNavItems = Utilities.getNavItems(this);
 
@@ -161,7 +163,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 return false;
             }
         });
-
 
         final int skipBack = Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
         final int skipForward = Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
