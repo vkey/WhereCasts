@@ -48,6 +48,13 @@
             android:defaultValue="false"
             />
 
+        <!-- TODO: Localize -->
+        <SwitchPreference
+            android:key="pref_display_show_downloaded"
+            android:title="Show podcasts with downloads only" />
+            android:defaultValue="false"
+            />
+
 
         <!--
         <SwitchPreference

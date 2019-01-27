@@ -208,8 +208,9 @@ public class AsyncTasks {
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+            final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-            mPodcasts = DBUtilities.GetPodcasts(ctx, hideEmpty);
+            mPodcasts = DBUtilities.GetPodcasts(ctx, hideEmpty, showDownloaded);
 
             return null;
         }

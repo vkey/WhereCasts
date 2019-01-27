@@ -315,7 +315,7 @@ public class DBUtilities {
         return count;
     }
 
-    static PodcastItem GetPodcast(final Context ctx, final int podcastId) {
+       static PodcastItem GetPodcast(final Context ctx, final int podcastId) {
         final PodcastItem podcast = new PodcastItem();
         final DBPodcasts db = new DBPodcasts(ctx);
         final SQLiteDatabase sdb = db.select();
@@ -409,10 +409,10 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetPodcasts(final Context ctx) {
-        return GetPodcasts(ctx, false);
+        return GetPodcasts(ctx, false, false);
     }
 
-        static List<PodcastItem> GetPodcasts(final Context ctx, final Boolean hideEmpty) {
+        static List<PodcastItem> GetPodcasts(final Context ctx, final Boolean hideEmpty, final Boolean showDownloaded) {
         List<PodcastItem> podcasts = new ArrayList<>();
         //final Gson gson = new Gson();
 
@@ -423,6 +423,8 @@ public class DBUtilities {
 
             final DBPodcasts db = new DBPodcasts(ctx);
             final SQLiteDatabase sdb = db.select();
+
+            int downloadsPlaylistId = ctx.getResources().getInteger(R.integer.playlist_downloads);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
@@ -437,6 +439,11 @@ public class DBUtilities {
                 while (!cursor.isAfterLast()) {
 
                     if (hideEmpty && NewEpisodeCount(ctx, cursor.getInt(0)) == 0) {
+                        cursor.moveToNext();
+                        continue;
+                    }
+
+                    if (showDownloaded && DBUtilities.HasDownloadedFiles(ctx, cursor.getInt(0)) == false){
                         cursor.moveToNext();
                         continue;
                     }
@@ -700,6 +707,22 @@ public class DBUtilities {
         return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), hidePlayed, numberOfEpisode, null);
     }
 
+
+    static Boolean HasDownloadedFiles(final Context ctx, final int podcastId) {
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        Boolean output;
+
+        final Cursor cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [pid] = ? AND [download] = 1 AND [downloadid] = 0", new String[]{String.valueOf(podcastId)});
+        output = cursor.moveToFirst();
+
+        cursor.close();
+        sdb.close();
+        db.close();
+
+        return output;
+    }
 
     static Boolean HasEpisodes(final Context ctx, final int podcastId, final int playlistId) {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);

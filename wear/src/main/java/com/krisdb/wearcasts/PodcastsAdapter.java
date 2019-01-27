@@ -50,8 +50,11 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
-        mPodcasts = DBUtilities.GetPodcasts(mContext, hideEmpty);
+        final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
+
+        mPodcasts = DBUtilities.GetPodcasts(mContext, hideEmpty, showDownloaded);
         notifyDataSetChanged();
+
         return mPodcasts.size();
     }
 
