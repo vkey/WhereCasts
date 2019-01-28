@@ -143,6 +143,33 @@ public class DBUtilities {
 
         return podcast;
     }
+    static List<PodcastItem> GetDownloadedEpisodes(final Context ctx, final int podcastId) {
+        return GetDownloadedEpisodes(ctx, podcastId, -1);
+    }
+
+    static List<PodcastItem> GetDownloadedEpisodes(final Context ctx, final int podcastId, final int count) {
+        final List<PodcastItem> episodes = new ArrayList<>();
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+        Cursor cursor;
+
+        if (count== -1)
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? AND [download] = 0 AND [downloadid] = 0"), new String[]{String.valueOf(podcastId)});
+        else
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? AND [download] = 0 AND [downloadid] = 0 LIMIT -1 OFFSET ".concat(String.valueOf(count))), new String[]{String.valueOf(podcastId)});
+
+        if (cursor.moveToFirst()) {
+            episodes.add(SetPodcastEpisode(cursor));
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return episodes;
+    }
 
     static int GetDownloadIDByEpisode(final Context ctx, final PodcastItem episode) {
         int downloadId = -1;
@@ -602,12 +629,20 @@ public class DBUtilities {
     }
 
     static List<PodcastItem> GetEpisodesWithDownloads(final Context ctx, final int podcastId) {
+        return GetEpisodesWithDownloads(ctx, podcastId, -1);
+    }
+
+    static List<PodcastItem> GetEpisodesWithDownloads(final Context ctx, final int podcastId, final int count) {
         final List<PodcastItem> podcasts = new ArrayList<>();
 
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
+        Cursor cursor;
 
-        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [pid] = ? ORDER BY [pubDate] DESC"), new String[]{String.valueOf(podcastId)});
+        if (count == -1)
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [pid] = ? ORDER BY [pubDate] DESC"), new String[]{String.valueOf(podcastId)});
+        else
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [pid] = ? ORDER BY [pubDate] DESC LIMIT -1 OFFSET ".concat(String.valueOf(count))), new String[]{String.valueOf(podcastId)});
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {

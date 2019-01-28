@@ -24,27 +24,24 @@ import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class DownloadReceiver extends BroadcastReceiver
-{
+public class DownloadReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
+    public void onReceive(final Context context, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (Objects.equals(intent.getAction(), DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
             context.startActivity(new Intent(context, MainActivity.class));
-        }
-        else if (Objects.equals(intent.getAction(), DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+        } else if (Objects.equals(intent.getAction(), DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
             final long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
 
             if (downloadId == 0) return;
 
-            final PodcastItem episode = DBUtilities.GetEpisodeByDownloadID(context, (int)downloadId);
+            final PodcastItem episode = DBUtilities.GetEpisodeByDownloadID(context, (int) downloadId);
 
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
-            final DownloadManager manager = (DownloadManager)context.getSystemService(DOWNLOAD_SERVICE);
+            final DownloadManager manager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
 
             final Cursor cursor = manager.query(query);
 
@@ -52,8 +49,7 @@ public class DownloadReceiver extends BroadcastReceiver
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 final String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-                if (status == DownloadManager.STATUS_SUCCESSFUL)
-                {
+                if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     //Log.d(context.getPackageName(), "Background service: Download Finished (" + episode.getTitle() + ")");
                     final ContentValues cvSuccess = new ContentValues();
                     cvSuccess.put("download", 1);
@@ -73,21 +69,18 @@ public class DownloadReceiver extends BroadcastReceiver
                     if (playSound && DateUtils.isTimeBetweenTwoTime(disableStart, disableEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
                         playSound = false;
 
-                    if (playSound)
-                    {
+                    if (playSound) {
                         final MediaPlayer mPlayer = MediaPlayer.create(context, R.raw.download_complete2);
                         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mPlayer.start();
                     }
 
-                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && Utilities.downloadsCount() == 1)
-                    {
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && Utilities.downloadsCount() == 1) {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();
                     }
-                }
-                else if (status == DownloadManager.STATUS_FAILED) {
+                } else if (status == DownloadManager.STATUS_FAILED) {
                     //Log.d(context.getPackageName(), "Background service: Download Failed (" + episode.getTitle() + ")");
                     final ContentValues cvFailed = new ContentValues();
                     cvFailed.put("download", 0);
@@ -126,33 +119,22 @@ public class DownloadReceiver extends BroadcastReceiver
 
             cursor.close();
 
-            if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
+            //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
             {
                 final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(context);
 
-                for(final PodcastItem podcast : podcasts) {
+                for (final PodcastItem podcast : podcasts) {
                     final int downloadsSaved = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
 
                     if (downloadsSaved > 0) {
-                        List<PodcastItem> downloads = DBUtilities.GetEpisodesWithDownloads(context, podcast.getPodcastId());
+                        List<PodcastItem> downloads = DBUtilities.GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
 
-                        //if (downloads.size() > 1)
-                        //downloads = downloads.subList(1, downloads.size()); //skip the recently downloaded episode
+                        if (downloads.size() > 0) {
 
-                        if (downloadsSaved <= downloads.size()) {
-
-                            final List<PodcastItem> downloadsRemove = downloads.subList(downloadsSaved, downloads.size());
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
 
-                            for (final PodcastItem download : downloadsRemove) {
-
-                                final ContentValues cv = new ContentValues();
-                                cv.put("download", 0);
-                                cv.put("downloadid", 0);
-                                db.update(cv, download.getEpisodeId());
-
+                            for (final PodcastItem download : downloads) {
                                 Utilities.DeleteMediaFile(context, download);
-                                //Log.d(context.getPackageName(), "Deleting: " + download.getTitle());
                                 SystemClock.sleep(500);
                             }
                             db.close();

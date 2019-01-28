@@ -119,6 +119,9 @@ public class CommonUtils {
         return output;
     }
 
+    /*
+    * Returns true/false if there is an active download
+    */
     public static boolean isCurrentDownload(final Context ctx) {
         final DownloadManager.Query q = new DownloadManager.Query();
         q.setFilterByStatus(DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);

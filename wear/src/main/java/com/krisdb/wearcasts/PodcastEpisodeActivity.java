@@ -174,7 +174,11 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             @Override
             public void onClick(View view) {
                 final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+
+                if (audioManager != null)
+                    audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+                else
+                    CommonUtils.showToast(mActivity, "No system audio found"); //TODO: Localize
             }
         });
 
@@ -344,7 +348,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_volume_down).setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_volume_up).setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_info_layout).setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_skip_forward).setVisibility(View.INVISIBLE);
@@ -375,11 +378,12 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_forward).setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_volume_down).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_info_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_skip_forward).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_skip_back).setVisibility(View.VISIBLE);
+
+        if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
+            findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
 
         SetContent();
     }

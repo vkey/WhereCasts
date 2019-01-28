@@ -119,11 +119,12 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         cbAutoDownload.setOrder(count++);
 
         final ListPreference lpDownloadsCount = new ListPreference(mActivity);
-        lpDownloadsCount.setTitle("Number of downloaded episodes"); //TODO: Localize
+        lpDownloadsCount.setTitle("Downloaded episodes"); //TODO: Localize
         lpDownloadsCount.setKey("pref_" + mPodcastId + "_downloaded_episodes_count");
         lpDownloadsCount.setEntries(R.array.downloaded_episodes_count_text);
         lpDownloadsCount.setEntryValues(R.array.downloaded_episodes_count_values);
         lpDownloadsCount.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
+        lpDownloadsCount.setOrder(count++);
 
         final ListPreference lpDownloadsSaved = new ListPreference(mActivity);
         lpDownloadsSaved.setTitle(R.string.settings_podcast_label_downloads_saved);
@@ -206,6 +207,8 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
             cbDownloadNext.setEnabled(false);
             lpDownloadsSaved.setSummary(getString(R.string.premium_locked_playback_speed));
             lpDownloadsSaved.setEnabled(false);
+            lpDownloadsCount.setSummary(getString(R.string.premium_locked_playback_speed));
+            lpDownloadsCount.setEnabled(false);
         }
         else
             cbDownloadNext.setSummary(R.string.settings_podcast_label_download_next_summary);
@@ -299,6 +302,13 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 findPreference("pref_" + mPodcastId + "_downloads_saved").setSummary(downloadsSavedEntry);
             else
                 findPreference("pref_" + mPodcastId + "_downloads_saved").setSummary(R.string.settings_podcast_label_downloads_saved_summary);
+
+            final CharSequence lpEpisodeCount = ((ListPreference)findPreference("pref_" + mPodcastId + "_downloaded_episodes_count")).getEntry();
+
+            if (lpEpisodeCount != null && Integer.parseInt(lpEpisodeCount.toString()) > 0)
+                findPreference("pref_" + mPodcastId + "_downloaded_episodes_count").setSummary(lpEpisodeCount);
+            else
+                findPreference("pref_" + mPodcastId + "_downloaded_episodes_count").setSummary("Number of episodes to always have downloaded"); //TODO: Localize
         }
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
@@ -335,6 +345,13 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
                 if (downloadsSavedEntry != null)
                     findPreference("pref_" + mPodcastId + "_downloads_saved").setSummary(((ListPreference) findPreference("pref_" + mPodcastId + "_downloads_saved")).getEntry());
+            }
+
+            if (key.equals("pref_" + mPodcastId + "_downloaded_episodes_count")) {
+                final CharSequence downloadsSavedEntry = ((ListPreference) findPreference("pref_" + mPodcastId + "_downloaded_episodes_count")).getEntry();
+
+                if (downloadsSavedEntry != null)
+                    findPreference("pref_" + mPodcastId + "_downloaded_episodes_count").setSummary(((ListPreference) findPreference("pref_" + mPodcastId + "_downloaded_episodes_count")).getEntry());
             }
         }
 

@@ -300,6 +300,7 @@ public class Utilities {
 
                 if (autoDownload) {
                     startDownload(ctx, episode);
+                    episode.setIsDownloaded(true);
                     downloadCount++;
                 }
 
@@ -312,7 +313,23 @@ public class Utilities {
         }
         db.close();
         DBUtilities.TrimEpisodes(ctx, podcast);
-        Log.d(ctx.getPackageName(), "Processing: New Episodes = " + newEpisodesCount);
+
+        final int episodesDownloadedCount = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloaded_episodes_count", "0"));
+
+        if (episodesDownloadedCount > 0)
+        {
+            int count = 1;
+            for(final PodcastItem episode : episodes)
+            {
+                if (count <= episodesDownloadedCount && episode.getIsDownloaded() == false)
+                    startDownload(ctx, episode);
+                else
+                    break;
+
+                count++;
+            }
+        }
+
 
         if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false)
         {
@@ -445,8 +462,15 @@ public class Utilities {
             db.delete(episode.getEpisodeId());
             db.close();
         }
-        else
-            DBUtilities.SaveEpisodeValue(ctx, episode, "download", 0);
+        else {
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+
+            final ContentValues cv = new ContentValues();
+            cv.put("download", 0);
+            cv.put("downloadid", 0);
+            db.update(cv, episode.getEpisodeId());
+            //DBUtilities.SaveEpisodeValue(ctx, episode, "download", 0);
+        }
 
         String fileName = Utilities.GetMediaFile(ctx, episode);
 

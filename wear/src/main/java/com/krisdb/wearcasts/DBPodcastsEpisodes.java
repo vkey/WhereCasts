@@ -80,13 +80,27 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
                 "[playlist_id] INTEGER not null" +
                 ");";
         db.execSQL(table_playlists_xref);
+
+        final StringBuilder sbCreatePodcastsTable = new StringBuilder();
+        sbCreatePodcastsTable.append("create table IF NOT EXISTS [" + mPodcastsTable + "] (");
+        sbCreatePodcastsTable.append("[id] INTEGER primary key AUTOINCREMENT,");
+        sbCreatePodcastsTable.append("[title] TEXT not null,");
+        sbCreatePodcastsTable.append("[url] TEXT not null,"); //rss url
+        sbCreatePodcastsTable.append("[site_url] TEXT null,");
+        sbCreatePodcastsTable.append("[thumbnail_url] TEXT null,");
+        sbCreatePodcastsTable.append("[thumbnail_name] TEXT null,");
+        sbCreatePodcastsTable.append("[description] TEXT null,");
+        sbCreatePodcastsTable.append("[dateAdded] DATETIME DEFAULT CURRENT_TIMESTAMP");
+        sbCreatePodcastsTable.append(");");
+
+        db.execSQL(sbCreatePodcastsTable.toString());
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
 
         final StringBuilder sbCreate = new StringBuilder();
-        sbCreate.append("create table ["+mPodcastsTable+"] (");
+        sbCreate.append("create table IF NOT EXISTS ["+mPodcastsTable+"] (");
         sbCreate.append("[id] INTEGER primary key AUTOINCREMENT,");
         sbCreate.append("[title] TEXT not null,");
         sbCreate.append("[url] TEXT not null,"); //rss url
@@ -99,10 +113,10 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
 
         db.execSQL(sbCreate.toString());
 
-        DBPodcasts dbPodcasts = new DBPodcasts(mContext);
+        final DBPodcasts dbPodcasts = new DBPodcasts(mContext);
         final SQLiteDatabase sdb = dbPodcasts.select();
 
-        Cursor cursor = sdb.rawQuery("SELECT id,title,url,site_url,thumbnail_url,thumbnail_name,description,dateAdded  FROM ["+mPodcastsTable+"]", null);
+        final Cursor cursor = sdb.rawQuery("SELECT id,title,url,site_url,thumbnail_url,thumbnail_name,description,dateAdded  FROM ["+mPodcastsTable+"]", null);
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -115,7 +129,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
                 cv1.put("thumbnail_name", cursor.getString(5));
                 cv1.put("dateAdded", DateUtils.GetDate());
 
-                long id =  db.insert(mPodcastsTable, null, cv1);
+                final long id = db.insert(mPodcastsTable, null, cv1);
 
                 final ContentValues cv2 = new ContentValues();
                 cv2.put("pid", id);
