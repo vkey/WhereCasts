@@ -56,6 +56,8 @@
     <string name="settings_podcast_title">Podcast Inställningar</string>
     <string name="settings_podcast_sort_order_global">[Global]</string>
     <string name="settings_podcast_label_autodownload">Auto ladda ner senaste avsnittet</string>
+    <string name="settings_podcast_label_episodes_downloaded">Nedladdade episoder</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">Antal episoder som alltid har laddats ner</string>
     <string name="settings_podcast_label_download_next">Hämta nästa avsnitt</string>
     <string name="settings_podcast_label_download_next_summary">När den du lyssnar på slutar</string>
     <string name="settings_podcast_label_download_next_alert">Nedladdningar kommer köa om offline</string>
@@ -87,6 +89,9 @@
     <string name="settings_podcasts_settings_updates_display">Uppdatera inställningarna</string>
     <string name="settings_podcasts_label_sync_podcasts">Klicka för att synkronisera podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Dölj podcaster med inga nya episoder</string>
+    <string name="settings_podcasts_label_show_downloads">Visa podcaster med endast nedladdningar</string>
+    <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
+    <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Dölj tomma spellistor</string>
     <string name="settings_podcasts_label_display_paging_indicator">Dölj personsökningsindikatorn</string>
     <string name="settings_podcasts_label_playlist_sort">Spellista Sortera ordning</string>
@@ -152,6 +157,7 @@
     <string name="settings_podcasts_updates_interval_6_hours">6 timmar</string>
     <string name="settings_podcasts_updates_interval_12_hours">12 timmar</string>
 
+    <string name="settings_podcasts_entries_title_sort_order">Sorteringsordning</string>
     <string name="settings_podcasts_sort_order_name_asc">Namn (A-Z)</string>
     <string name="settings_podcasts_sort_order_name_desc">Namn (Z-A)</string>
     <string name="settings_podcasts_sort_order_date_asc">Datum (äldsta på toppen)</string>
@@ -231,6 +237,7 @@
 
     <string name="menu_episodes_mark_all_played">Markera alla spelade</string>
     <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>
+    <string name="menu_episodes_search">Sök</string>
     <string name="menu_episodes_add_playlist">Lägg till allt till spellista</string>
 
     <string name="menu_episodes_delete_all">Radera allt</string>
@@ -254,6 +261,7 @@
     <string name="playlist_title_unplayed">ospelade</string>
     <string name="playlist_title_local">Lokal</string>
 
+    <string name="alert_no_system_audio">Inget systemljud hittades</string>
     <string name="text_episode_no_media">Kan inte hitta media för uppspelning. Ta bort och lägg till eller kontakta podcastleverantören.</string>
     <string name="alert_podcast_added">Lagt till</string>
     <string name="alert_episode_playlist_added">Lagt till %s</string>
@@ -306,6 +314,7 @@
     <string name="new_episodes_alert">Nya episoder</string>
 
     <string name="notification_download_count">%d Nedladdningar</string>
+    <string name="notification_downloads_count">%d Nedladdningar</string>
 
     <string name="tts_audio_skip_next">spelar nästa</string>
     <string name="tts_audio_skip_previous">spelar tidigare</string>

@@ -4,6 +4,10 @@
     <string name="tab_radio">Radio</string>
     <string name="tab_premium">Premium</string>
 
+    <string name="page_title_premium">Premium</string>
+    <string name="page_title_import">Import</string>
+    <string name="page_title_about">About</string>
+
     <string name="notification_channel_sync_service">Sync Service</string>
 
     <string name="validation_invalid_url">Enter a valid url</string>
@@ -55,7 +59,7 @@
 
     <string name="alert_podcast_added">%s sent to watch.</string>
     <string name="alert_episode_added">Sent to download playlist on watch.</string>
-    <string name="alert_episode_radio_added">Sent to radio playlist on watch.</string> <!--TODO: Localiz-->
+    <string name="alert_episode_radio_added">Sent to radio playlist on watch.</string>
     <string name="alert_episode_import_first">This episode will be sent to your watch and downloaded</string>
     <string name="alert_playlist_purchased">%d created.</string>
     <string name="text_file_uploaded">Sent successfully.\nThere may be a delay before file(s) show up on watch.\nSwipe left on the main screen.</string>

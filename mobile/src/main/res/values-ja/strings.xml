@@ -3,6 +3,10 @@
     <string name="tab_add">追加</string>
     <string name="tab_premium">プレミアム</string>
 
+    <string name="page_title_premium">プレミアム</string>
+    <string name="page_title_import">インポート</string>
+    <string name="page_title_about">約</string>
+
     <string name="notification_channel_sync_service">同期サービス</string>
 
     <string name="validation_invalid_url">有効なURLを入力してください</string>

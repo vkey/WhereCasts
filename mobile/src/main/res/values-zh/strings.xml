@@ -3,6 +3,10 @@
     <string name="tab_add">加</string>
     <string name="tab_premium">額外費用</string>
 
+    <string name="page_title_premium">額外費用</string>
+    <string name="page_title_import">進口</string>
+    <string name="page_title_about">關於</string>
+
     <string name="notification_channel_sync_service">同步服務</string>
 
     <string name="validation_invalid_url">輸入一個有效的網址</string>

@@ -56,6 +56,8 @@
     <string name="settings_podcast_title">पॉडकास्ट सेटिंग्स</string>
     <string name="settings_podcast_sort_order_global">[वैश्विक]</string>
     <string name="settings_podcast_label_autodownload">ऑटो डाउनलोड नवीनतम एपिसोड</string>
+    <string name="settings_podcast_label_episodes_downloaded">डाउनलोड किए गए एपिसोड</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">हमेशा डाउनलोड होने वाले एपिसोड की संख्या</string>
     <string name="settings_podcast_label_download_next">अगले एपिसोड डाउनलोड करें</string>
     <string name="settings_podcast_label_download_next_summary">जब आप एक को समाप्त करना सुन रहे हैं</string>
     <string name="settings_podcast_label_download_next_alert">ऑफलाइन होने पर डाउनलोड कतारबद्ध होंगे</string>
@@ -84,6 +86,9 @@
     <string name="settings_podcasts_settings_updates_display">सेटिंग अपडेट करें</string>
     <string name="settings_podcasts_label_sync_podcasts">पॉडकास्ट सिंक करने के लिए क्लिक करें</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">कोई नया एपिसोड के साथ पॉडकास्ट छुपाएं</string>
+    <string name="settings_podcasts_label_show_downloads">केवल डाउनलोड के साथ पॉडकास्ट दिखाएं</string>
+    <string name="settings_podcasts_label_disable_ambient">परिवेश मोड अक्षम करें</string>
+    <string name="settings_podcasts_label_disable_ambient_summary">परिवेश मोड केवल प्ले स्क्रीन पर है</string>
     <string name="settings_podcasts_label_playlists_hide_empty">खाली प्लेलिस्ट छुपाएं</string>
     <string name="settings_podcasts_label_display_paging_indicator">पेजिंग संकेतक छुपाएं</string>
     <string name="settings_podcasts_label_playlist_sort">प्लेलिस्ट क्रमबद्ध क्रम</string>
@@ -103,7 +108,6 @@
     <string name="settings_podcasts_label_download_complete_sound">डाउनलोड पूर्ण होने पर ध्वनि चलाएं</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">से ध्वनि अक्षम करें</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">ध्वनि को अक्षम करें</string>
-    <string name="settings_podcasts_label_hide_empty_podcasts">पॉडकास्ट को कोई नया या अनपेक्षित एपिसोड नहीं छुपाएं</string>
     <string name="settings_podcast_episode_limit_title">एपिसोड की संख्या प्रदर्शित करने के लिए</string>
     <string name="settings_podcast_episode_limit_all">सब</string>
 
@@ -153,6 +157,7 @@
     <string name="settings_podcasts_updates_interval_6_hours">6 घंटे</string>
     <string name="settings_podcasts_updates_interval_12_hours">12 घंटे</string>
 
+    <string name="settings_podcasts_entries_title_sort_order">क्रमबद्ध आदेश</string>
     <string name="settings_podcasts_sort_order_name_asc">नाम (ए-जेड)</string>
     <string name="settings_podcasts_sort_order_name_desc">नाम (जेड-ए)</string>
     <string name="settings_podcasts_sort_order_date_asc">तिथि (शीर्ष पर सबसे पुराना)</string>
@@ -232,6 +237,7 @@
 
     <string name="menu_episodes_mark_all_played">सभी को खेले गए निशान</string>
     <string name="menu_episodes_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें</string>
+    <string name="menu_episodes_search">खोज</string>
     <string name="menu_episodes_add_playlist">प्लेलिस्ट में सभी जोड़ें</string>
 
     <string name="menu_episodes_delete_all">सभी हटा दो</string>
@@ -255,6 +261,7 @@
     <string name="playlist_title_unplayed">नहीं चलाए गए</string>
     <string name="playlist_title_local">स्थानीय</string>
 
+    <string name="alert_no_system_audio">कोई सिस्टम ऑडियो नहीं मिला</string>
     <string name="text_episode_no_media">प्लेबैक के लिए मीडिया नहीं मिल सकता है पॉडकास्ट प्रदाता हटाएं और पुनः जोड़ें या संपर्क करें.</string>
     <string name="alert_podcast_added">जोड़ा गया</string>
     <string name="alert_episode_playlist_added">में जोड़ा %s</string>
@@ -307,6 +314,7 @@
     <string name="new_episodes_alert">नए एपिसोड</string>
 
     <string name="notification_download_count">%d डाउनलोड</string>
+    <string name="notification_downloads_count">%d डाउनलोड</string>
 
     <string name="tts_audio_skip_next">अगले खेलना</string>
     <string name="tts_audio_skip_previous">अगले खेलना</string>

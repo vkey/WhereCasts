@@ -19,7 +19,7 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("About"); //TODO: Localize
+        setTitle(getString(R.string.page_title_about));
 
         ((TextView)findViewById(R.id.about_copyright)).setText(getString(R.string.copyright, String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
         ((TextView)findViewById(R.id.about_version)).setText(getString(R.string.version, BuildConfig.VERSION_NAME));

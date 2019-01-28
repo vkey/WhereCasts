@@ -3,6 +3,10 @@
     <string name="tab_add">जोड़ना</string>
     <string name="tab_premium">प्रीमियम</string>
 
+    <string name="page_title_premium">प्रीमियम</string>
+    <string name="page_title_import">आयात</string>
+    <string name="page_title_about">के बारे में</string>
+
     <string name="notification_channel_sync_service">सेवा सिंक करें</string>
 
     <string name="validation_invalid_url">मान्य यूआरएल दर्ज करें</string>

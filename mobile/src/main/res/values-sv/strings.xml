@@ -3,6 +3,10 @@
     <string name="tab_add">Lägg till</string>
     <string name="tab_premium">Premie</string>
 
+    <string name="page_title_premium">Premie</string>
+    <string name="page_title_import">Importera</string>
+    <string name="page_title_about">Handla om</string>
+
     <string name="notification_channel_sync_service">Synkroniseringstjänst</string>
 
     <string name="validation_invalid_url">Ange en giltig webbadress</string>

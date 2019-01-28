@@ -61,7 +61,7 @@ public class UserAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Import"); //TODO: Localize
+        setTitle(getString(R.string.page_title_import));
 
         mActivity = this;
         mActivityRef = new WeakReference<>(mActivity);

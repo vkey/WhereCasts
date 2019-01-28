@@ -3,6 +3,10 @@
     <string name="tab_add">Agregar</string>
     <string name="tab_premium">Prima</string>
 
+    <string name="page_title_premium">Prima</string>
+    <string name="page_title_import">Importar</string>
+    <string name="page_title_about">Acerca de</string>
+
     <string name="notification_channel_sync_service">Servicio de Sincronización</string>
 
     <string name="validation_invalid_url">Ingrese una URL válida</string>

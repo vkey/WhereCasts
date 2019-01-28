@@ -178,7 +178,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 if (audioManager != null)
                     audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
                 else
-                    CommonUtils.showToast(mActivity, "No system audio found"); //TODO: Localize
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
             }
         });
 

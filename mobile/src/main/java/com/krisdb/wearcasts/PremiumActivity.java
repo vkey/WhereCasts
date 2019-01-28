@@ -69,7 +69,7 @@ public class PremiumActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_premium);
-        setTitle("Premium"); //TODO: Localize
+        setTitle(getString(R.string.page_title_premium));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mActivity = this;

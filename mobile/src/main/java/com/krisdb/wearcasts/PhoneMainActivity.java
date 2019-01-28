@@ -30,7 +30,6 @@ public class PhoneMainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Import");//TODO: Localize
 
         mViewPager = findViewById(R.id.main_pager);
         mContext = getApplicationContext();

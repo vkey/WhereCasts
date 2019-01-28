@@ -55,6 +55,8 @@
 
     <string name="settings_podcast_title">Podcast Settings</string>
     <string name="settings_podcast_label_autodownload">Auto-download latest episode</string>
+    <string name="settings_podcast_label_episodes_downloaded">Downloaded episodes</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">Number of episodes to always have downloaded</string>
     <string name="settings_podcast_label_download_next">Auto-download next episode not downloaded</string>
     <string name="settings_podcast_label_download_next_summary">When the one you\'re listening to ends</string>
     <string name="settings_podcast_label_download_next_alert">Downloads will queue if offline</string>
@@ -83,6 +85,9 @@
     <string name="settings_podcasts_settings_updates_display">Update Settings</string>
     <string name="settings_podcasts_label_sync_podcasts">Click to sync podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Hide podcasts with no new episodes</string>
+    <string name="settings_podcasts_label_show_downloads">Show podcasts with downloads only</string>
+    <string name="settings_podcasts_label_disable_ambient">Disable ambient mode</string>
+    <string name="settings_podcasts_label_disable_ambient_summary">Ambient mode is on play screen only</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Hide empty playlists</string>
     <string name="settings_podcasts_label_display_paging_indicator">Hide paging indicator</string>
     <string name="settings_podcasts_label_playlist_sort">Playlist sort order</string>
@@ -102,7 +107,6 @@
     <string name="settings_podcasts_label_download_complete_sound">Play sound when download completes</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Disable sound from</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">Disable sound to</string>
-    <string name="settings_podcasts_label_hide_empty_podcasts">Hide podcasts with no new or unplayed episodes</string>
     <string name="settings_podcasts_label_playback_speed">Playback Speed</string>
     <string name="settings_podcasts_label_playback_skip_back">Skip Back</string>
     <string name="settings_podcasts_label_playback_skip_forward">Skip Forward</string>
@@ -255,11 +259,12 @@
 
     <string name="playlist_title_inprogress">In Progress</string>
     <string name="playlist_title_downloads">Downloads</string>
-    <string name="playlist_title_radio">Radio</string> <!--TODO: Localize-->
     <string name="playlist_title_unplayed">Unplayed</string>
     <string name="playlist_title_local">Local</string>
 
     <string name="text_episode_no_media">Cannot find media for playback. Delete and re-add or contact podcast provider.</string>
+
+    <string name="alert_no_system_audio">No system audio found</string>
     <string name="alert_podcast_added">Added</string>
     <string name="alert_episode_playlist_added">Added to %s</string>
     <string name="alert_episodes_playlist_added">Added %d episodes to %s</string>
@@ -314,7 +319,6 @@
 
     <string name="tts_audio_skip_next">playing next</string>
     <string name="tts_audio_skip_previous">playing previous</string>
-    <string name="title_activity_web_server">WebServer</string>
 
     <string name="dropdown_playlist_select">[ Add To Playlist ]</string>
     <string name="button_mark_played">Mark As Played</string>

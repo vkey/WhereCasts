@@ -56,6 +56,8 @@
     <string name="settings_podcast_title">Paramètres de podcast</string>
     <string name="settings_podcast_sort_order_global">[Global]</string>
     <string name="settings_podcast_label_autodownload">Téléchargement automatique du dernier épisode</string>
+    <string name="settings_podcast_label_episodes_downloaded">Épisodes téléchargés</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">Nombre d'épisodes à avoir toujours téléchargés</string>
     <string name="settings_podcast_label_download_next">Télécharger le prochain épisode</string>
     <string name="settings_podcast_label_download_next_summary">Lorsque celui que vous écoutez se termine</string>
     <string name="settings_podcast_label_download_next_alert">Les téléchargements seront mis en file d\'attente si hors ligne</string>
@@ -87,6 +89,9 @@
     <string name="settings_podcasts_settings_updates_display">Mettre à jour les paramètres</string>
     <string name="settings_podcasts_label_sync_podcasts">Cliquez pour synchroniser les podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Masquer les podcasts sans nouveaux épisodes</string>
+    <string name="settings_podcasts_label_show_downloads">Afficher les podcasts avec des téléchargements uniquement</string>
+    <string name="settings_podcasts_label_disable_ambient">Désactiver le mode ambiant</string>
+    <string name="settings_podcasts_label_disable_ambient_summary">Le mode ambiant est uniquement sur l\'écran de lecture</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Masquer les playlists vides</string>
     <string name="settings_podcasts_label_display_paging_indicator">Masquer l\'indicateur de pagination</string>
     <string name="settings_podcasts_label_playlist_sort">Épisode Ordre de tri</string>
@@ -106,7 +111,6 @@
     <string name="settings_podcasts_label_download_complete_sound">Lire le son lorsque le téléchargement est terminé</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Désactiver le son de</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">Désactiver le son pour</string>
-    <string name="settings_podcasts_label_hide_empty_podcasts">Masquer les podcasts sans épisode nouveau ou non diffusé</string>
     <string name="settings_podcasts_label_playback_speed">Vitesse de lecture</string>
     <string name="settings_podcasts_label_playback_skip_back">Sauter Retour</string>
     <string name="settings_podcasts_label_playback_skip_forward">Sauter en avant</string>
@@ -153,6 +157,7 @@
     <string name="settings_podcasts_updates_interval_6_hours">6 heures</string>
     <string name="settings_podcasts_updates_interval_12_hours">12 heures</string>
 
+    <string name="settings_podcasts_entries_title_sort_order">Ordre de tri</string>
     <string name="settings_podcasts_sort_order_name_asc">Nom (A-Z)</string>
     <string name="settings_podcasts_sort_order_name_desc">Nom (Z-A)</string>
     <string name="settings_podcasts_sort_order_date_asc">Date (le plus ancien sur le dessus)</string>
@@ -196,6 +201,7 @@
     <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
     <string name="setting_podcasts_label_finish_end_time_30_seconds">30 secondes restantes</string>
     <string name="setting_podcasts_label_finish_end_time_45_seconds">45 secondes restantes</string>
+    <string name="setting_podcasts_label_finish_end_time_1_minute">1 Minute left</string>
     <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 Minutes restant</string>
     <string name="setting_podcasts_label_finish_end_time_2_minutes">2 Minutes restant</string>
     <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 Minutes restant</string>
@@ -213,6 +219,7 @@
     <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 Minutes restant</string>
     <string name="setting_podcasts_label_finish_end_time_9_minutes">9 Minutes restant</string>
     <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 Minutes restant</string>
+    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 Minutes restant</string>
 
     <string name="setting_podcasts_playback_skip_10_seconds">10 secondes</string>
     <string name="setting_podcasts_playback_skip_20_seconds">20 secondes</string>
@@ -230,6 +237,7 @@
 
     <string name="menu_episodes_mark_all_played">Marquer tout joué</string>
     <string name="menu_episodes_mark_all_unplayed">Marquer tous les non joués</string>
+    <string name="menu_episodes_search">Chercher</string>
     <string name="menu_episodes_add_playlist">Ajouter tout à la playlist</string>
 
     <string name="menu_episodes_delete_all">Supprimer tout</string>
@@ -253,6 +261,7 @@
     <string name="playlist_title_unplayed">Unplayed</string>
     <string name="playlist_title_local">Local</string>
 
+    <string name="alert_no_system_audio">Aucun système audio trouvé</string>
     <string name="text_episode_no_media">Impossible de trouver un média pour la lecture. Supprimer et rajouter ou contacter le fournisseur de podcast.</string>
     <string name="alert_podcast_added">Ajoutée</string>
     <string name="alert_episode_playlist_added">Ajouté à %s</string>
@@ -305,6 +314,7 @@
     <string name="new_episodes_alert">Nouveaux épisodes</string>
 
     <string name="notification_download_count">%d téléchargements</string>
+    <string name="notification_downloads_count">%d téléchargements</string>
 
     <string name="tts_audio_skip_next">jouer suivant</string>
     <string name="tts_audio_skip_previous">jouer précédent</string>

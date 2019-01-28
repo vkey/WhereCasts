@@ -56,6 +56,8 @@
     <string name="settings_podcast_title">ポッドキャスト設定</string>
     <string name="settings_podcast_sort_order_global">[グローバル]</string>
     <string name="settings_podcast_label_autodownload">自動ダウンロード最新エピソード</string>
+    <string name="settings_podcast_label_episodes_downloaded">ダウンロードしたエピソード</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">常にダウンロードしたエピソードの数</string>
     <string name="settings_podcast_label_download_next">次のエピソードをダウンロード</string>
     <string name="settings_podcast_label_download_next_summary">あなたが聞いているものが終わると</string>
     <string name="settings_podcast_label_download_next_alert">オフラインの場合、ダウンロードはキューに入れられます</string>
@@ -84,6 +86,9 @@
     <string name="settings_podcasts_settings_updates_display">設定を更新</string>
     <string name="settings_podcasts_label_sync_podcasts">クリックしてポッドキャストを同期する</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">新しいエピソードのないポッドキャストを隠す</string>
+    <string name="settings_podcasts_label_show_downloads">ダウンロードのみでPodcastを表示する</string>
+    <string name="settings_podcasts_label_disable_ambient">アンビエントモードを無効にする</string>
+    <string name="settings_podcasts_label_disable_ambient_summary">アンビエントモードはプレイ画面のみ</string>
     <string name="settings_podcasts_label_playlists_hide_empty">空のプレイリストを隠す</string>
     <string name="settings_podcasts_label_display_paging_indicator">ページングインジケータを隠す</string>
     <string name="settings_podcasts_label_playlist_sort">プレイリストの並び順</string>
@@ -152,6 +157,7 @@
     <string name="settings_podcasts_updates_interval_6_hours">6 時間</string>
     <string name="settings_podcasts_updates_interval_12_hours">12 時間</string>
 
+    <string name="settings_podcasts_entries_title_sort_order">ソート順</string>
     <string name="settings_podcasts_sort_order_name_asc">名前（A〜Z）</string>
     <string name="settings_podcasts_sort_order_name_desc">名前（Z-A）</string>
     <string name="settings_podcasts_sort_order_date_asc">日付（最長最長）</string>
@@ -231,6 +237,7 @@
 
     <string name="menu_episodes_mark_all_played">すべての試合をマークする</string>
     <string name="menu_episodes_mark_all_unplayed">すべてを表示しない</string>
+    <string name="menu_episodes_search">サーチ</string>
     <string name="menu_episodes_add_playlist">プレイリストにすべてを追加する</string>
 
     <string name="menu_episodes_delete_all">すべてを削除</string>
@@ -254,6 +261,7 @@
     <string name="playlist_title_unplayed">再生されていない</string>
     <string name="playlist_title_local">地元</string>
 
+    <string name="alert_no_system_audio">システムオーディオが見つかりません</string>
     <string name="text_episode_no_media">再生するメディアが見つかりません.ポッドキャストプロバイダを削除して再追加または連絡してください.</string>
     <string name="alert_podcast_added">追加された</string>
     <string name="alert_episode_playlist_added">に追加 %s</string>
@@ -306,6 +314,7 @@
     <string name="new_episodes_alert">新しいエピソード</string>
 
     <string name="notification_download_count">%d ダウンロード</string>
+    <string name="notification_downloads_count">%d ダウンロード</string>
 
     <string name="tts_audio_skip_next">次の演奏</string>
     <string name="tts_audio_skip_previous">前の演奏</string>
