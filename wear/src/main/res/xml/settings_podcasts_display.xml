@@ -54,14 +54,12 @@
             android:defaultValue="false"
             />
 
-        <!-- TODO: Localize -->
         <SwitchPreference
             android:key="pref_display_ambient_disable"
             android:title="@string/settings_podcasts_label_disable_ambient"
             android:summary="@string/settings_podcasts_label_disable_ambient_summary"
             android:defaultValue="false" />
             />
-
 
         <!--
         <SwitchPreference

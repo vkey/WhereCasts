@@ -33,4 +33,6 @@
     <color name="wc_header_color_red">#FFCC0000</color>
     <color name="wc_header_color_purple">#800080</color>
 
+    <color name="wc_episode_progress">#4CAF50</color>
+
 </resources>

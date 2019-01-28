@@ -57,7 +57,7 @@
     <string name="settings_podcast_sort_order_global">[Global]</string>
     <string name="settings_podcast_label_autodownload">Téléchargement automatique du dernier épisode</string>
     <string name="settings_podcast_label_episodes_downloaded">Épisodes téléchargés</string>
-    <string name="settings_podcast_label_episodes_downloaded_summary">Nombre d'épisodes à avoir toujours téléchargés</string>
+    <string name="settings_podcast_label_episodes_downloaded_summary">Nombre d\'épisodes à avoir toujours téléchargés</string>
     <string name="settings_podcast_label_download_next">Télécharger le prochain épisode</string>
     <string name="settings_podcast_label_download_next_summary">Lorsque celui que vous écoutez se termine</string>
     <string name="settings_podcast_label_download_next_alert">Les téléchargements seront mis en file d\'attente si hors ligne</string>
