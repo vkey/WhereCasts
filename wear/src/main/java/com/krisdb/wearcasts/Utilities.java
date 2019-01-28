@@ -294,13 +294,12 @@ public class Utilities {
                 final long episodeId = db.insert(cv);
                 episode.setEpisodeId((int) episodeId);
 
-                if (assignPlaylist) {
+                if (assignPlaylist)
                     db.addEpisodeToPlaylist(autoAssignPlaylistId, (int) episodeId);
-                }
 
                 if (autoDownload) {
                     startDownload(ctx, episode);
-                    episode.setIsDownloaded(true);
+                    DBUtilities.SaveEpisodeValue(ctx, episode, "download", 1); //so auto-download before doesn't re-download this episode
                     downloadCount++;
                 }
 
@@ -318,18 +317,19 @@ public class Utilities {
 
         if (episodesDownloadedCount > 0)
         {
-            int count = 1;
-            for(final PodcastItem episode : episodes)
-            {
-                if (count <= episodesDownloadedCount && episode.getIsDownloaded() == false)
-                    startDownload(ctx, episode);
-                else
-                    break;
+            List<PodcastItem> episodes2 = DBUtilities.GetEpisodes(ctx, podcast.getPodcastId());
 
-                count++;
+            if (episodes2.size() > 0) {
+                episodes2 = episodes2.subList(1, episodes2.size());
+                int count = 1;
+                for (final PodcastItem episode : episodes2) {
+                    if (episode.getIsDownloaded() == false)
+                        startDownload(ctx, episode);
+
+                    if (count++ == episodesDownloadedCount) break;
+                }
             }
         }
-
 
         if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false)
         {

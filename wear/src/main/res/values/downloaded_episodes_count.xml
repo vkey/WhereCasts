@@ -1,5 +1,6 @@
 <resources>
     <string-array name="downloaded_episodes_count_values">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -13,6 +14,7 @@
     </string-array>
 
     <string-array name="downloaded_episodes_count_text">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
