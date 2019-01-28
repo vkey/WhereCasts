@@ -451,8 +451,6 @@ public class DBUtilities {
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             final SQLiteDatabase sdb = db.select();
 
-            int downloadsPlaylistId = ctx.getResources().getInteger(R.integer.playlist_downloads);
-
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
@@ -462,32 +460,44 @@ public class DBUtilities {
 
             String sql;
             if (hideEmpty && showDownloaded)
-                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                        .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
+                        .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("WHERE tbl_podcast_episodes.new = 1 AND tbl_podcast_episodes.download = 1 ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
-                        .concat("ORDER BY ").concat(orderString);
+                        .concat("ORDER BY ")
+                        .concat(orderString);
             else if (hideEmpty)
-                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                        .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1)")
+                        .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("WHERE tbl_podcast_episodes.new = 1 ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
-                        .concat("ORDER BY ").concat(orderString);
+                        .concat("ORDER BY ")
+                        .concat(orderString);
             else if (showDownloaded)
-                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
+                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name "
+                        .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
+                        .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("WHERE tbl_podcast_episodes.download = 1 ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
-                        .concat("ORDER BY ").concat(orderString);
+                        .concat("ORDER BY ")
+                        .concat(orderString);
             else
-                sql = "SELECT tbl_podcast_episodes.pid,count(tbl_podcast_episodes.pid),tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name FROM [tbl_podcasts] "
-                        .concat("JOIN tbl_podcast_episodes ")
+                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name "
+                        .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
+                        .concat("FROM [tbl_podcasts] ")
+                        .concat("LEFT OUTER JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
-                        .concat("ORDER BY ").concat(orderString);
+                        .concat("ORDER BY ")
+                        .concat(orderString);
 
             final Cursor cursor = sdb.rawQuery(sql, null);
 
@@ -495,22 +505,22 @@ public class DBUtilities {
                 while (!cursor.isAfterLast()) {
 
                     final PodcastItem podcast = new PodcastItem();
+
                     podcast.setPodcastId(cursor.getInt(0));
 
                     final ChannelItem channel = new ChannelItem();
-                    channel.setTitle(cursor.getString(2));
-                    channel.setRSSUrl(cursor.getString(3));
-                    if (cursor.getString(4) != null && cursor.getString(5) != null) {
-                        channel.setThumbnailUrl(cursor.getString(4));
-                        channel.setThumbnailName(cursor.getString(5));
+                    channel.setTitle(cursor.getString(1));
+                    channel.setRSSUrl(cursor.getString(2));
+                    if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                        channel.setThumbnailUrl(cursor.getString(3));
+                        channel.setThumbnailName(cursor.getString(4));
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setNewCount(cursor.getInt(1));
                     podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
-
+                    podcast.setNewCount(cursor.getInt(5));
                     if (orderId == latestEpisodesSortOrderID)
-                        podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(1)));
+                        podcast.setLatestEpisode(DBUtilities.GetLatestEpisode(ctx, cursor.getInt(0)));
 
                     podcasts.add(podcast);
 
