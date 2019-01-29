@@ -118,7 +118,7 @@
     <string name="settings_podcasts_label_hardware_button">Styr uppspelning med hårdvaruknapp</string>
     <string name="settings_podcasts_label_hardware_buttons">Styr uppspelning med hårdvaruknappar</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Spela upp / Pausa (fungerar bara på spelskärmen)</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">Överst: Hoppa tillbaka\nMellan: Spela / Pausa\nBottom: Hoppa framåt\n(fungerar bara på spelskärmen)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Överst: Volym upp\nMellan: Spela / Pausa\nKnapp: Volym ner\n(fungerar bara på spelskärmen)</string>
     <string name="settings_podcasts_label_high_bandwidth">Kontrollera nätverksnätverk med hög bandbredd</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Före synkronisering, streaming eller nedladdning</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicka för att radera alla miniatyrbilder (%d)</string>

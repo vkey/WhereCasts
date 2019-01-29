@@ -117,7 +117,7 @@
     <string name="settings_podcasts_label_hardware_button">用硬件按鈕控製播放</string>
     <string name="settings_podcasts_label_hardware_buttons">用硬件按鈕控製播放</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">播放/暫停（僅適用於播放屏幕）</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">頂部：跳回\n中：播放/暫停\nB底部：向前跳過\n(僅適用於播放屏幕)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">上：增加音量\n中：播放/暫停\n按鈕：音量降低\n(僅適用於播放屏幕)</string>
     <string name="settings_podcasts_label_high_bandwidth">檢查高帶寬網絡</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">在同步，流式傳輸或下載之前</string>
     <string name="settings_podcasts_label_downloads_delete_all">點擊刪除所有下載 (%d)</string>

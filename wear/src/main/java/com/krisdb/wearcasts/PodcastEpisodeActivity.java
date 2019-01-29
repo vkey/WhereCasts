@@ -248,14 +248,27 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         togglePlayback();
                 else {
                     if (keyCode == KeyEvent.KEYCODE_STEM_2) {
-                        final int position = mSeekBar.getProgress() + getResources().getInteger(R.integer.skip_seconds) * 1000;
-                        if (position < mSeekBar.getMax())
-                            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
+                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+                        if (audioManager != null)
+                            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                        else
+                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+                        //final int position = mSeekBar.getProgress() + getResources().getInteger(R.integer.skip_seconds) * 1000;
+                        //if (position < mSeekBar.getMax())
+                        //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
                         return true;
                     } else if (keyCode == KeyEvent.KEYCODE_STEM_1) {
-                        final int position = mSeekBar.getProgress() - getResources().getInteger(R.integer.skip_seconds) * 1000;
-                        if (position > 0)
-                            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
+                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+                        if (audioManager != null)
+                            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                        else
+                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+
+                        //final int position = mSeekBar.getProgress() - getResources().getInteger(R.integer.skip_seconds) * 1000;
+                        //if (position > 0)
+                            //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
                         return true;
                     } else if (keyCode == KeyEvent.KEYCODE_STEM_3) {
                         togglePlayback();

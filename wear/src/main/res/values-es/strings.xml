@@ -118,7 +118,7 @@
     <string name="settings_podcasts_label_hardware_button">Controle la reproducción con el botón de hardware</string>
     <string name="settings_podcasts_label_hardware_buttons">Controle la reproducción con botones de hardware</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Reproducir / Pausa (funciona solo en la pantalla de juego)</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">Arriba: Saltar hacia atrás\nMedio: Reproducir / Pausa\nAbajo: saltar adelante\n(funciona solo en la pantalla de juego)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Arriba: subir volumen\nMedio: Reproducir/Pausa\nBotón: bajar volumen\n(funciona solo en la pantalla de juego)</string>
     <string name="settings_podcasts_label_high_bandwidth">Comprobar la red de ancho de banda alto</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Antes de sincronizar, transmitir o descargar</string>
     <string name="settings_podcasts_label_downloads_delete_all">Haga clic para eliminar todas las descargas (%d)</string>

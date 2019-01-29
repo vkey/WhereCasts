@@ -118,7 +118,7 @@
     <string name="settings_podcasts_label_hardware_button">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">चलाएं / रोकें (केवल स्क्रीन खेलने पर काम करता है)</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">शीर्ष: वापस जाएं\nमध्य: चलायें / रोकें\nनीचे: आगे बढ़ें\n(केवल स्क्रीन खेलने पर काम करता है)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">टॉप: वॉल्यूम ऊपर\nमध्य: खेलें / रोकें\nबटन: वॉल्यूम नीचें\n(केवल स्क्रीन खेलने पर काम करता है)</string>
     <string name="settings_podcasts_label_high_bandwidth">उच्च बैंडविड्थ नेटवर्क की जांच करें</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">सिंक्रनाइज़ करने से पहले, स्ट्रीमिंग या डाउनलोड करना</string>
     <string name="settings_podcasts_label_downloads_delete_all">सभी डाउनलोड हटाने के लिए क्लिक करें (%d)</string>

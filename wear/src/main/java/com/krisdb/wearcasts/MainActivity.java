@@ -23,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcastslibrary.AsyncTasks;
@@ -221,7 +222,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
 
             if (visits >= 2 && prefs.getBoolean("long_press_tip_shown", false) == false && DBUtilities.GetPodcasts(ctx).size() > 0) {
-                showToast(ctx, mActivity.get().getString(R.string.tips_swipe_long_press));
+                showToast(ctx, mActivity.get().getString(R.string.tips_swipe_long_press), Toast.LENGTH_LONG);
 
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("long_press_tip_shown", true);

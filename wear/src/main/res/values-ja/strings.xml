@@ -118,7 +118,7 @@
     <string name="settings_podcasts_label_hardware_button">ハードウェアボタンで再生をコントロールする</string>
     <string name="settings_podcasts_label_hardware_buttons">ハードウェアボタンによる再生の制御</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">再生/一時停止（再生画面でのみ機能する）</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">Top：スキップバック\n中間：再生/一時停止\nボトム：スキップフォワード\n(再生画面でのみ機能する)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">上：ボリュームアップ\n中：再生/一時停止\nボタン：音量を下げる\n(再生画面でのみ機能する)</string>
     <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">同期、ストリーミングまたはダウンロードの前に</string>
     <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>

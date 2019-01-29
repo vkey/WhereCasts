@@ -93,9 +93,10 @@ public class CommonUtils {
 
         try {
             final Toast toast = Toast.makeText(ctx, message, length);
-            final View view = toast.getView();
-            final TextView text = view.findViewById(android.R.id.message);
-            text.setBackgroundColor(Color.TRANSPARENT);
+            //final View view = toast.getView();
+            //final TextView text = view.findViewById(android.R.id.message);
+            //text.setBackgroundColor(ctx.getColor(R.color.wc_white));
+            //text.setTextColor(ctx.getColor(R.color.wc_white));
             toast.show();
         }catch (Exception ignored){}
     }

@@ -118,7 +118,7 @@
     <string name="settings_podcasts_label_hardware_button">Steuern Sie die Wiedergabe mit der Hardware-Taste</string>
     <string name="settings_podcasts_label_hardware_buttons">Steuern Sie die Wiedergabe mit Hardwaretasten</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Wiedergabe / Pause (funktioniert nur auf dem Bildschirm)</string>
-    <string name="settings_podcasts_label_hardware_buttons_3_summary">Oben: Zurückspringen\nMitte: Wiedergabe / Pause\nUnten: Vorwärts überspringen\n(funktioniert nur auf dem Bildschirm)</string>
+    <string name="settings_podcasts_label_hardware_buttons_3_summary">Top: Lautstärke erhöhen\nMitte: Wiedergabe/Pause\nTaste: Lautstärke leiser\n(funktioniert nur auf dem Bildschirm)</string>
     <string name="settings_podcasts_label_high_bandwidth">Überprüfen Sie das Netzwerk mit hoher Bandbreite</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Vor dem Synchronisieren, Streamen oder Herunterladen</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicken Sie hier, um alle Downloads zu löschen (%d)</string>

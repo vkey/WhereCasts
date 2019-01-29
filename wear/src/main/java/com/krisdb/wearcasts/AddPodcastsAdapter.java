@@ -99,37 +99,48 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addPodcast(holder);
+            }
+        });
 
-                final ContentValues cv = new ContentValues();
-                cv.put("title", mPodcasts.get(holder.getAdapterPosition()).getChannel().getTitle());
-                cv.put("url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getRSSUrl().toString());
-                cv.put("site_url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl() != null ? mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl().toString() : null);
-                cv.put("dateAdded", DateUtils.GetDate());
-
-                final URL thumbUrl = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailUrl();
-
-                if (thumbUrl != null) {
-                    final String thumbName = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailName();
-
-                    cv.put("thumbnail_url", thumbUrl.toString());
-                    cv.put("thumbnail_name", thumbName);
-
-                    new com.krisdb.wearcastslibrary.AsyncTasks.SaveLogo(mContext, thumbUrl.toString(), thumbName,
-                            new Interfaces.AsyncResponse() {
-                                @Override
-                                public void processFinish() {}
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-
-                final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
-                new AsyncTasks.GetPodcastEpisodes(mContext, podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                CacheUtils.deletePodcastsCache(mContext);
-
-                showToast(mContext, mContext.getString(R.string.alert_podcast_added));
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addPodcast(holder);
             }
         });
 
         return holder;
+    }
+
+    private void addPodcast(final ViewHolder holder)
+    {
+        final ContentValues cv = new ContentValues();
+        cv.put("title", mPodcasts.get(holder.getAdapterPosition()).getChannel().getTitle());
+        cv.put("url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getRSSUrl().toString());
+        cv.put("site_url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl() != null ? mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl().toString() : null);
+        cv.put("dateAdded", DateUtils.GetDate());
+
+        final URL thumbUrl = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailUrl();
+
+        if (thumbUrl != null) {
+            final String thumbName = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailName();
+
+            cv.put("thumbnail_url", thumbUrl.toString());
+            cv.put("thumbnail_name", thumbName);
+
+            new com.krisdb.wearcastslibrary.AsyncTasks.SaveLogo(mContext, thumbUrl.toString(), thumbName,
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {}
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+        final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
+        new AsyncTasks.GetPodcastEpisodes(mContext, podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CacheUtils.deletePodcastsCache(mContext);
+
+        showToast(mContext, mContext.getString(R.string.alert_podcast_added));
     }
 
     @Override
