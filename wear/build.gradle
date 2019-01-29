@@ -10,7 +10,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 446
-        versionName "1.29.08"
+        versionName "1.30.00"
     }
     buildTypes {
         release {
