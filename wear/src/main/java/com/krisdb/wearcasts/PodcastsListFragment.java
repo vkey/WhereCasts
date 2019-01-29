@@ -2,18 +2,11 @@ package com.krisdb.wearcasts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.wear.widget.WearableLinearLayoutManager;
@@ -31,7 +24,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class PodcastsListFragment extends Fragment {
 

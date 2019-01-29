@@ -15,9 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 

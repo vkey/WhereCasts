@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts;
 
 import android.app.DownloadManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class DownloadReceiver extends BroadcastReceiver {
