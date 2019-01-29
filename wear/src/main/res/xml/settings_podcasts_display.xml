@@ -39,7 +39,7 @@
             android:entries="@array/episode_limit_text"
             android:entryValues="@array/episode_limit_values"
             android:icon="@drawable/ic_setting_dropdown_indicator"
-            android:defaultValue="50"
+            android:defaultValue="20"
             />
 
         <SwitchPreference
