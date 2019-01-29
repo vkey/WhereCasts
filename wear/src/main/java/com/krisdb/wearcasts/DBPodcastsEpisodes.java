@@ -116,7 +116,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
         final DBPodcasts dbPodcasts = new DBPodcasts(mContext);
         final SQLiteDatabase sdb = dbPodcasts.select();
 
-        final Cursor cursor = sdb.rawQuery("SELECT id,title,url,site_url,thumbnail_url,thumbnail_name,description,dateAdded  FROM ["+mPodcastsTable+"]", null);
+        final Cursor cursor = sdb.rawQuery("SELECT id,title,url,site_url,thumbnail_url,thumbnail_name,description,dateAdded FROM ["+mPodcastsTable+"]", null);
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -134,7 +134,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
                 final ContentValues cv2 = new ContentValues();
                 cv2.put("pid", id);
 
-                db.update(mEpisodesTable, cv2, "[id] = ?", new String[] { String.valueOf(cursor.getInt(0)) });
+                db.update(mEpisodesTable, cv2, "[pid] = ?", new String[] { String.valueOf(cursor.getInt(0)) });
 
                 cursor.moveToNext();
             }
