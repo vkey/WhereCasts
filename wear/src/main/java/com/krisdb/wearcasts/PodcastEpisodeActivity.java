@@ -697,10 +697,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                             mDownloadId = DBUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
                             mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         }
-                        else
+                        else {
                             showToast(mActivity, Utilities.GetDownloadErrorReason(mContext, reason));
-
-                        mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                            mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                        }
                     case DownloadManager.STATUS_SUCCESSFUL:
                         final Menu menuSuccess = mWearableActionDrawer.getMenu();
                         menuSuccess.clear();

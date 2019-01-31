@@ -79,27 +79,9 @@ public class DownloadReceiver extends BroadcastReceiver {
                         editor.apply();
                     }
                 } else if (status == DownloadManager.STATUS_FAILED) {
-                    //Log.d(context.getPackageName(), "Background service: Download Failed (" + episode.getTitle() + ")");
-                    final ContentValues cvFailed = new ContentValues();
-                    cvFailed.put("download", 0);
-                    cvFailed.put("downloadid", 0);
-
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
-                    db.update(cvFailed, episode.getEpisodeId());
-                    db.close();
-
-                    Utilities.DeleteMediaFile(context, episode);
-                    final SharedPreferences.Editor editor = prefs.edit();
-                    final int downloadCount = prefs.getInt("new_downloads_count", 0);
-
-                    if (downloadCount > 0) {
-                        editor.putInt("new_downloads_count", downloadCount - 1);
-                        editor.apply();
-                    }
-
                     if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
                         final int count = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
-
+                        final SharedPreferences.Editor editor = prefs.edit();
                         if (count < 10) {
                             showToast(context, context.getString(R.string.alert_download_error_restart));
                             Utilities.DeleteMediaFile(context, episode);
@@ -108,10 +90,13 @@ public class DownloadReceiver extends BroadcastReceiver {
                         } else {
                             showToast(context, context.getString(R.string.alert_download_error_failed));
                             editor.putInt("downloads_" + episode.getEpisodeId(), 0);
+                            clearFailedDownload(context, episode);
                         }
 
                         editor.apply();
                     }
+                    else
+                        clearFailedDownload(context, episode);
                 }
             }
 
@@ -145,5 +130,28 @@ public class DownloadReceiver extends BroadcastReceiver {
                 editor.apply();
             }
         }
+    }
+
+    private void clearFailedDownload(final Context context, final PodcastItem episode)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        final ContentValues cvFailed = new ContentValues();
+        cvFailed.put("download", 0);
+        cvFailed.put("downloadid", 0);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
+        db.update(cvFailed, episode.getEpisodeId());
+        db.close();
+
+        Utilities.DeleteMediaFile(context, episode);
+        final SharedPreferences.Editor editor = prefs.edit();
+        final int downloadCount = prefs.getInt("new_downloads_count", 0);
+
+        if (downloadCount > 0) {
+            editor.putInt("new_downloads_count", downloadCount - 1);
+            editor.apply();
+        }
+
     }
 }

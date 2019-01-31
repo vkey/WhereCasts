@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -26,8 +25,6 @@ import android.text.Html;
 import android.util.Pair;
 import android.util.Patterns;
 import android.util.TypedValue;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
