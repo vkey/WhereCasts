@@ -566,7 +566,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound) {
                         layout.setPadding(0, 1, 0, 1);
-                        paramsLayout.setMargins(0, 0, 0, 20);
+                        paramsLayout.setMargins(0, 0, 0, 30);
                     }
                     else {
                         layout.setPadding(0, 0, 0, 0);
@@ -644,20 +644,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (mPlaylistId == mPlaylistDefault) { //episode listing
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(45, 0, 45, 10);
+                        paramsLayout.setMargins(45, 0, 45, 20);
                     else
-                        paramsLayout.setMargins(20, 0, 10, 10);
+                        paramsLayout.setMargins(20, 0, 10, 20);
 
                     layout.setPadding(0, 0, 0, 0);
                     paramsDate.setMargins(0, 20, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    paramsLayout.setMargins(60, 0, 40, 10);
+                    paramsLayout.setMargins(60, 0, 40, 20);
                     paramsDate.setMargins(0, 30, 0, 10);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                 } else {
-                    paramsLayout.setMargins(20, 0, 20, 10);
-                    paramsDate.setMargins(0, 30, 0, 10);
+                    paramsLayout.setMargins(20, 0, 20, 20);
+                    paramsDate.setMargins(0, 30, 0, 20);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
             }
