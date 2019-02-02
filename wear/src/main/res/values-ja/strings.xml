@@ -261,6 +261,7 @@
     <string name="playlist_title_unplayed">再生されていない</string>
     <string name="playlist_title_local">地元</string>
 
+    <string name="alert_add_podcast_no_episodes">エピソードは見つかりませんでした</string>
     <string name="alert_no_system_audio">システムオーディオが見つかりません</string>
     <string name="text_episode_no_media">再生するメディアが見つかりません.ポッドキャストプロバイダを削除して再追加または連絡してください.</string>
     <string name="alert_podcast_added">追加された</string>

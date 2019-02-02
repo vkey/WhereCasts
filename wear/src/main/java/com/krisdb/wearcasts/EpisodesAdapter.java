@@ -60,7 +60,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         private final TextView title, date, duration;
         private final ImageView thumbnail, thumbnailTitle, download;
         private final RelativeLayout layout;
-        private final ProgressBar progressEpisode, progressEpisodeDownload;
+        private final ProgressBar progressEpisode;
 
         ViewHolder(final View view) {
             super(view);
@@ -72,7 +72,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
             progressEpisode = view.findViewById(R.id.episode_progress);
-            progressEpisodeDownload = view.findViewById(R.id.episode_progress);
         }
     }
 
@@ -228,8 +227,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         final DownloadManager manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
                         if (manager != null)
                             manager.remove(downloadId);
-
-                        holder.progressEpisodeDownload.setVisibility(View.GONE);
 
                         DBUtilities.SaveEpisodeValue(mContext, episode, "downloadid", 0);
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
@@ -520,12 +517,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
         final ViewGroup.MarginLayoutParams paramsDate = (ViewGroup.MarginLayoutParams)date.getLayoutParams();
 
-        if (episode.getDownloadProgress() > 0) {
-            viewHolder.progressEpisodeDownload.setVisibility(View.VISIBLE);
-            viewHolder.progressEpisodeDownload.setProgress(episode.getDownloadProgress());
-            viewHolder.progressEpisodeDownload.setMax(episode.getDuration());
-        }
-        else if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
+        if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
         else
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
@@ -537,6 +529,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         {
             title.setPadding(0, 0, 0 ,0 );
             download.setVisibility(View.GONE);
+            viewHolder.progressEpisode.setVisibility(View.GONE);
+
             if (mPlaylistId != mPlaylistDefault)
             {
                 final SpannableString titleText = new SpannableString(episode.getChannel().getTitle());
@@ -546,9 +540,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 title.setTextSize(16);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
                 title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
-                title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                //title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 title.setVisibility(View.VISIBLE);
-                layout.setPadding(0, 0, 0, 0);
             }
             else
                 title.setVisibility(View.GONE);
@@ -557,7 +550,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             {
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(0, 20, 0, 20);
+                        paramsLayout.setMargins(0, 20, 0, 0);
                     else
                         paramsLayout.setMargins(0, 10, 0, 0);
 
@@ -573,11 +566,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound) {
                         layout.setPadding(0, 1, 0, 1);
-                        paramsLayout.setMargins(0, 0, 0, 40);
+                        paramsLayout.setMargins(0, 0, 0, 20);
                     }
                     else {
                         layout.setPadding(0, 0, 0, 0);
-                        paramsLayout.setMargins(0, 0, 0, 20);
+                        paramsLayout.setMargins(0, 0, 0, 10);
                     }
                 }
                 else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
@@ -614,8 +607,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 layout.setBackgroundColor(mHeaderColor);
                 title.setBackgroundColor(mHeaderColor);
             }
-
-            viewHolder.progressEpisode.setVisibility(View.GONE);
         }
         else //EPISODE
         {
@@ -626,19 +617,19 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             if (episode.getPosition() > 0)
             {
-                viewHolder.progressEpisode.setVisibility(View.VISIBLE);
+                viewHolder.progressEpisode.setVisibility(View.GONE);
                 viewHolder.progressEpisode.setMax(episode.getDuration());
                 viewHolder.progressEpisode.setProgress(episode.getPosition());
             }
             else
                 viewHolder.progressEpisode.setVisibility(View.GONE);
+
             if (mPlaylistId == mPlaylistDefault && episode.getDuration() > 0) {
                 duration.setText(episode.getDisplayDuration());
                 duration.setVisibility(View.VISIBLE);
             }
-            else {
+            else
                 duration.setVisibility(View.GONE);
-            }
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
@@ -653,36 +644,37 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (mPlaylistId == mPlaylistDefault) { //episode listing
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(45, 0, 45, 20);
+                        paramsLayout.setMargins(45, 0, 45, 10);
                     else
-                        paramsLayout.setMargins(20, 0, 10, 20);
+                        paramsLayout.setMargins(20, 0, 10, 10);
 
                     layout.setPadding(0, 0, 0, 0);
                     paramsDate.setMargins(0, 20, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    paramsLayout.setMargins(60, 20, 40, 0);
-                    paramsDate.setMargins(0, 30, 0, 0);
+                    paramsLayout.setMargins(60, 0, 40, 10);
+                    paramsDate.setMargins(0, 30, 0, 10);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                 } else {
-                    paramsLayout.setMargins(20, 20, 20, 0);
-                    paramsDate.setMargins(0, 30, 0, 0);
+                    paramsLayout.setMargins(20, 0, 20, 10);
+                    paramsDate.setMargins(0, 30, 0, 10);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
-            } else //playlist listing
+            }
+            else //playlist listing
             {
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(40, 0, 40, 40);
+                        paramsLayout.setMargins(40, 0, 40, 30);
                     else
-                        paramsLayout.setMargins(20, 0, 20, 40);
+                        paramsLayout.setMargins(20, 0, 20, 30);
 
                     layout.setPadding(0, 0, 0, 0);
                     paramsDate.setMargins(0, 30, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                     layout.setPadding(0, 0, 0, 0);
-                    paramsLayout.setMargins(70, 50, 30, 0);
+                    paramsLayout.setMargins(70, 0, 30, 30);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                     paramsDate.setMargins(0, 20, 0, 0);
                 } else {

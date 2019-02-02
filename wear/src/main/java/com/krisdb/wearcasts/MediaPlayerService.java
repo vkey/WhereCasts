@@ -581,7 +581,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         bundleEpisode.putInt("podcastId", mEpisode.getPodcastId());
         bundleEpisode.putInt("playlistId", mPlaylistID);
 
-        final Intent episodeIntent = new Intent(mContext, PodcastEpisodeActivity.class);
+        final Intent episodeIntent = new Intent(mContext, PodcastEpisodeFragment.class);
         episodeIntent.putExtras(bundleEpisode);
 
         final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)

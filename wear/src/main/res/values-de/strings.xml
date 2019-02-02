@@ -261,6 +261,7 @@
     <string name="playlist_title_unplayed">Ungespielt</string>
     <string name="playlist_title_local">Lokal</string>
 
+    <string name="alert_add_podcast_no_episodes">aber keine episoden gefunden</string>
     <string name="alert_no_system_audio">Kein Systemaudio gefunden</string>
     <string name="text_episode_no_media">Es können keine Medien für die Wiedergabe gefunden werden. Podcast-Anbieter löschen und erneut hinzufügen oder kontaktieren.</string>
     <string name="alert_podcast_added">Hinzugefügt</string>

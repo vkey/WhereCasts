@@ -261,6 +261,7 @@
     <string name="playlist_title_unplayed">Sin jugar</string>
     <string name="playlist_title_local">Local</string>
 
+    <string name="alert_add_podcast_no_episodes">pero no se han encontrado episodios</string>
     <string name="alert_no_system_audio">No se encontró el audio del sistema</string>
     <string name="text_episode_no_media">No se puede encontrar el medio para la reproducción. Eliminar y volver a agregar o contactar al proveedor de podcasts.</string>
     <string name="alert_podcast_added">Adicional</string>

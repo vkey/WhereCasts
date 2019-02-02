@@ -261,6 +261,7 @@
     <string name="playlist_title_unplayed">ospelade</string>
     <string name="playlist_title_local">Lokal</string>
 
+    <string name="alert_add_podcast_no_episodes">men inga episoder hittades</string>
     <string name="alert_no_system_audio">Inget systemljud hittades</string>
     <string name="text_episode_no_media">Kan inte hitta media för uppspelning. Ta bort och lägg till eller kontakta podcastleverantören.</string>
     <string name="alert_podcast_added">Lagt till</string>

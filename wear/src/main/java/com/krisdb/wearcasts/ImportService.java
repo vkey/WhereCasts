@@ -222,7 +222,11 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final int podcastId = (int)new DBPodcastsEpisodes(getApplicationContext()).insertPodcast(cv);
 
-                new AsyncTasks.GetPodcastEpisodes(getApplicationContext(), podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new AsyncTasks.GetPodcastEpisodes(getApplicationContext(), podcastId,
+                        new Interfaces.IntResponse() {
+                            @Override
+                            public void processFinish(final int count) { } }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                 CacheUtils.deletePodcastsCache(this);
             }
 

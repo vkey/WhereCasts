@@ -49,20 +49,6 @@
         android:paddingTop="10dp"
         />
 
-    <ProgressBar
-        android:id="@+id/episode_row_item_download_progress"
-        android:layout_width="2dp"
-        android:layout_height="2dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:paddingStart="10dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:progressDrawable="@drawable/circular_progress"
-        style="?android:attr/progressBarStyleSmall"
-        android:visibility="gone"
-        />
-
     <TextView
         android:id="@+id/episode_row_item_date"
         android:layout_width="match_parent"

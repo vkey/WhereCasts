@@ -265,6 +265,7 @@
 
     <string name="text_episode_no_media">Cannot find media for playback. Delete and re-add or contact podcast provider.</string>
 
+    <string name="alert_add_podcast_no_episodes">but no episodes found</string>
     <string name="alert_no_system_audio">No system audio found</string>
     <string name="alert_podcast_added">Added</string>
     <string name="alert_episode_playlist_added">Added to %s</string>

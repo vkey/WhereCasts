@@ -137,10 +137,17 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         }
 
         final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
-        new AsyncTasks.GetPodcastEpisodes(mContext, podcastId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        CacheUtils.deletePodcastsCache(mContext);
+        new AsyncTasks.GetPodcastEpisodes(mContext, podcastId,
+                new Interfaces.IntResponse() {
+                    @Override
+                    public void processFinish(final int count) {
+                        if (count == 0)
+                            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_add_podcast_no_episodes));
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         showToast(mContext, mContext.getString(R.string.alert_podcast_added));
+        CacheUtils.deletePodcastsCache(mContext);
     }
 
     @Override

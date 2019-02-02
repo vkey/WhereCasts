@@ -460,7 +460,7 @@ public class DBUtilities {
 
             String sql;
             if (hideEmpty && showDownloaded)
-                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -470,7 +470,7 @@ public class DBUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else if (hideEmpty)
-                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1)")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -480,7 +480,7 @@ public class DBUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else if (showDownloaded)
-                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -490,10 +490,10 @@ public class DBUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else
-                sql = "SELECT tbl_podcast_episodes.pid,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
-                        .concat("JOIN tbl_podcast_episodes ")
+                        .concat("LEFT JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
                         .concat("ORDER BY ")

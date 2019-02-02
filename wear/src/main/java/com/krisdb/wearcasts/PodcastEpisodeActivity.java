@@ -107,7 +107,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mActivityRef = new WeakReference<>(this);
 
-
         mNavItems = Utilities.getNavItems(this);
 
         final WearableNavigationDrawerView navDrawer = findViewById(R.id.drawer_nav_episode);

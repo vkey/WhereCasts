@@ -55,6 +55,8 @@ public class PodcastsListFragment extends Fragment {
 
         mPodcastsList = listView.findViewById(R.id.podcast_list);
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
+        //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
+
         /*
         mPodcastsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

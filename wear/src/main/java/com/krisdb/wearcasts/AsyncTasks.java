@@ -417,20 +417,30 @@ public class AsyncTasks {
     public static class GetPodcastEpisodes extends AsyncTask<Void, Void, Void> {
 
         int mPodcastId;
+        private Interfaces.IntResponse mResponse;
+        private int mCount;
 
-        GetPodcastEpisodes(final Context context, final int podcastId)
+        GetPodcastEpisodes(final Context context, final int podcastId, final Interfaces.IntResponse response)
         {
             mContext = new WeakReference<>(context);
             mPodcastId = podcastId;
+            mResponse = response;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
             final PodcastItem podcast = DBUtilities.GetPodcast(mContext.get(), mPodcastId);
-            ProcessEpisodes(mContext.get(), podcast);
+            final int[] response = ProcessEpisodes(mContext.get(), podcast);
+
+            mCount = response[0];
 
             return null;
+        }
+
+        protected void onPostExecute(Void param)
+        {
+            mResponse.processFinish(mCount);
         }
     }
 }
