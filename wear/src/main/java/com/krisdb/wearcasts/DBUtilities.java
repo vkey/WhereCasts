@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
 import com.krisdb.wearcastslibrary.ChannelItem;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -885,6 +886,9 @@ public class DBUtilities {
 
         final String orderString = orderBy == null ?  Utilities.GetOrderClause(order) : orderBy;
 
+        final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
+        final int playlistDefault = ctx.getResources().getInteger(R.integer.playlist_default);
+
         if (playlistId == resources.getInteger(R.integer.playlist_default)) //regular episodes
             {
                 if (hidePlayed)
@@ -915,6 +919,9 @@ public class DBUtilities {
 
                     if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));
+
+                    if (playlistId != playlistDefault)
+                        episode.setTitle(CommonUtils.truncateWords(episode.getTitle(), truncateWords));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 

@@ -566,7 +566,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound) {
                         layout.setPadding(0, 1, 0, 1);
-                        paramsLayout.setMargins(0, 0, 0, 30);
+                        paramsLayout.setMargins(0, 0, 0, 10);
                     }
                     else {
                         layout.setPadding(0, 0, 0, 0);
@@ -575,12 +575,12 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
                 else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                     if (isRound) {
-                        layout.setPadding(0, 2, 0, 2);
+                        layout.setPadding(0, 2, 0, 10);
                         paramsLayout.setMargins(0, 0, 0, 0);
                     }
                     else
                     {
-                        layout.setPadding(0, 5, 0, 5);
+                        layout.setPadding(0, 5, 0, 10);
                         paramsLayout.setMargins(0, 0, 0, 0);
                     }
                 }

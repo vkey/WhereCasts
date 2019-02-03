@@ -65,7 +65,18 @@ public class CommonUtils {
         return cm.getActiveNetwork();
     }
 
+    public static String truncateWords(final String s, final int n) {
+        if (s == null) return null;
+        if (n <= 0) return "";
 
+        final Pattern WB_PATTERN = Pattern.compile("(?<=\\w)\\b");
+        final Matcher m = WB_PATTERN.matcher(s);
+        for (int i=0; i<n && m.find(); i++);
+        if (m.hitEnd())
+            return s;
+        else
+            return s.substring(0, m.end()).concat("...");
+    }
     public static Boolean HighBandwidthNetwork(final Context ctx)
     {
         if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true) == false)
