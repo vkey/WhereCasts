@@ -79,24 +79,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                         editor.apply();
                     }
                 } else if (status == DownloadManager.STATUS_FAILED) {
-                    if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
-                        final int count = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        if (count < 10) {
-                            showToast(context, context.getString(R.string.alert_download_error_restart));
-                            Utilities.DeleteMediaFile(context, episode);
-                            Utilities.startDownload(context, episode);
-                            editor.putInt("downloads_" + episode.getEpisodeId(), count + 1);
-                        } else {
-                            showToast(context, context.getString(R.string.alert_download_error_failed));
-                            editor.putInt("downloads_" + episode.getEpisodeId(), 0);
-                            clearFailedDownload(context, episode);
-                        }
 
-                        editor.apply();
-                    }
-                    else
-                        clearFailedDownload(context, episode);
                 }
             }
 

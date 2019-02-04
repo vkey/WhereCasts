@@ -71,7 +71,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             thumbnailTitle = view.findViewById(R.id.episode_row_item_title_thumbnail);
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
-            progressEpisode = view.findViewById(R.id.episode_progress);
+            progressEpisode = view.findViewById(R.id.episode_row_item_progress);
         }
     }
 
@@ -576,18 +576,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                     if (isRound) {
                         layout.setPadding(0, 2, 0, 10);
-                        paramsLayout.setMargins(0, 0, 0, 0);
+                        paramsLayout.setMargins(0, 0, 0, 10);
                     }
                     else
                     {
                         layout.setPadding(0, 5, 0, 10);
-                        paramsLayout.setMargins(0, 0, 0, 0);
+                        paramsLayout.setMargins(0, 0, 0, 5);
                     }
                 }
                 else
                 {
                     layout.setPadding(0, 0, 0, 0);
-                    paramsLayout.setMargins(0, 0, 0, 0);
+                    paramsLayout.setMargins(0, 0, 0, 10);
                 }
             }
 

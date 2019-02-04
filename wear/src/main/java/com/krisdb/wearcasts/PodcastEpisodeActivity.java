@@ -690,7 +690,35 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         menuFailed.clear();
                         getMenuInflater().inflate(R.menu.menu_drawer_episode_download, menuFailed);
                         mDownloadManager.remove(mDownloadId);
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        Utilities.DeleteMediaFile(mContext, mEpisode);
 
+                        if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
+
+                            final int count = prefs.getInt("downloads_" + mEpisode.getEpisodeId(), 0);
+                            if (count < 10) {
+                                Utilities.startDownload(mContext, mEpisode);
+                                editor.putInt("downloads_" + mEpisode.getEpisodeId(), count + 1);
+                                showToast(mContext, mContext.getString(R.string.alert_download_error_restart));
+                            } else {
+                                editor.putInt("downloads_" + mEpisode.getEpisodeId(), 0);
+                                final int downloadCount = prefs.getInt("new_downloads_count", 0);
+
+                                if (downloadCount > 0)
+                                    editor.putInt("new_downloads_count", downloadCount - 1);
+                                showToast(mContext, mContext.getString(R.string.alert_download_error_failed));
+                            }
+                        }
+                        else
+                        {
+                            Utilities.DeleteMediaFile(mContext, mEpisode);
+                            final int downloadCount = prefs.getInt("new_downloads_count", 0);
+
+                            if (downloadCount > 0)
+                                editor.putInt("new_downloads_count", downloadCount - 1);
+                        }
+                        editor.apply();
+                        /*
                         if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
                             SystemClock.sleep(3000);
                             mDownloadId = DBUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
@@ -700,6 +728,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                             showToast(mActivity, Utilities.GetDownloadErrorReason(mContext, reason));
                             mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                         }
+                        */
                     case DownloadManager.STATUS_SUCCESSFUL:
                         final Menu menuSuccess = mWearableActionDrawer.getMenu();
                         menuSuccess.clear();

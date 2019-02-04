@@ -123,7 +123,7 @@
                 android:layout_height="74dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                android:progressDrawable="@drawable/circular_progress"
+                android:progressDrawable="@drawable/circular_progress_episode"
                 android:visibility="gone"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_below="@+id/podcast_episode_buttons_layout"
