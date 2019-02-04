@@ -33,7 +33,7 @@
         android:id="@+id/episode_row_item_progress"
         android:layout_width="121dp"
         android:layout_height="70dp"
-        android:layout_marginStart="-35dp"
+        android:layout_marginStart="-36dp"
         android:background="@color/wc_transparent"
         android:progressDrawable="@drawable/circular_progress_playlist"
         style="?android:attr/progressBarStyleHorizontal"

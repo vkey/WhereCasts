@@ -553,42 +553,28 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         paramsLayout.setMargins(0, 20, 0, 0);
                     else
                         paramsLayout.setMargins(0, 10, 0, 0);
-
                 }
-                else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
+                else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi)))
                     paramsLayout.setMargins(0, 20, 0, 0);
-                }
                 else
                     paramsLayout.setMargins(0, 20, 0, 0);
             }
             else //playlist title
             {
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
-                    if (isRound) {
-                        layout.setPadding(0, 1, 0, 1);
-                        paramsLayout.setMargins(0, 0, 0, 10);
-                    }
-                    else {
-                        layout.setPadding(0, 0, 0, 0);
-                        paramsLayout.setMargins(0, 0, 0, 10);
-                    }
+                    if (isRound)
+                        paramsLayout.setMargins(0, 0, 0, 0);
+                    else
+                        paramsLayout.setMargins(0, 0, 0, 0);
                 }
                 else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    if (isRound) {
-                        layout.setPadding(0, 2, 0, 10);
-                        paramsLayout.setMargins(0, 0, 0, 10);
-                    }
+                    if (isRound)
+                        paramsLayout.setMargins(0, 0, 0, 0);
                     else
-                    {
-                        layout.setPadding(0, 5, 0, 10);
-                        paramsLayout.setMargins(0, 0, 0, 5);
-                    }
+                        paramsLayout.setMargins(0, 0, 0, 0);
                 }
                 else
-                {
-                    layout.setPadding(0, 0, 0, 0);
                     paramsLayout.setMargins(0, 0, 0, 10);
-                }
             }
 
             thumbTitle.setVisibility(View.VISIBLE);
@@ -615,14 +601,19 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             title.setPadding(0, 0, 40 ,0 );
             download.setVisibility(View.VISIBLE);
 
+            //the progressbar around the thumbnails adds it's own margin
+            //so for episodes with no progressbar we have to add more margin
+            int topMargin = 0;
             if (episode.getPosition() > 0)
             {
                 viewHolder.progressEpisode.setVisibility(View.GONE);
                 viewHolder.progressEpisode.setMax(episode.getDuration());
                 viewHolder.progressEpisode.setProgress(episode.getPosition());
             }
-            else
+            else {
                 viewHolder.progressEpisode.setVisibility(View.GONE);
+                topMargin = 30;
+            }
 
             if (mPlaylistId == mPlaylistDefault && episode.getDuration() > 0) {
                 duration.setText(episode.getDisplayDuration());
@@ -644,19 +635,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (mPlaylistId == mPlaylistDefault) { //episode listing
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(45, 0, 45, 20);
+                        paramsLayout.setMargins(45, 20, 45, 0);
                     else
-                        paramsLayout.setMargins(20, 0, 10, 20);
+                        paramsLayout.setMargins(20, 20, 10, 0);
 
-                    layout.setPadding(0, 0, 0, 0);
                     paramsDate.setMargins(0, 20, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    paramsLayout.setMargins(60, 0, 40, 20);
+                    paramsLayout.setMargins(60, 20, 40, 0);
                     paramsDate.setMargins(0, 30, 0, 10);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                 } else {
-                    paramsLayout.setMargins(20, 0, 20, 20);
+                    paramsLayout.setMargins(20, 20, 20, 0);
                     paramsDate.setMargins(0, 30, 0, 20);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
@@ -665,21 +655,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             {
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(40, 0, 40, 30);
+                        paramsLayout.setMargins(40, topMargin, 40, 0);
                     else
-                        paramsLayout.setMargins(20, 0, 20, 30);
+                        paramsLayout.setMargins(20, topMargin, 20, 0);
 
-                    layout.setPadding(0, 0, 0, 0);
                     paramsDate.setMargins(0, 30, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    layout.setPadding(0, 0, 0, 0);
-                    paramsLayout.setMargins(70, 0, 30, 30);
+                    paramsLayout.setMargins(70, topMargin, 30, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                     paramsDate.setMargins(0, 20, 0, 0);
                 } else {
-                    layout.setPadding(0, 0, 0, 0);
-                    paramsLayout.setMargins(20, 60, 20, 0);
+                    paramsLayout.setMargins(70, topMargin, 30, 0);
                     paramsDate.setMargins(0, 20, 0, 0);
                     thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
