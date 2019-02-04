@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -711,7 +710,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         }
                         else
                         {
-                            Utilities.DeleteMediaFile(mContext, mEpisode);
                             final int downloadCount = prefs.getInt("new_downloads_count", 0);
 
                             if (downloadCount > 0)
