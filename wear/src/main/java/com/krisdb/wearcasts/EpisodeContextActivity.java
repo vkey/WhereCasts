@@ -26,8 +26,9 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
 
         mActivity = this;
 
-        final int episodeId = getIntent().getExtras().getInt("episodeid");
+        final List<Integer> episodeIds = getIntent().getExtras().getIntegerArrayList("episodeids");
 
+        /*
         final PodcastItem episode = DBUtilities.GetEpisode(mActivity, episodeId);
 
         final Button togglePlayButton = findViewById(R.id.episode_context_toggle_played);
@@ -46,7 +47,7 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
                 togglePlayButton.setText(episodeItem.getFinished() ? getString(R.string.button_mark_unplayed) : getString(R.string.button_mark_played));
             }
         });
-
+        */
         final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(this);
         final Spinner spinner = findViewById(R.id.episode_context_playlist);
 
@@ -67,7 +68,7 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
                     }
 
                     final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                    db.addEpisodeToPlaylist(playlist.getID(), episode.getEpisodeId());
+                    db.addEpisodesToPlaylist(playlist.getID(), episodeIds);
                     db.close();
 
                     showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));

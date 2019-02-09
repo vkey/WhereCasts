@@ -35,6 +35,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,15 +46,14 @@ import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
 
-    private List<PodcastItem> mEpisodes;
+    private List<PodcastItem> mEpisodes, mSelectedEpisodes;
     private Activity mContext;
-    private int mPlaylistId, mPlaylistDefault, mPlaylistDownloads, mPlaylistLocal, mPlaylistRadio, mTextColor, mHeaderColor;
+    private int mPlaylistId, mPlaylistDefault, mPlaylistDownloads, mPlaylistLocal, mTextColor, mHeaderColor;
     private String mDensityName;
     private Resources mResources;
     private boolean isRound;
     private WeakReference<Activity> mActivityRef;
-    //private Handler mDownloadProgressHandler = new Handler();
-    private DownloadManager mDownloadManager;
+    private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -75,26 +75,26 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
     }
 
-    EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor) {
+    EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
         mPlaylistId = playlistId;
         mResources = mContext.getResources();
         mPlaylistDefault = mResources.getInteger(R.integer.playlist_default);
-        mPlaylistRadio = mResources.getInteger(R.integer.playlist_radio);
         mPlaylistDownloads = mResources.getInteger(R.integer.playlist_downloads);
         mPlaylistLocal = mResources.getInteger(R.integer.playlist_local);
         mDensityName = CommonUtils.getDensityName(mContext);
         isRound = mResources.getConfiguration().isScreenRound();
         mHeaderColor = headerColor;
         mActivityRef = new WeakReference<>(mContext);
-        mDownloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
+        mEpisodeSelectedCallback = episodeSelectedCallback;
+        mSelectedEpisodes = new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int viewType) {
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.episode_row_item, viewGroup, false);
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(mPlaylistId == mPlaylistDefault ? R.layout.episode_row_item : R.layout.playlist_row_item, viewGroup, false);
 
         final ViewHolder holder = new ViewHolder(view);
 
@@ -329,62 +329,32 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             //mDownloadProgressHandler.postDelayed(prog, 1000);
     }
 
-    private class DownloadProgress implements Runnable
-    {
-        private PodcastItem episode;
-        private int position;
-        private long downloadid;
-
-        public DownloadProgress(final PodcastItem episode, final int position, final long downloadId)
-        {
-            this.episode = episode;
-            this.position = position;
-            this.downloadid = downloadId;
-
-        }
-        @Override
-        public void run() {
-            final DownloadManager.Query query = new DownloadManager.Query();
-            //query.setFilterById(mDownloadId);
-            final Cursor cursor = mDownloadManager.query(query);
-            final DownloadProgress prog = new DownloadProgress(episode, position, downloadid);
-
-            if (cursor.moveToFirst()) {
-                final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-
-                final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-
-                //Log.d(mContext.getPackageName(), "Status: " + status);
-                //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
-
-                switch (status) {
-                    case DownloadManager.STATUS_PAUSED:
-                    case DownloadManager.STATUS_RUNNING:
-                    case DownloadManager.STATUS_PENDING:
-                        final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                        //mDownloadProgressHandler.postDelayed(prog, 1000);
-                        break;
-                    case DownloadManager.STATUS_FAILED:
-                        //mDownloadManager.remove(mDownloadId);
-                        //mDownloadProgressHandler.removeCallbacksAndMessages(prog);
-                    case DownloadManager.STATUS_SUCCESSFUL:
-                        //mDownloadProgressHandler.removeCallbacksAndMessages(prog);
-                }
-            }
-            cursor.close();
-        }
-    }
-
     private void showContext(final int position)
     {
         if (mPlaylistId == mResources.getInteger(R.integer.playlist_default))
         {
+            final PodcastItem episode = mEpisodes.get(position);
+            if (episode.getIsSelected())
+            {
+                episode.setIsSelected(false);
+                mSelectedEpisodes.remove(episode);
+            }
+            else
+            {
+                episode.setIsSelected(true);
+                mSelectedEpisodes.add(episode);
+            }
+
+            notifyItemChanged(position);
+
+            mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes);
+            /*
             final Intent intent = new Intent(mContext, EpisodeContextActivity.class);
             final Bundle bundle = new Bundle();
             bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
             intent.putExtras(bundle);
             mContext.startActivity(intent);
+            */
             return;
         }
 
@@ -601,6 +571,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             title.setPadding(0, 0, 40 ,0 );
             download.setVisibility(View.VISIBLE);
 
+            if (episode.getIsSelected())
+                layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
+            else
+                layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+
             //the progressbar around the thumbnails adds it's own margin
             //so for episodes with no progressbar we have to add more margin
             int topMargin = 0;
@@ -622,8 +597,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             else
                 duration.setVisibility(View.GONE);
 
-            layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
-            title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+            //layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+            //title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             thumbTitle.setVisibility(View.GONE);
             thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
 

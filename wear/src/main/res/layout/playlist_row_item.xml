@@ -17,11 +17,34 @@
         android:visibility="gone"
         />
 
+    <ImageView
+        android:id="@+id/episode_row_item_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        />
+
+    <ProgressBar
+        android:id="@+id/episode_row_item_progress"
+        android:layout_width="121dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="-36dp"
+        android:background="@color/wc_transparent"
+        android:progressDrawable="@drawable/circular_progress_playlist"
+        style="?android:attr/progressBarStyleHorizontal"
+        />
+
     <TextView
         android:id="@+id/episode_row_item_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/episode_row_item_thumbnail"
         android:breakStrategy="simple"
         android:layout_marginBottom="11dp"
         />
@@ -43,7 +66,7 @@
         android:layout_height="match_parent"
         android:textSize="13sp"
         android:layout_below="@+id/episode_row_item_title"
-        android:layout_toEndOf="@+id/episode_row_item_title"
+        android:layout_toEndOf="@+id/episode_row_item_thumbnail"
         />
 
     <TextView

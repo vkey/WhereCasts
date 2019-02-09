@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_drawer_episode_list_selected_markplayed"
+        android:title="Mark Selected As Played"
+        android:icon="@drawable/ic_action_markread"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_list_selected__markunplayed"
+        android:title="Mark Selected As Unplayed"
+        android:icon="@drawable/ic_action_mark_unread"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_list_selected__add_playlist"
+        android:title="Add Selected to Playlist"
+        android:icon="@drawable/ic_settings_playlists"
+        />
+
+</menu>

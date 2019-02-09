@@ -10,25 +10,29 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class PodcastEpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener {
+public class PodcastEpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.OnEpisodeSelectedListener {
 
     private WearableActionDrawerView mWearableActionDrawer;
     private Activity mActivity;
     private int mPodcastId, mPlaylistId;
     private static int SEARCH_RESULTS_CODE = 131;
     private static WeakReference<PodcastEpisodeListActivity> mActivityRef;
+    private List<PodcastItem> mSelectedEpisodes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,30 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
         final int itemId = menuItem.getItemId();
 
         switch (itemId) {
+            case R.id.menu_drawer_episode_list_selected_markplayed:
+                DBPodcastsEpisodes db1 = new DBPodcastsEpisodes(mActivity);
+                db1.updateEpisodes(mSelectedEpisodes, "finished", 1);
+                db1.close();
+                final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+                break;
+            case R.id.menu_drawer_episode_list_selected__markunplayed:
+                DBPodcastsEpisodes db2 = new DBPodcastsEpisodes(mActivity);
+                db2.updateEpisodes(mSelectedEpisodes, "finished", 0);
+                db2.close();
+                final Fragment fragment2 = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment2).commit();
+                break;
+            case R.id.menu_drawer_episode_list_selected__add_playlist:
+                final Intent intent = new Intent(mActivity, EpisodeContextActivity.class);
+                final Bundle bundle = new Bundle();
+                final ArrayList<Integer> ids = new ArrayList<>();
+                for (final PodcastItem episode : mSelectedEpisodes)
+                    ids.add(episode.getEpisodeId());
+                bundle.putIntegerArrayList("episodeids", ids);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             case R.id.menu_drawer_episode_list_search:
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
                 break;
@@ -194,4 +222,28 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         return true;
     }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof PodcastEpisodesListFragment) {
+            PodcastEpisodesListFragment headlinesFragment = (PodcastEpisodesListFragment) fragment;
+            headlinesFragment.setOnEpisodeSelectedListener(this);
+        }
+    }
+
+    @Override
+    public void onEpisodeSelected(List<PodcastItem> episodes) {
+
+        mSelectedEpisodes = episodes;
+
+        final Menu menuFailed = mWearableActionDrawer.getMenu();
+        menuFailed.clear();
+
+        if (episodes.size() > 0)
+            getMenuInflater().inflate(R.menu.menu_drawer_episode_list_selected, menuFailed);
+        else
+            getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menuFailed);
+        mSelectedEpisodes = episodes;
+    }
+
 }

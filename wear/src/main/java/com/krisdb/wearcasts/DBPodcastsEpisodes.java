@@ -205,6 +205,25 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
         db.close();
     }
 
+    public void updateEpisodes(final List<PodcastItem> episodes, final String field, final long value) {
+
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteStatement statement = db.compileStatement("UPDATE ".concat(mEpisodesTable).concat(" SET [".concat(field).concat("] = ? WHERE id = ?")));
+        db.beginTransaction();
+
+        try {
+            for (final PodcastItem episode : episodes) {
+                statement.bindLong(1, value);
+                statement.bindLong(2, episode.getEpisodeId());
+                statement.executeInsert();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
+    }
+
     public long insert(final ContentValues cv)
     {
         long id;
@@ -261,6 +280,25 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
 
         final SQLiteDatabase db = this.getWritableDatabase();
         db.insert(mPlayistTableRef, null, cv);
+        db.close();
+    }
+
+    public void addEpisodesToPlaylist(final Integer playlistId, final List<Integer> episodeIds)
+    {
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteStatement statement = db.compileStatement("INSERT INTO ".concat(mPlayistTableRef).concat(" ([episode_id], [playlist_id]) VALUES (?,?)"));
+        db.beginTransaction();
+
+        try {
+            for (final Integer episodeId : episodeIds) {
+                statement.bindLong(1, episodeId);
+                statement.bindLong(2, playlistId);
+                statement.executeInsert();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
         db.close();
     }
 

@@ -53,6 +53,7 @@ public class PodcastEpisodesListFragment extends Fragment {
     private EpisodesAdapter mAdapter;
     private String mQuery;
     private WeakReference<Activity> mActivityRef;
+    private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
 
     public static PodcastEpisodesListFragment newInstance(final int playlistId, final int podcastId, final String query) {
 
@@ -67,11 +68,17 @@ public class PodcastEpisodesListFragment extends Fragment {
         return elf;
     }
 
+
+    public void setOnEpisodeSelectedListener(Activity activity) {
+        mEpisodeSelectedCallback = (Interfaces.OnEpisodeSelectedListener)activity;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
         mActivityRef = new WeakReference<>(mActivity);
+
     }
 
     @Override
@@ -291,7 +298,7 @@ public class PodcastEpisodesListFragment extends Fragment {
 
                         if (isAdded() == false) return;
 
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor);
+                        mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor, mEpisodeSelectedCallback);
                         mEpisodeList.setAdapter(mAdapter);
 
                         if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
