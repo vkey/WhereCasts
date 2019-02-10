@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:padding="5dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
@@ -21,9 +22,7 @@
         android:id="@+id/episode_row_item_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
         android:breakStrategy="simple"
-        android:layout_marginBottom="11dp"
         />
 
     <ImageView
@@ -31,10 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:paddingStart="10dp"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
         />
 
     <TextView
@@ -42,8 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="13sp"
-        android:layout_below="@+id/episode_row_item_title"
-        android:layout_toEndOf="@+id/episode_row_item_title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
         />
 
     <TextView
@@ -53,6 +50,7 @@
         android:textSize="13sp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
         />
 
 </RelativeLayout>

@@ -149,22 +149,23 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
+        if (holder.thumbnail!= null) {
+            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openEpisode(holder.getAdapterPosition());
+                }
+            });
+            holder.thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    showContext(holder.getAdapterPosition());
+                    return false;
+                }
+            });
+        }
 
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return false;
-            }
-        });
-
-        holder.thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 showContext(holder.getAdapterPosition());
@@ -484,8 +485,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ImageView thumb = viewHolder.thumbnail;
         final ImageView download = viewHolder.download;
         final RelativeLayout layout = viewHolder.layout;
+        final ProgressBar episodeProgress = viewHolder.progressEpisode;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
-        final ViewGroup.MarginLayoutParams paramsDate = (ViewGroup.MarginLayoutParams)date.getLayoutParams();
 
         if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
@@ -499,7 +500,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         {
             title.setPadding(0, 0, 0 ,0 );
             download.setVisibility(View.GONE);
-            viewHolder.progressEpisode.setVisibility(View.GONE);
+
+            if (episodeProgress != null)
+                episodeProgress.setVisibility(View.GONE);
 
             if (mPlaylistId != mPlaylistDefault)
             {
@@ -551,7 +554,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             thumbTitle.setMaxWidth(Utilities.getThumbMaxWidth(mContext, mDensityName, isRound));
             duration.setVisibility(View.GONE);
             date.setVisibility(View.GONE);
-            thumb.setVisibility(View.GONE);
+
+            if (thumb != null)
+                thumb.setVisibility(View.GONE);
 
             if (mPlaylistId == mPlaylistDefault) {
                 if (episode.getDisplayThumbnail() != null) //thumbnail row
@@ -576,18 +581,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             else
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
 
-            //the progressbar around the thumbnails adds it's own margin
-            //so for episodes with no progressbar we have to add more margin
-            int topMargin = 0;
-            if (episode.getPosition() > 0)
-            {
-                viewHolder.progressEpisode.setVisibility(View.GONE);
-                viewHolder.progressEpisode.setMax(episode.getDuration());
-                viewHolder.progressEpisode.setProgress(episode.getPosition());
-            }
-            else {
-                viewHolder.progressEpisode.setVisibility(View.GONE);
-                topMargin = 30;
+            int topMarginPlaylists = 0;
+            if (episodeProgress != null) {
+                //the progressbar around the thumbnails adds it's own margin
+                //so for episodes with no progressbar we have to add more margin
+                if (episode.getPosition() > 0) {
+                    episodeProgress.setVisibility(View.GONE);
+                    episodeProgress.setMax(episode.getDuration());
+                    episodeProgress.setProgress(episode.getPosition());
+                } else {
+                    episodeProgress.setVisibility(View.GONE);
+                    topMarginPlaylists = 30;
+                }
             }
 
             if (mPlaylistId == mPlaylistDefault && episode.getDuration() > 0) {
@@ -600,64 +605,71 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             //layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             //title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             thumbTitle.setVisibility(View.GONE);
-            thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
+            if (thumb != null)
+                thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
 
-            if (mPlaylistId == mPlaylistDefault)
-                viewHolder.progressEpisode.setVisibility(View.GONE);
-            else if (episode.getPosition() > 0)
-                viewHolder.progressEpisode.setVisibility(View.VISIBLE);
+            if (episodeProgress != null) {
+                if (mPlaylistId == mPlaylistDefault)
+                    episodeProgress.setVisibility(View.GONE);
+                else if (episode.getPosition() > 0)
+                    episodeProgress.setVisibility(View.VISIBLE);
+            }
 
             if (mPlaylistId == mPlaylistDefault) { //episode listing
+                final int topMarginEpisodes = 50;
+                final int topMarginEpisodesDate = 30;
+
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(45, 20, 45, 0);
+                        paramsLayout.setMargins(45, topMarginEpisodes, 45, 0);
                     else
-                        paramsLayout.setMargins(20, 20, 10, 0);
+                        paramsLayout.setMargins(20, topMarginEpisodes, 10, 0);
 
-                    paramsDate.setMargins(0, 20, 0, 0);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    paramsLayout.setMargins(60, 20, 40, 0);
-                    paramsDate.setMargins(0, 30, 0, 10);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
+                    paramsLayout.setMargins(60, topMarginEpisodes, 40, 0);
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                 } else {
-                    paramsLayout.setMargins(20, 20, 20, 0);
-                    paramsDate.setMargins(0, 30, 0, 20);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
+                    paramsLayout.setMargins(20, topMarginEpisodes, 20, 0);
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
             }
             else //playlist listing
             {
                 if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                     if (isRound)
-                        paramsLayout.setMargins(40, topMargin, 40, 0);
+                        paramsLayout.setMargins(40, topMarginPlaylists, 40, 0);
                     else
-                        paramsLayout.setMargins(20, topMargin, 20, 0);
+                        paramsLayout.setMargins(20, topMarginPlaylists, 20, 0);
 
-                    paramsDate.setMargins(0, 30, 0, 0);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
                 } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                    paramsLayout.setMargins(70, topMargin, 30, 0);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
-                    paramsDate.setMargins(0, 20, 0, 0);
+                    paramsLayout.setMargins(70, topMarginPlaylists, 30, 0);
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
                 } else {
-                    paramsLayout.setMargins(70, topMargin, 30, 0);
-                    paramsDate.setMargins(0, 20, 0, 0);
-                    thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
+                    paramsLayout.setMargins(70, topMarginPlaylists, 30, 0);
+                    if (thumb != null)
+                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
                 }
             }
 
-            if (mPlaylistId != mPlaylistDefault) //thumbnail row
-            {
-                if (episode.getDisplayThumbnail() != null)
-                    thumb.setImageDrawable(episode.getDisplayThumbnail());
-                else
-                    thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_playlist_default));
+            if (thumb != null) {
+                if (mPlaylistId != mPlaylistDefault) //thumbnail row
+                {
+                    if (episode.getDisplayThumbnail() != null)
+                        thumb.setImageDrawable(episode.getDisplayThumbnail());
+                    else
+                        thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_playlist_default));
 
-                date.setVisibility(View.GONE);
-            } else
-                thumb.setVisibility(View.GONE);
-
+                    date.setVisibility(View.GONE);
+                } else
+                    thumb.setVisibility(View.GONE);
+            }
             if (mPlaylistId == mPlaylistDefault) {
                 date.setText(episode.getDisplayDate());
                 date.setVisibility(View.VISIBLE);
