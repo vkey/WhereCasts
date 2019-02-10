@@ -360,6 +360,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         }
         //mLogo.setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_forward).setVisibility(View.INVISIBLE);
+        findViewById(R.id.ic_podcast_episode_download).setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
@@ -390,6 +391,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         //((ImageView) findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_off), PorterDuff.Mode.SRC_IN);
         //mLogo.setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.VISIBLE);
+        findViewById(R.id.ic_podcast_episode_download).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_forward).setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
@@ -638,7 +640,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     builder.create().show();
                 }
                 break;
-            case R.id.menu_drawer_episode_download:
+
+            /*case R.id.menu_drawer_episode_download:
                 final int writeStorage = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
                 if (writeStorage != PackageManager.PERMISSION_GRANTED)
@@ -646,6 +649,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 else
                     handleNetwork(true);
                 break;
+                */
             case R.id.menu_drawer_episode_download_delete:
                 DeleteEpisode();
                 break;
@@ -887,10 +891,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 DownloadEpisode();
             }
         });
-
-        final Menu menu = mWearableActionDrawer.getMenu();
-        menu.clear();
-        getMenuInflater().inflate(R.menu.menu_drawer_episode_download, menu);
 
         final ContentValues cv = new ContentValues();
         cv.put("download", 0);

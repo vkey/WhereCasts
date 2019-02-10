@@ -35,5 +35,6 @@
     <color name="wc_header_color_purple">#800080</color>
 
     <color name="wc_episode_progress">#00BCD4</color>
+    <color name="wc_playlist_progress">#21E92B</color>
 
 </resources>

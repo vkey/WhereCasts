@@ -9,9 +9,9 @@
             android:useLevel="true">
 
             <gradient
-                android:centerColor="#999999"
-                android:endColor="#999999"
-                android:startColor="#999999"
+                android:centerColor="@color/wc_transparent"
+                android:endColor="@color/wc_transparent"
+                android:startColor="@color/wc_transparent"
                 android:type="sweep" />
         </shape>
     </item>
@@ -36,9 +36,9 @@
                     android:toDegrees="360" />
 
                 <gradient
-                    android:centerColor="@color/wc_episode_progress"
-                    android:endColor="@color/wc_episode_progress"
-                    android:startColor="@color/wc_episode_progress"
+                    android:centerColor="@color/wc_playlist_progress"
+                    android:endColor="@color/wc_playlist_progress"
+                    android:startColor="@color/wc_playlist_progress"
                     android:type="sweep" />
 
             </shape>
