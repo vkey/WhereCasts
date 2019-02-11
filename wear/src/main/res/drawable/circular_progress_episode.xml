@@ -11,7 +11,7 @@
             <shape
                 android:innerRadiusRatio="6"
                 android:shape="ring"
-                android:thicknessRatio="50.0"
+                android:thicknessRatio="35.0"
                 android:useLevel="true">
                 <rotate
                     android:fromDegrees="0"

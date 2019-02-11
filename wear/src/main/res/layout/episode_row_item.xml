@@ -24,6 +24,7 @@
         android:layout_height="match_parent"
         android:breakStrategy="simple"
         android:layout_alignParentTop="true"
+        android:paddingBottom="5dp"
         />
 
     <ImageView
