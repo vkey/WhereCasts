@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -49,8 +52,15 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
         });
         */
         final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(this);
-        final Spinner spinner = findViewById(R.id.episode_context_playlist);
 
+        if (playlistItems.size() == 0)
+        {
+            findViewById(R.id.episode_context_text).setVisibility(View.VISIBLE);
+            return;
+        }
+
+        final Spinner spinner = findViewById(R.id.episode_context_playlist);
+        spinner.setVisibility(View.VISIBLE);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
