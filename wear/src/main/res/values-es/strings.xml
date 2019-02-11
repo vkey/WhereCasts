@@ -240,6 +240,10 @@
     <string name="menu_episodes_search">Buscar</string>
     <string name="menu_episodes_add_playlist">Agregar todo a la lista de reproducción</string>
 
+    <string name="menu_episodes_mark_selected_played">Marca seleccionada como jugada</string>
+    <string name="menu_episodes_mark_selected_unplayed">Marcar seleccionado como no jugado</string>
+    <string name="menu_episodes_selected_playlist">Añadir seleccionado a la lista de reproducción</string>
+
     <string name="menu_episodes_delete_all">Eliminar todos</string>
     <string name="menu_episodes_finish_all">Terminar todo</string>
 

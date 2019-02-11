@@ -245,6 +245,10 @@
     <string name="menu_episodes_search">Suche</string>
     <string name="menu_episodes_add_playlist">Alle zur Wiedergabeliste hinzufügen</string>
 
+    <string name="menu_episodes_mark_selected_played">Als ausgewählt markieren</string>
+    <string name="menu_episodes_mark_selected_unplayed">Als ausgewählt markieren</string>
+    <string name="menu_episodes_selected_playlist">Als ausgewählt markieren</string>
+
     <string name="menu_episodes_delete_all">Alles löschen</string>
     <string name="menu_episodes_finish_all">Finish All</string>
 

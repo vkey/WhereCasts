@@ -240,6 +240,10 @@
     <string name="menu_episodes_search">खोज</string>
     <string name="menu_episodes_add_playlist">प्लेलिस्ट में सभी जोड़ें</string>
 
+    <string name="menu_episodes_mark_selected_played">मार्क का चयन किया गया</string>
+    <string name="menu_episodes_mark_selected_unplayed">मार्क को अनलेप्ड के रूप में चुना गया</string>
+    <string name="menu_episodes_selected_playlist">प्लेलिस्ट में चयनित जोड़ें</string>
+
     <string name="menu_episodes_delete_all">सभी हटा दो</string>
     <string name="menu_episodes_finish_all">सभी को समाप्त करें</string>
 

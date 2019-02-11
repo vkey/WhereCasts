@@ -39,8 +39,7 @@
         android:layout_height="match_parent"
         android:textSize="13sp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/episode_row_item_title"
         />
 
     <TextView
@@ -49,8 +48,7 @@
         android:layout_height="wrap_content"
         android:textSize="13sp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/episode_row_item_title"
         />
 
 </RelativeLayout>

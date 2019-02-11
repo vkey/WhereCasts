@@ -240,6 +240,10 @@
     <string name="menu_episodes_search">サーチ</string>
     <string name="menu_episodes_add_playlist">プレイリストにすべてを追加する</string>
 
+    <string name="menu_episodes_mark_selected_played">選択したものを再生済みとしてマーク</string>
+    <string name="menu_episodes_mark_selected_unplayed">未選択として選択をマーク</string>
+    <string name="menu_episodes_selected_playlist">選択をプレイリストに追加</string>
+
     <string name="menu_episodes_delete_all">すべてを削除</string>
     <string name="menu_episodes_finish_all">フィニッシュオール</string>
 

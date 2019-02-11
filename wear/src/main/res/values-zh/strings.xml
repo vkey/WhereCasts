@@ -239,6 +239,10 @@
     <string name="menu_episodes_search">搜索</string>
     <string name="menu_episodes_add_playlist">全部添加到播放列表</string>
 
+    <string name="menu_episodes_mark_selected_played">標記選擇為已播放</string>
+    <string name="menu_episodes_mark_selected_unplayed">Mark選擇為未播放</string>
+    <string name="menu_episodes_selected_playlist">將所選內容添加到播放列表</string>
+
     <string name="menu_episodes_delete_all">刪除所有</string>
     <string name="menu_episodes_finish_all">完成所有</string>
 
