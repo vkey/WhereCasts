@@ -675,8 +675,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircle.setMax(bytes_total);
-                //mProgressCircle.setSecondaryProgress(bytes_total);
-                mProgressCircle.setVisibility(View.VISIBLE);
+                mProgressCircle.setSecondaryProgress(bytes_total);
 
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
@@ -860,6 +859,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
     private void DownloadEpisode() {
         mPlayPauseImage.setVisibility(View.INVISIBLE);
+        mProgressCircle.setVisibility(View.VISIBLE);
         mDownloadId = Utilities.startDownload(mContext, mEpisode);
         showToast(mActivity, getString(R.string.alert_episode_download_start));
         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
