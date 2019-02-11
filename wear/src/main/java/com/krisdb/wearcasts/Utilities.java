@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class Utilities {
@@ -450,6 +451,23 @@ public class Utilities {
 
         return ctx.getString(R.string.alert_download_error_default);
     }
+
+
+    public static void deleteLocal(final Context ctx, final String title)
+    {
+        final File localFile = new File(GetLocalDirectory().concat(title));
+
+        if (localFile.exists())
+            localFile.delete();
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final SharedPreferences.Editor editor = prefs.edit();
+
+        editor.remove(Utilities.GetLocalDurationKey(title));
+        editor.remove(Utilities.GetLocalPositionKey(title));
+        editor.apply();
+    }
+
     static void DeleteMediaFile(final Context ctx, final PodcastItem episode)
     {
         //episodes sent from the phone app shouldn't be assigned to any playlist, so delete those.  This

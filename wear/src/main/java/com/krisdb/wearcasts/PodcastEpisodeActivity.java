@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -21,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaBrowserCompat;
@@ -527,9 +525,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         final Menu menu = mWearableActionDrawer.getMenu();
         getMenuInflater().inflate(R.menu.menu_drawer_episode_download, menu);
-        if (DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1)
+
+        if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1)
         {
-            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
+            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
             mDownloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -758,7 +757,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mInfoLayout.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mProgressCircle.setVisibility(View.INVISIBLE);
-                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
+                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
 
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -907,15 +906,23 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Utilities.DeleteMediaFile(mActivity, mEpisode);
-                    mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download));
 
-                    mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            handleNetwork(true);
-                        }
-                    });
+                    if (mLocalFile != null)
+                    {
+                        Utilities.deleteLocal(mContext, mEpisode.getTitle());
+                        mDownloadImage.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        Utilities.DeleteMediaFile(mActivity, mEpisode);
+
+                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download));
+                        mDownloadImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                handleNetwork(true);
+                            }
+                        });
+                    }
 
                     dialog.dismiss();
                 }

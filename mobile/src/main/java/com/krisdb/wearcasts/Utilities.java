@@ -46,11 +46,8 @@ public class Utilities {
         dataMap.putLong("time", new Date().getTime());
         dataMap.putInt("playlistid", episode.getPlaylistId());
         dataMap.putBoolean("auto_download", autoDownload);
-        dataMap.putBoolean("radio", episode.getIsRadio());
 
-        if (episode.getIsRadio())
-            CommonUtils.DeviceSync(ctx, dataMapRequest, ctx.getString(R.string.alert_episode_radio_added), Toast.LENGTH_SHORT);
-        else if (episode.getPlaylistId() == 0)
+        if (episode.getPlaylistId() == 0)
             CommonUtils.DeviceSync(ctx, dataMapRequest, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
         else
             CommonUtils.DeviceSync(ctx, dataMapRequest, null, Toast.LENGTH_SHORT);

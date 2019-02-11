@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,14 +32,12 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
@@ -136,7 +133,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-
         holder.date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,7 +194,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    deleteLocal(position);
+                    Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
                     refreshList(mEpisodes.get(position).getPodcastId());
                 }
             });
@@ -398,7 +394,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     } else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                     else if (mPlaylistId == mPlaylistLocal)
-                        deleteLocal(position);
+                        Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
                     else
                         DBUtilities.SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
 
@@ -423,21 +419,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             alert.show();
         }
-    }
-
-    private void deleteLocal(final int position)
-    {
-        final File localFile = new File(GetLocalDirectory().concat(mEpisodes.get(position).getTitle()));
-
-        if (localFile.exists())
-            localFile.delete();
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final SharedPreferences.Editor editor = prefs.edit();
-
-        editor.remove(Utilities.GetLocalDurationKey(mEpisodes.get(position).getTitle()));
-        editor.remove(Utilities.GetLocalPositionKey(mEpisodes.get(position).getTitle()));
-        editor.apply();
     }
 
     private void openEpisode(final int position)

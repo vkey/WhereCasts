@@ -6,13 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import com.krisdb.wearcastslibrary.PodcastItem;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

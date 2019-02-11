@@ -355,7 +355,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
             try {
-
                 try {
                     mMediaPlayer.setDataSource(uri.toString());
                 }

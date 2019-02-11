@@ -114,7 +114,6 @@ public class AsyncTasks {
                         station.setTitle(podcastObj.getString("name"));
                         station.setDescription(podcastObj.getString("description"));
                         station.setMediaUrl(podcastObj.getString("mediaurl"));
-                        station.setIsRadio(true);
 
                         if (podcastObj.getString("thumbnail") != null) {
 
