@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
