@@ -114,10 +114,6 @@ public class AsyncTasks {
         }
 
         @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
             new DBPodcastsEpisodes(ctx).deletePodcast(mPodcastID);
@@ -133,61 +129,33 @@ public class AsyncTasks {
         }
     }
 
-    public static class RefreshMainNav extends AsyncTask<Void, Void, Void> {
+    public static class DownloadMultipleEpisodes extends AsyncTask<Void, Void, Void> {
         private Interfaces.AsyncResponse mResponse;
+        private List<PodcastItem> mEpisodes;
 
-        RefreshMainNav(final Context context, final Interfaces.AsyncResponse response)
+        DownloadMultipleEpisodes(final Context context, final List<PodcastItem> episodes, final Interfaces.AsyncResponse response)
         {
             mContext = new WeakReference<>(context);
+            mEpisodes = episodes;
             mResponse = response;
         }
 
         @Override
         protected void onPreExecute() {
+            CommonUtils.showToast(mContext.get(), mContext.get().getString(mEpisodes.size() == 1 ? R.string.alert_download_episode_selected : R.string.alert_download_episodes_selected, mEpisodes.size()));
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            final Context ctx = mContext.get();
-            SystemClock.sleep(3000);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            mResponse.processFinish();
-        }
-    }
-
-    public static class DisableBluetooth extends AsyncTask<Void, Void, Void> {
-        private Interfaces.AsyncResponse mResponse;
-
-        DisableBluetooth(final Context context, final Interfaces.AsyncResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showToast(mContext.get(), mContext.get().getString(R.string.alert_disable_bluetooth_disabled_start));
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            BluetoothAdapter.getDefaultAdapter().disable();
-            SystemClock.sleep(5000);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if (CommonUtils.getActiveNetwork(mContext.get()) == null) {
-                CommonUtils.showToast(mContext.get(), mContext.get().getString(R.string.alert_network_waiting));
-                SystemClock.sleep(5000);
+            for (final PodcastItem episode : mEpisodes) {
+                Utilities.startDownload(mContext.get(), episode);
+                SystemClock.sleep(500);
             }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void result) {
             mResponse.processFinish();
         }
     }

@@ -25,6 +25,8 @@ import android.text.Html;
 import android.util.Pair;
 import android.util.Patterns;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -101,9 +103,9 @@ public class CommonUtils {
 
         try {
             final Toast toast = Toast.makeText(ctx, message, length);
-            //final View view = toast.getView();
-            //final TextView text = view.findViewById(android.R.id.message);
-            //text.setBackgroundColor(ctx.getColor(R.color.wc_white));
+            final View view = toast.getView();
+            final TextView text = view.findViewById(android.R.id.message);
+            text.setBackgroundColor(ctx.getColor(R.color.wc_transparent));
             //text.setTextColor(ctx.getColor(R.color.wc_white));
             toast.show();
         }catch (Exception ignored){}

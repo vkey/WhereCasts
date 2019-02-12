@@ -559,11 +559,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             download.setVisibility(View.VISIBLE);
 
             if (episode.getIsSelected()) {
-                layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
-                title.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
-                duration.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
-                date.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
-                download.setBackgroundColor(mContext.getColor(R.color.wc_episode_progress));
+                layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
+                title.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
+                duration.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
+                date.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
+                download.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
             }
             else {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));

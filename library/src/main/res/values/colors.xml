@@ -2,6 +2,5 @@
     <color name="wc_general_green">#019f2c</color>
     <color name="wc_white">#FFFFFF</color>
     <color name="wc_black">#000000</color>
-
-
+    <color name="wc_transparent">#00000000</color>
 </resources>

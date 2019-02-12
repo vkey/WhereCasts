@@ -243,6 +243,10 @@
     <string name="menu_episodes_mark_selected_played">Markera vald som spelad</string>
     <string name="menu_episodes_mark_selected_unplayed">Markera vald som ospelad</string>
     <string name="menu_episodes_selected_playlist">Lägg till vald till spellista</string>
+    <string name="menu_episodes_selected_download">Hämta vald</string>
+
+    <string name="alert_download_episode_selected">nedladdning 1 episod</string>
+    <string name="alert_download_episodes_selected">nedladdning %d episoder</string>
 
     <string name="menu_episodes_delete_all">Radera allt</string>
     <string name="menu_episodes_finish_all">Avsluta alla</string>

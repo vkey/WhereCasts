@@ -243,6 +243,10 @@
     <string name="menu_episodes_mark_selected_played">Marque sélectionnée comme jouée</string>
     <string name="menu_episodes_mark_selected_unplayed">Marque sélectionnée comme non jouée</string>
     <string name="menu_episodes_selected_playlist">Ajouter la sélection à la playlist</string>
+    <string name="menu_episodes_selected_download">Télécharger sélectionné</string>
+
+    <string name="alert_download_episode_selected">Téléchargement 1 épisode</string>
+    <string name="alert_download_episodes_selected">Téléchargement %d épisodes</string>
 
     <string name="menu_episodes_delete_all">Supprimer tout</string>
     <string name="menu_episodes_finish_all">Terminer tout</string>

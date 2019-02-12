@@ -6,7 +6,9 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -72,23 +75,30 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
+        final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
                 DBPodcastsEpisodes db1 = new DBPodcastsEpisodes(mActivity);
                 db1.updateEpisodes(mSelectedEpisodes, "finished", 1);
                 db1.close();
-                final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
-            case R.id.menu_drawer_episode_list_selected__markunplayed:
+            case R.id.menu_drawer_episode_list_selected_markunplayed:
                 DBPodcastsEpisodes db2 = new DBPodcastsEpisodes(mActivity);
                 db2.updateEpisodes(mSelectedEpisodes, "finished", 0);
                 db2.close();
-                final Fragment fragment2 = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment2).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
-            case R.id.menu_drawer_episode_list_selected__add_playlist:
+            case R.id.menu_drawer_episode_list_selected_downloaad:
+                new AsyncTasks.DownloadMultipleEpisodes(mActivity, mSelectedEpisodes,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {}
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+                break;
+            case R.id.menu_drawer_episode_list_selected_add_playlist:
                 final Intent intent = new Intent(mActivity, EpisodeContextActivity.class);
                 final Bundle bundle = new Bundle();
                 final ArrayList<Integer> ids = new ArrayList<>();
@@ -114,8 +124,6 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                             db.updateAll(cv, mPodcastId);
                             db.close();
-
-                            final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                         }
                     });
@@ -144,8 +152,6 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                             db.updateAll(cv, mPodcastId);
                             db.close();
-
-                            final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                         }
                     });
