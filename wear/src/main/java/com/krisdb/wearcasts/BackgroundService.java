@@ -96,7 +96,7 @@ public class BackgroundService extends JobService {
                                     final Notification notification = new NotificationCompat.Builder(ctx, channelID)
                                             .setContentIntent(intent)
                                             .setSmallIcon(R.drawable.ic_notification)
-                                            .setContentTitle(getString(R.string.app_name))
+                                            .setContentTitle(getString(R.string.app_name_wc))
                                             .setContentText(displayMessage).build();
 
                                     mNotificationManager.notify(102, notification);
@@ -104,7 +104,7 @@ public class BackgroundService extends JobService {
                                     final NotificationCompat.Builder notificationBuilder =
                                             new NotificationCompat.Builder(ctx)
                                                     .setSmallIcon(R.drawable.ic_notification)
-                                                    .setContentTitle(getString(R.string.app_name))
+                                                    .setContentTitle(getString(R.string.app_name_wc))
                                                     .setContentText(displayMessage)
                                                     .setContentIntent(intent);
 

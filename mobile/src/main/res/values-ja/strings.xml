@@ -15,6 +15,10 @@
     <string name="copyright">著作権 © %s</string>
     <string name="version">バージョン: %s</string>
 
+    <string name="tutorial_send_podcasts">あなたの時計にポッドキャストを送る</string>
+    <string name="tutorial_unlock_premium">プレミアム設定のロックを解除する</string>
+    <string name="tutorial_import">ポッドキャストをインポートする</string>
+
     <string name="alert_users_add_fetching_feed">RSSフィードの取得…</string>
 
     <string name="tip_1">ポッドキャストをインポートする前に、あなたのウェアデバイスの許可を受け入れる.</string>

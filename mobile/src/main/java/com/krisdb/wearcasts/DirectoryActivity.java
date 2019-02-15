@@ -18,15 +18,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastCategory;
+import com.takusemba.spotlight.Spotlight;
+import com.takusemba.spotlight.shape.Circle;
+import com.takusemba.spotlight.target.SimpleTarget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DirectoryActivity extends AppCompatActivity {
     private ViewPager mViewPager;
@@ -35,8 +41,6 @@ public class DirectoryActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Intent intent = getIntent();
 
         setContentView(R.layout.activity_directory);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,6 +62,69 @@ public class DirectoryActivity extends AppCompatActivity {
                         findViewById(R.id.main_progress_text).setVisibility(View.GONE);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getInt("id", 0) == 0 && prefs.getBoolean("tutorial_startup_shown", false) == false)
+        {
+            String density = CommonUtils.getDensityName(this);
+
+            float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+            float radius1 = 200f, radius2 = 300f;
+
+            if (Objects.equals(density, getString(R.string.hdpi)))
+            {
+                x1 = 100f;
+                y1 = 700f;
+
+                x2 = 400f;
+                y2 = 120f;
+                radius1 = 100f;
+                radius2 = 100f;
+            }
+            else if (Objects.equals(density, getString(R.string.xhdpi)))
+            {
+                x1 = 150f;
+                y1 = 720f;
+
+                x2 = 1150f;
+                y2 = 150f;
+            }
+            else if (Objects.equals(density, getString(R.string.xxhdpi)))
+            {
+                x1 = 150f;
+                y1 = 900f;
+
+                x2 = 1250f;
+                y2 = 150f;
+            }
+
+            if (x1 > 0) {
+                final SimpleTarget targetSend = new SimpleTarget.Builder(this)
+                        .setPoint(x1, y1)
+                        .setShape(new Circle(radius1))
+                        .setTitle(getString(R.string.tutorial_send_podcasts))
+                        .build();
+
+                final SimpleTarget targetSettings = new SimpleTarget.Builder(this)
+                        .setPoint(x2, y2)
+                        .setShape(new Circle(radius2))
+                        .setTitle(getString(R.string.tutorial_settings))
+                        .build();
+
+                Spotlight.with(this)
+                        .setOverlayColor(R.color.background)
+                        .setDuration(1000L)
+                        .setAnimation(new DecelerateInterpolator(2f))
+                        .setClosedOnTouchedOutside(true)
+                        .setTargets(targetSend, targetSettings)
+                        .start();
+            }
+            final SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putBoolean("tutorial_startup_shown", true);
+            editor.apply();
+        }
     }
 
     private void SetDirectory(final List<PodcastCategory> categories)

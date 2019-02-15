@@ -666,13 +666,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, new SimpleDateFormat("h:mm a", Locale.US).format(Calendar.getInstance().getTime()));
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mLocalFile != null ? mLocalFile : mEpisode.getTitle());
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name_wc));
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
 
         if (mLocalFile != null)
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mEpisode.getChannel().getTitle());
 
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name_wc));
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DATE, mEpisode.getPubDate());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, mEpisode.getDescription());
 
@@ -714,7 +714,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
    private void initMediaSession() {
         final ComponentName mediaButtonReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
-        mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name), mediaButtonReceiver, null);
+        mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name_wc), mediaButtonReceiver, null);
 
         mMediaSessionCompat.setCallback(mMediaSessionCallback);
         mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
@@ -740,7 +740,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, final int clientUid, @Nullable Bundle rootHints) {
         if (clientPackageName.equalsIgnoreCase(getPackageName())) {
-            return new BrowserRoot(getString(R.string.app_name), null);
+            return new BrowserRoot(getString(R.string.app_name_wc), null);
         }
 
         return null;

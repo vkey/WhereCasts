@@ -91,7 +91,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
 
             final Notification notification = new NotificationCompat.Builder(this, mNotificationChannelID)
-                    .setContentTitle(getString(R.string.app_name))
+                    .setContentTitle(getString(R.string.app_name_wc))
                     .setContentText("Media Player Service")
                     .setSmallIcon(R.drawable.ic_notification).build();
 
@@ -467,7 +467,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         //lock screen icon for pre lollipop
         metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name));
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, mContext.getString(R.string.app_name_wc));
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, mEpisode.getTitle());
         metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, 1);
         metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1);
@@ -503,7 +503,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
         if (clientPackageName.equalsIgnoreCase(getPackageName())) {
-            return new BrowserRoot(getString(R.string.app_name), null);
+            return new BrowserRoot(getString(R.string.app_name_wc), null);
         }
 
         return null;

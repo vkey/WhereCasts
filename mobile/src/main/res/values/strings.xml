@@ -16,6 +16,11 @@
     <string name="copyright">Copyright © %s</string>
     <string name="version">Version: %s</string>
 
+    <string name="tutorial_send_podcasts">Send podcasts to your watch here</string>
+    <string name="tutorial_unlock_premium">Unlock premium settings here</string>
+    <string name="tutorial_import">Import podcasts here</string>
+    <string name="tutorial_settings">Unlock premium settings and import podcasts here</string>
+
     <string name="alert_users_add_fetching_feed">Fetching RSS feed…</string>
 
     <string name="tip_1">Accept permissions on your wear device before importing podcasts.</string>

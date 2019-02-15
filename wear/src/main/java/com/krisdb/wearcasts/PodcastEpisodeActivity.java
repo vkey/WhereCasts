@@ -479,6 +479,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 MediaControllerCompat.getMediaController(mActivity).getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
             mCurrentState = STATE_PLAYING;
 
+            mDownloadImage.setVisibility(View.INVISIBLE);
             final Boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
 
             if (isCurrentlyPlaying) {
@@ -521,6 +522,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mSkipBackImage.setVisibility(View.INVISIBLE);
             mSkipBack.setVisibility(View.INVISIBLE);
             mSkipForward.setVisibility(View.INVISIBLE);
+            mDownloadImage.setVisibility(View.VISIBLE);
         }
 
         final Menu menu = mWearableActionDrawer.getMenu();

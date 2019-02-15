@@ -15,6 +15,10 @@
     <string name="copyright">Copyright © %s</string>
     <string name="version">Versión: %s</string>
 
+    <string name="tutorial_send_podcasts">Envía podcasts a tu reloj</string>
+    <string name="tutorial_unlock_premium">Desbloquea la configuración premium aquí</string>
+    <string name="tutorial_import">Importar podcasts aquí</string>
+
     <string name="alert_users_add_fetching_feed">Obteniendo RSS feed…</string>
 
     <string name="tip_1">Acepte permisos en su dispositivo de desgaste antes de importar podcasts.</string>

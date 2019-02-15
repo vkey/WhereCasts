@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu
+    android:id="@+id/menu_directory"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/search_directory"
         android:title="@string/search"
         android:icon="@drawable/ic_action_search"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
 
     <item android:id="@+id/menu_directory_premium"
@@ -16,7 +18,7 @@
     <item android:id="@+id/menu_directory_import"
         android:title="@string/menu_text_import"
         android:icon="@drawable/ic_action_import"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
     <item android:id="@+id/menu_about"
         android:title="@string/menu_text_about"

@@ -15,6 +15,10 @@
     <string name="copyright">upphovsrätt © %s</string>
     <string name="version">Version: %s</string>
 
+    <string name="tutorial_send_podcasts">Skicka podcaster till din klocka</string>
+    <string name="tutorial_unlock_premium">Lås upp premiuminställningarna här</string>
+    <string name="tutorial_import">Importera podcaster här</string>
+
     <string name="alert_users_add_fetching_feed">Hämtar RSS-flöde…</string>
 
     <string name="tip_1">Godkänn behörigheter på din slitage enhet innan du importerar podcaster.</string>
