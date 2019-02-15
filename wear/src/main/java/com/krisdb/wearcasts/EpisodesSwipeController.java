@@ -2,11 +2,15 @@ package com.krisdb.wearcasts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
+import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
@@ -42,16 +46,31 @@ public class EpisodesSwipeController extends Callback {
         final int position = viewHolder.getAdapterPosition();
         final PodcastItem episode = mEpisodes.get(position);
 
-        if (mPlaylistID == mContext.getResources().getInteger(R.integer.playlist_default)) {
+        if (episode.getIsTitle())
+        {
+            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_refreshing_thumb));
+            new AsyncTasks.SaveLogo(mContext, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true,
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {
+                            mAdapter.refreshItem(0);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else if (mPlaylistID == mContext.getResources().getInteger(R.integer.playlist_default)) {
             DBUtilities.SaveEpisodeValue(mContext, episode, "finished", episode.getFinished() ? 0 : 1);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            final Boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
+            final boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
             final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
             mEpisodes = DBUtilities.GetEpisodes(mContext, episode.getPodcastId(), mPlaylistID, hidePlayed, numberOfEpisode, null);
-            mAdapter.refreshList(mEpisodes);
+
+            if (hidePlayed)
+                mAdapter.refreshList(mEpisodes);
+            else
+                mAdapter.refreshItem(mEpisodes, position);
         }
     }
 }

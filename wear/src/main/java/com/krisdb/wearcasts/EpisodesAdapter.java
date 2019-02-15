@@ -103,17 +103,13 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                 final PodcastItem podcast = DBUtilities.GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
-                if (podcast.getChannel().getThumbnailUrl() != null) {
-                    CommonUtils.showToast(mContext, mContext.getString(R.string.alert_refreshing_thumb));
-                    new AsyncTasks.SaveLogo(mContext, podcast.getChannel().getThumbnailUrl().toString(), podcast.getChannel().getThumbnailName(), true,
-                            new Interfaces.AsyncResponse() {
-                                @Override
-                                public void processFinish() {
-                                    notifyItemChanged(0);
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putInt("podcastId", podcast.getPodcastId());
+                intent.putExtras(bundle);
 
-                }
+                if (podcast.getPodcastId() > 0)
+                    mContext.startActivity(intent);
 
                 return false;
             }
@@ -447,11 +443,22 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         //diffResult.dispatchUpdatesTo(this);
     }
 
+    public void refreshItem(final List<PodcastItem> episodes, final int position)
+    {
+        mEpisodes = episodes;
+        notifyItemChanged(position);
+    }
+
+    public void refreshItem(final int position)
+    {
+        notifyItemChanged(position);
+    }
+
     public void refreshList(final int podcastId)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        final Boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
+        final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
         final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
         refreshList(DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null));

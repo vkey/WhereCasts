@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:paddingBottom="30dp"
+            android:paddingBottom="20dp"
             android:visibility="invisible">
 
             <android.widget.TextClock
