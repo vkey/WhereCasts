@@ -61,7 +61,7 @@
     <string name="settings_podcast_label_download_next">次のエピソードをダウンロード</string>
     <string name="settings_podcast_label_download_next_summary">あなたが聞いているものが終わると</string>
     <string name="settings_podcast_label_download_next_alert">オフラインの場合、ダウンロードはキューに入れられます</string>
-    <string name="settings_podcast_label_download_sort_order">ソート順（グローバルソート順を上書きする）</string>
+    <string name="settings_podcast_label_download_sort_order">ソート順（デフォルトのソート順をオーバーライドします）</string>
     <string name="settings_podcast_label_downloads_saved">自動クリーンアップのダウンロード</string>
     <string name="settings_podcast_label_downloads_saved_summary">この番号を超えるダウンロードは自動的に削除されます</string>
     <string name="settings_podcast_label_hideplayed">再生されたエピソードを非表示</string>

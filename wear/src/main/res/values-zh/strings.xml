@@ -87,7 +87,7 @@
     <string name="settings_podcast_label_download_next">下載下一集</string>
     <string name="settings_podcast_label_download_next_summary">當你正在收聽的人結束時</string>
     <string name="settings_podcast_label_download_next_alert">如果下線，下載將排隊</string>
-    <string name="settings_podcast_label_download_sort_order">排序（覆蓋全局排序順序）</string>
+    <string name="settings_podcast_label_download_sort_order">排序（覆蓋默認排序順序）</string>
     <string name="settings_podcast_label_downloads_saved">自動清理下載</string>
     <string name="settings_podcast_label_downloads_saved_summary">超過此數字的下載將自動刪除</string>
     <string name="settings_podcast_label_hideplayed">隱藏播放的劇集</string>

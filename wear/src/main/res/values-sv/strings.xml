@@ -61,7 +61,7 @@
     <string name="settings_podcast_label_download_next">Hämta nästa avsnitt</string>
     <string name="settings_podcast_label_download_next_summary">När den du lyssnar på slutar</string>
     <string name="settings_podcast_label_download_next_alert">Nedladdningar kommer köa om offline</string>
-    <string name="settings_podcast_label_download_sort_order">Sortera efter (överstiger global sorteringsordning)</string>
+    <string name="settings_podcast_label_download_sort_order">Sortera efter (överstyrar standard sorteringsordning)</string>
     <string name="settings_podcast_label_downloads_saved">Automatisk uppringning av nedladdningar</string>
     <string name="settings_podcast_label_downloads_saved_summary">Nedladdningar över det här numret kommer att raderas automatiskt</string>
     <string name="settings_podcast_label_hideplayed">Dölj spelade episoder</string>

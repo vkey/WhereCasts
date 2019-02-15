@@ -60,7 +60,7 @@
     <string name="settings_podcast_label_download_next">Auto-download next episode not downloaded</string>
     <string name="settings_podcast_label_download_next_summary">When the one you\'re listening to ends</string>
     <string name="settings_podcast_label_download_next_alert">Downloads will queue if offline</string>
-    <string name="settings_podcast_label_download_sort_order">Sort by (overrides global sort order)</string>
+    <string name="settings_podcast_label_download_sort_order">Sort by (overrides default sort order)</string>
     <string name="settings_podcast_label_downloads_saved">Auto cleanup downloads</string>
     <string name="settings_podcast_label_downloads_saved_summary">Downloads above this number will be auto-deleted</string>
     <string name="settings_podcast_label_hideplayed">Hide played episodes</string>
