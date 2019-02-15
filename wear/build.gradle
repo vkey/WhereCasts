@@ -9,7 +9,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 456
+        versionCode 457
         versionName "1.30.09"
     }
     buildTypes {
