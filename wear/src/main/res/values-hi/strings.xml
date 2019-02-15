@@ -54,7 +54,7 @@
     <string name="confirm_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें?</string>
 
     <string name="settings_podcast_title">पॉडकास्ट सेटिंग्स</string>
-    <string name="settings_podcast_sort_order_global">[वैश्विक]</string>
+    <string name="settings_podcast_sort_order_global">[चूक]</string>
     <string name="settings_podcast_label_autodownload">ऑटो डाउनलोड नवीनतम एपिसोड</string>
     <string name="settings_podcast_label_episodes_downloaded">डाउनलोड किए गए एपिसोड</string>
     <string name="settings_podcast_label_episodes_downloaded_summary">हमेशा डाउनलोड होने वाले एपिसोड की संख्या</string>

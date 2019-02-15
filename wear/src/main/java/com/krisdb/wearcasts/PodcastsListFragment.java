@@ -55,6 +55,7 @@ public class PodcastsListFragment extends Fragment {
 
         mPodcastsList = listView.findViewById(R.id.podcast_list);
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
+        mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
         //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
 
         /*
@@ -69,10 +70,7 @@ public class PodcastsListFragment extends Fragment {
                 }
             }
         });
-        */
-
-        final WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(mActivity);
-        mPodcastsList.setLayoutManager(layoutManager);
+       */
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 

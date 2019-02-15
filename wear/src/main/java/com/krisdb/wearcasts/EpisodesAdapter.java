@@ -524,12 +524,12 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
                 else if (isXHDPI) {
                     if (isRound)
-                        paramsLayout.setMargins(0, 0, 0, 25);
+                        paramsLayout.setMargins(0, 0, 0, 35);
                     else
-                        paramsLayout.setMargins(0, 0, 0, 25);
+                        paramsLayout.setMargins(0, 0, 0, 35);
                 }
                 else
-                    paramsLayout.setMargins(0, 0, 0, 25);
+                    paramsLayout.setMargins(0, 0, 0, 35);
             }
 
             thumbTitle.setVisibility(View.VISIBLE);
@@ -573,7 +573,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             }
 
-            final int topMarginPlaylists = isXHDPI ? -80 : -100;
+            final int topMarginPlaylists = isXHDPI ? -85 : -100;
             if (episodeProgress != null) {
                 if (episode.getPosition() > 0) {
                     episodeProgress.setVisibility(View.VISIBLE);

@@ -54,7 +54,7 @@
     <string name="confirm_mark_all_unplayed">Markiere alle ungespielten?</string>
 
     <string name="settings_podcast_title">Podcast-Einstellungen</string>
-    <string name="settings_podcast_sort_order_global">[Global]</string>
+    <string name="settings_podcast_sort_order_global">[Default]</string>
     <string name="settings_podcast_label_autodownload">Lade automatisch die neueste Folge herunter</string>
     <string name="settings_podcast_label_episodes_downloaded">Heruntergeladene Episoden</string>
     <string name="settings_podcast_label_episodes_downloaded_summary">Anzahl der Episoden, die immer heruntergeladen wurden</string>

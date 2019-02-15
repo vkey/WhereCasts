@@ -83,7 +83,7 @@
     <string name="settings_podcast_label_autodownload">自動下載下一集</string>
     <string name="settings_podcast_label_episodes_downloaded">下載劇集</string>
     <string name="settings_podcast_label_episodes_downloaded_summary">始終下載的劇集數量</string>
-    <string name="settings_podcast_sort_order_global">[全球]</string>
+    <string name="settings_podcast_sort_order_global">[默認]</string>
     <string name="settings_podcast_label_download_next">下載下一集</string>
     <string name="settings_podcast_label_download_next_summary">當你正在收聽的人結束時</string>
     <string name="settings_podcast_label_download_next_alert">如果下線，下載將排隊</string>

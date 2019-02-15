@@ -54,7 +54,7 @@
     <string name="confirm_mark_all_unplayed">Marcar todo sin jugar?</string>
 
     <string name="settings_podcast_title">Configuraciones de podcast</string>
-    <string name="settings_podcast_sort_order_global">[Global]</string>
+    <string name="settings_podcast_sort_order_global">[defecto]</string>
     <string name="settings_podcast_label_autodownload">Descarga automáticamente el último episodio</string>
     <string name="settings_podcast_label_episodes_downloaded">Episodios descargados</string>
     <string name="settings_podcast_label_episodes_downloaded_summary">Número de episodios a descargar siempre.</string>

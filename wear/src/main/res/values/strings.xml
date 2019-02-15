@@ -158,7 +158,7 @@
     <string name="settings_podcasts_updates_interval_12_hours">12 hours</string>
 
     <string name="settings_podcasts_entries_title_sort_order">Sort Order</string>
-    <string name="settings_podcast_sort_order_global">[Global]</string>
+    <string name="settings_podcast_sort_order_global">[Default]</string>
     <string name="settings_podcasts_sort_order_name_asc">Name (A-Z)</string>
     <string name="settings_podcasts_sort_order_name_desc">Name (Z-A)</string>
     <string name="settings_podcasts_sort_order_date_asc">Date (Oldest on Top)</string>
