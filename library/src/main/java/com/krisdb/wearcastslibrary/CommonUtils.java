@@ -106,8 +106,8 @@ public class CommonUtils {
             final View view = toast.getView();
             final TextView text = view.findViewById(android.R.id.message);
 
-            text.setBackgroundColor(ctx.getColor(R.color.wc_gray));
-            //text.setTextColor(ctx.getColor(R.color.wc_white));
+            text.setBackgroundColor(ctx.getColor(R.color.wc_toast_bg));
+            text.setTextColor(ctx.getColor(R.color.wc_black));
             toast.show();
         }catch (Exception ignored){}
     }

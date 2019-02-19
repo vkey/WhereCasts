@@ -2,7 +2,6 @@ package com.krisdb.wearcasts;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,7 +49,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private static WeakReference<MainActivity> mActivityRef;
-    private static WeakReference<ViewPager> mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,11 +266,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            mViewPager = new WeakReference<>((ViewPager)ctx.findViewById(R.id.main_pager));
+            final ViewPager vp = ctx.findViewById(R.id.main_pager);
 
-            mViewPager.get().setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
-            mViewPager.get().setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            mViewPager.get().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            vp.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
+            vp.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrollStateChanged(int state) {
                 }
 
@@ -286,7 +284,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     //ctx.findViewById(R.id.main_pager_dots).setVisibility(View.VISIBLE);
                 }
             });
-            mViewPager.get().setVisibility(View.VISIBLE);
+
+            vp.setVisibility(View.VISIBLE);
 
             /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
@@ -442,6 +441,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int count, final int downloads) {
+                            mShowPodcastList = true;
                             new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -456,6 +456,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
                             public void processFinish(final int count, final int downloads) {
+                                mShowPodcastList = true;
                                 new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
