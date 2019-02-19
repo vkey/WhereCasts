@@ -258,8 +258,9 @@
     <string name="alert_directory_resync">再同期してもよろしいですか?</string>
     <string name="nav_main_discover">ポッドキャストを発見する</string>
     <string name="nav_main_settings">設定</string>
+    <string name="nav_main_update">更新</string>
 
-    <string name="nav_add_refresh">Refresh</string>
+    <string name="nav_add_refresh">更新する</string>
 
     <string name="confirm_yes">はい</string>
     <string name="confirm_no">NO</string>

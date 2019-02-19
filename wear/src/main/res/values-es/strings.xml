@@ -258,6 +258,7 @@
     <string name="alert_directory_resync">Seguro que quieres resincronizar?</string>
     <string name="nav_main_discover">Descubra los podcasts</string>
     <string name="nav_main_settings">Configuraciones</string>
+    <string name="nav_main_update">Actualizar</string>
 
     <string name="nav_add_refresh">Refrescar</string>
 

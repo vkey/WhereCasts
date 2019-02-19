@@ -257,6 +257,7 @@
     <string name="alert_directory_resync">你確定要重新同步嗎?</string>
     <string name="nav_main_discover">發現播客</string>
     <string name="nav_main_settings">設置</string>
+    <string name="nav_main_update">更新</string>
 
     <string name="nav_add_refresh">刷新</string>
 

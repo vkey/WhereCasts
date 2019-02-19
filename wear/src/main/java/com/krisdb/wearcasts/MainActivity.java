@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -48,8 +49,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private LocalBroadcastManager mBroadcastManger;
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
-    private NavigationAdapter mNavAdapter;
     private static WeakReference<MainActivity> mActivityRef;
+    private static WeakReference<ViewPager> mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +120,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         mNavItems = Utilities.getNavItems(this);
         mNavDrawer = new WeakReference<>((WearableNavigationDrawerView)findViewById(R.id.drawer_nav_main));
-        mNavAdapter = new NavigationAdapter(this, mNavItems);
 
         if (mNavDrawer.get() != null) {
-            mNavDrawer.get().setAdapter(mNavAdapter);
+            mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
             mNavDrawer.get().addOnItemSelectedListener(this);
         }
     }
@@ -149,8 +149,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(resources.getInteger(R.integer.default_home_screen))));
-            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
-            final Boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
+            final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
+            final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
 
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
@@ -268,10 +268,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            final ViewPager vpMain = ctx.findViewById(R.id.main_pager);
-            vpMain.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
-            vpMain.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            vpMain.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            mViewPager = new WeakReference<>((ViewPager)ctx.findViewById(R.id.main_pager));
+
+            mViewPager.get().setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
+            mViewPager.get().setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager.get().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrollStateChanged(int state) {
                 }
 
@@ -285,7 +286,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     //ctx.findViewById(R.id.main_pager_dots).setVisibility(View.VISIBLE);
                 }
             });
-            vpMain.setVisibility(View.VISIBLE);
+            mViewPager.get().setVisibility(View.VISIBLE);
 
             /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
@@ -383,23 +384,83 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 startActivity(new Intent(this, AddPodcastsActivity.class));
                 break;
             case 1:
-                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-                if (adapter.isEnabled()) {
-                    //CommonUtils.showToast(this,"Bluetooth off");
-                    adapter.disable();
-                }
-                else {
-                    //CommonUtils.showToast(this,"Bluetooth on");
-                    adapter.enable();
-                }
-
-                mNavItems = Utilities.getNavItems(this, adapter);
-                mNavAdapter.notifyDataSetChanged();
+                handleNetwork();
                 break;
             case 2:
                 startActivity(new Intent(this, SettingsPodcastsActivity.class));
                 break;
         }
     }
+
+    private void handleNetwork()
+    {
+        if (CommonUtils.getActiveNetwork(this) == null)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        else if (CommonUtils.HighBandwidthNetwork(this) == false)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        else
+        {
+            new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
+                    new Interfaces.BackgroundSyncResponse() {
+                        @Override
+                        public void processFinish(final int count, final int downloads) {
+                            new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
+                        new Interfaces.BackgroundSyncResponse() {
+                            @Override
+                            public void processFinish(final int count, final int downloads) {
+                                new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    }
+
 }

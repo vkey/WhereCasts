@@ -260,6 +260,7 @@
     <string name="alert_directory_resync">Möchten Sie die Synchronisierung wirklich durchführen?</string>
     <string name="nav_main_discover">Alle beenden</string>
     <string name="nav_main_settings">die Einstellungen</string>
+    <string name="nav_main_update">Aktualisieren</string>
 
     <string name="confirm_yes">JA</string>
     <string name="confirm_no">NEIN</string>
