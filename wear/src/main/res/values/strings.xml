@@ -260,6 +260,7 @@
     <string name="alert_directory_resync">Are you sure you want to resync?</string>
     <string name="nav_main_discover">Discover Podcasts</string>
     <string name="nav_main_settings">Settings</string>
+    <string name="nav_main_update">Update</string>
 
     <string name="nav_add_refresh">Refresh</string>
 

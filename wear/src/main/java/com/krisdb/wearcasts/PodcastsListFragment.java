@@ -149,7 +149,6 @@ public class PodcastsListFragment extends Fragment {
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-
     }
 
     @Override
@@ -166,7 +165,6 @@ public class PodcastsListFragment extends Fragment {
             }
         }
     }
-
 
     @Override
     public void onActivityCreated(final Bundle icicle) {

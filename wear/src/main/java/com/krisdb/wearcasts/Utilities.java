@@ -66,6 +66,12 @@ public class Utilities {
             items.add(navToggleBluetooth);
         }
         */
+        final NavItem navItemUpdate = new NavItem();
+        navItemUpdate.setID(1);
+        navItemUpdate.setTitle(ctx.getString(R.string.nav_main_update));
+        navItemUpdate.setIcon("ic_settings_updates");
+        items.add(navItemUpdate);
+
         final NavItem navItemSettings = new NavItem();
         navItemSettings.setID(2);
         navItemSettings.setTitle(ctx.getString(R.string.nav_main_settings));
