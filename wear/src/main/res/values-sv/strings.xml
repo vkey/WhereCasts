@@ -258,6 +258,7 @@
     <string name="alert_directory_resync">Är du säker på att du vill resync?</string>
     <string name="nav_main_discover">Upptäck Podcasts</string>
     <string name="nav_main_settings">inställningar</string>
+    <string name="nav_main_update">Uppdatering</string>
 
     <string name="nav_add_refresh">Uppdatera</string>
 

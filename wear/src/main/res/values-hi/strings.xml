@@ -258,6 +258,7 @@
     <string name="alert_directory_resync">क्या आप वाकई पुनर्वितरण करना चाहते हैं?</string>
     <string name="nav_main_discover">पॉडकास्ट खोजें</string>
     <string name="nav_main_settings">सेटिंग्स</string>
+    <string name="nav_main_update">अद्यतन करें</string>
 
     <string name="nav_add_refresh">ताज़ा करना</string>
 

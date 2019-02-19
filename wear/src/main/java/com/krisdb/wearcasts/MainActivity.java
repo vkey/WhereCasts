@@ -49,9 +49,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private LocalBroadcastManager mBroadcastManger;
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
-    private NavigationAdapter mNavAdapter;
     private static WeakReference<MainActivity> mActivityRef;
-    private static ViewPager mViewPager;
+    private static WeakReference<ViewPager> mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,10 +120,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         mNavItems = Utilities.getNavItems(this);
         mNavDrawer = new WeakReference<>((WearableNavigationDrawerView)findViewById(R.id.drawer_nav_main));
-        mNavAdapter = new NavigationAdapter(this, mNavItems);
 
         if (mNavDrawer.get() != null) {
-            mNavDrawer.get().setAdapter(mNavAdapter);
+            mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
             mNavDrawer.get().addOnItemSelectedListener(this);
         }
     }
@@ -270,10 +268,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            mViewPager = ctx.findViewById(R.id.main_pager);
-            mViewPager.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
-            mViewPager.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            mViewPager = new WeakReference<>((ViewPager)ctx.findViewById(R.id.main_pager));
+
+            mViewPager.get().setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
+            mViewPager.get().setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager.get().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrollStateChanged(int state) {
                 }
 
@@ -287,7 +286,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     //ctx.findViewById(R.id.main_pager_dots).setVisibility(View.VISIBLE);
                 }
             });
-            mViewPager.setVisibility(View.VISIBLE);
+            mViewPager.get().setVisibility(View.VISIBLE);
 
             /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
@@ -443,7 +442,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int count, final int downloads) {
-                            mViewPager.setCurrentItem(1);
+                            new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -457,7 +456,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
                             public void processFinish(final int count, final int downloads) {
-                                mViewPager.setCurrentItem(1);
+                                new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
