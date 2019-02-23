@@ -550,6 +550,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
                 else
                     thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_title_default));
+
+                layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+                title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             }
             else {
                 layout.setBackgroundColor(mHeaderColor);
