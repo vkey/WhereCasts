@@ -18,6 +18,8 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
+import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
+
 
 public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapter.ViewHolder> {
 
@@ -51,6 +53,9 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
         final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
+
+        if (prefs.getBoolean("long_press_tip_shown", false) == false && DBUtilities.GetPodcasts(mContext).size() > 0)
+            showToast(mContext, mContext.getString(R.string.tips_swipe_long_press));
 
         mPodcasts = DBUtilities.GetPodcasts(mContext, hideEmpty, showDownloaded);
         notifyDataSetChanged();

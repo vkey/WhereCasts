@@ -81,7 +81,6 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                             new Interfaces.PodcastsResponse() {
                                 @Override
                                 public void processFinish(List<PodcastItem> episodes) {
-
                                     holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
                                     holder.episodes.setAdapter(new EpisodesPreviewAdapter(mContext, episodes));
                                     holder.episodes.setVisibility(View.VISIBLE);
@@ -137,6 +136,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         }
 
         final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
+
         new AsyncTasks.GetPodcastEpisodes(mContext, podcastId,
                 new Interfaces.IntResponse() {
                     @Override

@@ -219,14 +219,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mNavDrawer.get().getController().peekDrawer();
             }
 
-            if (visits >= 2 && prefs.getBoolean("long_press_tip_shown", false) == false && DBUtilities.GetPodcasts(ctx).size() > 0) {
-                showToast(ctx, mActivity.get().getString(R.string.tips_swipe_long_press), Toast.LENGTH_LONG);
-
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("long_press_tip_shown", true);
-                editor.apply();
-            }
-
             if (visits == 40)
             {
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -383,7 +375,24 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 startActivity(new Intent(this, AddPodcastsActivity.class));
                 break;
             case 1:
-                handleNetwork();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setMessage("Start update?");
+                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            handleNetwork();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
                 break;
             case 2:
                 startActivity(new Intent(this, SettingsPodcastsActivity.class));
@@ -441,8 +450,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int count, final int downloads) {
-                            mShowPodcastList = true;
-                            new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                            if (count > 0) {
+                                mShowPodcastList = true;
+                                new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                            }
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -463,5 +474,4 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
         }
     }
-
 }

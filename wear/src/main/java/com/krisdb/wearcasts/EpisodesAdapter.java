@@ -510,14 +510,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             {
                 if (isHDPI) {
                     if (isRound)
-                        paramsLayout.setMargins(0, 20, 0, 0);
+                        paramsLayout.setMargins(0, 5, 0, 0);
                     else
                         paramsLayout.setMargins(0, 10, 0, 0);
                 }
                 else if (isXHDPI)
-                    paramsLayout.setMargins(0, 20, 0, 0);
+                    paramsLayout.setMargins(0, 5, 0, 0);
                 else
-                    paramsLayout.setMargins(0, 20, 0, 0);
+                    paramsLayout.setMargins(0, 10, 0, 0);
             }
             else //playlist title
             {

@@ -16,6 +16,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
@@ -309,6 +310,14 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 findPreference("pref_" + mPodcastId + "_downloaded_episodes_count").setSummary(lpEpisodeCount);
             else
                 findPreference("pref_" + mPodcastId + "_downloaded_episodes_count").setSummary(R.string.settings_podcast_label_episodes_downloaded_summary);
+        }
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+        if (prefs.getBoolean("long_press_tip_shown", false) == false) {
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("long_press_tip_shown", true);
+            editor.apply();
         }
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

@@ -18,7 +18,7 @@
 
     <dimen name="thumbs_width_episode_list_title_hdpi_square">55dp</dimen>
     <dimen name="thumbs_width_episode_list_title_hdpi_round">70dp</dimen>
-    <dimen name="thumbs_width_episode_list_title_xhdpi">90dp</dimen>
+    <dimen name="thumbs_width_episode_list_title_xhdpi">70dp</dimen>
     <dimen name="thumbs_width_episode_list_title_default">80dp</dimen>
 
     <item name="ldpi" format="float" type="dimen">.75</item>
