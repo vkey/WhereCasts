@@ -24,7 +24,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class PodcastsListFragment extends Fragment {
 

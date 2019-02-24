@@ -68,7 +68,6 @@ public class PodcastEpisodesListFragment extends Fragment {
         return elf;
     }
 
-
     public void setOnEpisodeSelectedListener(Activity activity) {
         mEpisodeSelectedCallback = (Interfaces.OnEpisodeSelectedListener)activity;
     }
@@ -78,7 +77,6 @@ public class PodcastEpisodesListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
         mActivityRef = new WeakReference<>(mActivity);
-
     }
 
     @Override
@@ -298,7 +296,7 @@ public class PodcastEpisodesListFragment extends Fragment {
 
                         if (isAdded() == false) return;
 
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor, mEpisodeSelectedCallback);
+                        mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
                         mEpisodeList.setAdapter(mAdapter);
 
                         if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {

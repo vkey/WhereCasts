@@ -39,7 +39,7 @@
                 android:layout_centerHorizontal="true"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="8dp"
                 android:maxWidth="40dp"
                 android:layout_below="@+id/podcast_episode_clock"
                 />

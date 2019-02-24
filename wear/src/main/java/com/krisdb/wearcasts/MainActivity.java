@@ -22,7 +22,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcastslibrary.AsyncTasks;
@@ -38,7 +37,6 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int mNumberOfPages;
@@ -207,7 +205,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.putInt("new_downloads_count", 0);
                 editor.apply();
             }
-
             final int visits = prefs.getInt("visits", 0) + 1;
 
             if (prefs.getInt("visits", 0) == 0)

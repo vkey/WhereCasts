@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.wear.widget.WearableRecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -49,6 +50,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private boolean isRound, isXHDPI, isHDPI;
     private WeakReference<Activity> mActivityRef;
     private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -70,7 +72,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
     }
 
-    EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
+    EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
@@ -87,6 +89,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mSelectedEpisodes = new ArrayList<>();
         isXHDPI = Objects.equals(mDensityName, mContext.getString(R.string.xhdpi));
         isHDPI = Objects.equals(mDensityName, mContext.getString(R.string.hdpi));
+        mSwipeRefreshLayout = refreshLayout;
     }
 
     @Override
@@ -340,6 +343,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             notifyItemChanged(position);
 
+            mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
             mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes);
             /*
             final Intent intent = new Intent(mContext, EpisodeContextActivity.class);
