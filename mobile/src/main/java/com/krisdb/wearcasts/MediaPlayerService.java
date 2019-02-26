@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,7 +39,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
-import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
 public class MediaPlayerService extends MediaBrowserServiceCompat implements AudioManager.OnAudioFocusChangeListener {
@@ -85,6 +83,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
 
+        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             final NotificationChannel channel = new NotificationChannel(mNotificationChannelID, "Media Player Service", NotificationManager.IMPORTANCE_DEFAULT);
@@ -97,6 +96,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             startForeground(1, notification);
         }
+        */
 
         MediaButtonReceiver.handleIntent(mMediaSessionCompat, intent);
 
@@ -217,7 +217,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mMediaPlayer.pause();
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
-            stopForeground(true);
+            stopForeground(false);
             showNotification(true);
             disableNoisyReceiver();
 
@@ -359,6 +359,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             });
 
             mMediaPlayer.prepareAsync();
+            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(PreferenceManager.getDefaultSharedPreferences(mContext).getFloat("pref_playback_speed", 1.0f)));
         } catch (Exception ex) {
             Log.e(mPackage, "Service error: " + ex.toString());
         }
@@ -402,17 +403,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         final Bundle bundle = new Bundle();
         bundle.putInt("eid", mEpisode.getEpisodeId());
 
-        final Intent notificationIntent = new Intent(mContext, PhoneMainActivity.class);
+        final Intent notificationIntent = new Intent(mContext, DirectoryActivity.class);
         notificationIntent.putExtras(bundle);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, mNotificationChannelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentText(mEpisode.getTitle())
-                .setOngoing(true)
-                .setLocalOnly(true)
-                .setWhen(0)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setVisibility(VISIBILITY_PUBLIC)
                 .setContentIntent(PendingIntent.getActivity(mContext, mEpisode.getEpisodeId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
 
@@ -435,7 +432,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             notification.setChannelId(mNotificationChannelID);
 
-            final NotificationChannel notificationChannel = new NotificationChannel(String.valueOf(mNotificationID), mContext.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+            final NotificationChannel notificationChannel = new NotificationChannel(String.valueOf(mNotificationID), mContext.getPackageName(), NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.setSound(null, null);
             manager.createNotificationChannel(notificationChannel);
 
             notification.setChannelId(String.valueOf(mNotificationID));
@@ -447,15 +445,27 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             startForeground(mNotificationID, notification.build());
     }
 
-    private void setMediaPlaybackState(int state) {
+    private void setMediaPlaybackState(final int state)
+    {
+        setMediaPlaybackState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN);
+    }
+
+    private void setMediaPlaybackState(final int state, final long position) {
         final PlaybackStateCompat.Builder playbackstateBuilder = new PlaybackStateCompat.Builder();
 
         if (state == PlaybackStateCompat.STATE_PLAYING) {
-            playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
-        } else {
+            playbackstateBuilder.setActions(
+                    PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                            PlaybackStateCompat.ACTION_PAUSE |
+                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT |
+                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                            PlaybackStateCompat.ACTION_FAST_FORWARD |
+                            PlaybackStateCompat.ACTION_REWIND
+            );
+        } else
             playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY);
-        }
-        playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+
+        playbackstateBuilder.setState(state, position, 0);
         mMediaSessionCompat.setPlaybackState(playbackstateBuilder.build());
     }
 
@@ -477,15 +487,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void initMediaSession() {
         final ComponentName mediaButtonReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
-        mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), "Mobile", mediaButtonReceiver, null);
+        mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name_wc), mediaButtonReceiver, null);
 
         mMediaSessionCompat.setCallback(mMediaSessionCallback);
         mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        final Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
         mMediaSessionCompat.setMediaButtonReceiver(pendingIntent);
 
         setSessionToken(mMediaSessionCompat.getSessionToken());
