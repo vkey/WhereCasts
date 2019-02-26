@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:paddingTop="5dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="9dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:maxWidth="@dimen/thumb_with_podcast_list_default"
@@ -31,8 +31,7 @@
         android:layout_height="22dp"
         android:layout_marginTop="35dp"
         android:layout_marginStart="25dp"
-        android:textSize="10sp"
-        android:gravity="center_vertical|center_horizontal" />
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/podcast_row_item_title"
