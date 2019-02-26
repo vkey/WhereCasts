@@ -68,6 +68,7 @@
                     android:src="@drawable/ic_skip_back"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
+                    android:layout_marginStart="5dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -78,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ic_skip_back"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="13dp"
                     android:layout_marginTop="7dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
@@ -116,6 +117,16 @@
                     style="?android:progressBarStyleHorizontal"
                     />
 
+                <TextView
+                    android:id="@+id/podcast_episode_download_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="invisible"
+                    android:layout_below="@+id/ic_podcast_episode_download"
+                    android:layout_marginTop="30dp"
+                    android:textSize="12sp" />
+
                 <ImageView
                     android:id="@+id/ic_skip_forward"
                     android:layout_width="wrap_content"
@@ -123,6 +134,7 @@
                     android:src="@drawable/ic_skip_forward"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="5dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -134,7 +146,7 @@
                     android:layout_below="@+id/ic_skip_forward"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="13dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     android:textSize="10sp"
