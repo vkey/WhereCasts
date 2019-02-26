@@ -10,6 +10,9 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.wearable.input.WearableButtons;
 
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcastslibrary.CommonUtils;
+
 public class SettingsPodcastsPlaybackFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
@@ -74,8 +77,15 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
         SystemClock.sleep(500);
 
-        if (key.equals("pref_playback_speed") && Utilities.hasPremium(mActivity))
-            findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
+        if (key.equals("pref_playback_speed") && Utilities.hasPremium(mActivity)) {
+            findPreference("pref_playback_speed").setSummary(((ListPreference) findPreference("pref_playback_speed")).getEntry());
+
+            final PutDataMapRequest dataMap = PutDataMapRequest.create("/syncplaybackspeed");
+
+            dataMap.getDataMap().putFloat("playback_speed", Float.parseFloat(((ListPreference)findPreference("pref_playback_speed")).getEntry().toString()));
+
+            CommonUtils.DeviceSync(mActivity, dataMap);
+        }
 
         if (key.equals("pref_playback_skip_forward"))
            findPreference("pref_playback_skip_forward").setSummary(((ListPreference)findPreference("pref_playback_skip_forward")).getEntry());

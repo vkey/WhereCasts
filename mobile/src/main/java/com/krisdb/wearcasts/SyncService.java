@@ -68,6 +68,13 @@ public class SyncService extends WearableListenerService {
                 intentPremiumConfirm.putExtra("premium", true);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intentPremiumConfirm);
             }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/syncplaybackspeed")) {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                final SharedPreferences.Editor editor = prefs.edit();
+                final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
+                editor.putFloat("pref_playback_speed", dataMapItem.getDataMap().getFloat("playback_speed"));
+                editor.apply();
+            }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/thirdparty")) {
                 final Intent intent = new Intent();
                 intent.setAction("watchresponse");

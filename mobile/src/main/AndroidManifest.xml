@@ -72,6 +72,10 @@
                     android:scheme="wear" />
                 <data
                     android:host="*"
+                    android:pathPrefix="/syncplaybackspeed"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
                     android:pathPrefix="/rateapp"
                     android:scheme="wear" />
                 <data
@@ -88,6 +92,13 @@
                     android:scheme="wear" />
             </intent-filter>
         </service>
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
 
         <!--
         <receiver  android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:name=".WidgetProvider" >
