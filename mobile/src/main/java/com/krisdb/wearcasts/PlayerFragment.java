@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import com.krisdb.wearcastslibrary.DateUtils;
 
+import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class PlayerFragment extends Fragment  {
@@ -65,6 +67,11 @@ public class PlayerFragment extends Fragment  {
         super.onCreate(savedInstanceState);
 
         mActivity = getActivity();
+
+        ActivityCompat.requestPermissions(mActivity, new String[]
+                {
+                        READ_PHONE_STATE
+                }, 122);
     }
 
     @Override
@@ -74,14 +81,14 @@ public class PlayerFragment extends Fragment  {
         mView = inflater.inflate(R.layout.fragment_player, container, false);
 
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
-        mProgressBar = (ProgressBar)mView.findViewById(R.id.podcast_progress_bar);
-        mSeekBar = (SeekBar)mView.findViewById(R.id.sb_podcast_episode);
-        mPlayPauseImage = (ImageView)mView.findViewById(R.id.iv_podcast_playpause);
-        mSkipBackImage = (ImageView)mView.findViewById(R.id.iv_skip_back);
-        mSkipForwardImage = (ImageView)mView.findViewById(R.id.iv_skip_forward);
-        mDurationView = (TextView)mView.findViewById(R.id.tv_podcast_duration);
-        mPositionView = (TextView)mView.findViewById(R.id.tv_podcast_position);
-        mInfoLayout = (RelativeLayout)mView.findViewById(R.id.podcast_episode_info_layout);
+        mProgressBar = mView.findViewById(R.id.podcast_progress_bar);
+        mSeekBar = mView.findViewById(R.id.sb_podcast_episode);
+        mPlayPauseImage = mView.findViewById(R.id.iv_podcast_playpause);
+        mSkipBackImage = mView.findViewById(R.id.iv_skip_back);
+        mSkipForwardImage = mView.findViewById(R.id.iv_skip_forward);
+        mDurationView = mView.findViewById(R.id.tv_podcast_duration);
+        mPositionView = mView.findViewById(R.id.tv_podcast_position);
+        mInfoLayout = mView.findViewById(R.id.podcast_episode_info_layout);
 
         mSkipBackImage.setOnClickListener(new View.OnClickListener() {
             @Override

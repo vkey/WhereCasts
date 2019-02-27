@@ -31,6 +31,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -50,7 +52,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private MediaSessionCompat mMediaSessionCompat;
     private static int mNotificationID = 101;
     private String mNotificationChannelID;
-
+    private TelephonyManager mTelephonyManager;
 
     public MediaPlayerService() {
         super();
@@ -61,6 +63,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         super.onCreate();
         mPackage = getPackageName();
         mNotificationChannelID = mPackage.concat(".playback");
+        mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
         mMediaSessionCompat = new MediaSessionCompat(this, MediaPlayerService.class.getSimpleName());
         mContext = this;
@@ -103,9 +106,27 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         return START_STICKY;
     }
 
+    final PhoneStateListener mPhoneState = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                PauseAudio();
+            } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                //if (mMediaPlayer != null && mMediaPlayer.isPlaying() == false)
+                //PlayAudio();
+            } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                PauseAudio();
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (mTelephonyManager != null)
+            mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -157,6 +178,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             editor.apply();
 
             showNotification(false);
+
+            if (mTelephonyManager != null)
+                mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
 
             mMediaPlayer.start();
 
@@ -226,6 +250,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             intentMediaPaused.setAction("media_action");
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPaused);
 
+            if (mTelephonyManager != null)
+                mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
+
             SyncWithWearDevice();
         }
     }
@@ -256,6 +283,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("isplaying", true);
         editor.apply();
+
+        if (mTelephonyManager != null)
+            mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
 
         try {
 
@@ -396,6 +426,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             Log.d(mContext.getPackageName(), "Media position changed to: " + position);
         }
     };
+
     private void showNotification(Boolean pause) {
 
         final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -409,6 +440,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, mNotificationChannelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setColor(0x008000)
                 .setContentText(mEpisode.getTitle())
                 .setContentIntent(PendingIntent.getActivity(mContext, mEpisode.getEpisodeId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
@@ -526,7 +558,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     @Override
-    public void onAudioFocusChange(int focusChange) {
+    public void onAudioFocusChange(final int focusChange) {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS: {
                 if (mMediaPlayer.isPlaying()) {
@@ -545,12 +577,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 break;
             }
             case AudioManager.AUDIOFOCUS_GAIN: {
-                if (mMediaPlayer != null) {
-                    if (!mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.start();
-                    }
-                    mMediaPlayer.setVolume(1.0f, 1.0f);
-                }
+                //if (mMediaPlayer != null) {
+                    //if (!mMediaPlayer.isPlaying()) {
+                    //mMediaPlayer.start();
+                    //}
+                    //mMediaPlayer.setVolume(1.0f, 1.0f);
+                //}
                 break;
             }
         }
