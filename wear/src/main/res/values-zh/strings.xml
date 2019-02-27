@@ -235,6 +235,8 @@
     <string name="menu_main_title_playlist_add">添加到播放列表</string>
 
     <string name="menu_episode_wifi_open">打開WiFi設置</string>
+    <string name="menu_episode_bluetooth_enable">啟用藍牙</string>
+    <string name="menu_episode_bluetooth_disable">禁用藍牙</string>
 
     <string name="menu_episodes_mark_all_played">馬克都玩過了</string>
     <string name="menu_episodes_mark_all_unplayed">標記所有未播放</string>

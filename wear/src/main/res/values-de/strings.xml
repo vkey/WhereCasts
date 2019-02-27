@@ -238,6 +238,8 @@
     <string name="menu_main_title_playlist_add">Zur Titelliste hinzufügen</string>
 
     <string name="menu_episode_wifi_open">Öffnen Sie die WLAN-Einstellungen</string>
+    <string name="menu_episode_bluetooth_enable">Aktivieren Sie Bluetooth</string>
+    <string name="menu_episode_bluetooth_disable">Deaktivieren Sie Bluetooth</string>
 
     <string name="tips_swipe_left">Wischen Sie nach links, um die automatischen Wiedergabelisten anzuzeigen</string>
     <string name="tips_swipe_long_press">Lange drücken Sie einen Podcast für Optionen</string>

@@ -236,6 +236,8 @@
     <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
 
     <string name="menu_episode_wifi_open">Öppna WiFi-inställningarna</string>
+    <string name="menu_episode_bluetooth_enable">Aktivera Bluetooth</string>
+    <string name="menu_episode_bluetooth_disable">Inaktivera Bluetooth</string>
 
     <string name="menu_episodes_mark_all_played">Markera alla spelade</string>
     <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>

@@ -71,17 +71,6 @@
                     android:background="?android:attr/selectableItemBackground"
                     />
 
-                <ImageView
-                    android:id="@+id/podcast_episode_toggle_bluetooth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="5dp"
-                    />
-
-
                 <TextView
                     android:id="@+id/tv_skip_back"
                     android:layout_width="wrap_content"
