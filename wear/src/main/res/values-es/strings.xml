@@ -235,6 +235,8 @@
     <string name="menu_main_title_download_cancel">Cancelar descarga</string>
     <string name="menu_main_title_playlist_add">Agregar a la lista\nde reproducción</string>
 
+    <string name="menu_episode_wifi_open">Abrir la configuración de WiFi</string>
+
     <string name="menu_episodes_mark_all_played">Marcar todo jugado</string>
     <string name="menu_episodes_mark_all_unplayed">Marcar todo sin reproducir</string>
     <string name="menu_episodes_search">Buscar</string>
@@ -273,6 +275,7 @@
     <string name="alert_add_podcast_no_episodes">pero no se han encontrado episodios</string>
     <string name="alert_no_system_audio">No se encontró el audio del sistema</string>
     <string name="text_episode_no_media">No se puede encontrar el medio para la reproducción. Eliminar y volver a agregar o contactar al proveedor de podcasts.</string>
+    <string name="alert_main_menu_start_update">Iniciar actualización?</string>
     <string name="alert_podcast_added">Adicional</string>
     <string name="alert_episode_playlist_added">Añadido a %s</string>
     <string name="alert_episodes_playlist_added">Adicional %d episodios a %s</string>

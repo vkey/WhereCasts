@@ -374,7 +374,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             case 1:
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setMessage("Start update?");
+                    alert.setMessage(R.string.alert_main_menu_start_update);
                     alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

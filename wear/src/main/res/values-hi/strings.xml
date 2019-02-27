@@ -235,6 +235,8 @@
     <string name="menu_main_title_download_cancel">डाउनलोड रद्द करें</string>
     <string name="menu_main_title_playlist_add">प्लेलिस्ट में जोड़ें</string>
 
+    <string name="menu_episode_wifi_open">वाईफाई सेटिंग्स खोलें</string>
+
     <string name="menu_episodes_mark_all_played">सभी को खेले गए निशान</string>
     <string name="menu_episodes_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें</string>
     <string name="menu_episodes_search">खोज</string>
@@ -273,6 +275,7 @@
     <string name="alert_add_podcast_no_episodes">लेकिन कोई एपिसोड नहीं मिला</string>
     <string name="alert_no_system_audio">कोई सिस्टम ऑडियो नहीं मिला</string>
     <string name="text_episode_no_media">प्लेबैक के लिए मीडिया नहीं मिल सकता है पॉडकास्ट प्रदाता हटाएं और पुनः जोड़ें या संपर्क करें.</string>
+    <string name="alert_main_menu_start_update">अपडेट शुरू करें?</string>
     <string name="alert_podcast_added">जोड़ा गया</string>
     <string name="alert_episode_playlist_added">में जोड़ा %s</string>
     <string name="alert_episodes_playlist_added">जोड़ा गया %d एपिसोड %s</string>

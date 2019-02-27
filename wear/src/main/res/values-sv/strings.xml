@@ -235,6 +235,8 @@
     <string name="menu_main_title_download_cancel">Avbryt Ladda ner</string>
     <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
 
+    <string name="menu_episode_wifi_open">Öppna WiFi-inställningarna</string>
+
     <string name="menu_episodes_mark_all_played">Markera alla spelade</string>
     <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>
     <string name="menu_episodes_search">Sök</string>
@@ -273,6 +275,7 @@
     <string name="alert_add_podcast_no_episodes">men inga episoder hittades</string>
     <string name="alert_no_system_audio">Inget systemljud hittades</string>
     <string name="text_episode_no_media">Kan inte hitta media för uppspelning. Ta bort och lägg till eller kontakta podcastleverantören.</string>
+    <string name="alert_main_menu_start_update">Starta uppdateringen?</string>
     <string name="alert_podcast_added">Lagt till</string>
     <string name="alert_episode_playlist_added">Lagt till %s</string>
     <string name="alert_episodes_playlist_added">Lagt till %d episoder till %s</string>
