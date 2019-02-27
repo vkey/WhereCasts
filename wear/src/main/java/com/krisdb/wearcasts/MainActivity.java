@@ -60,6 +60,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         final NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(102);
 
+        //CommonUtils.showToast(this, CommonUtils.getDensityName(this));
+
         //final SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubdate] DESC LIMIT 1)");
 

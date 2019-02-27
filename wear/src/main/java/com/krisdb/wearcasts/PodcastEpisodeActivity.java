@@ -3,6 +3,7 @@ package com.krisdb.wearcasts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -70,7 +71,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private int mPlaylistID, mCurrentState, mThemeID;
     private long mDownloadId, mDownloadStartTime;
     private Handler mDownloadProgressHandler = new Handler();
-    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage;
+    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage, mToggleBluetooth;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
     private MediaBrowserCompat mMediaBrowserCompat;
     private WearableActionDrawerView mWearableActionDrawer;
@@ -128,6 +129,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mSkipBackImage = findViewById(R.id.ic_skip_back);
         mSkipForwardImage = findViewById(R.id.ic_skip_forward);
         mDownloadSpeed = findViewById(R.id.podcast_episode_download_speed);
+        mToggleBluetooth = findViewById(R.id.podcast_episode_toggle_bluetooth);
         mVolumeUp = findViewById(R.id.ic_volume_up);
         //mVolumeDown = findViewById(R.id.ic_volume_down);
         mDurationView = findViewById(R.id.tv_podcast_duration);
@@ -180,7 +182,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             }
         });
 
-
         /*
         mVolumeDown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +191,32 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             }
         });
         */
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (adapter != null) {
+            if (adapter.isEnabled())
+                mToggleBluetooth.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_episode_toggle_bluetooth_disable));
+            else
+                mToggleBluetooth.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_episode_toggle_bluetooth_enable));
+        }
+        else
+            mToggleBluetooth.setVisibility(View.INVISIBLE);
+
+        mToggleBluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (adapter.isEnabled()) {
+                    mToggleBluetooth.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_episode_toggle_bluetooth_enable));
+                    CommonUtils.showToast(mContext, getString(R.string.alert_disable_bluetooth_disabled_end));
+                    adapter.disable();
+                }
+                else {
+                    mToggleBluetooth.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_episode_toggle_bluetooth_disable));
+                    CommonUtils.showToast(mContext, getString(R.string.alert_disable_bluetooth_enabled));
+                    adapter.enable();
+                }
+            }
+        });
 
         mSkipBackImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,7 +326,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             extras.putString("local_file", mLocalFile);
             extras.putInt("playlistid", mPlaylistID);
             mDownloadImage.setVisibility(View.GONE);
-
+            mToggleBluetooth.setVisibility(View.GONE);
             //check for downloaded episode
             if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
@@ -327,6 +354,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mDownloadImage.setVisibility(View.VISIBLE);
+            mToggleBluetooth.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
             mInfoLayout.setVisibility(View.GONE);
             //mVolumeDown.setVisibility(View.GONE);
@@ -361,6 +389,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         findViewById(R.id.tv_skip_forward).setVisibility(View.INVISIBLE);
         mProgressCircle.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.INVISIBLE);
+        mToggleBluetooth.setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_podcast_episode_download).setVisibility(View.INVISIBLE);
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.INVISIBLE);
@@ -393,6 +422,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         //mLogo.setVisibility(View.VISIBLE);
         mProgressCircle.setVisibility(View.VISIBLE);
         mDownloadSpeed.setVisibility(View.VISIBLE);
+        mToggleBluetooth.setVisibility(View.VISIBLE);
         findViewById(R.id.tv_skip_back).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_podcast_episode_download).setVisibility(View.VISIBLE);
         findViewById(R.id.ic_podcast_playpause).setVisibility(View.VISIBLE);
@@ -483,6 +513,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mCurrentState = STATE_PLAYING;
 
             mDownloadImage.setVisibility(View.INVISIBLE);
+            mToggleBluetooth.setVisibility(View.GONE);
             final Boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
 
             if (isCurrentlyPlaying) {
@@ -518,6 +549,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mInfoLayout.setVisibility(View.GONE);
+            mToggleBluetooth.setVisibility(View.VISIBLE);
             //mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
@@ -689,6 +721,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 //Log.d(mContext.getPackageName(), "Status: " + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
+                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
                 switch (status) {
                     case DownloadManager.STATUS_PAUSED:
@@ -703,9 +736,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         else
                             mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024)) + " MB/s");
 
-                        //mDisableBluetooth.setVisibility(adapter != null && adapter.isEnabled() ? View.VISIBLE : View.GONE);
                         mProgressCircle.setProgress(bytes_downloaded);
                         mProgressCircle.setVisibility(View.VISIBLE);
+
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
