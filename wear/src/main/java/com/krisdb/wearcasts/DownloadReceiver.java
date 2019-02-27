@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts;
 
 import android.app.DownloadManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
@@ -83,6 +85,16 @@ public class DownloadReceiver extends BroadcastReceiver {
             }
 
             cursor.close();
+
+            /*
+            if (prefs.getBoolean("enable_bluetooth", false) && isCurrentDownload(context) == false)
+            {
+                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+                if (adapter != null && adapter.isEnabled() == false)
+                    adapter.enable();
+            }
+            */
 
             //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
             {

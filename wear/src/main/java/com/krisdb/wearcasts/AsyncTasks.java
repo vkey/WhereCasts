@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -125,6 +126,41 @@ public class AsyncTasks {
         @Override
         protected void onPostExecute(Void result) {
             mResponse.processFinish(true);
+        }
+    }
+
+    public static class DisableBluetooth extends AsyncTask<Void, Void, Void> {
+        private Interfaces.AsyncResponse mResponse;
+
+        DisableBluetooth(final Context context, final Interfaces.AsyncResponse response)
+        {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
+            final SharedPreferences.Editor editor = prefs.edit();
+
+            if (prefs.getBoolean("disable_bluetooth_first_time", true)) {
+                CommonUtils.showToast(mContext.get(), "Bluetooth with be enabled when downloading is finished");
+                editor.putBoolean("disable_bluetooth_first_time", false);
+            }
+            else
+                CommonUtils.showToast(mContext.get(), "Disabling Bluetooth...");
+
+            editor.putBoolean("enable_bluetooth", true);
+            editor.apply();
+            adapter.disable();
+            SystemClock.sleep(3000);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            mResponse.processFinish();
         }
     }
 
