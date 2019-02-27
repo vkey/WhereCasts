@@ -180,6 +180,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             }
         });
 
+
         /*
         mVolumeDown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -584,6 +585,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         final int itemId = menuItem.getItemId();
 
         switch (itemId) {
+            case R.id.menu_drawer_episode_open_wifi:
+                startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                break;
             case R.id.menu_drawer_episode_markplayed:
                 DBUtilities.SaveEpisodeValue(mContext, mEpisode, "finished", 1);
                 CommonUtils.showToast(mActivity, getString(R.string.alert_marked_played));
@@ -699,6 +703,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         else
                             mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024)) + " MB/s");
 
+                        //mDisableBluetooth.setVisibility(adapter != null && adapter.isEnabled() ? View.VISIBLE : View.GONE);
                         mProgressCircle.setProgress(bytes_downloaded);
                         mProgressCircle.setVisibility(View.VISIBLE);
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));

@@ -22,4 +22,9 @@
         android:icon="@drawable/ic_action_mark_unread"
         />
 
+    <item android:id="@+id/menu_drawer_episode_open_wifi"
+        android:title="@string/menu_episode_wifi_open"
+        android:icon="@drawable/ic_menu_episode_wifi_open"
+        />
+
 </menu>

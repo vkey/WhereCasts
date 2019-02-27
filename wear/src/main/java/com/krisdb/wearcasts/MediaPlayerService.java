@@ -772,12 +772,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 break;
             }
             case AudioManager.AUDIOFOCUS_GAIN: {
-                if (mMediaPlayer != null) {
-                    if (!mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.start();
-                    }
-                    mMediaPlayer.setVolume(1.0f, 1.0f);
-                }
+                //if (mMediaPlayer != null) {
+                    //if (!mMediaPlayer.isPlaying()) {
+                    //mMediaPlayer.start();
+                    //}
+                    //mMediaPlayer.setVolume(1.0f, 1.0f);
+                //}
                 break;
             }
         }

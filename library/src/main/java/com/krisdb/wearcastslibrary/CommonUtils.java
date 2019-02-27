@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -18,6 +20,7 @@ import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.graphics.Palette;
@@ -360,6 +363,52 @@ public class CommonUtils {
     }
 
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem, int defaultResource) {
+
+        Bitmap bitmap;
+        int borderWidth = 3;
+
+        if (channelItem != null && channelItem.getThumbnailUrl() != null)
+            bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory() + channelItem.getThumbnailName());
+        else {
+            bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
+            borderWidth = 2;
+        }
+
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
+            borderWidth = 2;
+        }
+
+        final int bitmapWidthImage = bitmap.getWidth();
+        final int bitmapHeightImage = bitmap.getHeight();
+        final int borderWidthHalfImage = 4;
+
+        final int bitmapRadiusImage = Math.min(bitmapWidthImage,bitmapHeightImage);
+        final int bitmapSquareWidthImage = Math.min(bitmapWidthImage,bitmapHeightImage);
+        final int newBitmapSquareWidthImage = bitmapSquareWidthImage+borderWidthHalfImage;
+
+        final Bitmap roundedImageBitmap = Bitmap.createBitmap(newBitmapSquareWidthImage,newBitmapSquareWidthImage,Bitmap.Config.ARGB_8888);
+        final Canvas mcanvas = new Canvas(roundedImageBitmap);
+        //mcanvas.drawColor(Color.RED);
+        final int i = borderWidthHalfImage + bitmapSquareWidthImage - bitmapWidthImage;
+        final int j = borderWidthHalfImage + bitmapSquareWidthImage - bitmapHeightImage;
+
+        mcanvas.drawBitmap(bitmap, i, j, null);
+
+        final Paint borderImagePaint = new Paint();
+        borderImagePaint.setStyle(Paint.Style.STROKE);
+        borderImagePaint.setStrokeWidth(borderWidthHalfImage*borderWidth);
+        borderImagePaint.setColor(ContextCompat.getColor(ctx, R.color.wc_logo_border));
+        mcanvas.drawCircle(mcanvas.getWidth() >> 1, mcanvas.getWidth() >> 1, newBitmapSquareWidthImage >> 1, borderImagePaint);
+
+        final RoundedBitmapDrawable roundedImageBitmapDrawable = RoundedBitmapDrawableFactory.create(ctx.getResources(),roundedImageBitmap);
+        roundedImageBitmapDrawable.setCornerRadius(bitmapRadiusImage);
+        roundedImageBitmapDrawable.setAntiAlias(true);
+
+        return roundedImageBitmapDrawable;
+    }
+
+    public static RoundedBitmapDrawable GetRoundedLogoOLD(final Context ctx, final ChannelItem channelItem, int defaultResource) {
         RoundedBitmapDrawable rdb;
 
         if (channelItem != null && channelItem.getThumbnailUrl() != null)
