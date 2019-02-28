@@ -296,7 +296,7 @@
     <string name="alert_episode_download_start">ダウンロード…</string>
     <string name="alert_episode_network_search">高帯域幅ネットワークの検索…</string>
     <string name="alert_episode_network_notfound">ネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
-    <string name="alert_episode_network_no_high_bandwidth">高帯域幅のネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
+    <string name="alert_episode_network_no_high_bandwidth">高帯域幅ネットワークが見つかりません。 WiFi設定を開く?</string>
     <string name="alert_playlist_delete">本気ですか?</string>
 
     <string name="alert_download_error_noresume">ダウンロードを再開できません. もう一度お試しください</string>

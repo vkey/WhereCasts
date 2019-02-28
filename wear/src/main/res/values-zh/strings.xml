@@ -295,7 +295,7 @@
     <string name="alert_episode_download_start">下載…</string>
     <string name="alert_episode_network_search">尋找高帶寬網絡…</string>
     <string name="alert_episode_network_notfound">找不到網絡. 你想打開WiFi設置嗎?</string>
-    <string name="alert_episode_network_no_high_bandwidth">找不到高帶寬網絡。 你想打開WiFi設置嗎？?</string>
+    <string name="alert_episode_network_no_high_bandwidth">找不到高帶寬網絡。 打開WiFi設置?</string>
     <string name="alert_playlist_delete">你確定?</string>
 
     <string name="alert_download_error_noresume">無法恢復下載。 請再試一次</string>

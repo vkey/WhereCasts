@@ -296,7 +296,7 @@
     <string name="alert_episode_download_start">Téléchargement…</string>
     <string name="alert_episode_network_search">Recherche de réseau à haute bande passante…</string>
     <string name="alert_episode_network_notfound">Aucun réseau trouvé. Voulez-vous ouvrir les paramètres WiFi?</string>
-    <string name="alert_episode_network_no_high_bandwidth">Pas de réseau à bande passante élevée trouvé. Voulez-vous ouvrir les paramètres WiFi?</string>
+    <string name="alert_episode_network_no_high_bandwidth">Aucun réseau haut débit trouvé. Ouvrir les paramètres WiFi?</string>
     <string name="alert_playlist_delete">Êtes-vous sûr?</string>
 
     <string name="alert_download_error_noresume">Impossible de reprendre le téléchargement. Veuillez réessayer</string>

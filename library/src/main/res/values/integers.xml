@@ -8,6 +8,6 @@
 
     <integer name="playlist_playerfm">-7</integer>
     <integer name="playlist_radio">-8</integer>
-    <integer name="minimum_bandwidth">320</integer>
+    <integer name="minimum_bandwidth_kbs">1000</integer>
 
 </resources>

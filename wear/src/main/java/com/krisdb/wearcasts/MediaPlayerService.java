@@ -415,7 +415,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                     final Intent intentMediaCompleted = new Intent();
                     intentMediaCompleted.setAction("media_action");
-                    intentMediaCompleted.putExtra("media_start", false);
+                    intentMediaCompleted.putExtra("media_started", false);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
 
                     if (mLocalFile == null)

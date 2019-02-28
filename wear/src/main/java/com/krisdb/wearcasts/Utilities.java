@@ -69,7 +69,7 @@ public class Utilities {
         final NavItem navItemUpdate = new NavItem();
         navItemUpdate.setID(1);
         navItemUpdate.setTitle(ctx.getString(R.string.nav_main_update));
-        navItemUpdate.setIcon("ic_menu_main_update");
+        navItemUpdate.setIcon("ic_action_resync");
         items.add(navItemUpdate);
 
         final NavItem navItemSettings = new NavItem();

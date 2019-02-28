@@ -296,7 +296,7 @@
     <string name="alert_episode_download_start">डाउनलोड कर रहा है…</string>
     <string name="alert_episode_network_search">उच्च बैंडविड्थ नेटवर्क की खोज…</string>
     <string name="alert_episode_network_notfound">कोई नेटवर्क नहीं मिला क्या आप वाईफाई सेटिंग को खोलना चाहते हैं?</string>
-    <string name="alert_episode_network_no_high_bandwidth">कोई उच्च बैंडविड्थ नेटवर्क नहीं मिला। क्या आप वाईफाई सेटिंग्स खोलना चाहते हैं?</string>
+    <string name="alert_episode_network_no_high_bandwidth">कोई उच्च बैंडविड्थ नेटवर्क नहीं मिला। वाईफाई सेटिंग्स खोलें?</string>
     <string name="alert_playlist_delete">क्या आपको यकीन है?</string>
 
     <string name="alert_download_error_noresume">डाउनलोड फिर से शुरू नहीं कर सकता। कृपया पुन: प्रयास करें</string>

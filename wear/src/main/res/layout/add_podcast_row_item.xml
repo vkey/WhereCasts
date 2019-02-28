@@ -4,7 +4,6 @@
     android:id="@+id/add_podcast_row_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <ImageView
@@ -23,6 +22,7 @@
         android:id="@+id/add_podcast_row_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_alignParentTop="true"
         android:breakStrategy="simple"
         android:layout_toEndOf="@+id/add_podcast_row_item_add" />

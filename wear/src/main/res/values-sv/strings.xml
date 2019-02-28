@@ -296,7 +296,7 @@
     <string name="alert_episode_download_start">nedladdning…</string>
     <string name="alert_episode_network_search">Söker efter nätverk med hög bandbredd…</string>
     <string name="alert_episode_network_notfound">Inget nätverk hittades. Vill du öppna WiFi-inställningarna?</string>
-    <string name="alert_episode_network_no_high_bandwidth">Inget nätverk med hög bandbredd hittades. Vill du öppna WiFi-inställningarna?</string>
+    <string name="alert_episode_network_no_high_bandwidth">Inget nätverk med hög bandbredd hittades. Öppna WiFi-inställningarna?</string>
     <string name="alert_playlist_delete">Är du säker?</string>
 
     <string name="alert_download_error_noresume">Kan inte återuppta nedladdning. Var god försök igen</string>
