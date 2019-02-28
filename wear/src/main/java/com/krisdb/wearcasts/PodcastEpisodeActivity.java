@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -79,6 +80,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private android.support.v4.widget.NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
     private WeakReference<PodcastEpisodeActivity> mActivityRef;
+    private WearableNavigationDrawerView mNavDrawer;
 
     @Override
     public Resources.Theme getTheme() {
@@ -106,9 +108,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mNavItems = Utilities.getNavItems(this);
 
-        final WearableNavigationDrawerView navDrawer = findViewById(R.id.drawer_nav_episode);
-        navDrawer.setAdapter(new NavigationAdapter(this, mNavItems));
-        navDrawer.addOnItemSelectedListener(this);
+        mNavDrawer = findViewById(R.id.drawer_nav_episode);
+        mNavDrawer.setAdapter(new NavigationAdapter(this, mNavItems));
+        mNavDrawer.addOnItemSelectedListener(this);
 
         mMediaBrowserCompat = new MediaBrowserCompat(
                 mContext,
@@ -152,6 +154,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 if (mEpisode.getPodcastId() > 0)
                     startActivity(intent);
+
                 return false;
             }
         });
@@ -234,7 +237,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
         final Menu menu = mWearableActionDrawer.getMenu();
-
         if (adapter != null) {
             menu.clear();
             if (adapter.isEnabled())
@@ -362,6 +364,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
 
         mScrollView.setBackgroundColor(getColor(R.color.wc_background_amoled));
+        mWearableActionDrawer.getController().closeDrawer();
+        mNavDrawer.getController().closeDrawer();
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
 
         if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
             findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
