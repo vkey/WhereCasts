@@ -5,6 +5,9 @@
     <color name="wc_checkboxes">#ff4285f4</color>
     <color name="background">#ff101018</color>
 
+    <color name="wc_toast_bg">#00000000</color>
+    <color name="wc_toast_text">#FFFFFF</color>
+
     <color name="wc_text">#FFFFFF</color>
 
     <color name="wc_background_dark">#2e2e2e</color>
