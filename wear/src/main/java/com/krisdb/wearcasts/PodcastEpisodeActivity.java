@@ -53,6 +53,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Locale;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
@@ -708,12 +709,19 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
+                        try
+                        {
                         final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
                         if (bytesPerSec < 1000000.0)
-                            mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024) + " KB/s");
+                            mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
                         else
-                            mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024)) + " MB/s");
+                            mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat( " MB/s"));
+                        }
+                        catch (Exception ex)
+                        {
+                            mDownloadSpeed.setVisibility(View.GONE);
+                        }
 
                         mProgressCircle.setProgress(bytes_downloaded);
                         mProgressCircle.setVisibility(View.VISIBLE);
