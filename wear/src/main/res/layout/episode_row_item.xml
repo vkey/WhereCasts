@@ -26,6 +26,7 @@
         android:breakStrategy="simple"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"
+        android:lineSpacingExtra="2dp"
         />
 
     <ImageView
