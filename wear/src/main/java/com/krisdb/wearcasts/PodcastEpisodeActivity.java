@@ -711,12 +711,12 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                         try
                         {
-                        final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
+                            final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
-                        if (bytesPerSec < 1000000.0)
-                            mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
-                        else
-                            mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat( " MB/s"));
+                            if (bytesPerSec < 1000000.0)
+                                mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
+                            else
+                                mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat( " MB/s"));
                         }
                         catch (Exception ex)
                         {
@@ -1116,6 +1116,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     message = getString(R.string.error_playback_lowdisk);
                 else if (errorCode < 0)
                     message = getString(R.string.error_playback_other);
+
+                message = message.concat("\n(error code: ".concat(String.valueOf(errorCode).concat(")")));
 
                 showToast(mActivity, message);
 

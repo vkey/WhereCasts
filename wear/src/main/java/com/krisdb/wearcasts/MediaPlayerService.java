@@ -65,6 +65,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
+    private Boolean mError = false;
 
     public MediaPlayerService() {
         super();
@@ -383,6 +384,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     int position;
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
+                    mError = false;
+
                     if (mLocalFile == null)
                         position = DBUtilities.GetEpisodeValue(getApplicationContext(), mEpisode, "position");
                     else
@@ -458,7 +461,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     intentMediaError.putExtra("media_error", true);
                     intentMediaError.putExtra("error_code", what);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
-
+                    mError = true;
                     Log.e(mPackage, "MediaPlayerService Service error: " + String.valueOf(what) + " " + String.valueOf(extra));
 
                     if (mMediaPlayer != null) {
@@ -845,19 +848,21 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
-        new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish( final List<PodcastItem> playlistItems ) {
-                        final Intent intentMediaCompleted = new Intent();
-                        intentMediaCompleted.setAction("media_action");
-                        intentMediaCompleted.putExtra("media_completed", true);
-                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
-                        stopForeground(false);
-                        SystemClock.sleep(500);
-                        playlistSkip(Enums.SkipDirection.NEXT, playlistItems);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (mError == false) {
+            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile,
+                    new Interfaces.PodcastsResponse() {
+                        @Override
+                        public void processFinish(final List<PodcastItem> playlistItems) {
+                            final Intent intentMediaCompleted = new Intent();
+                            intentMediaCompleted.setAction("media_action");
+                            intentMediaCompleted.putExtra("media_completed", true);
+                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+                            stopForeground(false);
+                            SystemClock.sleep(500);
+                            playlistSkip(Enums.SkipDirection.NEXT, playlistItems);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override
