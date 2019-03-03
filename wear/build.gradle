@@ -9,8 +9,8 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 465
-        versionName "1.30.18"
+        versionCode 466
+        versionName "1.30.19"
     }
     buildTypes {
         release {
