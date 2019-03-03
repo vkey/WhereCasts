@@ -253,6 +253,7 @@
                 android:layout_below="@+id/podcast_episode_error"
                 android:textSize="14sp"
                 android:layout_marginBottom="20dp"
+                android:lineSpacingExtra="2dp"
                 />
         </RelativeLayout>
 
