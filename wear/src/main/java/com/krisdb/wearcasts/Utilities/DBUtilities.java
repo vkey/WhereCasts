@@ -1,4 +1,4 @@
-package com.krisdb.wearcasts.Databases;
+package com.krisdb.wearcasts.Utilities;
 
 
 import android.content.ContentValues;
@@ -11,9 +11,10 @@ import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Databases.DatabaseHelper;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -158,7 +159,7 @@ public class DBUtilities {
 
         final SQLiteDatabase sdb = db.select();
 
-        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [downloadid] = ?"), new String[]{String.valueOf(downloadId)});
+        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.downloadid = ?"), new String[]{String.valueOf(downloadId)});
 
         PodcastItem podcast = new PodcastItem();
 
@@ -184,9 +185,9 @@ public class DBUtilities {
         Cursor cursor;
 
         if (count== -1)
-            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? AND [download] = 0 AND [downloadid] = 0"), new String[]{String.valueOf(podcastId)});
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.pid = ? AND tbl_podcast_episodes.download = 0 AND tbl_podcast_episodes.downloadid = 0"), new String[]{String.valueOf(podcastId)});
         else
-            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? AND [download] = 0 AND [downloadid] = 0 LIMIT -1 OFFSET ".concat(String.valueOf(count))), new String[]{String.valueOf(podcastId)});
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.pid = ? AND tbl_podcast_episodes.download = 0 AND tbl_podcast_episodes.downloadid = 0 LIMIT -1 OFFSET ".concat(String.valueOf(count))), new String[]{String.valueOf(podcastId)});
 
         if (cursor.moveToFirst()) {
             episodes.add(SetPodcastEpisode(cursor));
@@ -224,7 +225,7 @@ public class DBUtilities {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
 
-        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [title] = ?"), new String[]{String.valueOf(title)});
+        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.title = ?"), new String[]{String.valueOf(title)});
 
         if (cursor.moveToFirst())
             episode = SetPodcastEpisode(cursor);
@@ -278,7 +279,7 @@ public class DBUtilities {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
 
-        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [playing] = 1"), null);
+        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes.tbl_podcast_episodes WHERE tbl_podcast_episodes.playing = 1"), null);
 
         PodcastItem episode = null;
         if (cursor.moveToFirst()) {
@@ -594,7 +595,8 @@ public class DBUtilities {
 
         return podcasts;
     }
-    static PodcastItem GetEpisode(final Context ctx, final int episodeId) {
+
+    public static PodcastItem GetEpisode(final Context ctx, final int episodeId) {
         return GetEpisode(ctx, episodeId, Integer.MAX_VALUE);
     }
 
@@ -606,7 +608,7 @@ public class DBUtilities {
         final SQLiteDatabase sdb = db.select();
 
         final Cursor cursor = sdb.rawQuery(
-                "SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE id = ?"),
+                "SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.id = ?"),
                 new String[] { String.valueOf(episodeId) }
         );
 
@@ -957,7 +959,7 @@ public class DBUtilities {
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    PodcastItem episode = SetPodcastEpisode(cursor);
+                    final PodcastItem episode = SetPodcastEpisode(cursor);
 
                     if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));

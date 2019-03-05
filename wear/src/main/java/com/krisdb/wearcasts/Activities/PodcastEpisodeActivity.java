@@ -21,8 +21,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaBrowserCompat;
@@ -36,7 +36,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,13 +52,13 @@ import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -625,9 +624,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 break;
-            //case R.id.menu_drawer_episode_open_wifi:
-                //startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
-                //break;
+            case R.id.menu_drawer_episode_open_wifi:
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                break;
             case R.id.menu_drawer_episode_markunplayed:
                 DBUtilities.markUnplayed(mContext, mEpisode);
                 mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
@@ -699,8 +698,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
     private void setMenu()
     {
-        final PodcastItem episode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
-
         final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
         final Menu menu = mWearableActionDrawer.getMenu();
@@ -715,7 +712,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
         }
 
-        menu.removeItem(episode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
+        menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
     }
 
 

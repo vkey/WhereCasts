@@ -11,8 +11,8 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -153,7 +153,7 @@ public class AsyncTasks {
             else
                 adapter.enable();
 
-            SystemClock.sleep(1000);
+            SystemClock.sleep(1300);
             return null;
         }
 

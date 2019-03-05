@@ -14,9 +14,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.List;

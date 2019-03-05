@@ -25,13 +25,13 @@ import android.view.View;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Fragments.PodcastEpisodesListFragment;
 import com.krisdb.wearcasts.Fragments.PodcastsListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -62,6 +62,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
 
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);

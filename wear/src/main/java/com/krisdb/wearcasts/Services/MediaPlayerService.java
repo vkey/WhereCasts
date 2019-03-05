@@ -43,8 +43,8 @@ import android.util.Log;
 import com.krisdb.wearcasts.Activities.PodcastEpisodeActivity;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
@@ -214,7 +214,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mPlaylistID = extras.getInt("playlistid");
             mLocalFile = extras.getString("local_file");
-            mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
+            mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"));
 
             StartStream(uri);
         }

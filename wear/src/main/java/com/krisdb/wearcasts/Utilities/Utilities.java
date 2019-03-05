@@ -20,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.BackgroundService;
