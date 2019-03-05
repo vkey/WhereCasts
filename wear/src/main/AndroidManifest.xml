@@ -61,7 +61,7 @@
             android:value="NO_BRIDGING" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name_wc"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden">
@@ -71,29 +71,30 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PodcastEpisodeListActivity" android:launchMode="singleTask" />
-        <activity android:name=".PodcastEpisodeActivity" android:launchMode="singleTask" />
-        <activity android:name=".SettingsPodcastsActivity" />
-        <activity android:name=".SearchDirectoryActivity" />
-        <activity android:name=".SearchEpisodesActivity" />
-        <activity android:name=".SettingsPodcastActivity" />
-        <activity android:name=".SettingsPodcastsUpdatesActivity" />
-        <activity android:name=".SettingsPodcastsDisplayActivity" />
-        <activity android:name=".SettingsPodcastsGeneralActivity" />
-        <activity android:name=".AddPodcastsActivity" />
-        <activity android:name=".SettingsPodcastsPlaybackActivity" />
-        <activity android:name=".SettingsPodcastsDownloadsActivity" />
-        <activity android:name=".SettingsPlaylistsActivity" />
-        <activity android:name=".EpisodeContextActivity" />
+        <activity android:name=".Activities.PodcastEpisodeListActivity" android:launchMode="singleTask" />
+        <activity android:name=".Activities.PodcastEpisodeActivity" android:launchMode="singleTask" />
+        <activity android:name=".Activities.SearchDirectoryActivity" />
+        <activity android:name=".Activities.SearchEpisodesActivity" />
+        <activity android:name=".Activities.AddPodcastsActivity" />
+        <activity android:name=".Activities.EpisodeContextActivity" />
+        <activity android:name=".Settings.SettingsPodcastsActivity" />
 
-        <receiver android:name=".DownloadReceiver">
+        <activity android:name=".Settings.SettingsPodcastActivity" />
+        <activity android:name=".Settings.SettingsPodcastsUpdatesActivity" />
+        <activity android:name=".Settings.SettingsPodcastsDisplayActivity" />
+        <activity android:name=".Settings.SettingsPodcastsGeneralActivity" />
+        <activity android:name=".Settings.SettingsPodcastsPlaybackActivity" />
+        <activity android:name=".Settings.SettingsPodcastsDownloadsActivity" />
+        <activity android:name=".Settings.SettingsPlaylistsActivity" />
+
+        <receiver android:name=".Receivers.DownloadReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".Receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -107,12 +108,12 @@
         </receiver>
 
         <service
-            android:name=".BackgroundService"
+            android:name=".Services.BackgroundService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
-            android:name=".MediaPlayerService"
+            android:name=".Services.MediaPlayerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -121,7 +122,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".ImportService">
+        <service android:name=".Services.ImportService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
 

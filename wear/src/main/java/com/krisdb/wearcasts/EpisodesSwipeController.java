@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
+import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
+import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -22,7 +24,7 @@ public class EpisodesSwipeController extends Callback {
     private EpisodesAdapter mAdapter;
     private int mPlaylistID;
 
-    EpisodesSwipeController(final Context ctx, final EpisodesAdapter adapter, final List<PodcastItem> episodes, final int playlistId)
+    public EpisodesSwipeController(final Context ctx, final EpisodesAdapter adapter, final List<PodcastItem> episodes, final int playlistId)
     {
         mContext = ctx;
         mAdapter = adapter;
