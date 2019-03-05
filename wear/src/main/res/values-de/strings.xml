@@ -90,6 +90,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Zum Synchronisieren von Podcasts klicken</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Verstecken Sie Podcasts ohne neue Episoden</string>
     <string name="settings_podcasts_label_show_downloads">Podcasts nur mit Downloads anzeigen</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Nur heruntergeladene Episoden anzeigen</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">In Episodenliste und Wiedergabelisten</string>
     <string name="settings_podcasts_label_disable_ambient">Umgebungsmodus deaktivieren</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Der Umgebungsmodus ist nur auf dem Wiedergabebildschirm</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Leere Playlists ausblenden</string>

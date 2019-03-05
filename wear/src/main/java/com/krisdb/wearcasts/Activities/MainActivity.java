@@ -115,8 +115,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(1);
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(2);
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(3);
-        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Next");
-        //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Comedy");
+        //new com.krisdb.wearcasts.Databases.DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Next");
+        //new com.krisdb.wearcasts.Databases.DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Comedy");
         //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Videos");
         //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Business");
         //Utilities.resetHomeScreen(this);
@@ -158,6 +158,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(resources.getInteger(R.integer.default_home_screen))));
             final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
             final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
+            final boolean showOnlyDownloads = PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false);
 
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
@@ -168,8 +169,16 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             final List<PlaylistItem> playlists = DBUtilities.getPlaylists(ctx, hideEmpty);
 
-            for(final PlaylistItem playlist: playlists)
-                mPlayListIds.add(playlist.getID());
+            if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false))
+            {
+                for (final PlaylistItem playlist : playlists)
+                    if (DBUtilities.HasEpisodes(ctx, 0, playlist.getID()))
+                        mPlayListIds.add(playlist.getID());
+            }
+            else {
+                for (final PlaylistItem playlist : playlists)
+                    mPlayListIds.add(playlist.getID());
+            }
 
             //if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_radio)))
                 //mPlayListIds.add(resources.getInteger(R.integer.playlist_radio));

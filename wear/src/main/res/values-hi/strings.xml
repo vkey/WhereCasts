@@ -87,6 +87,8 @@
     <string name="settings_podcasts_label_sync_podcasts">पॉडकास्ट सिंक करने के लिए क्लिक करें</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">कोई नया एपिसोड के साथ पॉडकास्ट छुपाएं</string>
     <string name="settings_podcasts_label_show_downloads">केवल डाउनलोड के साथ पॉडकास्ट दिखाएं</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">केवल डाउनलोड किए गए एपिसोड दिखाएं</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">एपिसोड की सूची और प्लेलिस्ट में</string>
     <string name="settings_podcasts_label_disable_ambient">परिवेश मोड अक्षम करें</string>
     <string name="settings_podcasts_label_disable_ambient_summary">परिवेश मोड केवल प्ले स्क्रीन पर है</string>
     <string name="settings_podcasts_label_playlists_hide_empty">खाली प्लेलिस्ट छुपाएं</string>

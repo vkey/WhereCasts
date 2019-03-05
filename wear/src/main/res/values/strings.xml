@@ -86,6 +86,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Click to sync podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Hide podcasts with no new episodes</string>
     <string name="settings_podcasts_label_show_downloads">Show podcasts with downloads only</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Show only downloaded episodes</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">In episodes list and playlists</string>
     <string name="settings_podcasts_label_disable_ambient">Disable ambient mode</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Ambient mode is on play screen only</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Hide empty playlists</string>

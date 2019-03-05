@@ -90,6 +90,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Haz clic para sincronizar podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Ocultar podcasts sin episodios nuevos</string>
     <string name="settings_podcasts_label_show_downloads">Mostrar podcasts solo con descargas</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Mostrar solo los episodios descargados</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">En la lista de episodios y listas de reproducción.</string>
     <string name="settings_podcasts_label_disable_ambient">Desactiva el modo ambiente</string>
     <string name="settings_podcasts_label_disable_ambient_summary">El modo ambiente solo está en la pantalla de juego</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Ocultar listas de reproducción vacías</string>

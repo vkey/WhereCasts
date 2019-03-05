@@ -90,6 +90,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Klicka för att synkronisera podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Dölj podcaster med inga nya episoder</string>
     <string name="settings_podcasts_label_show_downloads">Visa podcaster med endast nedladdningar</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Visa bara nedladdade episoder</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">I avsnittslistor och spellistor</string>
     <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Dölj tomma spellistor</string>

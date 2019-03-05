@@ -798,18 +798,27 @@ public class DBUtilities {
 
         Boolean output;
 
+        final boolean showOnlyDownloads = PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false);
+        String downloadsOnlySelect = "";
+
+        if (showOnlyDownloads)
+            downloadsOnlySelect = " AND tbl_podcast_episodes.download = 1";
+
         Cursor cursor;
 
         if (playlistId == ctx.getResources().getInteger(R.integer.playlist_downloads))
             cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0", null);
         else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_inprogress))
-            cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [position] > 0", null);
+            cursor = sdb.rawQuery("SELECT tbl_podcast_episodes.id FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.position > 0".concat(downloadsOnlySelect), null);
         //else if (playlistId == ctx.getResources().getInteger(R.integer.playlist_radio))
             //cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [radio] > 0", null);
         else if (playlistId != 0)
-            cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
+            if (showOnlyDownloads)
+                cursor = sdb.rawQuery("SELECT tbl_podcast_episodes.id FROM tbl_playlists_xref INNER JOIN tbl_podcast_episodes ON tbl_podcast_episodes.id = tbl_playlists_xref.episode_id WHERE tbl_playlists_xref.playlist_id = ?".concat(downloadsOnlySelect), new String[]{String.valueOf(playlistId)});
+            else
+               cursor = sdb.rawQuery("SELECT id FROM [tbl_playlists_xref] WHERE [playlist_id] = ?", new String[]{String.valueOf(playlistId)});
         else
-            cursor = sdb.rawQuery("SELECT id FROM [tbl_podcast_episodes] WHERE [pid] = ?", new String[]{String.valueOf(podcastId)});
+            cursor = sdb.rawQuery("SELECT tbl_podcast_episodes.id FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.pid = ?".concat(downloadsOnlySelect), new String[]{String.valueOf(podcastId)});
 
         output = cursor.moveToFirst();
 
@@ -889,28 +898,35 @@ public class DBUtilities {
 
         final String orderString = orderBy == null ?  Utilities.GetOrderClause(order) : orderBy;
 
+        final boolean showOnlyDownloads = prefs.getBoolean("pref_display_show_downloaded_episodes", false);
+
+        String downloadsOnlySelect = "";
+
+        if (showOnlyDownloads)
+            downloadsOnlySelect = " AND tbl_podcast_episodes.download = 1";
+
         final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
         final int playlistDefault = ctx.getResources().getInteger(R.integer.playlist_default);
 
         if (playlistId == resources.getInteger(R.integer.playlist_default)) //regular episodes
             {
                 if (hidePlayed)
-                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 AND [pid] = ? ORDER BY ".concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
+                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ".concat(downloadsOnlySelect).concat(" AND [pid] = ? ORDER BY ").concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
                 else if (query != null) {
                     query = "%".concat(query.toLowerCase()).concat("%");
-                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? AND ([title] LIKE ? OR [description] LIKE ?) ORDER BY [pubDate]"), new String[]{String.valueOf(podcastId), query, query});
+                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ?".concat(downloadsOnlySelect).concat(" AND ([title] LIKE ? OR [description] LIKE ?) ORDER BY [pubDate]")), new String[]{String.valueOf(podcastId), query, query});
                 }
                 else
-                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ? ORDER BY ".concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
+                    cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ?".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});
             }
             else if (playlistId == resources.getInteger(R.integer.playlist_downloads)) //downloads can also be in progress, so need separate query for downloads
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
-                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0 ORDER BY ".concat(orderString)), null);
+                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString)), null);
             else if (playlistId > resources.getInteger(R.integer.playlist_default) || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
-                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ? ORDER BY ".concat(orderString)), new String[]{String.valueOf(playlistId)});
+                cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ?".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(playlistId)});
             else
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [upnext] = 1 ORDER BY ".concat(orderString)), null);
 
