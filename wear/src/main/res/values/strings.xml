@@ -293,7 +293,8 @@
     <string name="alert_locating_network_notfound">Cannot locate a network</string>
     <string name="alert_sync_started">Syncing started</string>
     <string name="alert_sync_finished">Syncing completed</string>
-    <string name="alert_disable_bluetooth_disabled_start">Disabling Bluetooth…</string>
+    <string name="alert_disable_bluetooth_disabling">Disabling Bluetooth…</string>
+    <string name="alert_disable_bluetooth_enabling">Enabling Bluetooth…</string>
     <string name="alert_unsubscribing">Unsubscribing…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetooth disabled</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth enabled</string>

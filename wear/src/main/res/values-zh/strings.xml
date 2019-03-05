@@ -290,7 +290,8 @@
     <string name="alert_locating_network_notfound">找不到網絡</string>
     <string name="alert_sync_started">正在開始同步</string>
     <string name="alert_sync_finished">正在同步完成</string>
-    <string name="alert_disable_bluetooth_disabled_start">禁用藍牙…</string>
+    <string name="alert_disable_bluetooth_disabling">禁用藍牙…</string>
+    <string name="alert_disable_bluetooth_enabling">啟用藍牙…</string>
     <string name="alert_unsubscribing">退訂…</string>
     <string name="alert_disable_bluetooth_disabled_end">禁用藍牙</string>
     <string name="alert_disable_bluetooth_enabled">禁用藍牙</string>

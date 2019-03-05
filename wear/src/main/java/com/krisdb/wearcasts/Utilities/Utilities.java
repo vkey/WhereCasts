@@ -114,7 +114,6 @@ public class Utilities {
         return output;
     }
 
-
     public static void resetHomeScreen(final Context ctx)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

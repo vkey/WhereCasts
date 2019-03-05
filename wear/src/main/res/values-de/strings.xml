@@ -292,7 +292,8 @@
     <string name="alert_locating_network_notfound">Kann kein Netzwerk finden</string>
     <string name="alert_sync_started">Synchronisierung gestartet</string>
     <string name="alert_sync_finished">Synchronisierung abgeschlossen</string>
-    <string name="alert_disable_bluetooth_disabled_start">Bluetooth deaktivieren…</string>
+    <string name="alert_disable_bluetooth_disabling">Bluetooth deaktivieren…</string>
+    <string name="alert_disable_bluetooth_enabling">Bluetooth aktivieren…</string>
     <string name="alert_unsubscribing">Abmeldung…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetooth deaktiviert</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth aktiviert</string>

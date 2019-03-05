@@ -291,7 +291,8 @@
     <string name="alert_locating_network_notfound">ネットワークを見つけることができません</string>
     <string name="alert_sync_started">同期が開始されました</string>
     <string name="alert_sync_finished">同期が完了しました</string>
-    <string name="alert_disable_bluetooth_disabled_start">Bluetoothを無効にする…</string>
+    <string name="alert_disable_bluetooth_disabling">Bluetoothを無効にする…</string>
+    <string name="alert_disable_bluetooth_enabling">Bluetoothを有効にする…</string>
     <string name="alert_unsubscribing">サブスクライブ解除…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetoothが無効</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth対応</string>

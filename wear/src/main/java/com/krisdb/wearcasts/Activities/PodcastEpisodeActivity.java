@@ -17,9 +17,11 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -34,6 +36,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,6 +51,7 @@ import android.widget.TextView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Databases.DBUtilities;
 import com.krisdb.wearcasts.Models.NavItem;
@@ -60,6 +64,7 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -81,7 +86,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private RelativeLayout mInfoLayout, mControlsLayout;
     private DownloadManager mDownloadManager;
     private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed;
-    private int mPlaylistID, mCurrentState, mThemeID;
+    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
     private long mDownloadId, mDownloadStartTime;
     private Handler mDownloadProgressHandler = new Handler();
     private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage;
@@ -246,19 +251,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             }
         });
 
-        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-        final Menu menu = mWearableActionDrawer.getMenu();
-        if (adapter != null) {
-            menu.clear();
-            if (adapter.isEnabled())
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_bluetooth_enabled, menu);
-            else
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_bluetooth_disabled, menu);
-        }
-        else
-            getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
-
         final ContentValues cv = new ContentValues();
         cv.put("read", 1);
 
@@ -319,7 +311,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     {
         mWearableActionDrawer.setEnabled(true);
 
-        final Boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
+        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play episode
             final Bundle extras = new Bundle();
@@ -430,7 +422,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
             findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
-
+        mEpisodeID = -1;
         SetContent();
     }
 
@@ -441,7 +433,11 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         try {
             if (intent.getExtras() != null)
-                SetContent(intent.getExtras().getInt("eid"));
+            {
+                mEpisodeID = intent.getExtras().getInt("eid");
+                SetContent();
+            }
+
         } catch (Exception ex) {
             CommonUtils.showToast(this, getString(R.string.general_error));
             ex.printStackTrace();
@@ -460,23 +456,22 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                mMediaBrowserCompat.disconnect();
            }
        }
-        else
-            SetContent();
+        else {
+            mEpisodeID = -1;
+           SetContent();
+       }
     }
 
-    private void SetContent()
-    {
-        SetContent(-1);
-    }
-
-    private void SetContent(int episodeId) {
+    private void SetContent() {
 
         if (mLocalFile != null) {
             mEpisode = new PodcastItem();
             mEpisode.setTitle(mLocalFile);
         }
-        else if (episodeId > -1)
-            mEpisode = DBUtilities.GetEpisode(mActivity, episodeId, mPlaylistID);
+        else if (mEpisodeID > -1)
+            mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+
+        setMenu();
 
         mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel(), R.drawable.ic_thumb_default));
 
@@ -610,30 +605,38 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         final int itemId = menuItem.getItemId();
 
         switch (itemId) {
-            case R.id.menu_drawer_episode_bluetooth_enable:
-                BluetoothAdapter.getDefaultAdapter().enable();
-                final Menu menu1 = mWearableActionDrawer.getMenu();
-                menu1.clear();
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_bluetooth_enabled, menu1);
-                CommonUtils.showToast(mActivity, getString(R.string.alert_disable_bluetooth_enabled));
-                break;
             case R.id.menu_drawer_episode_bluetooth_disable:
-                BluetoothAdapter.getDefaultAdapter().disable();
-                final Menu menu2 = mWearableActionDrawer.getMenu();
-                menu2.clear();
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_bluetooth_disabled, menu2);
-                CommonUtils.showToast(mActivity, getString(R.string.alert_disable_bluetooth_disabled_end));
+                new AsyncTasks.ToggleBluetooth(mActivity, true,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                setMenu();
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                break;
+            case R.id.menu_drawer_episode_bluetooth_enable:
+                new AsyncTasks.ToggleBluetooth(mActivity, false,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                                setMenu();
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                 break;
             //case R.id.menu_drawer_episode_open_wifi:
                 //startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
                 //break;
-            case R.id.menu_drawer_episode_markplayed:
-                DBUtilities.SaveEpisodeValue(mContext, mEpisode, "finished", 1);
-                CommonUtils.showToast(mActivity, getString(R.string.alert_marked_played));
-                break;
             case R.id.menu_drawer_episode_markunplayed:
-                DBUtilities.SaveEpisodeValue(mContext, mEpisode, "finished", 0);
-                CommonUtils.showToast(mActivity, getString(R.string.alert_marked_unplayed));
+                DBUtilities.markUnplayed(mContext, mEpisode);
+                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                setMenu();
+                break;
+            case R.id.menu_drawer_episode_markplayed:
+                DBUtilities.markPlayed(mContext, mEpisode);
+                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                setMenu();
                 break;
             case R.id.menu_drawer_episode_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
@@ -693,6 +696,28 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         return true;
     }
+
+    private void setMenu()
+    {
+        final PodcastItem episode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+        final Menu menu = mWearableActionDrawer.getMenu();
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
+
+        if (adapter != null)
+            menu.removeItem(adapter.isEnabled() ? R.id.menu_drawer_episode_bluetooth_enable : R.id.menu_drawer_episode_bluetooth_disable);
+        else
+        {
+            menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
+            menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
+        }
+
+        menu.removeItem(episode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
+    }
+
 
     private Runnable downloadProgress = new Runnable() {
             @Override
@@ -1015,7 +1040,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 mLocalFile = getIntent().getExtras().getString("local_file");
 
-                SetContent(getIntent().getExtras().getInt("eid"));
+                mEpisodeID = getIntent().getExtras().getInt("eid");
+                SetContent();
                 mActivity.findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
 
                 } catch( RemoteException e ) {
@@ -1030,7 +1056,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         public void onExtrasChanged(Bundle extras) {
             super.onExtrasChanged(extras);
 
-            SetContent(extras.getInt("id"));
+            mEpisodeID = extras.getInt("id");
         }
 
         @Override
@@ -1156,7 +1182,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     mLocalFile = extras.getString("local_file");
                 else
                     mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
-                SetContent(extras.getInt("id"));
+                mEpisodeID = extras.getInt("id");
+                SetContent();
             }
             else {
                 int duration;

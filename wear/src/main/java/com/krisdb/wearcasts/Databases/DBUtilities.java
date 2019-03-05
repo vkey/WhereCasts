@@ -103,6 +103,31 @@ public class DBUtilities {
         return playlists;
     }
 
+    public static void markPlayed(final Context ctx, final PodcastItem episode)
+    {
+        final ContentValues cv = new ContentValues();
+        cv.put("finished", 1);
+        cv.put("position", 0);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        db.update(cv, episode.getEpisodeId());
+        db.close();
+
+        CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_played));
+    }
+
+    public static void markUnplayed(final Context ctx, final PodcastItem episode)
+    {
+        final ContentValues cv = new ContentValues();
+        cv.put("finished", 0);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        db.update(cv, episode.getEpisodeId());
+        db.close();
+
+        CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_unplayed));
+    }
+
     public static void SaveEpisodeValue(final Context ctx, final PodcastItem episode, final String field, long value) {
         if (ctx == null || episode == null || field == null) return;
 

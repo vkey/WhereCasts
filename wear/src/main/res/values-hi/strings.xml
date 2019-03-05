@@ -291,7 +291,8 @@
     <string name="alert_locating_network_notfound">कोई नेटवर्क नहीं ढूँढा जा सकता</string>
     <string name="alert_sync_started">सिंकिंग प्रारंभ हुआ</string>
     <string name="alert_sync_finished">सिंकिंग पूर्ण हुआ</string>
-    <string name="alert_disable_bluetooth_disabled_start">ब्लूटूथ को अक्षम करना…</string>
+    <string name="alert_disable_bluetooth_disabling">ब्लूटूथ को अक्षम करना…</string>
+    <string name="alert_disable_bluetooth_enabling">ब्लूटूथ को सक्षम करना…</string>
     <string name="alert_unsubscribing">सदस्यता रद्द किए…</string>
     <string name="alert_disable_bluetooth_disabled_end">ब्लूटूथ को अक्षम करना</string>
     <string name="alert_disable_bluetooth_enabled">ब्लूटूथ सक्षम किया गया</string>

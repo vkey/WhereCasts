@@ -112,7 +112,9 @@ public class CommonUtils {
             text.setBackgroundColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_bg", "color", ctx.getPackageName())));
             text.setTextColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_text", "color", ctx.getPackageName())));
             toast.show();
-        }catch (Exception ignored){}
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public static String getRedirectUrl(final String url) {

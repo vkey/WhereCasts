@@ -133,37 +133,33 @@ public class AsyncTasks {
         }
     }
 
-    public static class DisableBluetooth extends AsyncTask<Void, Void, Void> {
+    public static class ToggleBluetooth extends AsyncTask<Void, Void, Void> {
         private Interfaces.AsyncResponse mResponse;
+        private Boolean mDisable;
 
-        DisableBluetooth(final Context context, final Interfaces.AsyncResponse response)
+        public ToggleBluetooth(final Context context, final Boolean disable, final Interfaces.AsyncResponse response)
         {
             mContext = new WeakReference<>(context);
+            mDisable = disable;
             mResponse = response;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
-            final SharedPreferences.Editor editor = prefs.edit();
 
-            if (prefs.getBoolean("disable_bluetooth_first_time", true)) {
-                CommonUtils.showToast(mContext.get(), "Bluetooth with be enabled when downloading is finished");
-                editor.putBoolean("disable_bluetooth_first_time", false);
-            }
+            if (mDisable)
+                adapter.disable();
             else
-                CommonUtils.showToast(mContext.get(), "Disabling Bluetooth...");
+                adapter.enable();
 
-            editor.putBoolean("enable_bluetooth", true);
-            editor.apply();
-            adapter.disable();
-            SystemClock.sleep(3000);
+            SystemClock.sleep(1000);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
+            CommonUtils.showToast(mContext.get(), mContext.get().getString(mDisable ? R.string.alert_disable_bluetooth_disabled_end : R.string.alert_disable_bluetooth_enabled));
             mResponse.processFinish();
         }
     }

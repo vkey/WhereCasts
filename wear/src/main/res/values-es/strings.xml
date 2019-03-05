@@ -291,7 +291,8 @@
     <string name="alert_locating_network_notfound">No se puede ubicar una red</string>
     <string name="alert_sync_started">La sincronización comenzó</string>
     <string name="alert_sync_finished">Sincronización completada</string>
-    <string name="alert_disable_bluetooth_disabled_start">Deshabilitando Bluetooth…</string>
+    <string name="alert_disable_bluetooth_disabling">Deshabilitando Bluetooth…</string>
+    <string name="alert_disable_bluetooth_enabling">Habilitando bluetooth…</string>
     <string name="alert_unsubscribing">Darse de baja…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetooth deshabilitado</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth habilitado</string>
