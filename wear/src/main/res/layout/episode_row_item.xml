@@ -20,11 +20,13 @@
 
     <TextView
         android:id="@+id/episode_row_item_title"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:breakStrategy="simple"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"
+        android:lineSpacingExtra="2dp"
         />
 
     <ImageView

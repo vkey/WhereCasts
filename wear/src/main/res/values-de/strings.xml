@@ -90,6 +90,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Zum Synchronisieren von Podcasts klicken</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Verstecken Sie Podcasts ohne neue Episoden</string>
     <string name="settings_podcasts_label_show_downloads">Podcasts nur mit Downloads anzeigen</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Nur heruntergeladene Episoden anzeigen</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">In Episodenliste und Wiedergabelisten</string>
     <string name="settings_podcasts_label_disable_ambient">Umgebungsmodus deaktivieren</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Der Umgebungsmodus ist nur auf dem Wiedergabebildschirm</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Leere Playlists ausblenden</string>
@@ -237,6 +239,10 @@
     <string name="menu_main_title_download_cancel">Abbrechen Herunterladen</string>
     <string name="menu_main_title_playlist_add">Zur Titelliste hinzufügen</string>
 
+    <string name="menu_episode_wifi_open">Öffnen Sie die WLAN-Einstellungen</string>
+    <string name="menu_episode_bluetooth_enable">Aktivieren Sie Bluetooth</string>
+    <string name="menu_episode_bluetooth_disable">Deaktivieren Sie Bluetooth</string>
+
     <string name="tips_swipe_left">Wischen Sie nach links, um die automatischen Wiedergabelisten anzuzeigen</string>
     <string name="tips_swipe_long_press">Lange drücken Sie einen Podcast für Optionen</string>
 
@@ -273,6 +279,8 @@
     <string name="alert_add_podcast_no_episodes">aber keine episoden gefunden</string>
     <string name="alert_no_system_audio">Kein Systemaudio gefunden</string>
     <string name="text_episode_no_media">Es können keine Medien für die Wiedergabe gefunden werden. Podcast-Anbieter löschen und erneut hinzufügen oder kontaktieren.</string>
+    <string name="alert_main_menu_start_update">Update starten?</string>
+
     <string name="alert_podcast_added">Hinzugefügt</string>
     <string name="alert_episode_playlist_added">Hinzugefügt zu %s</string>
     <string name="alert_episodes_playlist_added">Hinzugefügt %d Episoden zu %s</string>
@@ -284,14 +292,15 @@
     <string name="alert_locating_network_notfound">Kann kein Netzwerk finden</string>
     <string name="alert_sync_started">Synchronisierung gestartet</string>
     <string name="alert_sync_finished">Synchronisierung abgeschlossen</string>
-    <string name="alert_disable_bluetooth_disabled_start">Bluetooth deaktivieren…</string>
+    <string name="alert_disable_bluetooth_disabling">Bluetooth deaktivieren…</string>
+    <string name="alert_disable_bluetooth_enabling">Bluetooth aktivieren…</string>
     <string name="alert_unsubscribing">Abmeldung…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetooth deaktiviert</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth aktiviert</string>
     <string name="alert_episode_download_start">wird heruntergeladen…</string>
     <string name="alert_episode_network_search">Suche nach einem Netzwerk mit hoher Bandbreite…</string>
     <string name="alert_episode_network_notfound">Kein Netzwerk gefunden. Möchten Sie die WLAN-Einstellungen öffnen?</string>
-    <string name="alert_episode_network_no_high_bandwidth">Kein Netzwerk mit hoher Bandbreite gefunden. Möchten Sie die WLAN-Einstellungen öffnen??</string>
+    <string name="alert_episode_network_no_high_bandwidth">Kein Netzwerk mit hoher Bandbreite gefunden. Öffnen Sie die WLAN-Einstellungen?</string>
     <string name="alert_playlist_delete">Bist du sicher?</string>
 
     <string name="alert_download_error_noresume">Der Download kann nicht fortgesetzt werden. Bitte versuche es erneut</string>

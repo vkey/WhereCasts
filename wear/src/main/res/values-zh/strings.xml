@@ -72,6 +72,8 @@
     <string name="settings_podcasts_settings_updates_display">更新設置</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">隱藏沒有新劇集的播客</string>
     <string name="settings_podcasts_label_show_downloads">僅顯示帶有下載內容的播客</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">僅顯示下載的劇集</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">在劇集列表和播放列表中</string>
     <string name="settings_podcasts_label_disable_ambient">禁用環境模式</string>
     <string name="settings_podcasts_label_disable_ambient_summary">環境模式僅在播放屏幕上</string>
     <string name="settings_podcasts_label_playlists_hide_empty">隱藏空白播放列表</string>
@@ -234,6 +236,10 @@
     <string name="menu_main_title_download_cancel">取消下載</string>
     <string name="menu_main_title_playlist_add">添加到播放列表</string>
 
+    <string name="menu_episode_wifi_open">打開WiFi設置</string>
+    <string name="menu_episode_bluetooth_enable">啟用藍牙</string>
+    <string name="menu_episode_bluetooth_disable">禁用藍牙</string>
+
     <string name="menu_episodes_mark_all_played">馬克都玩過了</string>
     <string name="menu_episodes_mark_all_unplayed">標記所有未播放</string>
     <string name="menu_episodes_search">搜索</string>
@@ -272,6 +278,7 @@
     <string name="alert_add_podcast_no_episodes">但沒有找到劇集</string>
     <string name="alert_no_system_audio">找不到系統音頻</string>
     <string name="text_episode_no_media">找不到要播放的媒體。刪除並重新添加或聯繫播客提供商.</string>
+    <string name="alert_main_menu_start_update">開始更新?</string>
     <string name="alert_podcast_added">添加</string>
     <string name="alert_episode_playlist_added">添加到 %s</string>
     <string name="alert_episodes_playlist_added">添加 %d 劇集 %s</string>
@@ -283,14 +290,15 @@
     <string name="alert_locating_network_notfound">找不到網絡</string>
     <string name="alert_sync_started">正在開始同步</string>
     <string name="alert_sync_finished">正在同步完成</string>
-    <string name="alert_disable_bluetooth_disabled_start">禁用藍牙…</string>
+    <string name="alert_disable_bluetooth_disabling">禁用藍牙…</string>
+    <string name="alert_disable_bluetooth_enabling">啟用藍牙…</string>
     <string name="alert_unsubscribing">退訂…</string>
     <string name="alert_disable_bluetooth_disabled_end">禁用藍牙</string>
     <string name="alert_disable_bluetooth_enabled">禁用藍牙</string>
     <string name="alert_episode_download_start">下載…</string>
     <string name="alert_episode_network_search">尋找高帶寬網絡…</string>
     <string name="alert_episode_network_notfound">找不到網絡. 你想打開WiFi設置嗎?</string>
-    <string name="alert_episode_network_no_high_bandwidth">找不到高帶寬網絡。 你想打開WiFi設置嗎？?</string>
+    <string name="alert_episode_network_no_high_bandwidth">找不到高帶寬網絡。 打開WiFi設置?</string>
     <string name="alert_playlist_delete">你確定?</string>
 
     <string name="alert_download_error_noresume">無法恢復下載。 請再試一次</string>

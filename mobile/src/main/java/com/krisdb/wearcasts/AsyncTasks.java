@@ -146,7 +146,7 @@ public class AsyncTasks {
          private Interfaces.PodcastsResponse mResponse;
          private static WeakReference<ProgressBar> mProgressBar;
 
-         SendToWatch(final Context context, final List<PodcastItem> podcasts, final ProgressBar progressBar, final Interfaces.PodcastsResponse response) {
+        public SendToWatch(final Context context, final List<PodcastItem> podcasts, final ProgressBar progressBar, final Interfaces.PodcastsResponse response) {
              mContext = new WeakReference<>(context);
              mProgressBar = new WeakReference<>(progressBar);
              mPodcasts = podcasts;

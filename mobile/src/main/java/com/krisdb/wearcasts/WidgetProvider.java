@@ -11,6 +11,8 @@ import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.RemoteViews;
 
+import com.krisdb.wearcasts.Activities.PhoneMainActivity;
+
 public class WidgetProvider extends AppWidgetProvider {
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Activities.PhoneMainActivity;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.FetchPodcast;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -26,12 +27,12 @@ import java.util.List;
 
 public class Utilities {
 
-    static void sendEpisode(final Context ctx, final PodcastItem episode)
+    public static void sendEpisode(final Context ctx, final PodcastItem episode)
     {
         sendEpisode(ctx, episode, false);
     }
 
-    static void sendEpisode(final Context ctx, final PodcastItem episode, final Boolean autoDownload)
+    public static void sendEpisode(final Context ctx, final PodcastItem episode, final Boolean autoDownload)
     {
         final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/episodeimport");
         final DataMap dataMap = dataMapRequest.getDataMap();
@@ -53,16 +54,16 @@ public class Utilities {
             CommonUtils.DeviceSync(ctx, dataMapRequest, null, Toast.LENGTH_SHORT);
    }
 
-    static void SendToWatch(final Context ctx, final PodcastItem podcast)
+    public static void SendToWatch(final Context ctx, final PodcastItem podcast)
     {
         SendToWatch(ctx, podcast, true);
     }
 
-    static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased) {
+    public static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased) {
         TogglePremiumOnWatch(ctx, purchased, false);
     }
 
-    static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased, final Boolean showConfirm) {
+    public static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased, final Boolean showConfirm) {
         SystemClock.sleep(1500);
 
         final PutDataMapRequest dataMap = PutDataMapRequest.create("/premium");
@@ -72,7 +73,7 @@ public class Utilities {
         CommonUtils.DeviceSync(ctx, dataMap);
     }
 
-    static void SendToWatch(final Context ctx, final PodcastItem podcast, final Boolean showToast) {
+    public static void SendToWatch(final Context ctx, final PodcastItem podcast, final Boolean showToast) {
 
         if (podcast.getChannel().getThumbnailUrl() != null) {
 

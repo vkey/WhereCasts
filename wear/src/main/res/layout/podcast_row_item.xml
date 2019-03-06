@@ -15,9 +15,8 @@
         android:id="@+id/podcast_row_item_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingTop="5dp"
-        android:layout_marginEnd="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="9dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:maxWidth="@dimen/thumb_with_podcast_list_default"
@@ -27,11 +26,10 @@
         android:id="@+id/podcast_row_item_count"
         style="@style/podcast_list_unread_count"
         android:background="@drawable/podcast_list_unread_count_circle"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginStart="25dp"
-        android:textSize="10sp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginStart="23dp"
         android:gravity="center_vertical|center_horizontal" />
 
     <TextView
@@ -39,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:layout_toEndOf="@+id/podcast_row_item_thumbnail"
         style="@style/podcast_list_title"
         />

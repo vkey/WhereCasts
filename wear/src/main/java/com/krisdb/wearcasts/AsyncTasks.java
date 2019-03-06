@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +10,10 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -18,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
-import static com.krisdb.wearcasts.Utilities.ProcessEpisodes;
+import static com.krisdb.wearcasts.Utilities.Utilities.ProcessEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
@@ -36,7 +41,7 @@ public class AsyncTasks {
         private int mPlaylistID;
         private List<PodcastItem> mPlaylistItems;
 
-        FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final String localFile, final Interfaces.PodcastsResponse response)
+        public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final String localFile, final Interfaces.PodcastsResponse response)
         {
             mContext = new WeakReference<>(context);
             mEpisode = episode;
@@ -105,7 +110,7 @@ public class AsyncTasks {
         private Interfaces.BooleanResponse mResponse;
         private int mPodcastID;
 
-        Unsubscribe(final Context context, final int podcastId, final Interfaces.BooleanResponse response)
+        public Unsubscribe(final Context context, final int podcastId, final Interfaces.BooleanResponse response)
         {
             mContext = new WeakReference<>(context);
             mPodcastID = podcastId;
@@ -128,11 +133,42 @@ public class AsyncTasks {
         }
     }
 
+    public static class ToggleBluetooth extends AsyncTask<Void, Void, Void> {
+        private Interfaces.AsyncResponse mResponse;
+        private Boolean mDisable;
+
+        public ToggleBluetooth(final Context context, final Boolean disable, final Interfaces.AsyncResponse response)
+        {
+            mContext = new WeakReference<>(context);
+            mDisable = disable;
+            mResponse = response;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (mDisable)
+                adapter.disable();
+            else
+                adapter.enable();
+
+            SystemClock.sleep(1300);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            CommonUtils.showToast(mContext.get(), mContext.get().getString(mDisable ? R.string.alert_disable_bluetooth_disabled_end : R.string.alert_disable_bluetooth_enabled));
+            mResponse.processFinish();
+        }
+    }
+
     public static class DownloadMultipleEpisodes extends AsyncTask<Void, Void, Void> {
         private Interfaces.AsyncResponse mResponse;
         private List<PodcastItem> mEpisodes;
 
-        DownloadMultipleEpisodes(final Context context, final List<PodcastItem> episodes, final Interfaces.AsyncResponse response)
+        public DownloadMultipleEpisodes(final Context context, final List<PodcastItem> episodes, final Interfaces.AsyncResponse response)
         {
             mContext = new WeakReference<>(context);
             mEpisodes = episodes;
@@ -163,7 +199,7 @@ public class AsyncTasks {
         private Interfaces.PodcastsResponse mResponse;
         private List<PodcastItem> mPodcasts;
 
-        DisplayPodcasts(final Context context, final Interfaces.PodcastsResponse response) {
+        public DisplayPodcasts(final Context context, final Interfaces.PodcastsResponse response) {
             mContext = new WeakReference<>(context);
             mResponse = response;
        }
@@ -193,7 +229,7 @@ public class AsyncTasks {
         private List<PodcastItem> mEpisodes;
         private String mQuery;
 
-        DisplayEpisodes(final Context context, final int podcastId, final int playlistId, final String query, final Interfaces.PodcastsResponse response) {
+        public DisplayEpisodes(final Context context, final int podcastId, final int playlistId, final String query, final Interfaces.PodcastsResponse response) {
             mContext = new WeakReference<>(context);
             mPodcastId = podcastId;
             mPlayListId = playlistId;
@@ -231,7 +267,7 @@ public class AsyncTasks {
         private Interfaces.BackgroundSyncResponse mResponse;
         private Boolean mDisableToast;
 
-        SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Interfaces.BackgroundSyncResponse response) {
+        public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Interfaces.BackgroundSyncResponse response) {
             mContext = new WeakReference<>(context);
             mResponse = response;
             mPodcastId = podcastId;
@@ -289,7 +325,7 @@ public class AsyncTasks {
         private MediaPlayer mMediaPlayer;
         private Boolean mFinished;
 
-        SyncWithMobileDevice(final Context context, final PodcastItem episode, final MediaPlayer mp, final Boolean finished) {
+        public SyncWithMobileDevice(final Context context, final PodcastItem episode, final MediaPlayer mp, final Boolean finished) {
             mContext = new WeakReference<>(context);
             mEpisode= episode;
             mMediaPlayer = mp;
@@ -329,7 +365,7 @@ public class AsyncTasks {
     {
         private Interfaces.AsyncResponse mResponse;
 
-        SyncArt(final Context context, final Interfaces.AsyncResponse response)
+        public SyncArt(final Context context, final Interfaces.AsyncResponse response)
         {
             mContext = new WeakReference<>(context);
             mResponse = response;
@@ -387,7 +423,7 @@ public class AsyncTasks {
         private Interfaces.IntResponse mResponse;
         private int mCount;
 
-        GetPodcastEpisodes(final Context context, final int podcastId, final Interfaces.IntResponse response)
+        public GetPodcastEpisodes(final Context context, final int podcastId, final Interfaces.IntResponse response)
         {
             mContext = new WeakReference<>(context);
             mPodcastId = podcastId;

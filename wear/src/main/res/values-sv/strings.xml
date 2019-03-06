@@ -90,6 +90,8 @@
     <string name="settings_podcasts_label_sync_podcasts">Klicka för att synkronisera podcasts</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">Dölj podcaster med inga nya episoder</string>
     <string name="settings_podcasts_label_show_downloads">Visa podcaster med endast nedladdningar</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">Visa bara nedladdade episoder</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">I avsnittslistor och spellistor</string>
     <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Dölj tomma spellistor</string>
@@ -235,6 +237,10 @@
     <string name="menu_main_title_download_cancel">Avbryt Ladda ner</string>
     <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
 
+    <string name="menu_episode_wifi_open">Öppna WiFi-inställningarna</string>
+    <string name="menu_episode_bluetooth_enable">Aktivera Bluetooth</string>
+    <string name="menu_episode_bluetooth_disable">Inaktivera Bluetooth</string>
+
     <string name="menu_episodes_mark_all_played">Markera alla spelade</string>
     <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>
     <string name="menu_episodes_search">Sök</string>
@@ -273,6 +279,7 @@
     <string name="alert_add_podcast_no_episodes">men inga episoder hittades</string>
     <string name="alert_no_system_audio">Inget systemljud hittades</string>
     <string name="text_episode_no_media">Kan inte hitta media för uppspelning. Ta bort och lägg till eller kontakta podcastleverantören.</string>
+    <string name="alert_main_menu_start_update">Starta uppdateringen?</string>
     <string name="alert_podcast_added">Lagt till</string>
     <string name="alert_episode_playlist_added">Lagt till %s</string>
     <string name="alert_episodes_playlist_added">Lagt till %d episoder till %s</string>
@@ -284,14 +291,15 @@
     <string name="alert_locating_network_notfound">Det går inte att hitta ett nätverk</string>
     <string name="alert_sync_started">Synkronisering startade</string>
     <string name="alert_sync_finished">Synkronisering slutförd</string>
-    <string name="alert_disable_bluetooth_disabled_start">Inaktiverar Bluetooth…</string>
+    <string name="alert_disable_bluetooth_disabling">Inaktiverar Bluetooth…</string>
+    <string name="alert_disable_bluetooth_enabling">Aktiverar Bluetooth…</string>
     <string name="alert_unsubscribing">Gå ur…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetooth disabled</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth aktiverad</string>
     <string name="alert_episode_download_start">nedladdning…</string>
     <string name="alert_episode_network_search">Söker efter nätverk med hög bandbredd…</string>
     <string name="alert_episode_network_notfound">Inget nätverk hittades. Vill du öppna WiFi-inställningarna?</string>
-    <string name="alert_episode_network_no_high_bandwidth">Inget nätverk med hög bandbredd hittades. Vill du öppna WiFi-inställningarna?</string>
+    <string name="alert_episode_network_no_high_bandwidth">Inget nätverk med hög bandbredd hittades. Öppna WiFi-inställningarna?</string>
     <string name="alert_playlist_delete">Är du säker?</string>
 
     <string name="alert_download_error_noresume">Kan inte återuppta nedladdning. Var god försök igen</string>

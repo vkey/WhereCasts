@@ -11,4 +11,7 @@
     <size
         android:height="20dp"
         android:width="20dp"/>
+
+    <stroke android:width="2px" android:color="@color/wc_white"/>
+
 </shape>

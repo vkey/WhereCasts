@@ -87,6 +87,8 @@
     <string name="settings_podcasts_label_sync_podcasts">クリックしてポッドキャストを同期する</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">新しいエピソードのないポッドキャストを隠す</string>
     <string name="settings_podcasts_label_show_downloads">ダウンロードのみでPodcastを表示する</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes">ダウンロードしたエピソードのみを表示</string>
+    <string name="settings_podcasts_label_show_downloaded_episodes_summary">エピソードリストとプレイリスト</string>
     <string name="settings_podcasts_label_disable_ambient">アンビエントモードを無効にする</string>
     <string name="settings_podcasts_label_disable_ambient_summary">アンビエントモードはプレイ画面のみ</string>
     <string name="settings_podcasts_label_playlists_hide_empty">空のプレイリストを隠す</string>
@@ -235,6 +237,10 @@
     <string name="menu_main_title_download_cancel">ダウンロードをキャンセルする</string>
     <string name="menu_main_title_playlist_add">プレイリストに追加する</string>
 
+    <string name="menu_episode_wifi_open">WiFi設定を開く</string>
+    <string name="menu_episode_bluetooth_enable">Bluetoothを有効にする</string>
+    <string name="menu_episode_bluetooth_disable">Bluetoothを無効にする</string>
+
     <string name="menu_episodes_mark_all_played">すべての試合をマークする</string>
     <string name="menu_episodes_mark_all_unplayed">すべてを表示しない</string>
     <string name="menu_episodes_search">サーチ</string>
@@ -273,6 +279,7 @@
     <string name="alert_add_podcast_no_episodes">エピソードは見つかりませんでした</string>
     <string name="alert_no_system_audio">システムオーディオが見つかりません</string>
     <string name="text_episode_no_media">再生するメディアが見つかりません.ポッドキャストプロバイダを削除して再追加または連絡してください.</string>
+    <string name="alert_main_menu_start_update">更新を開始?</string>
     <string name="alert_podcast_added">追加された</string>
     <string name="alert_episode_playlist_added">に追加 %s</string>
     <string name="alert_episodes_playlist_added">追加された %d エピソード %s</string>
@@ -284,14 +291,15 @@
     <string name="alert_locating_network_notfound">ネットワークを見つけることができません</string>
     <string name="alert_sync_started">同期が開始されました</string>
     <string name="alert_sync_finished">同期が完了しました</string>
-    <string name="alert_disable_bluetooth_disabled_start">Bluetoothを無効にする…</string>
+    <string name="alert_disable_bluetooth_disabling">Bluetoothを無効にする…</string>
+    <string name="alert_disable_bluetooth_enabling">Bluetoothを有効にする…</string>
     <string name="alert_unsubscribing">サブスクライブ解除…</string>
     <string name="alert_disable_bluetooth_disabled_end">Bluetoothが無効</string>
     <string name="alert_disable_bluetooth_enabled">Bluetooth対応</string>
     <string name="alert_episode_download_start">ダウンロード…</string>
     <string name="alert_episode_network_search">高帯域幅ネットワークの検索…</string>
     <string name="alert_episode_network_notfound">ネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
-    <string name="alert_episode_network_no_high_bandwidth">高帯域幅のネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
+    <string name="alert_episode_network_no_high_bandwidth">高帯域幅ネットワークが見つかりません。 WiFi設定を開く?</string>
     <string name="alert_playlist_delete">本気ですか?</string>
 
     <string name="alert_download_error_noresume">ダウンロードを再開できません. もう一度お試しください</string>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="25sp"
-        android:text="@string/app_name"
+        android:text="@string/app_name_wc"
         android:paddingTop="20dp"
         />
 

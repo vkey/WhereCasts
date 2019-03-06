@@ -4,4 +4,6 @@
     <color name="wc_black">#000000</color>
     <color name="wc_gray">#6F6F6F</color>
     <color name="wc_transparent">#00000000</color>
+    <color name="wc_logo_border">#FFFFFF</color>
+
 </resources>

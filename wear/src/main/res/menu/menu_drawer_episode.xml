@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    <item android:id="@+id/menu_drawer_episode_download"
+        android:title="@string/menu_main_title_download"
+        android:icon="@drawable/ic_action_episode_download"
+        />
+        -->
+    <item android:id="@+id/menu_drawer_episode_add_playlist"
+        android:title="@string/menu_main_title_playlist_add"
+        android:icon="@drawable/ic_podcast_add"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_markplayed"
+        android:title="@string/button_mark_played"
+        android:icon="@drawable/ic_action_markread"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_markunplayed"
+        android:title="@string/button_mark_unplayed"
+        android:icon="@drawable/ic_action_mark_unread"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_bluetooth_enable"
+        android:title="@string/menu_episode_bluetooth_enable"
+        android:icon="@drawable/ic_menu_episode_bluetooth_enable"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_bluetooth_disable"
+        android:title="@string/menu_episode_bluetooth_disable"
+        android:icon="@drawable/ic_menu_episode_bluetooth_disable"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_open_wifi"
+        android:title="@string/menu_episode_wifi_open"
+        android:icon="@drawable/ic_menu_episode_wifi_open"
+        />
+</menu>
