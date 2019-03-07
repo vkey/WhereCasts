@@ -27,13 +27,4 @@
         android:padding="20dp"
         />
 
-    <Button
-        android:id="@+id/episode_context_toggle_played"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        style="@style/Button"
-        />
 </RelativeLayout>

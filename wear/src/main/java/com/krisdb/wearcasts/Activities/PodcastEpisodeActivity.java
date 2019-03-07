@@ -77,7 +77,7 @@ import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class PodcastEpisodeActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener, WearableNavigationDrawerView.OnItemSelectedListener {
 
-    private ProgressBar mProgressBar, mProgressCircle;
+    private ProgressBar mProgressBar, mProgressCircle, mProgressCircleLoading;
     private Context mContext;
     private Activity mActivity;
     private PodcastItem mEpisode;
@@ -138,6 +138,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mScrollView = findViewById(R.id.podcast_episode_scrollview);
         mProgressBar = findViewById(R.id.podcast_episode_progress_bar);
         mProgressCircle = findViewById(R.id.podcast_episode_progress_circle);
+        mProgressCircleLoading = findViewById(R.id.podcast_episode_progress_loading);
         mDownloadImage = findViewById(R.id.ic_podcast_episode_download);
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
 
@@ -148,7 +149,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mSkipForwardImage = findViewById(R.id.ic_skip_forward);
         mDownloadSpeed = findViewById(R.id.podcast_episode_download_speed);
         mVolumeUp = findViewById(R.id.ic_volume_up);
-        //mVolumeDown = findViewById(R.id.ic_volume_down);
         mDurationView = findViewById(R.id.tv_podcast_duration);
         mPositionView = findViewById(R.id.tv_podcast_position);
         mInfoLayout = findViewById(R.id.podcast_episode_info_layout);
@@ -480,9 +480,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 mCurrentState = STATE_PLAYING;
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
-                //mInfoLayout.setVisibility(View.VISIBLE);
-                //mVolumeDown.setVisibility(View.VISIBLE);
+                mInfoLayout.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
             }
             else
@@ -537,6 +535,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircle.setMax(bytes_total);
+
                 //mProgressCircle.setSecondaryProgress(bytes_total);
 
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
@@ -551,19 +550,28 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
-                        if ((System.nanoTime() - mDownloadStartTime) > 0)
-                        {
+                        if ((System.nanoTime() - mDownloadStartTime) > 0) {
                             final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
-                            if (bytesPerSec < 1000000.0)
-                                mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
-                            else
+                            if (bytesPerSec < 1000000.0) {
+                                if (bytesPerSec / 1024 == 0.00)
+                                    mProgressCircleLoading.setVisibility(View.VISIBLE);
+                                else {
+                                    mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
+                                    mDownloadSpeed.setVisibility(View.VISIBLE);
+                                    mProgressCircleLoading.setVisibility(View.GONE);
+                                }
+                            } else {
                                 mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat(" MB/s"));
+                                mProgressCircleLoading.setVisibility(View.GONE);
+                            }
                         }
                         else
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
 
                         mProgressCircle.setProgress(bytes_downloaded);
+                        mProgressCircle.setVisibility(View.VISIBLE);
+                        mPlayPauseImage.setVisibility(View.INVISIBLE);
 
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
@@ -572,7 +580,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                                 CancelDownload();
                             }
                         });
-                        mDownloadSpeed.setVisibility(View.VISIBLE);
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
@@ -653,14 +660,16 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     };
 
     private void DownloadEpisode() {
+        mDownloadId = Utilities.startDownload(mContext, mEpisode);
+
         mPlayPauseImage.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.VISIBLE);
         mDownloadStartTime = System.nanoTime();
-        mDownloadId = Utilities.startDownload(mContext, mEpisode);
         mProgressCircle.setVisibility(View.VISIBLE);
-        mProgressCircle.setProgressDrawable(getDrawable(R.drawable.circular_progress_episode));
-        mProgressBar.setIndeterminate(true);
+        mProgressCircle.setProgress(0);
+        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
 
+        mProgressCircleLoading.setVisibility(View.VISIBLE);
         showToast(mActivity, getString(R.string.alert_episode_download_start));
         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
     }
@@ -668,11 +677,14 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     public void CancelDownload()
     {
         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+
         mPlayPauseImage.setEnabled(true);
         mControlsLayout.setVisibility(View.VISIBLE);
         mDownloadManager.remove(mDownloadId);
         mProgressBar.setVisibility(View.GONE);
         mProgressCircle.setVisibility(View.INVISIBLE);
+        mProgressCircle.setProgress(0);
+        mProgressCircleLoading.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.INVISIBLE);
         mPlayPauseImage.setVisibility(View.VISIBLE);
         mSeekBar.setVisibility(View.GONE);

@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/empty_podcast_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_swipe_left"
+        android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="gone"

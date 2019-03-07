@@ -8,6 +8,7 @@
     android:paddingStart="2dp"
     android:paddingEnd="5dp"
     android:layout_marginBottom="10dp"
+    android:background="@color/wc_transparent"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
@@ -24,13 +25,14 @@
 
     <TextView
         android:id="@+id/podcast_row_item_count"
-        style="@style/podcast_list_unread_count"
         android:background="@drawable/podcast_list_unread_count_circle"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="43dp"
-        android:layout_marginStart="23dp"
-        android:gravity="center_vertical|center_horizontal" />
+        android:layout_marginTop="39dp"
+        android:layout_marginStart="21dp"
+        android:gravity="center_vertical|center_horizontal"
+        style="@style/podcast_list_unread_count"
+        />
 
     <TextView
         android:id="@+id/podcast_row_item_title"
@@ -39,7 +41,6 @@
         android:layout_centerVertical="true"
         android:textSize="14sp"
         android:layout_toEndOf="@+id/podcast_row_item_thumbnail"
-        style="@style/podcast_list_title"
         />
 
 </RelativeLayout>

@@ -604,26 +604,32 @@ public class DBUtilities {
     {
         PodcastItem episode = new PodcastItem();
 
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-        final SQLiteDatabase sdb = db.select();
+        try {
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+            final SQLiteDatabase sdb = db.select();
 
-        final Cursor cursor = sdb.rawQuery(
-                "SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.id = ?"),
-                new String[] { String.valueOf(episodeId) }
-        );
+            final Cursor cursor = sdb.rawQuery(
+                    "SELECT ".concat(mEpisodeColumns).concat(" FROM tbl_podcast_episodes WHERE tbl_podcast_episodes.id = ?"),
+                    new String[]{String.valueOf(episodeId)}
+            );
 
-        if (cursor.moveToFirst())
-            episode = SetPodcastEpisode(cursor);
+            if (cursor.moveToFirst())
+                episode = SetPodcastEpisode(cursor);
 
-        episode.setChannel(DBUtilities.GetChannel(ctx, episode.getPodcastId()));
+            episode.setChannel(DBUtilities.GetChannel(ctx, episode.getPodcastId()));
 
-        //third party: add playlist
-        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_playerfm))
-            episode.setPlaylistId(ctx.getResources().getInteger(R.integer.playlist_playerfm));
+            //third party: add playlist
+            if (playlistId == ctx.getResources().getInteger(R.integer.playlist_playerfm))
+                episode.setPlaylistId(ctx.getResources().getInteger(R.integer.playlist_playerfm));
 
-        cursor.close();
-        db.close();
-        sdb.close();
+            cursor.close();
+            db.close();
+            sdb.close();
+        }
+        catch(SQLiteException ex)
+        {
+            ex.printStackTrace();
+        }
 
         return episode;
     }

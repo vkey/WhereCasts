@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/menu_drawer_episode_list_selected_add_playlist"
+        android:title="@string/menu_episodes_selected_playlist"
+        android:icon="@drawable/ic_podcast_add"
+        />
+
     <item android:id="@+id/menu_drawer_episode_list_selected_markplayed"
         android:title="@string/menu_episodes_mark_selected_played"
         android:icon="@drawable/ic_action_markread"
@@ -14,11 +19,6 @@
     <item android:id="@+id/menu_drawer_episode_list_selected_downloaad"
         android:title="@string/menu_episodes_selected_download"
         android:icon="@drawable/ic_action_episode_download"
-        />
-
-    <item android:id="@+id/menu_drawer_episode_list_selected_add_playlist"
-        android:title="@string/menu_episodes_selected_playlist"
-        android:icon="@drawable/ic_settings_playlists"
         />
 
 </menu>

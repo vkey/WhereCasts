@@ -31,26 +31,6 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
 
         final List<Integer> episodeIds = getIntent().getExtras().getIntegerArrayList("episodeids");
 
-        /*
-        final PodcastItem episode = DBUtilities.GetEpisode(mActivity, episodeId);
-
-        final Button togglePlayButton = findViewById(R.id.episode_context_toggle_played);
-
-        togglePlayButton.setText(episode.getFinished() ? getString(R.string.button_mark_unplayed) : getString(R.string.button_mark_played));
-
-        togglePlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PodcastItem episodeItem = DBUtilities.GetEpisode(mActivity, episodeId);
-
-                DBUtilities.SaveEpisodeValue(mActivity, episodeItem, "finished", episodeItem.getFinished() ? 0 : 1);
-
-                episodeItem = DBUtilities.GetEpisode(mActivity, episodeId);
-
-                togglePlayButton.setText(episodeItem.getFinished() ? getString(R.string.button_mark_unplayed) : getString(R.string.button_mark_played));
-            }
-        });
-        */
         final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(this);
 
         if (playlistItems.size() == 0)

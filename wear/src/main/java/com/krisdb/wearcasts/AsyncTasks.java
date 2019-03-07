@@ -51,10 +51,6 @@ public class AsyncTasks {
         }
 
         @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
             mPlaylistItems = DBUtilities.getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
@@ -109,6 +105,10 @@ public class AsyncTasks {
     public static class Unsubscribe extends AsyncTask<Void, Void, Void> {
         private Interfaces.BooleanResponse mResponse;
         private int mPodcastID;
+        @Override
+        protected void onPreExecute() {
+            CommonUtils.showToast(mContext.get(), mContext.get().getString(R.string.alert_unsubscribing));
+        }
 
         public Unsubscribe(final Context context, final int podcastId, final Interfaces.BooleanResponse response)
         {

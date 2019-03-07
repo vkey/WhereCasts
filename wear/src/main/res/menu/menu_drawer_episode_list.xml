@@ -3,7 +3,7 @@
 
     <item android:id="@+id/menu_drawer_episode_list_add_playlist"
         android:title="@string/menu_episodes_add_playlist"
-        android:icon="@drawable/ic_settings_playlists"
+        android:icon="@drawable/ic_podcast_add"
         />
 
     <item android:id="@+id/menu_drawer_episode_list_markplayed"

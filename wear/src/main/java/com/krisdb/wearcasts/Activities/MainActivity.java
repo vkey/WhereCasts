@@ -116,6 +116,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(1);
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(2);
         //new DBPodcastsEpisodes(getApplicationContext()).deletePlaylist(3);
+
         //new com.krisdb.wearcasts.Databases.DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Next");
         //new com.krisdb.wearcasts.Databases.DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Comedy");
         //new DBPodcastsEpisodes(getApplicationContext()).insertPlaylist("Videos");

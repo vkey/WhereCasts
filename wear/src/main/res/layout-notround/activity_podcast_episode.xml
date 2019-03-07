@@ -64,10 +64,10 @@
                     android:id="@+id/ic_skip_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_skip_back"
+                    android:src="@drawable/ic_action_episode_skip_back"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="5dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -78,10 +78,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="17dp"
+                    android:layout_marginStart="16dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     />
 
                 <ImageView
@@ -100,6 +100,20 @@
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="?android:attr/selectableItemBackground"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/podcast_episode_progress_loading"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"
+                    android:indeterminate="true"
+                    android:background="@color/wc_transparent"
+                    android:visibility="gone"
+                    style="@android:style/Widget.ProgressBar.Small"
+                    android:indeterminateDrawable="@drawable/circular_progress_episode_loading"
                     />
 
                 <ProgressBar
@@ -129,7 +143,7 @@
                     android:id="@+id/ic_skip_forward"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_skip_forward"
+                    android:src="@drawable/ic_action_episode_skip_forward"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="5dp"
@@ -143,10 +157,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="13dp"
+                    android:layout_marginEnd="16dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     />
             </RelativeLayout>
 
@@ -165,11 +179,10 @@
                 android:id="@+id/podcast_episode_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_below="@+id/podcast_episode_progress_bar"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_podcast_position"
@@ -205,20 +218,6 @@
             </RelativeLayout>
 
             <ImageView
-                android:id="@+id/ic_volume_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_volume_down"
-                android:background="?android:attr/selectableItemBackground"
-                android:layout_below="@+id/podcast_episode_info_layout"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="35dp"
-                android:layout_marginBottom="10dp"
-                android:padding="5dp"
-                android:visibility="gone"
-                />
-
-            <ImageView
                 android:id="@+id/ic_volume_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -226,9 +225,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="10dp"
-                android:padding="5dp"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/ic_action_volume_up"
+                android:src="@drawable/ic_action_episode_volume"
                 android:visibility="gone" />
 
             <TextView
