@@ -41,11 +41,7 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class Utilities {
 
-    public static List<NavItem> getNavItems(final Context ctx) {
-        return getNavItems(ctx, BluetoothAdapter.getDefaultAdapter());
-    }
-
-    public static List<NavItem> getNavItems(final Context ctx, final BluetoothAdapter adapter)
+    public static List<NavItem> getNavItems(final Context ctx)
     {
         List<NavItem> items = new ArrayList<>();
         final NavItem navItemDiscover = new NavItem();
@@ -54,32 +50,16 @@ public class Utilities {
         navItemDiscover.setIcon("ic_action_add_podcast");
         items.add(navItemDiscover);
 
-        /*
-        CommonUtils.showToast(ctx, adapter.isEnabled() ? "Bluetooth on" : "Bluetooth off");
-
-        if (adapter != null) {
-            final NavItem navToggleBluetooth = new NavItem();
-            navToggleBluetooth.setID(1);
-            if (adapter.isEnabled()) {
-                navToggleBluetooth.setTitle("Bluetooth Off");
-                navToggleBluetooth.setIcon("ic_setting_bluetooth_off");
-            } else {
-                navToggleBluetooth.setTitle("Bluetooth On");
-                navToggleBluetooth.setIcon("ic_setting_bluetooth_on");
-            }
-            items.add(navToggleBluetooth);
-        }
-        */
         final NavItem navItemUpdate = new NavItem();
         navItemUpdate.setID(1);
         navItemUpdate.setTitle(ctx.getString(R.string.nav_main_update));
-        navItemUpdate.setIcon("ic_action_resync");
+        navItemUpdate.setIcon("ic_action_menu_main_refresh");
         items.add(navItemUpdate);
 
         final NavItem navItemSettings = new NavItem();
         navItemSettings.setID(2);
         navItemSettings.setTitle(ctx.getString(R.string.nav_main_settings));
-        navItemSettings.setIcon("ic_action_settings");
+        navItemSettings.setIcon("ic_action_menu_main_settings");
         items.add(navItemSettings);
 
         return items;

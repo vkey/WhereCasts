@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/menu_drawer_episode_list_add_playlist"
+        android:title="@string/menu_episodes_add_playlist"
+        android:icon="@drawable/ic_settings_playlists"
+        />
+
     <item android:id="@+id/menu_drawer_episode_list_markplayed"
         android:title="@string/menu_episodes_mark_all_played"
         android:icon="@drawable/ic_action_markread"
@@ -9,11 +14,6 @@
     <item android:id="@+id/menu_drawer_episode_list_markunplayed"
         android:title="@string/menu_episodes_mark_all_unplayed"
         android:icon="@drawable/ic_action_mark_unread"
-        />
-
-    <item android:id="@+id/menu_drawer_episode_list_add_playlist"
-        android:title="@string/menu_episodes_add_playlist"
-        android:icon="@drawable/ic_settings_playlists"
         />
 
     <item android:id="@+id/menu_drawer_episode_list_search"

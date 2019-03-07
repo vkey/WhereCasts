@@ -20,6 +20,7 @@ import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -79,12 +80,22 @@ public class PodcastsListFragment extends Fragment {
 
         mVisits = prefs.getInt("visits", 0);
 
-        String emptyText = mActivity.getString(R.string.empty_podcast_list);
+        String emptyText = "";
+        final String lastUpdateDate = prefs.getString("last_podcast_sync_date", "");
 
         if (mVisits < 10) {
-            emptyText = emptyText.concat("\n\n").concat(mActivity.getString(R.string.empty_podcast_list2));
+            emptyText = emptyText.concat(mActivity.getString(R.string.empty_podcast_list)).concat("\n\n").concat(mActivity.getString(R.string.empty_podcast_list2));
             listView.findViewById(R.id.podcast_list_swipe_left).setVisibility(View.VISIBLE);
         }
+        else if (lastUpdateDate.length() > 0) {
+            emptyText = emptyText.concat("\n\n").concat(getString(R.string.last_updated)
+                    .concat(":\n")
+                    .concat(DateUtils.GetDisplayDate(mActivity, lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))
+                    .concat(" @ ")
+                    .concat(DateUtils.GetTime(DateUtils.ConvertDate(lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))));
+        }
+        else
+            emptyText = mActivity.getString(R.string.empty_podcast_list);
 
         mEmptyView = listView.findViewById(R.id.empty_podcast_list);
         mEmptyView.setText(emptyText);

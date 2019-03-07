@@ -6,38 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/podcast_list_progress_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="gone"
-        android:textSize="14sp"
-        android:layout_centerVertical="true"
-        android:text="@string/text_loading_podcasts"
-        />
-
-    <ProgressBar
-        android:id="@+id/podcast_list_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/podcast_list_progress_text"
-        style="@android:style/Widget.Material.ProgressBar.Horizontal"
-        />
-
     <android.support.wear.widget.WearableRecyclerView
         android:id="@+id/podcast_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         />
 
     <TextView
@@ -46,9 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:gravity="center"
         android:visibility="gone"
         android:textSize="15sp"
+        android:lineSpacingExtra="1dp"
         />
 
     <ImageView

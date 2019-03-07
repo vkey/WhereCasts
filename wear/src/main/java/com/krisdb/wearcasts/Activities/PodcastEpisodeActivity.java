@@ -306,125 +306,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         return super.onKeyDown(keyCode, event);
     }
 
-    private void togglePlayback()
-    {
-        mWearableActionDrawer.setEnabled(true);
-
-        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
-
-        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play episode
-            final Bundle extras = new Bundle();
-            extras.putInt("id", mEpisode.getEpisodeId());
-            extras.putString("local_file", mLocalFile);
-            extras.putInt("playlistid", mPlaylistID);
-            mDownloadImage.setVisibility(View.GONE);
-            //check for downloaded episode
-            if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
-
-                final String uri = (mLocalFile != null) ? GetLocalDirectory().concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
-
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
-
-                mCurrentState = STATE_PLAYING;
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
-                mInfoLayout.setVisibility(View.VISIBLE);
-                //mVolumeDown.setVisibility(View.VISIBLE);
-                mVolumeUp.setVisibility(View.VISIBLE);
-            }
-            else
-                handleNetwork(false);
-
-            int position = DBUtilities.GetEpisodeValue(getApplicationContext(), mEpisode, "position");
-            mSeekBar.setProgress(position);
-        }
-        else
-        {
-            //pause episode
-            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
-            //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-            mDownloadImage.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mInfoLayout.setVisibility(View.GONE);
-            //mVolumeDown.setVisibility(View.GONE);
-            mVolumeUp.setVisibility(View.GONE);
-            mSkipBackImage.setVisibility(View.INVISIBLE);
-            mSkipForwardImage.setVisibility(View.INVISIBLE);
-            mSkipBack.setVisibility(View.INVISIBLE);
-            mSkipForward.setVisibility(View.INVISIBLE);
-            mCurrentState = STATE_PAUSED;
-        }
-    }
-
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails) {
-        super.onEnterAmbient(ambientDetails);
-
-        ((TextView)findViewById(R.id.podcast_episode_title)).setTextColor(ContextCompat.getColor(this, R.color.wc_text));
-
-        findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
-        //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
-
-        mScrollView.setBackgroundColor(getColor(R.color.wc_background_amoled));
-        mWearableActionDrawer.getController().closeDrawer();
-        mNavDrawer.getController().closeDrawer();
-        mScrollView.fullScroll(ScrollView.FOCUS_UP);
-
-        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
-            findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
-            findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
-            findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
-            findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
-            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_amoled));
-        }
-        //mLogo.setVisibility(View.INVISIBLE);
-        findViewById(R.id.tv_skip_forward).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_podcast_episode_download).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_podcast_playpause).setVisibility(View.INVISIBLE);
-        findViewById(R.id.tv_skip_back).setVisibility(View.INVISIBLE);
-        findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_volume_up).setVisibility(View.INVISIBLE);
-        findViewById(R.id.podcast_episode_info_layout).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_skip_forward).setVisibility(View.INVISIBLE);
-        findViewById(R.id.ic_skip_back).setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onExitAmbient() {
-        super.onExitAmbient();
-
-        findViewById(R.id.podcast_episode_clock).setVisibility(View.GONE);
-
-        if (mThemeID == Enums.ThemeOptions.DEFAULT.getThemeId())
-            mScrollView.setBackgroundColor(getColor(R.color.wc_transparent));
-
-        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
-            mScrollView.setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_dark));
-        }
-
-        //((ImageView) findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_off), PorterDuff.Mode.SRC_IN);
-        //mLogo.setVisibility(View.VISIBLE);
-        findViewById(R.id.tv_skip_back).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_podcast_episode_download).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_podcast_playpause).setVisibility(View.VISIBLE);
-        findViewById(R.id.tv_skip_forward).setVisibility(View.VISIBLE);
-        findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
-        findViewById(R.id.podcast_episode_info_layout).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_skip_forward).setVisibility(View.VISIBLE);
-        findViewById(R.id.ic_skip_back).setVisibility(View.VISIBLE);
-
-        if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
-            findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
-        mEpisodeID = -1;
-        SetContent();
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -509,14 +390,12 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
             if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId()) {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
                 int position = DBUtilities.GetEpisodeValue(mActivity, mEpisode, "position");
                 int duration = DBUtilities.GetEpisodeValue(mActivity, mEpisode, "duration");
                 mSeekBar.setMax(duration);
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
                 mInfoLayout.setVisibility(View.VISIBLE);
-                //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.VISIBLE);
@@ -525,9 +404,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mSkipForward.setVisibility(View.VISIBLE);
             } else {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_stop_dark : R.drawable.ic_action_episode_stop));
                 mInfoLayout.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -537,10 +414,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             }
         } else {
             mCurrentState = STATE_PAUSED;
-            //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mInfoLayout.setVisibility(View.GONE);
-            //mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -584,6 +459,59 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         catch(Exception ignored){}
     }
 
+    private void togglePlayback()
+    {
+        mWearableActionDrawer.setEnabled(true);
+
+        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
+
+        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play episode
+            final Bundle extras = new Bundle();
+            extras.putInt("id", mEpisode.getEpisodeId());
+            extras.putString("local_file", mLocalFile);
+            extras.putInt("playlistid", mPlaylistID);
+            mDownloadImage.setVisibility(View.INVISIBLE);
+            //check for downloaded episode
+            if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
+
+                final String uri = (mLocalFile != null) ? GetLocalDirectory().concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
+
+                MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
+
+                mCurrentState = STATE_PLAYING;
+                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
+                //mInfoLayout.setVisibility(View.VISIBLE);
+                //mVolumeDown.setVisibility(View.VISIBLE);
+                mVolumeUp.setVisibility(View.VISIBLE);
+            }
+            else
+                handleNetwork(false);
+
+            int position = DBUtilities.GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+            mSeekBar.setProgress(position);
+        }
+        else
+        {
+            //pause episode
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
+
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mDownloadImage.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressCircle.setVisibility(View.INVISIBLE);
+            mDownloadSpeed.setVisibility(View.INVISIBLE);
+            mInfoLayout.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mSkipBack.setVisibility(View.INVISIBLE);
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipForward.setVisibility(View.INVISIBLE);
+
+            mCurrentState = STATE_PAUSED;
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -597,124 +525,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         super.onPause();
     }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-
-        final int itemId = menuItem.getItemId();
-
-        switch (itemId) {
-            case R.id.menu_drawer_episode_bluetooth_disable:
-                new AsyncTasks.ToggleBluetooth(mActivity, true,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                setMenu();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-            case R.id.menu_drawer_episode_bluetooth_enable:
-                new AsyncTasks.ToggleBluetooth(mActivity, false,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
-                                setMenu();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                break;
-            case R.id.menu_drawer_episode_open_wifi:
-                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                break;
-            case R.id.menu_drawer_episode_markunplayed:
-                DBUtilities.markUnplayed(mContext, mEpisode);
-                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
-                setMenu();
-                break;
-            case R.id.menu_drawer_episode_markplayed:
-                DBUtilities.markPlayed(mContext, mEpisode);
-                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
-                setMenu();
-                break;
-            case R.id.menu_drawer_episode_add_playlist:
-                final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
-
-                final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
-                final Spinner spinner = playlistAddView.findViewById(R.id.episode_add_playlist_list);
-
-                if (playlistItems.size() == 0) {
-                    playlistAddView.findViewById(R.id.episode_add_playlist_empty).setVisibility(View.VISIBLE);
-                    playlistAddView.findViewById(R.id.episode_add_playlist_list).setVisibility(View.GONE);
-                }
-                else
-                {
-                    final PlaylistItem playlistEmpty = new PlaylistItem();
-                    playlistEmpty.setID(mActivity.getResources().getInteger(R.integer.default_playlist_select));
-                    playlistEmpty.setName(getString(R.string.dropdown_playlist_select));
-                    playlistItems.add(0, playlistEmpty);
-
-                    spinner.setAdapter(new PlaylistsAssignAdapter(this, playlistItems));
-                }
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        final PlaylistItem playlist = (PlaylistItem) parent.getSelectedItem();
-
-                        if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
-                            {
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putBoolean("refresh_vp", true);
-                                editor.apply();
-                            }
-
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.addEpisodeToPlaylist(playlist.getID(), mEpisode.getEpisodeId());
-                            db.close();
-
-                            showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
-                        }
-                    }
-
-                    public void onNothingSelected(AdapterView<?> parent) {}
-                });
-
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeActivity.this);
-                    builder.setView(playlistAddView);
-                    builder.create().show();
-                }
-                break;
-        }
-
-        mWearableActionDrawer.getController().closeDrawer();
-
-        return true;
-    }
-
-    private void setMenu()
-    {
-        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-        final Menu menu = mWearableActionDrawer.getMenu();
-        menu.clear();
-        getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
-
-        if (adapter != null)
-            menu.removeItem(adapter.isEnabled() ? R.id.menu_drawer_episode_bluetooth_enable : R.id.menu_drawer_episode_bluetooth_disable);
-        else
-        {
-            menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
-            menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
-        }
-
-        menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
-    }
-
 
     private Runnable downloadProgress = new Runnable() {
             @Override
@@ -734,7 +544,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                 //Log.d(mContext.getPackageName(), "Status: " + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
-                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
                 switch (status) {
                     case DownloadManager.STATUS_PAUSED:
@@ -755,7 +564,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
 
                         mProgressCircle.setProgress(bytes_downloaded);
-                        mProgressCircle.setVisibility(View.VISIBLE);
 
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
@@ -764,7 +572,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                                 CancelDownload();
                             }
                         });
-                        findViewById(R.id.podcast_episode_download_speed).setVisibility(View.VISIBLE);
+                        mDownloadSpeed.setVisibility(View.VISIBLE);
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
@@ -781,7 +589,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
                         mControlsLayout.setVisibility(View.VISIBLE);
-                        //mVolumeDown.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mDownloadManager.remove(mDownloadId);
                         final SharedPreferences.Editor editor = prefs.edit();
@@ -824,13 +631,13 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         }
                         */
                     case DownloadManager.STATUS_SUCCESSFUL:
+                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mProgressCircle.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
-                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
 
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -844,6 +651,51 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             cursor.close();
         }
     };
+
+    private void DownloadEpisode() {
+        mPlayPauseImage.setVisibility(View.INVISIBLE);
+        mDownloadSpeed.setVisibility(View.VISIBLE);
+        mDownloadStartTime = System.nanoTime();
+        mDownloadId = Utilities.startDownload(mContext, mEpisode);
+        mProgressCircle.setVisibility(View.VISIBLE);
+        mProgressCircle.setProgressDrawable(getDrawable(R.drawable.circular_progress_episode));
+        mProgressBar.setIndeterminate(true);
+
+        showToast(mActivity, getString(R.string.alert_episode_download_start));
+        mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+    }
+
+    public void CancelDownload()
+    {
+        mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+        mPlayPauseImage.setEnabled(true);
+        mControlsLayout.setVisibility(View.VISIBLE);
+        mDownloadManager.remove(mDownloadId);
+        mProgressBar.setVisibility(View.GONE);
+        mProgressCircle.setVisibility(View.INVISIBLE);
+        mDownloadSpeed.setVisibility(View.INVISIBLE);
+        mPlayPauseImage.setVisibility(View.VISIBLE);
+        mSeekBar.setVisibility(View.GONE);
+        mInfoLayout.setVisibility(View.GONE);
+        mVolumeUp.setVisibility(View.GONE);
+        Utilities.DeleteMediaFile(mActivity, mEpisode);
+        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+
+        mDownloadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleNetwork(true);
+            }
+        });
+
+        final ContentValues cv = new ContentValues();
+        cv.put("download", 0);
+        cv.put("downloadid", 0);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+        db.update(cv, mEpisode.getEpisodeId());
+        db.close();
+    }
 
     private void handleNetwork(final Boolean download) {
         if (CommonUtils.getActiveNetwork(mActivity) == null)
@@ -928,51 +780,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mCurrentState = STATE_PLAYING;
 
         MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(mEpisode.getMediaUrl().toString()), extras);
-    }
-
-    private void DownloadEpisode() {
-        mPlayPauseImage.setVisibility(View.INVISIBLE);
-        mProgressCircle.setVisibility(View.VISIBLE);
-        mDownloadSpeed.setVisibility(View.VISIBLE);
-        mDownloadStartTime = System.nanoTime();
-        mDownloadId = Utilities.startDownload(mContext, mEpisode);
-        showToast(mActivity, getString(R.string.alert_episode_download_start));
-        mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
-    }
-
-    public void CancelDownload()
-    {
-        mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
-        mPlayPauseImage.setEnabled(true);
-        mControlsLayout.setVisibility(View.VISIBLE);
-        mDownloadManager.remove(mDownloadId);
-        mProgressBar.setVisibility(View.GONE);
-        mProgressCircle.setVisibility(View.INVISIBLE);
-        mDownloadSpeed.setVisibility(View.INVISIBLE);
-        //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-        //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-        mPlayPauseImage.setVisibility(View.VISIBLE);
-        mSeekBar.setVisibility(View.GONE);
-        mInfoLayout.setVisibility(View.GONE);
-        //mVolumeDown.setVisibility(View.GONE);
-        mVolumeUp.setVisibility(View.GONE);
-        Utilities.DeleteMediaFile(mActivity, mEpisode);
-        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-
-        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleNetwork(true);
-            }
-        });
-
-        final ContentValues cv = new ContentValues();
-        cv.put("download", 0);
-        cv.put("downloadid", 0);
-
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-        db.update(cv, mEpisode.getEpisodeId());
-        db.close();
     }
 
     public void DeleteEpisode() {
@@ -1209,8 +1016,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mPositionView.setVisibility(View.VISIBLE);
                 mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                 mDownloadImage.setVisibility(View.GONE);
-                mDownloadSpeed.setVisibility(View.GONE);
-                mProgressCircle.setVisibility(View.GONE);
+                mDownloadSpeed.setVisibility(View.INVISIBLE);
+                mProgressCircle.setVisibility(View.INVISIBLE);
 
                 mWearableActionDrawer.setEnabled(true);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1235,6 +1042,191 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 break;
         }
     }
+
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+
+        ((TextView)findViewById(R.id.podcast_episode_title)).setTextColor(ContextCompat.getColor(this, R.color.wc_text));
+
+        findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
+        //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
+
+        mScrollView.setBackgroundColor(getColor(R.color.wc_background_amoled));
+        mWearableActionDrawer.getController().closeDrawer();
+        mNavDrawer.getController().closeDrawer();
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+
+        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
+            findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
+            findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
+            findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
+            findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
+            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_amoled));
+        }
+        //mLogo.setVisibility(View.INVISIBLE);
+        mSkipForward.setVisibility(View.INVISIBLE);
+        mSkipForwardImage.setVisibility(View.INVISIBLE);
+        mSkipBackImage.setVisibility(View.INVISIBLE);
+        mSkipBack.setVisibility(View.INVISIBLE);
+        mDownloadImage.setVisibility(View.INVISIBLE);
+        mPlayPauseImage.setVisibility(View.INVISIBLE);
+        mVolumeUp.setVisibility(View.INVISIBLE);
+        mInfoLayout.setVisibility(View.INVISIBLE);
+        findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+
+        findViewById(R.id.podcast_episode_clock).setVisibility(View.GONE);
+
+        if (mThemeID == Enums.ThemeOptions.DEFAULT.getThemeId())
+            mScrollView.setBackgroundColor(getColor(R.color.wc_transparent));
+
+        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
+            mScrollView.setBackgroundColor(getColor(R.color.wc_background_dark));
+            findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
+            findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
+            findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
+            findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
+            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_dark));
+        }
+
+        mSkipForward.setVisibility(View.VISIBLE);
+        mSkipForwardImage.setVisibility(View.VISIBLE);
+        mSkipBackImage.setVisibility(View.VISIBLE);
+        mSkipBack.setVisibility(View.VISIBLE);
+        mDownloadImage.setVisibility(View.VISIBLE);
+        mPlayPauseImage.setVisibility(View.VISIBLE);
+        mInfoLayout.setVisibility(View.VISIBLE);
+        findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
+
+        if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
+            findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
+
+        mEpisodeID = -1;
+        SetContent();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+
+        final int itemId = menuItem.getItemId();
+
+        switch (itemId) {
+            case R.id.menu_drawer_episode_bluetooth_disable:
+                new AsyncTasks.ToggleBluetooth(mActivity, true,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                setMenu();
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                break;
+            case R.id.menu_drawer_episode_bluetooth_enable:
+                new AsyncTasks.ToggleBluetooth(mActivity, false,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                                setMenu();
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                break;
+            case R.id.menu_drawer_episode_open_wifi:
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                break;
+            case R.id.menu_drawer_episode_markunplayed:
+                DBUtilities.markUnplayed(mContext, mEpisode);
+                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                setMenu();
+                break;
+            case R.id.menu_drawer_episode_markplayed:
+                DBUtilities.markPlayed(mContext, mEpisode);
+                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                setMenu();
+                break;
+            case R.id.menu_drawer_episode_add_playlist:
+                final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
+
+                final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
+                final Spinner spinner = playlistAddView.findViewById(R.id.episode_add_playlist_list);
+
+                if (playlistItems.size() == 0) {
+                    playlistAddView.findViewById(R.id.episode_add_playlist_empty).setVisibility(View.VISIBLE);
+                    playlistAddView.findViewById(R.id.episode_add_playlist_list).setVisibility(View.GONE);
+                }
+                else
+                {
+                    final PlaylistItem playlistEmpty = new PlaylistItem();
+                    playlistEmpty.setID(mActivity.getResources().getInteger(R.integer.default_playlist_select));
+                    playlistEmpty.setName(getString(R.string.dropdown_playlist_select));
+                    playlistItems.add(0, playlistEmpty);
+
+                    spinner.setAdapter(new PlaylistsAssignAdapter(this, playlistItems));
+                }
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        final PlaylistItem playlist = (PlaylistItem) parent.getSelectedItem();
+
+                        if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
+                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
+                            {
+                                final SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("refresh_vp", true);
+                                editor.apply();
+                            }
+
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                            db.addEpisodeToPlaylist(playlist.getID(), mEpisode.getEpisodeId());
+                            db.close();
+
+                            showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+                        }
+                    }
+
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
+
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                    builder.setView(playlistAddView);
+                    builder.create().show();
+                }
+                break;
+        }
+
+        mWearableActionDrawer.getController().closeDrawer();
+
+        return true;
+    }
+
+    private void setMenu()
+    {
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+        final Menu menu = mWearableActionDrawer.getMenu();
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
+
+        if (adapter != null)
+            menu.removeItem(adapter.isEnabled() ? R.id.menu_drawer_episode_bluetooth_enable : R.id.menu_drawer_episode_bluetooth_disable);
+        else
+        {
+            menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
+            menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
+        }
+
+        menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
+    }
+
     private BroadcastReceiver mMediaBufferingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

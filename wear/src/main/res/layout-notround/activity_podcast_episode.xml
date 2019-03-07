@@ -14,8 +14,8 @@
             android:id="@+id/podcast_episode_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:paddingBottom="40dp"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="40dp"
             android:visibility="invisible">
 
             <android.widget.TextClock
@@ -55,7 +55,7 @@
             <RelativeLayout
                 android:id="@+id/podcast_episode_buttons_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_below="@+id/podcast_episode_title"
                 android:orientation="horizontal">
@@ -67,7 +67,7 @@
                     android:src="@drawable/ic_skip_back"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="10dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -76,10 +76,9 @@
                     android:id="@+id/tv_skip_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ic_skip_back"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="13dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginStart="17dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     android:textSize="10sp"
@@ -107,12 +106,12 @@
                     android:id="@+id/podcast_episode_progress_circle"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_marginEnd="-15dp"
+                    android:layout_marginEnd="-16dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="@color/wc_transparent"
-                    android:progressDrawable="@drawable/circular_progress_episode"
                     android:visibility="invisible"
+                    android:progressDrawable="@drawable/circular_progress_episode"
                     style="?android:progressBarStyleHorizontal"
                     />
 
@@ -124,7 +123,6 @@
                     android:visibility="invisible"
                     android:layout_below="@+id/ic_podcast_episode_download"
                     android:layout_marginTop="30dp"
-                    android:layout_marginBottom="10dp"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -143,7 +141,6 @@
                     android:id="@+id/tv_skip_forward"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ic_skip_forward"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="13dp"
@@ -153,12 +150,11 @@
                     />
             </RelativeLayout>
 
-
             <ProgressBar
                 android:id="@+id/podcast_episode_progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:indeterminate="true"
                 android:layout_marginTop="6dp"
                 style="@android:style/Widget.Material.ProgressBar.Horizontal"
@@ -246,6 +242,7 @@
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
                 />
+
             <TextView
                 android:id="@+id/podcast_episode_description"
                 android:layout_width="match_parent"
