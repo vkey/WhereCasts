@@ -247,13 +247,20 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         mSelectedEpisodes = episodes;
 
-        final Menu menuFailed = mWearableActionDrawer.getMenu();
-        menuFailed.clear();
+        final Menu menu = mWearableActionDrawer.getMenu();
+        menu.clear();
 
-        if (episodes.size() > 0)
-            getMenuInflater().inflate(R.menu.menu_drawer_episode_list_selected, menuFailed);
-        else
-            getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menuFailed);
+        int menuId = R.menu.menu_drawer_episode_list;
+
+        if (episodes.size() > 0) {
+            if (episodes.size() == 1)
+                menuId = R.menu.menu_drawer_episode_list_selected;
+                //menuId = R.menu.menu_drawer_episode_list_selected_single;
+            else
+                menuId = R.menu.menu_drawer_episode_list_selected;
+        }
+
+        getMenuInflater().inflate(menuId, menu);
         mSelectedEpisodes = episodes;
     }
 
