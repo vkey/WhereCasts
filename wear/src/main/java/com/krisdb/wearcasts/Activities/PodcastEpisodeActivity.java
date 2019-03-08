@@ -70,6 +70,14 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisode;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markPlayed;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markUnplayed;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
@@ -349,7 +357,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mEpisode.setTitle(mLocalFile);
         }
         else if (mEpisodeID > -1)
-            mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+            mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
 
         setMenu();
 
@@ -383,15 +391,15 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 MediaControllerCompat.getMediaController(mActivity).getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
             mCurrentState = STATE_PLAYING;
 
-            if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
+            if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId())
                 mDownloadImage.setVisibility(View.GONE);
             else
                 mDownloadImage.setVisibility(View.VISIBLE);
 
-            if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId()) {
+            if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId()) {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                int position = DBUtilities.GetEpisodeValue(mActivity, mEpisode, "position");
-                int duration = DBUtilities.GetEpisodeValue(mActivity, mEpisode, "duration");
+                int position = GetEpisodeValue(mActivity, mEpisode, "position");
+                int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
                 mSeekBar.setMax(duration);
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
@@ -425,7 +433,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mDownloadImage.setVisibility(View.VISIBLE);
         }
 
-        if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1)
+        if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1)
         {
             mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
             mDownloadImage.setOnClickListener(new View.OnClickListener() {
@@ -437,7 +445,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         }
         //fail safe in case file failed to download;
         if (Utilities.GetMediaFile(mActivity, mEpisode) == null)
-            DBUtilities.SaveEpisodeValue(mActivity, mEpisode, "download", 0);
+            SaveEpisodeValue(mActivity, mEpisode, "download", 0);
 
         if (mLocalFile == null && mEpisode.getMediaUrl() == null) {
             mPlayPauseImage.setEnabled(false);
@@ -447,7 +455,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             findViewById(R.id.podcast_episode_error).setVisibility(View.VISIBLE);
         }
 
-        mDownloadId = DBUtilities.GetEpisodeValue(mActivity, mEpisode, "downloadid");
+        mDownloadId = GetEpisodeValue(mActivity, mEpisode, "downloadid");
 
         if (mDownloadId > 0)
             downloadProgress.run();
@@ -463,7 +471,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     {
         mWearableActionDrawer.setEnabled(true);
 
-        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId();
+        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId();
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play episode
             final Bundle extras = new Bundle();
@@ -472,7 +480,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             extras.putInt("playlistid", mPlaylistID);
             mDownloadImage.setVisibility(View.INVISIBLE);
             //check for downloaded episode
-            if (mLocalFile != null || DBUtilities.GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
+            if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
                 final String uri = (mLocalFile != null) ? GetLocalDirectory().concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
 
@@ -486,7 +494,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             else
                 handleNetwork(false);
 
-            int position = DBUtilities.GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+            int position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
             mSeekBar.setProgress(position);
         }
         else
@@ -629,7 +637,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         /*
                         if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
                             SystemClock.sleep(3000);
-                            mDownloadId = DBUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
+                            mDownloadId = GetDownloadIDByEpisode(mContext, mEpisode);
                             mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         }
                         else {
@@ -997,7 +1005,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 if (extras.getString("local_file") != null)
                     mLocalFile = extras.getString("local_file");
                 else
-                    mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
+                    mEpisode = GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
                 mEpisodeID = extras.getInt("id");
                 SetContent();
             }
@@ -1007,7 +1015,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 if (mLocalFile != null)
                     duration = (int) PreferenceManager.getDefaultSharedPreferences(mContext).getLong(Utilities.GetLocalDurationKey(mLocalFile), 0);
                 else
-                    duration = DBUtilities.GetEpisodeValue(mContext, mEpisode, "duration");
+                    duration = GetEpisodeValue(mContext, mEpisode, "duration");
 
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
@@ -1034,7 +1042,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mWearableActionDrawer.setEnabled(true);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-                //DBUtilities.SaveEpisodeValue(mActivity, mEpisode, "buffering", 0);
+                //SaveEpisodeValue(mActivity, mEpisode, "buffering", 0);
             }
         }
     };
@@ -1115,7 +1123,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mInfoLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
 
-        if (mEpisode.getEpisodeId() == DBUtilities.GetPlayingEpisode(mContext).getEpisodeId())
+        if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId())
             findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
 
         mEpisodeID = -1;
@@ -1142,7 +1150,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         new Interfaces.AsyncResponse() {
                             @Override
                             public void processFinish() {
-                                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                                mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
                                 setMenu();
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1152,19 +1160,19 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.menu_drawer_episode_markunplayed:
-                DBUtilities.markUnplayed(mContext, mEpisode);
-                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                markUnplayed(mContext, mEpisode);
+                mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
                 setMenu();
                 break;
             case R.id.menu_drawer_episode_markplayed:
-                DBUtilities.markPlayed(mContext, mEpisode);
-                mEpisode = DBUtilities.GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+                markPlayed(mContext, mEpisode);
+                mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
                 setMenu();
                 break;
             case R.id.menu_drawer_episode_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
 
-                final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
+                final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
                 final Spinner spinner = playlistAddView.findViewById(R.id.episode_add_playlist_list);
 
                 if (playlistItems.size() == 0) {
@@ -1189,7 +1197,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
+                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && playlistIsEmpty(mActivity, playlist.getID()))
                             {
                                 final SharedPreferences.Editor editor = prefs.edit();
                                 editor.putBoolean("refresh_vp", true);

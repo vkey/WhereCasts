@@ -82,6 +82,8 @@
         <activity android:name=".Settings.SettingsPodcastActivity" />
         <activity android:name=".Settings.SettingsPodcastsUpdatesActivity" />
         <activity android:name=".Settings.SettingsPodcastsDisplayActivity" />
+        <activity android:name=".Settings.SettingsPodcastsEpisodesActivity" />
+        <activity android:name=".Settings.SettingsPodcastsPodcastsActivity" />
         <activity android:name=".Settings.SettingsPodcastsGeneralActivity" />
         <activity android:name=".Settings.SettingsPodcastsPlaybackActivity" />
         <activity android:name=".Settings.SettingsPodcastsDownloadsActivity" />
