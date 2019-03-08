@@ -25,6 +25,7 @@ import com.krisdb.wearcasts.OPMLParser;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
+import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -39,6 +40,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByTitle;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
 public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener {
@@ -87,7 +89,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
                 //final Boolean isRadio = dataMapItem.getDataMap().getBoolean("radio");
 
-                PodcastItem episode = DBUtilities.GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
+                PodcastItem episode = GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
 
                 if (episode == null) {
                     episode = new PodcastItem();
@@ -190,7 +192,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 int number = dataMapItem.getDataMap().getInt("number");
                 DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
 
-                final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(this);
+                final List<PodcastItem> podcasts = PodcastUtilities.GetPodcasts(this);
 
                 final int autoAssignDefaultPlaylistId = getResources().getInteger(R.integer.default_playlist_select);
                 final SharedPreferences.Editor editor = prefs.edit();

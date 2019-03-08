@@ -29,6 +29,9 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
+
 
 public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSettingsAdapter.ViewHolder> {
 
@@ -76,7 +79,7 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
                     final int position = holder.getAdapterPosition();
                     final int playlistId = mPlaylists.get(position).getID();
                     db.updatePlaylist(holder.name.getText().toString(), playlistId);
-                    mPlaylists = DBUtilities.getPlaylists(mContext, false);
+                    mPlaylists = getPlaylists(mContext, false);
                     notifyItemChanged(position);
 
                     holder.name.setText(v.getText().toString());
@@ -106,9 +109,9 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
                                 Utilities.resetHomeScreen(mContext);
 
                             db.deletePlaylist(playlistId);
-                            mPlaylists = DBUtilities.getPlaylists(mContext, false);
+                            mPlaylists = getPlaylists(mContext, false);
 
-                            final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mContext);
+                            final List<PodcastItem> podcasts = GetPodcasts(mContext);
                             final SharedPreferences.Editor editor = prefs.edit();
                             final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
 

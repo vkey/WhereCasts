@@ -31,6 +31,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesFiltered;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class PodcastEpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.OnEpisodeSelectedListener {
@@ -174,7 +177,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
             case R.id.menu_drawer_episode_list_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
 
-                final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
+                final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
                 final Spinner spinner = playlistAddView.findViewById(R.id.episodes_add_playlist_list);
 
                 if (playlistItems.size() == 0) {
@@ -198,7 +201,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
                         if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
 
-                            List<PodcastItem> episodes = DBUtilities.GetEpisodesFiltered(mActivity, mPodcastId);
+                            List<PodcastItem> episodes = GetEpisodesFiltered(mActivity, mPodcastId);
                             episodes = episodes.subList(1, episodes.size());
 
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
@@ -207,7 +210,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
+                            if (prefs.getBoolean("pref_hide_empty_playlists", false) && playlistIsEmpty(mActivity, playlist.getID()))
                             {
                                 final SharedPreferences.Editor editor = prefs.edit();
                                 editor.putBoolean("refresh_vp", true);

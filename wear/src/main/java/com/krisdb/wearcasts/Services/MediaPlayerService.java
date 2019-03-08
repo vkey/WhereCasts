@@ -57,6 +57,9 @@ import java.util.Objects;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
@@ -143,7 +146,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         NotificationManagerCompat.from(this).cancel(mNotificationID);
 
         if (mLocalFile == null && mMediaPlayer != null) {
-            DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
+            SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
             SyncWithMobileDevice();
         }
 
@@ -214,7 +217,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mPlaylistID = extras.getInt("playlistid");
             mLocalFile = extras.getString("local_file");
-            mEpisode = DBUtilities.GetEpisode(mContext, extras.getInt("id"));
+            mEpisode = GetEpisode(mContext, extras.getInt("id"));
 
             StartStream(uri);
         }
@@ -288,7 +291,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             if (mLocalFile == null)
             {
-                DBUtilities.SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
+                SaveEpisodeValue(mContext, mEpisode, "position", getCurrentPosition(mMediaPlayer));
 
                 final ContentValues cvPlaying = new ContentValues();
                 cvPlaying.put("playing", 0);
@@ -401,7 +404,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mError = false;
 
                     if (mLocalFile == null)
-                        position = DBUtilities.GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+                        position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
                     else
                         position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
 
@@ -420,7 +423,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                     if (mLocalFile == null)
-                        DBUtilities.SaveEpisodeValue(mContext, mEpisode, "duration", mMediaPlayer.getDuration());
+                        SaveEpisodeValue(mContext, mEpisode, "duration", mMediaPlayer.getDuration());
                     else
                     {
                         final SharedPreferences.Editor editor = prefs.edit();
@@ -533,7 +536,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                 String uri;
 
-                if (DBUtilities.GetEpisodeValue(mContext, mEpisode, "download") == 1)
+                if (GetEpisodeValue(mContext, mEpisode, "download") == 1)
                     uri = Utilities.GetMediaFile(mContext, mEpisode);
                 else if (mLocalFile != null)
                 {

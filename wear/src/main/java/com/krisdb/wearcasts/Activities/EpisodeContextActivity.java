@@ -16,6 +16,8 @@ import com.krisdb.wearcasts.Utilities.DBUtilities;
 
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodeContextActivity extends BaseFragmentActivity {
@@ -31,7 +33,7 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
 
         final List<Integer> episodeIds = getIntent().getExtras().getIntegerArrayList("episodeids");
 
-        final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(this);
+        final List<PlaylistItem> playlistItems = getPlaylists(this);
 
         if (playlistItems.size() == 0)
         {
@@ -50,7 +52,7 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
 
                     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && DBUtilities.playlistIsEmpty(mActivity, playlist.getID()))
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && playlistIsEmpty(mActivity, playlist.getID()))
                     {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("refresh_vp", true);

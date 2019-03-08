@@ -47,6 +47,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 
 public class PodcastEpisodesListFragment extends Fragment {
 
@@ -230,7 +233,7 @@ public class PodcastEpisodesListFragment extends Fragment {
         {
             if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId())
             {
-                final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(DBUtilities.GetPodcast(mActivity, mPodcastId));
+                final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(GetPodcast(mActivity, mPodcastId));
                 mEpisodeListLayout.setBackgroundColor(colors.first);
                 mTextColor = colors.second;
                 mProgressPlaylistText.setTextColor(mTextColor);
@@ -240,7 +243,7 @@ public class PodcastEpisodesListFragment extends Fragment {
         mStatus.setTextColor(mTextColor);
 
         if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
-            final PodcastItem podcast = DBUtilities.GetPodcast(mActivity, mPodcastId);
+            final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
             mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel(), R.drawable.ic_thumb_title_default));
             mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
         } else {
@@ -260,7 +263,7 @@ public class PodcastEpisodesListFragment extends Fragment {
             else if (mPlaylistId == resources.getInteger(R.integer.playlist_local))
                 title = getString(R.string.playlist_title_local);
             else if (mPlaylistId >= resources.getInteger(R.integer.playlist_default))
-                title = DBUtilities.getPlaylistName(mActivity, mPlaylistId);
+                title = getPlaylistName(mActivity, mPlaylistId);
 
             final SpannableString titleText = new SpannableString(title);
             titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -318,7 +321,7 @@ public class PodcastEpisodesListFragment extends Fragment {
                                 mStatus.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            if (DBUtilities.HasNewEpisodes(mActivity, mPodcastId)) {
+                            if (HasNewEpisodes(mActivity, mPodcastId)) {
                                 final ContentValues cv = new ContentValues();
                                 cv.put("new", 0);
                                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);

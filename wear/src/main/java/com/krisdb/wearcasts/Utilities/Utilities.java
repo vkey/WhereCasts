@@ -36,6 +36,13 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLatestEpisode;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.TrimEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.episodeExists;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlaylist;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
@@ -243,7 +250,7 @@ public class Utilities {
 
         if (episodes == null || episodes.size() == 0) return quantities;
 
-        final PodcastItem latestPodcast = DBUtilities.GetLatestEpisode(ctx, episodes.get(0).getPodcastId());
+        final PodcastItem latestPodcast = GetLatestEpisode(ctx, episodes.get(0).getPodcastId());
 
         final Date latestEpisodeDate = latestPodcast != null && latestPodcast.getPubDate() != null ? DateUtils.ConvertDate(latestPodcast.getPubDate(), "yyyy-MM-dd HH:mm:ss") : null;
 
@@ -262,7 +269,7 @@ public class Utilities {
 
                 final Date episodeDate = DateUtils.ConvertDate(episode.getPubDate(), "yyyy-MM-dd HH:mm:ss");
 
-                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || DBUtilities.episodeExists(ctx, episode.getMediaUrl().toString()))
+                if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || episode.getMediaUrl() == null || episodeExists(ctx, episode.getMediaUrl().toString()))
                     continue;
 
                 final ContentValues cv = new ContentValues();
@@ -287,7 +294,7 @@ public class Utilities {
 
                 if (autoDownload) {
                     startDownload(ctx, episode);
-                    DBUtilities.SaveEpisodeValue(ctx, episode, "download", 1); //so auto-download before doesn't re-download this episode
+                    SaveEpisodeValue(ctx, episode, "download", 1); //so auto-download before doesn't re-download this episode
                     downloadCount++;
                 }
 
@@ -299,13 +306,13 @@ public class Utilities {
             }
         }
         db.close();
-        DBUtilities.TrimEpisodes(ctx, podcast);
+        TrimEpisodes(ctx, podcast);
 
         final int episodesDownloadedCount = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloaded_episodes_count", "0"));
 
         if (episodesDownloadedCount > 0)
         {
-            List<PodcastItem> episodes2 = DBUtilities.GetEpisodes(ctx, podcast.getPodcastId());
+            List<PodcastItem> episodes2 = GetEpisodes(ctx, podcast.getPodcastId());
 
             if (episodes2.size() > 0) {
                 episodes2 = episodes2.subList(1, episodes2.size());
@@ -345,7 +352,7 @@ public class Utilities {
 
         final long downloadId = manager.enqueue(download);
 
-        DBUtilities.SaveEpisodeValue(ctx, episode, "downloadid", downloadId);
+        SaveEpisodeValue(ctx, episode, "downloadid", downloadId);
 
         return downloadId;
     }
@@ -461,7 +468,7 @@ public class Utilities {
     {
         //episodes sent from the phone app shouldn't be assigned to any playlist, so delete those.  This
         //prevent third-party episodes from being deleted
-        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id) && DBUtilities.assignedToPlaylist(ctx, episode.getEpisodeId()) == false)
+        if (episode.getPodcastId() == ctx.getResources().getInteger(R.integer.episode_with_no_podcast_id) && assignedToPlaylist(ctx, episode.getEpisodeId()) == false)
         {
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
             db.delete(episode.getEpisodeId());
@@ -474,7 +481,7 @@ public class Utilities {
             cv.put("download", 0);
             cv.put("downloadid", 0);
             db.update(cv, episode.getEpisodeId());
-            //DBUtilities.SaveEpisodeValue(ctx, episode, "download", 0);
+            //SaveEpisodeValue(ctx, episode, "download", 0);
         }
 
         String fileName = Utilities.GetMediaFile(ctx, episode);
@@ -537,7 +544,7 @@ public class Utilities {
 
     public static void DeleteFiles(final Context ctx, final int podcastId)
     {
-        final List<PodcastItem> episodes = DBUtilities.GetEpisodesWithDownloads(ctx, podcastId);
+        final List<PodcastItem> episodes = GetEpisodesWithDownloads(ctx, podcastId);
 
         for(final PodcastItem episode : episodes)
             DeleteMediaFile(ctx, episode);

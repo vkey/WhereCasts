@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
@@ -39,7 +42,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             if (downloadId == 0) return;
 
-            final PodcastItem episode = DBUtilities.GetEpisodeByDownloadID(context, (int) downloadId);
+            final PodcastItem episode = GetEpisodeByDownloadID(context, (int) downloadId);
 
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
@@ -101,13 +104,13 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
             {
-                final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(context);
+                final List<PodcastItem> podcasts = GetPodcasts(context);
 
                 for (final PodcastItem podcast : podcasts) {
                     final int downloadsSaved = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
 
                     if (downloadsSaved > 0) {
-                        List<PodcastItem> downloads = DBUtilities.GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
+                        List<PodcastItem> downloads = GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
 
                         if (downloads.size() > 0) {
 

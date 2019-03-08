@@ -13,6 +13,8 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+
 public class DBPodcastsEpisodes extends SQLiteOpenHelper
 {
     private String mPlayistTable = "tbl_playlists";
@@ -330,7 +332,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
 
     public void unsubscribe(final Context ctx, final Integer podcastId)
     {
-        final List<PodcastItem> episodes = DBUtilities.GetEpisodes(ctx, podcastId);
+        final List<PodcastItem> episodes = GetEpisodes(ctx, podcastId);
 
         if (episodes.size() == 1) return;
 

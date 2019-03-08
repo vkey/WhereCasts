@@ -30,6 +30,8 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.Date;
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
+
 public class BackgroundService extends JobService {
     boolean isWorking = false;
     boolean jobCancelled = false;
@@ -62,7 +64,7 @@ public class BackgroundService extends JobService {
     private void doWork(JobParameters jobParameters) {
         final Context ctx = getApplicationContext();
         //Log.d(getPackageName(), "Updated Started");
-        final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(ctx);
+        final List<PodcastItem> podcasts = GetPodcasts(ctx);
 
         if (podcasts.size() > 0) {
             new AsyncTasks.SyncPodcasts(this, 0, true,

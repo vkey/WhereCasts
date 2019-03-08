@@ -9,13 +9,20 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
+import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
+
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodesSwipeController extends Callback {
 
@@ -60,19 +67,38 @@ public class EpisodesSwipeController extends Callback {
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else if (mPlaylistID == mContext.getResources().getInteger(R.integer.playlist_default)) {
-            DBUtilities.SaveEpisodeValue(mContext, episode, "finished", episode.getFinished() ? 0 : 1);
-
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            final boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
-            final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
+            final int swipeActionId = Integer.valueOf(prefs.getString("pref_episodes_swipe_action", "0"));
 
-            mEpisodes = DBUtilities.GetEpisodes(mContext, episode.getPodcastId(), mPlaylistID, hidePlayed, numberOfEpisode, null);
+            if (swipeActionId == 0) {
+                SaveEpisodeValue(mContext, episode, "finished", episode.getFinished() ? 0 : 1);
 
-            if (hidePlayed)
-                mAdapter.refreshList(mEpisodes);
-            else
+                final boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
+                final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
+
+                mEpisodes = GetEpisodes(mContext, episode.getPodcastId(), mPlaylistID, hidePlayed, numberOfEpisode, null);
+
+                if (hidePlayed)
+                    mAdapter.refreshList(mEpisodes);
+                else
+                    mAdapter.refreshItem(mEpisodes, position);
+            }
+            else if (swipeActionId == -1)
+            {
+                Utilities.startDownload(mContext, episode);
+                showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
                 mAdapter.refreshItem(mEpisodes, position);
+            }
+            else
+            {
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+                db.addEpisodeToPlaylist(swipeActionId, episode.getEpisodeId());
+                db.close();
+
+                showToast(mContext, mContext.getString(R.string.alert_episode_playlist_added, PlaylistsUtilities.getPlaylistName(mContext, swipeActionId)));
+                mAdapter.refreshItem(mEpisodes, position);
+            }
         }
     }
 }

@@ -44,6 +44,8 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
@@ -166,15 +168,15 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
 
             //third party: add check for playlist
-            if (DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
+            if (HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 
-            final List<PlaylistItem> playlists = DBUtilities.getPlaylists(ctx, hideEmpty);
+            final List<PlaylistItem> playlists = getPlaylists(ctx, hideEmpty);
 
             if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false))
             {
                 for (final PlaylistItem playlist : playlists)
-                    if (DBUtilities.HasEpisodes(ctx, 0, playlist.getID()))
+                    if (HasEpisodes(ctx, 0, playlist.getID()))
                         mPlayListIds.add(playlist.getID());
             }
             else {
@@ -188,10 +190,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             if (localFiles)
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
 
-            if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
+            if (hideEmpty == false || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_inprogress));
 
-            if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
+            if (hideEmpty == false || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
 
             mNumberOfPages = mPlayListIds.size();

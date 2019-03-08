@@ -23,6 +23,12 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SearchEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.getNextEpisodeNotDownloaded;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistItems;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 import static com.krisdb.wearcasts.Utilities.Utilities.ProcessEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
@@ -53,10 +59,10 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            mPlaylistItems = DBUtilities.getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+            mPlaylistItems = getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
-                final PodcastItem nextEpisode = DBUtilities.getNextEpisodeNotDownloaded(ctx, mEpisode);
+                final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);
 
                 if (nextEpisode != null && Utilities.getDownloadId(ctx, nextEpisode.getEpisodeId()) == 0)
                     Utilities.startDownload(ctx, nextEpisode);
@@ -213,7 +219,7 @@ public class AsyncTasks {
             final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
             final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-            mPodcasts = DBUtilities.GetPodcasts(ctx, hideEmpty, showDownloaded);
+            mPodcasts = GetPodcasts(ctx, hideEmpty, showDownloaded);
 
             return null;
         }
@@ -249,9 +255,9 @@ public class AsyncTasks {
             final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
 
             if (mQuery == null)
-                mEpisodes = DBUtilities.GetEpisodes(ctx, mPodcastId, mPlayListId, hidePlayed, numberOfEpisode, null);
+                mEpisodes = GetEpisodes(ctx, mPodcastId, mPlayListId, hidePlayed, numberOfEpisode, null);
             else
-                mEpisodes = DBUtilities.SearchEpisodes(ctx, mPodcastId, mQuery);
+                mEpisodes = SearchEpisodes(ctx, mPodcastId, mQuery);
 
             return null;
         }
@@ -287,14 +293,14 @@ public class AsyncTasks {
             mDownloadCount = 0;
             if (mPodcastId > 0)
             {
-                final PodcastItem podcast = DBUtilities.GetPodcast(mContext.get(), mPodcastId);
+                final PodcastItem podcast = GetPodcast(mContext.get(), mPodcastId);
                 mQuantities = ProcessEpisodes(mContext.get(), podcast);
                 mNewEpisodes = mNewEpisodes + mQuantities[0];
                 mDownloadCount = mDownloadCount + mQuantities[1];
             }
             else
             {
-                final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mContext.get());
+                final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
 
                 for (final PodcastItem podcast : podcasts) {
                     mQuantities = ProcessEpisodes(mContext.get(), podcast);
@@ -338,7 +344,7 @@ public class AsyncTasks {
 
             if (mMediaPlayer == null || mEpisode == null) return null;
 
-            final PodcastItem podcast = DBUtilities.GetPodcast(mContext.get(), mEpisode.getPodcastId());
+            final PodcastItem podcast = GetPodcast(mContext.get(), mEpisode.getPodcastId());
 
             if (podcast == null) return null;
 
@@ -381,7 +387,7 @@ public class AsyncTasks {
 
             final File dirThumbs = new File(GetThumbnailDirectory());
 
-            final List<PodcastItem> podcasts = DBUtilities.GetPodcasts(mContext.get());
+            final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
 
             if (dirThumbs.exists() == false)
                dirThumbs.mkdirs();
@@ -433,7 +439,7 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
 
-            final PodcastItem podcast = DBUtilities.GetPodcast(mContext.get(), mPodcastId);
+            final PodcastItem podcast = GetPodcast(mContext.get(), mPodcastId);
             final int[] response = ProcessEpisodes(mContext.get(), podcast);
 
             mCount = response[0];

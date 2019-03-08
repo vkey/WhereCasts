@@ -43,6 +43,10 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
@@ -108,7 +112,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             @Override
             public boolean onLongClick(View view) {
 
-                final PodcastItem podcast = DBUtilities.GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
+                final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
                 final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
                 final Bundle bundle = new Bundle();
@@ -213,7 +217,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         int episodeId = mEpisodes.get(position).getEpisodeId();
 
-        final PodcastItem episode = DBUtilities.GetEpisode(mContext, episodeId, mPlaylistId);
+        final PodcastItem episode = GetEpisode(mContext, episodeId, mPlaylistId);
 
         final int downloadId = Utilities.getDownloadId(mContext, episodeId);
 
@@ -230,7 +234,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         if (manager != null)
                             manager.remove(downloadId);
 
-                        DBUtilities.SaveEpisodeValue(mContext, episode, "downloadid", 0);
+                        SaveEpisodeValue(mContext, episode, "downloadid", 0);
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                         mEpisodes.get(position).setIsDownloaded(false);
                         notifyItemChanged(position);
@@ -400,7 +404,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     else if (mPlaylistId == mPlaylistLocal)
                         Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
                     else
-                        DBUtilities.SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
+                        SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
 
                     if (mPlaylistId == mResources.getInteger(R.integer.playlist_default)) {
                         mEpisodes.get(position).setFinished(mEpisodes.get(position).getFinished() ? false : true);
@@ -446,7 +450,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     {
         mEpisodes = episodes;
         notifyDataSetChanged();
-        //List<PodcastItem> episodes = DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
+        //List<PodcastItem> episodes = GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
         //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new EpisodesDiffCallback(this.mEpisodes, episodes));
         //diffResult.dispatchUpdatesTo(this);
     }
@@ -469,7 +473,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
         final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
-        refreshList(DBUtilities.GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null));
+        refreshList(GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null));
     }
 
     @Override
