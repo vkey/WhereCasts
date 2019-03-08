@@ -62,6 +62,7 @@
     <string name="settings_podcast_label_download_next_summary">Cuando el que estás escuchando termina</string>
     <string name="settings_podcast_label_download_next_alert">Las descargas colaran si fuera de línea</string>
     <string name="settings_podcast_label_download_sort_order">Ordenar por (anula el orden predeterminado)</string>
+    <string name="settings_podcast_label_download_playback_speed">Velocidad de reproducción (anula la velocidad de reproducción predeterminada)</string>
     <string name="settings_podcast_label_downloads_saved">Descargas de auto limpieza</string>
     <string name="settings_podcast_label_downloads_saved_summary">Las descargas por encima de este número se eliminarán automáticamente</string>
     <string name="settings_podcast_label_hideplayed">Ocultar episodios reproducidos</string>

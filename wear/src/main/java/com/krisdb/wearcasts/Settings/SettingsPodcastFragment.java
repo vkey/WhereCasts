@@ -169,6 +169,16 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         lpSortOrder.setOrder(count++);
         lpSortOrder.setSummary(lpSortOrder.getEntry());
 
+        final ListPreference lpPlaybackSpeed = new ListPreference(mActivity);
+        lpPlaybackSpeed.setTitle(R.string.settings_podcast_label_download_playback_speed);
+        lpPlaybackSpeed.setKey("pref_" + mPodcastId + "_playback_speed");
+        lpPlaybackSpeed.setEntries(R.array.playback_speed_podcast_text);
+        lpPlaybackSpeed.setEntryValues(R.array.playback_speed_podcast_values);
+        lpPlaybackSpeed.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
+        lpPlaybackSpeed.setDefaultValue("0");
+        lpPlaybackSpeed.setOrder(count++);
+        lpPlaybackSpeed.setSummary(lpPlaybackSpeed.getEntry());
+
         final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
 
         final PlaylistItem playlistEmpty = new PlaylistItem();
@@ -217,6 +227,8 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
             lpDownloadsSaved.setEnabled(false);
             lpDownloadsCount.setSummary(getString(R.string.premium_locked_playback_speed));
             lpDownloadsCount.setEnabled(false);
+            lpPlaybackSpeed.setSummary(getString(R.string.premium_locked_playback_speed));
+            lpPlaybackSpeed.setEnabled(false);
         }
         else
             cbDownloadNext.setSummary(R.string.settings_podcast_label_download_next_summary);
@@ -284,6 +296,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         category.addPreference(cbDownloadNext);
         //category.addPreference(lpDownloadNextCount);
         category.addPreference(lpSortOrder);
+        category.addPreference(lpPlaybackSpeed);
         category.addPreference(lpPlaylist);
         category.addPreference(lpSkipStartTime);
         category.addPreference(lpEndStopTime);
@@ -303,6 +316,8 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
             //findPreference("pref_" + mPodcastId + "_download_next_count").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_download_next_count")).getEntry());
             findPreference("pref_" + mPodcastId + "_sort_order").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_sort_order")).getEntry());
+
+            findPreference("pref_" + mPodcastId + "_playback_speed").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_playback_speed")).getEntry());
 
             final CharSequence downloadsSavedEntry = ((ListPreference)findPreference("pref_" + mPodcastId + "_downloads_saved")).getEntry();
 
@@ -355,6 +370,9 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
             if (key.equals("pref_" + mPodcastId + "_sort_order"))
                 findPreference("pref_" + mPodcastId + "_sort_order").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_sort_order")).getEntry());
+
+            if (key.equals("pref_" + mPodcastId + "_playback_speed"))
+                findPreference("pref_" + mPodcastId + "_playback_speed").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_playback_speed")).getEntry());
 
             if (key.equals("pref_" + mPodcastId + "_downloads_saved")) {
                 final CharSequence downloadsSavedEntry = ((ListPreference) findPreference("pref_" + mPodcastId + "_downloads_saved")).getEntry();

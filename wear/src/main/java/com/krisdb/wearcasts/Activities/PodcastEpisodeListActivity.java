@@ -84,13 +84,13 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
-                DBPodcastsEpisodes db1 = new DBPodcastsEpisodes(mActivity);
+                final DBPodcastsEpisodes db1 = new DBPodcastsEpisodes(mActivity);
                 db1.updateEpisodes(mSelectedEpisodes, "finished", 1);
                 db1.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
             case R.id.menu_drawer_episode_list_selected_markunplayed:
-                DBPodcastsEpisodes db2 = new DBPodcastsEpisodes(mActivity);
+                final DBPodcastsEpisodes db2 = new DBPodcastsEpisodes(mActivity);
                 db2.updateEpisodes(mSelectedEpisodes, "finished", 0);
                 db2.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();

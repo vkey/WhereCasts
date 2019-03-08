@@ -62,6 +62,7 @@
     <string name="settings_podcast_label_download_next_summary">Wenn der, den du hörst, endet</string>
     <string name="settings_podcast_label_download_next_alert">Downloads werden in die Warteschlange gestellt, wenn sie offline sind</string>
     <string name="settings_podcast_label_download_sort_order">Sortieren nach (Überschreibt die Standardsortierreihenfolge)</string>
+    <string name="settings_podcast_label_download_playback_speed">Wiedergabegeschwindigkeit (überschreibt die Standardwiedergabegeschwindigkeit)</string>
     <string name="settings_podcast_label_downloads_saved">Anzahl der gespeicherten Downloads</string>
     <string name="settings_podcast_label_downloads_saved_summary">Downloads über dieser Nummer werden automatisch gelöscht</string>
     <string name="settings_podcast_label_hideplayed">Versteckte Episoden ausblenden</string>

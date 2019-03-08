@@ -62,6 +62,7 @@
     <string name="settings_podcast_label_download_next_summary">जब आप एक को समाप्त करना सुन रहे हैं</string>
     <string name="settings_podcast_label_download_next_alert">ऑफलाइन होने पर डाउनलोड कतारबद्ध होंगे</string>
     <string name="settings_podcast_label_download_sort_order">द्वारा क्रमबद्ध करें (डिफ़ॉल्ट सॉर्ट क्रम को ओवरराइड करता है)</string>
+    <string name="settings_podcast_label_download_playback_speed">प्लेबैक गति (डिफ़ॉल्ट प्लेबैक गति को ओवरराइड करता है)</string>
     <string name="settings_podcast_label_downloads_saved">ऑटो सफाई डाउनलोड</string>
     <string name="settings_podcast_label_downloads_saved_summary">इस नंबर के ऊपर डाउनलोड स्वतः हटा दिए जाएंगे</string>
     <string name="settings_podcast_label_hideplayed">एपिसोड छुपाएं</string>

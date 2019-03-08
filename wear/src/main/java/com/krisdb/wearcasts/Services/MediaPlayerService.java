@@ -375,7 +375,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 else
                     mMediaPlayer.prepare();
 
-            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_playback_speed", "1.0f"))));
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "0"));
+                float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "1.0f"));
+
+                if (playbackSpeed2 != 0)
+                    playbackSpeed = playbackSpeed2;
+
+            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
 
             showNotification(false, false);
 
