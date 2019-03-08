@@ -21,6 +21,9 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import java.util.List;
 import java.util.Objects;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+
 public class SettingsPodcastsDisplayFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
@@ -36,11 +39,11 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("display_settings");
 
-        final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity, false);
+        final List<PlaylistItem> playlists = getPlaylists(mActivity, false);
         int size = playlists.size();
 
         //third party: check if playlist has episodes
-        final Boolean thirdPartyPlayerFM = DBUtilities.HasEpisodes(mActivity, 0, resources.getInteger(R.integer.playlist_playerfm));
+        final Boolean thirdPartyPlayerFM = HasEpisodes(mActivity, 0, resources.getInteger(R.integer.playlist_playerfm));
 
         int limit;
 
@@ -52,7 +55,7 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         final CharSequence entryValues[] = new String[limit];
         final CharSequence entryText[] = new String[limit];
 
-        final List<PlaylistItem> playlistsArray = DBUtilities.getPlaylists(mActivity);
+        final List<PlaylistItem> playlistsArray = getPlaylists(mActivity);
 
         entryValues[0] = "0";
         entryText[0] = getString(R.string.settings_podcasts_home_screen_default);
@@ -100,10 +103,6 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
             findPreference("pref_header_color").setSummary(((ListPreference) findPreference("pref_header_color")).getEntry());
         }
 
-        findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
-        findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference)findPreference("pref_display_podcasts_sort_order")).getEntry());
-        findPreference("pref_display_episodes_sort_order").setSummary(((ListPreference)findPreference("pref_display_episodes_sort_order")).getEntry());
-
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -142,17 +141,6 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
                 if (key.equals("pref_header_color"))
                     findPreference("pref_header_color").setSummary(((ListPreference) findPreference("pref_header_color")).getEntry());
             }
-
-            if (key.equals("pref_episode_limit"))
-                findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
-
-                if (key.equals("pref_display_podcasts_sort_order")) {
-                    findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference) findPreference("pref_display_podcasts_sort_order")).getEntry());
-                    CacheUtils.deletePodcastsCache(mActivity);
-                }
-
-            if (key.equals("pref_display_episodes_sort_order"))
-                findPreference("pref_display_episodes_sort_order").setSummary(((ListPreference) findPreference("pref_display_episodes_sort_order")).getEntry());
         }
     }
 }

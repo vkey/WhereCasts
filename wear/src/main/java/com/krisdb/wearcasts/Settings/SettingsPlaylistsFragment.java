@@ -22,6 +22,8 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import java.util.List;
 import java.util.Objects;
 
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+
 public class SettingsPlaylistsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private Activity mActivity;
 
@@ -33,7 +35,7 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
         mActivity = getActivity();
 
-        final List<PlaylistItem> playlists = DBUtilities.getPlaylists(mActivity);
+        final List<PlaylistItem> playlists = getPlaylists(mActivity);
 
         if (playlists.size() == 0) {
             findPreference("pref_playlists_empty").setTitle(R.string.text_playlists_pref_empty_title);

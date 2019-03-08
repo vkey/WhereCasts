@@ -29,6 +29,20 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
             }
         });
 
+        findPreference("pref_podcasts").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(mActivity, SettingsPodcastsPodcastsActivity.class));
+                return false;
+            }
+        });
+
+        findPreference("pref_episodes").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(mActivity, SettingsPodcastsEpisodesActivity.class));
+                return false;
+            }
+        });
+
         findPreference("pref_display").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(mActivity, SettingsPodcastsDisplayActivity.class));

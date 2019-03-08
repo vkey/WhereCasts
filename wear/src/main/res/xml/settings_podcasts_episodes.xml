@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:key="display_episodes" android:title="@string/settings_podcasts_settings_title_episodes">
+
+        <ListPreference
+            android:key="pref_episode_limit"
+            android:title="@string/settings_podcast_episode_limit_title"
+            android:entries="@array/episode_limit_text"
+            android:entryValues="@array/episode_limit_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="20"
+            />
+
+        <SwitchPreference
+            android:key="pref_display_show_downloaded_episodes"
+            android:title="@string/settings_podcasts_label_show_downloaded_episodes"
+            android:summary="@string/settings_podcasts_label_show_downloaded_episodes_summary"
+            android:defaultValue="false"
+            />
+
+        <ListPreference
+            android:key="pref_display_episodes_sort_order"
+            android:title="@string/settings_podcasts_label_episodes_sort"
+            android:entries="@array/sort_order_episodes_global_text"
+            android:entryValues="@array/sort_order_episodes_global_values"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:defaultValue="4"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

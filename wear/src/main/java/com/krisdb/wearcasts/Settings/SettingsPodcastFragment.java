@@ -38,6 +38,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
+import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
+
 public class SettingsPodcastFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
@@ -68,7 +71,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
         mPodcastId = getArguments().getInt("podcastId");
 
-        mPodcast = DBUtilities.GetPodcast(mActivity, mPodcastId);
+        mPodcast = GetPodcast(mActivity, mPodcastId);
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("podcast_settings");
 
@@ -179,7 +182,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         lpPlaybackSpeed.setOrder(count++);
         lpPlaybackSpeed.setSummary(lpPlaybackSpeed.getEntry());
 
-        final List<PlaylistItem> playlistItems = DBUtilities.getPlaylists(mActivity);
+        final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
 
         final PlaylistItem playlistEmpty = new PlaylistItem();
         playlistEmpty.setID(resources.getInteger(R.integer.default_playlist_select));

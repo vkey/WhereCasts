@@ -33,34 +33,6 @@
             />
             -->
 
-        <ListPreference
-            android:key="pref_episode_limit"
-            android:title="@string/settings_podcast_episode_limit_title"
-            android:entries="@array/episode_limit_text"
-            android:entryValues="@array/episode_limit_values"
-            android:icon="@drawable/ic_setting_dropdown_indicator"
-            android:defaultValue="20"
-            />
-
-        <SwitchPreference
-            android:key="pref_hide_empty"
-            android:title="@string/settings_podcasts_label_hide_nonew_podcasts"
-            android:defaultValue="false"
-            />
-
-        <SwitchPreference
-            android:key="pref_display_show_downloaded"
-            android:title="@string/settings_podcasts_label_show_downloads"
-            android:defaultValue="false"
-            />
-
-        <SwitchPreference
-            android:key="pref_display_show_downloaded_episodes"
-            android:title="@string/settings_podcasts_label_show_downloaded_episodes"
-            android:summary="@string/settings_podcasts_label_show_downloaded_episodes_summary"
-            android:defaultValue="false"
-            />
-
         <SwitchPreference
             android:key="pref_display_ambient_disable"
             android:title="@string/settings_podcasts_label_disable_ambient"
@@ -75,23 +47,7 @@
             android:defaultValue="false"
             />
         -->
-        <ListPreference
-            android:key="pref_display_podcasts_sort_order"
-            android:title="@string/settings_podcasts_label_podcast_sort"
-            android:entries="@array/sort_order_podcasts_text"
-            android:entryValues="@array/sort_order_podcasts_values"
-            android:icon="@drawable/ic_setting_dropdown_indicator"
-            android:defaultValue="1"
-            />
 
-        <ListPreference
-            android:key="pref_display_episodes_sort_order"
-            android:title="@string/settings_podcasts_label_episodes_sort"
-            android:entries="@array/sort_order_episodes_global_text"
-            android:entryValues="@array/sort_order_episodes_global_values"
-            android:icon="@drawable/ic_setting_dropdown_indicator"
-            android:defaultValue="4"
-            />
 
     </PreferenceCategory>
 </PreferenceScreen>
