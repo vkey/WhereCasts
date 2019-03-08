@@ -238,29 +238,40 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mNavDrawer.get().getController().peekDrawer();
             }
 
-            if (visits == 40)
+            if (visits > 40 && prefs.getBoolean("rate_app_reminded", false) == false)
             {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                    alert.setMessage(ctx.getString(R.string.rate_app_reminder));
-                    alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                new AsyncTasks.WatchConnected(ctx,
+                        new Interfaces.BooleanResponse() {
+                            @Override
+                            public void processFinish(final Boolean connected) {
+                                if (connected && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                                    final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                                    alert.setMessage(ctx.getString(R.string.rate_app_reminder));
+                                    alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
-                            CommonUtils.DeviceSync(ctx, dataMap);
-                            dialog.dismiss();
-                        }
-                    });
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
+                                            CommonUtils.DeviceSync(ctx, dataMap);
 
-                    alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                                            final SharedPreferences.Editor editor = prefs.edit();
+                                            editor.putBoolean("rate_app_reminded", true);
+                                            editor.apply();
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                }
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+                                }
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
             if (visits > 20 && prefs.getBoolean("updatesEnabled", true) && prefs.getBoolean("updatesRefactor", true)) {
