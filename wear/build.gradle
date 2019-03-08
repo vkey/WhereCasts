@@ -9,7 +9,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 473
+        versionCode 474
         versionName "1.30.24"
     }
     buildTypes {
