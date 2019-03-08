@@ -14,6 +14,7 @@ import android.support.wear.widget.WearableRecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
@@ -28,11 +29,12 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class PodcastsListFragment extends Fragment {
 
     private WearableRecyclerView mPodcastsList = null;
-    private int mPlaylistId, mVisits;
+    private int mPlaylistId;
     private Activity mActivity;
     private TextView mEmptyView;
     private PodcastsAdapter mAdapter;
@@ -76,37 +78,14 @@ public class PodcastsListFragment extends Fragment {
         });
        */
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
-
-        mVisits = prefs.getInt("visits", 0);
-
-        String emptyText = "";
-        final String lastUpdateDate = prefs.getString("last_podcast_sync_date", "");
-
-        if (mVisits < 10) {
-            emptyText = emptyText.concat(mActivity.getString(R.string.empty_podcast_list)).concat("\n\n").concat(mActivity.getString(R.string.empty_podcast_list2));
-            listView.findViewById(R.id.podcast_list_swipe_left).setVisibility(View.VISIBLE);
-        }
-        else if (lastUpdateDate.length() > 0) {
-            emptyText = emptyText.concat("\n\n").concat(getString(R.string.last_updated)
-                    .concat(":\n")
-                    .concat(DateUtils.GetDisplayDate(mActivity, lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))
-                    .concat(" @ ")
-                    .concat(DateUtils.GetTime(DateUtils.ConvertDate(lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))));
-        }
-        else
-            emptyText = mActivity.getString(R.string.empty_podcast_list);
-
-        mEmptyView = listView.findViewById(R.id.empty_podcast_list);
-        mEmptyView.setText(emptyText);
-
         mPlaylistId = (getArguments() != null) ? getArguments().getInt("playlistId") : mActivity.getResources().getInteger(R.integer.playlist_default);
 
-        if (prefs.getBoolean("syncOnStart", false))
+        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
 
         RefreshContent();
-       return listView;
+
+        return listView;
     }
 
     private void handleNetwork()
@@ -207,20 +186,51 @@ public class PodcastsListFragment extends Fragment {
 
     private void showCopy(final int number)
     {
+        final ImageView swipeLeftView = mActivity.findViewById(R.id.podcast_list_swipe_left);
+
         if (number > 0)
         {
             if (mEmptyView != null)
                 mEmptyView.setVisibility(TextView.GONE);
 
-            if (mActivity.findViewById(R.id.podcast_list_swipe_left) != null)
-                mActivity.findViewById(R.id.podcast_list_swipe_left).setVisibility(View.GONE);
+            if (swipeLeftView != null)
+                swipeLeftView.setVisibility(View.GONE);
+
+            mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.GONE);
         }
         else {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+            final int visits = prefs.getInt("visits", 0);
+
+            String emptyText = "";
+            final String lastUpdateDate = prefs.getString("last_podcast_sync_date", "");
+            mEmptyView = mActivity.findViewById(R.id.empty_podcast_list);
+
+            if (visits < 10) {
+                emptyText = emptyText.concat(mActivity.getString(R.string.empty_podcast_list)).concat("\n\n").concat(mActivity.getString(R.string.empty_podcast_list2));
+                swipeLeftView.setVisibility(View.VISIBLE);
+            }
+            else if (lastUpdateDate.length() > 0) {
+                emptyText = emptyText.concat(getString(R.string.last_updated)
+                        .concat(":\n")
+                        .concat(DateUtils.GetDisplayDate(mActivity, lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))
+                        .concat(" @ ")
+                        .concat(DateUtils.GetTime(DateUtils.ConvertDate(lastUpdateDate, "EEE MMM dd H:mm:ss Z yyyy"))));
+            }
+            else
+                emptyText = mActivity.getString(R.string.empty_podcast_list);
+
+            mEmptyView.setText(emptyText);
+
             if (mEmptyView != null)
                 mEmptyView.setVisibility(TextView.VISIBLE);
 
-            if (mActivity.findViewById(R.id.podcast_list_swipe_left) != null)
-                mActivity.findViewById(R.id.podcast_list_swipe_left).setVisibility(mVisits < 10 ? View.VISIBLE : View.GONE);
+            if (swipeLeftView != null)
+                swipeLeftView.setVisibility(visits < 10 ? View.VISIBLE : View.GONE);
+
+            ((ImageView)mActivity.findViewById(R.id.podcast_list_empty_logo)).setImageDrawable(GetRoundedLogo(mActivity, null, R.drawable.ic_thumb_default));
+            mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.VISIBLE);
         }
     }
 

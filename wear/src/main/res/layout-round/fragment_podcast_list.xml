@@ -12,6 +12,19 @@
         android:layout_height="match_parent"
         />
 
+    <ImageView
+        android:id="@+id/podcast_list_empty_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:maxWidth="40dp"
+        android:visibility="gone"
+        android:layout_above="@+id/empty_podcast_list"
+        />
+
     <TextView
         android:id="@+id/empty_podcast_list"
         android:layout_width="match_parent"
@@ -24,7 +37,7 @@
         android:visibility="gone"
         android:textSize="15sp"
         android:lineSpacingExtra="1dp"
-       />
+        />
 
     <ImageView
         android:id="@+id/podcast_list_swipe_left"
