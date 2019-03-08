@@ -68,6 +68,8 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
 
         category.addPreference(lpSwipeAction);
 
+        findPreference("pref_episodes_swipe_action").setSummary(((ListPreference) findPreference("pref_episodes_swipe_action")).getEntry());
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -84,6 +86,8 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
         if (key.equals("pref_episode_limit"))
             findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
 
+        if (key.equals("pref_episodes_swipe_action"))
+            findPreference("pref_episodes_swipe_action").setSummary(((ListPreference) findPreference("pref_episodes_swipe_action")).getEntry());
 
         if (key.equals("pref_display_episodes_sort_order"))
             findPreference("pref_display_episodes_sort_order").setSummary(((ListPreference) findPreference("pref_display_episodes_sort_order")).getEntry());
