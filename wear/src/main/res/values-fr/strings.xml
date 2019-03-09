@@ -258,6 +258,7 @@
 
     <string name="menu_episodes_mark_selected_played">Marque sélectionnée comme jouée</string>
     <string name="menu_episodes_mark_selected_unplayed">Marque sélectionnée comme non jouée</string>
+    <string name="menu_episodes_mark_selected_unplayed_single">Tout marquer comme joué à partir d\'ici</string>
     <string name="menu_episodes_selected_playlist">Ajouter la sélection à la playlist</string>
     <string name="menu_episodes_selected_download">Télécharger sélectionné</string>
 

@@ -19,9 +19,11 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodesSwipeController extends Callback {
@@ -92,11 +94,18 @@ public class EpisodesSwipeController extends Callback {
             }
             else
             {
+                if (prefs.getBoolean("pref_hide_empty_playlists", false) && playlistIsEmpty(mContext, swipeActionId)) {
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("refresh_vp", true);
+                    editor.apply();
+                }
+
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
                 db.addEpisodeToPlaylist(swipeActionId, episode.getEpisodeId());
                 db.close();
 
                 showToast(mContext, mContext.getString(R.string.alert_episode_playlist_added, PlaylistsUtilities.getPlaylistName(mContext, swipeActionId)));
+
                 mAdapter.refreshItem(mEpisodes, position);
             }
         }

@@ -258,6 +258,7 @@
 
     <string name="menu_episodes_mark_selected_played">Markera vald som spelad</string>
     <string name="menu_episodes_mark_selected_unplayed">Markera vald som ospelad</string>
+    <string name="menu_episodes_mark_selected_unplayed_single">Markera allt som spelas härifrån</string>
     <string name="menu_episodes_selected_playlist">Lägg till vald till spellista</string>
     <string name="menu_episodes_selected_download">Hämta vald</string>
 

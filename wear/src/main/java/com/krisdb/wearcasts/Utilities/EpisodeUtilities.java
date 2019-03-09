@@ -694,6 +694,48 @@ public class EpisodeUtilities {
         return episodes;
     }
 
+    public static List<PodcastItem> GetEpisodesAfter(final Context ctx, final PodcastItem episode) {
+        List<PodcastItem> episodes = new ArrayList<>();
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        int order;
+
+        final int podcastOrder = Integer.valueOf(prefs.getString("pref_" + episode.getPodcastId() + "_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_sort_order))));
+        if (podcastOrder != 0)
+            order = podcastOrder;
+        else
+            order = Integer.valueOf(prefs.getString("pref_display_episodes_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_global_sort_order)))); //global sort order
+
+        final String orderString = Utilities.GetOrderClause(order);
+
+        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ?".concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(episode.getPodcastId())});
+
+        int rowNumber = 0, count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                final PodcastItem e = SetPodcastEpisode(cursor);
+                if (e.getEpisodeId() == episode.getEpisodeId())
+                    rowNumber = count;
+                else
+                    count++;
+
+                episodes.add(SetPodcastEpisode(cursor));
+                cursor.moveToNext();
+            }
+        }
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        episodes = episodes.subList(rowNumber, episodes.size());
+
+        return episodes;
+    }
+
+
     static PodcastItem SetPodcastEpisode(final Cursor cursor)
     {
         final PodcastItem episode = new PodcastItem();

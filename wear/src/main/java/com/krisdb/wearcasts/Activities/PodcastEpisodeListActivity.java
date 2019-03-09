@@ -24,6 +24,7 @@ import com.krisdb.wearcasts.Fragments.PodcastEpisodesListFragment;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -87,15 +88,24 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
-                final DBPodcastsEpisodes db1 = new DBPodcastsEpisodes(mActivity);
-                db1.updateEpisodes(mSelectedEpisodes, "finished", 1);
-                db1.close();
+                final DBPodcastsEpisodes dbMarkPlayed = new DBPodcastsEpisodes(mActivity);
+                dbMarkPlayed.updateEpisodes(mSelectedEpisodes, "finished", 1);
+                dbMarkPlayed.close();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+                break;
+            case R.id.menu_drawer_episode_list_selected_markplayed_single:
+
+                final List<PodcastItem> episodes = EpisodeUtilities.GetEpisodesAfter(mActivity, mSelectedEpisodes.get(0));
+
+                final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
+                dbMarkPlayedSingle.updateEpisodes(episodes, "finished", 1);
+                dbMarkPlayedSingle.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
             case R.id.menu_drawer_episode_list_selected_markunplayed:
-                final DBPodcastsEpisodes db2 = new DBPodcastsEpisodes(mActivity);
-                db2.updateEpisodes(mSelectedEpisodes, "finished", 0);
-                db2.close();
+                final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
+                dbMarkUnplayed.updateEpisodes(mSelectedEpisodes, "finished", 0);
+                dbMarkUnplayed.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
             case R.id.menu_drawer_episode_list_selected_downloaad:
@@ -257,8 +267,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
         if (episodes.size() > 0) {
             if (episodes.size() == 1)
-                menuId = R.menu.menu_drawer_episode_list_selected;
-                //menuId = R.menu.menu_drawer_episode_list_selected_single;
+                menuId = R.menu.menu_drawer_episode_list_selected_single;
             else
                 menuId = R.menu.menu_drawer_episode_list_selected;
         }

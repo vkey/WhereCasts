@@ -25,7 +25,7 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
 public class SettingsPodcastsEpisodesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private Activity mActivity;
+    //private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
 
         addPreferencesFromResource(R.xml.settings_podcasts_episodes);
 
-        mActivity = getActivity();
+        final Activity mActivity = getActivity();
 
         findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
         findPreference("pref_display_episodes_sort_order").setSummary(((ListPreference)findPreference("pref_display_episodes_sort_order")).getEntry());
@@ -41,20 +41,20 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
         final PreferenceCategory category = (PreferenceCategory)findPreference("display_episodes");
 
         final List<PlaylistItem> playlists = getPlaylists(mActivity, false);
-        int size = playlists.size();
+        final int size = playlists.size();
 
         final CharSequence entryValues[] = new String[size + 2];
         final CharSequence entryText[] = new String[size + 2];
 
         entryValues[0] = "0";
-        entryText[0] = "Toggle played/unplayed";
+        entryText[0] = getString(R.string.settings_podcasts_episodes_swipe_action_option_toggle);
 
         entryValues[1] = "-1";
-        entryText[1] = "Download";
+        entryText[1] = getString(R.string.settings_podcasts_episodes_swipe_action_option_download);
 
         for(int p = 2; p <= size+1; p++) {
             entryValues[p] = String.valueOf(playlists.get(p-2).getID());
-            entryText[p] = "Add to ".concat(playlists.get(p-2).getName()); //TODO: Localize
+            entryText[p] = getString(R.string.settings_podcasts_episodes_swipe_action_option_playlist, playlists.get(p-2).getName());
         }
 
         final ListPreference lpSwipeAction = new ListPreference(mActivity);
@@ -68,7 +68,15 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
 
         category.addPreference(lpSwipeAction);
 
-        findPreference("pref_episodes_swipe_action").setSummary(((ListPreference) findPreference("pref_episodes_swipe_action")).getEntry());
+        if (!Utilities.hasPremium(mActivity))
+        {
+            findPreference("pref_episodes_swipe_action").setSummary(getString(R.string.premium_locked_playback_speed));
+            findPreference("pref_episodes_swipe_action").setEnabled(false);
+        }
+        else
+        {
+            findPreference("pref_episodes_swipe_action").setSummary(((ListPreference) findPreference("pref_episodes_swipe_action")).getEntry());
+        }
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }

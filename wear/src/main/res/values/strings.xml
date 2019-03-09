@@ -259,6 +259,7 @@
 
     <string name="menu_episodes_mark_selected_played">Mark selected as played</string>
     <string name="menu_episodes_mark_selected_unplayed">Mark selected as unplayed</string>
+    <string name="menu_episodes_mark_selected_unplayed_single">Mark all as played from here</string>
     <string name="menu_episodes_selected_playlist">Add selected to playlist</string>
     <string name="menu_episodes_selected_download">Download selected</string>
 

@@ -257,6 +257,7 @@
 
     <string name="menu_episodes_mark_selected_played">標記選擇為已播放</string>
     <string name="menu_episodes_mark_selected_unplayed">Mark選擇為未播放</string>
+    <string name="menu_episodes_mark_selected_unplayed_single">标记所有从这里播放</string>
     <string name="menu_episodes_selected_playlist">將所選內容添加到播放列表</string>
     <string name="menu_episodes_selected_download">下載選中</string>
 

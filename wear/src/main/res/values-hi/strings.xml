@@ -258,6 +258,7 @@
 
     <string name="menu_episodes_mark_selected_played">मार्क का चयन किया गया</string>
     <string name="menu_episodes_mark_selected_unplayed">मार्क को अनलेप्ड के रूप में चुना गया</string>
+    <string name="menu_episodes_mark_selected_unplayed_single">सभी को यहां से खेला गया के रूप में चिह्नित करें</string>
     <string name="menu_episodes_selected_playlist">प्लेलिस्ट में चयनित जोड़ें</string>
     <string name="menu_episodes_selected_download">डाउनलोड का चयन करें</string>
 
