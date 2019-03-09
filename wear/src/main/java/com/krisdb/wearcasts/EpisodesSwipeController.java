@@ -10,7 +10,6 @@ import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
@@ -19,7 +18,6 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;

@@ -58,7 +58,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;

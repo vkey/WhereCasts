@@ -12,7 +12,6 @@ import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 
 import java.util.List;
 

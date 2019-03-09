@@ -2,9 +2,7 @@ package com.krisdb.wearcasts.Settings;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.ListPreference;
@@ -14,12 +12,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.CacheUtils;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 

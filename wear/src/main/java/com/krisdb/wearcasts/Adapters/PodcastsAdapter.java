@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Activities.PodcastEpisodeListActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;

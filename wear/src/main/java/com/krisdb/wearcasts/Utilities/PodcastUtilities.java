@@ -1,37 +1,26 @@
 package com.krisdb.wearcasts.Utilities;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
-import android.util.ArrayMap;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Databases.DatabaseHelper;
-import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLatestEpisode;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
-import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class PodcastUtilities {
 

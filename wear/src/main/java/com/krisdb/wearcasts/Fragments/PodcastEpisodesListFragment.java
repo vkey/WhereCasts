@@ -35,7 +35,6 @@ import com.krisdb.wearcasts.EpisodesSwipeController;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
-import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
