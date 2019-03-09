@@ -92,8 +92,7 @@
     <string name="settings_podcasts_episodes_swipe_action_option_toggle">Växla spelad / ospelad</string>
     <string name="settings_podcasts_episodes_swipe_action_option_download">Ladda ner</string>
     <string name="settings_podcasts_episodes_swipe_action_option_playlist">Lägg till %s</string>
-    <string name="settings_podcasts_label_episodes_swipe_action">Swipe-åtgärd</string>
-    <string name="settings_podcasts_label_episodes_swipe_action_summary">När du sveper kvar på en episod</string>
+    <string name="settings_podcasts_label_episodes_swipe_action">Vänster svep åtgärd</string>
     <string name="settings_podcasts_settings_title_playback">Uppspelningsinställningar</string>
     <string name="settings_podcasts_settings_title_playlist">Inställningar för spellista</string>
     <string name="settings_podcasts_settings_updates_display">Uppdatera inställningarna</string>

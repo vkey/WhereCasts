@@ -59,7 +59,6 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
 
         final ListPreference lpSwipeAction = new ListPreference(mActivity);
         lpSwipeAction.setTitle(R.string.settings_podcasts_label_episodes_swipe_action);
-        lpSwipeAction.setSummary(R.string.settings_podcasts_label_episodes_swipe_action_summary);
         lpSwipeAction.setKey("pref_episodes_swipe_action");
         lpSwipeAction.setEntryValues(entryValues);
         lpSwipeAction.setEntries(entryText);

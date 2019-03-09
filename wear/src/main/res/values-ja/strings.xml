@@ -91,8 +91,7 @@
     <string name="settings_podcasts_episodes_swipe_action_option_toggle">再生/未再生の切り替え</string>
     <string name="settings_podcasts_episodes_swipe_action_option_download">ダウンロード</string>
     <string name="settings_podcasts_episodes_swipe_action_option_playlist">追加 %s</string>
-    <string name="settings_podcasts_label_episodes_swipe_action">スワイプアクション</string>
-    <string name="settings_podcasts_label_episodes_swipe_action_summary">エピソードを左にスワイプすると</string>
+    <string name="settings_podcasts_label_episodes_swipe_action">左スワイプアクション</string>
     <string name="settings_podcasts_settings_updates_display">設定を更新</string>
     <string name="settings_podcasts_label_sync_podcasts">クリックしてポッドキャストを同期する</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">新しいエピソードのないポッドキャストを隠す</string>

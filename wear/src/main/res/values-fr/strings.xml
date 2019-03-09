@@ -92,8 +92,7 @@
     <string name="settings_podcasts_episodes_swipe_action_option_toggle">Basculer joué / non joué</string>
     <string name="settings_podcasts_episodes_swipe_action_option_download">Télécharger</string>
     <string name="settings_podcasts_episodes_swipe_action_option_playlist">Ajouter à %s</string>
-    <string name="settings_podcasts_label_episodes_swipe_action">Acción de deslizar</string>
-    <string name="settings_podcasts_label_episodes_swipe_action_summary">Al deslizar a la izquierda en un episodio</string>
+    <string name="settings_podcasts_label_episodes_swipe_action">Action de balayage gauche</string>
     <string name="settings_podcasts_settings_title_playback">Paramètres de lecture</string>
     <string name="settings_podcasts_settings_title_playlist">Paramètres de la playlist</string>
     <string name="settings_podcasts_settings_updates_display">Mettre à jour les paramètres</string>

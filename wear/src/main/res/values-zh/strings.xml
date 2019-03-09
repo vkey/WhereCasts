@@ -76,8 +76,7 @@
     <string name="settings_podcasts_episodes_swipe_action_option_toggle">切換播放/不播放</string>
     <string name="settings_podcasts_episodes_swipe_action_option_download">下載</string>
     <string name="settings_podcasts_episodes_swipe_action_option_playlist">添加 %s</string>
-    <string name="settings_podcasts_label_episodes_swipe_action">滑動動作</string>
-    <string name="settings_podcasts_label_episodes_swipe_action_summary">在劇集中向左滑動時</string>
+    <string name="settings_podcasts_label_episodes_swipe_action">向左滑動動作</string>
     <string name="settings_podcasts_settings_updates_display">更新設置</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">隱藏沒有新劇集的播客</string>
     <string name="settings_podcasts_label_show_downloads">僅顯示帶有下載內容的播客</string>

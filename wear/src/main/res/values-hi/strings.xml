@@ -91,8 +91,7 @@
     <string name="settings_podcasts_episodes_swipe_action_option_toggle">टॉगल खेले / अनपले</string>
     <string name="settings_podcasts_episodes_swipe_action_option_download">डाउनलोड</string>
     <string name="settings_podcasts_episodes_swipe_action_option_playlist">में जोड़े %s</string>
-    <string name="settings_podcasts_label_episodes_swipe_action">कड़ी चोट कार्रवाई</string>
-    <string name="settings_podcasts_label_episodes_swipe_action_summary">जब स्वाइपिंग एक एपिसोड पर छोड़ दिया</string>
+    <string name="settings_podcasts_label_episodes_swipe_action">बाएं स्वाइप क्रिया</string>
     <string name="settings_podcasts_settings_updates_display">सेटिंग अपडेट करें</string>
     <string name="settings_podcasts_label_sync_podcasts">पॉडकास्ट सिंक करने के लिए क्लिक करें</string>
     <string name="settings_podcasts_label_hide_nonew_podcasts">कोई नया एपिसोड के साथ पॉडकास्ट छुपाएं</string>
