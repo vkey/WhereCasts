@@ -20,6 +20,12 @@
             android:defaultValue="false"
             />
 
+        <SwitchPreference
+            android:key="pref_episodes_downloads_first"
+            android:title="@string/settings_podcasts_label_downloads_first"
+            android:defaultValue="false"
+            />
+
         <ListPreference
             android:key="pref_display_episodes_sort_order"
             android:title="@string/settings_podcasts_label_episodes_sort"

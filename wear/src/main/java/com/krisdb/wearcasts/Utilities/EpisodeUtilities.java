@@ -618,7 +618,7 @@ public class EpisodeUtilities {
             else
                 order = Integer.valueOf(prefs.getString("pref_display_playlist_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_playlist_sort_order))));
 
-        final String orderString = orderBy == null ?  Utilities.GetOrderClause(order) : orderBy;
+        String orderString = orderBy == null ?  Utilities.GetOrderClause(order) : orderBy;
 
         final boolean showOnlyDownloads = prefs.getBoolean("pref_display_show_downloaded_episodes", false);
 
@@ -626,6 +626,13 @@ public class EpisodeUtilities {
 
         if (showOnlyDownloads)
             downloadsOnlySelect = " AND tbl_podcast_episodes.download = 1";
+
+        if (playlistId == resources.getInteger(R.integer.playlist_default)) {
+            final boolean downloadsFirst = prefs.getBoolean("pref_episodes_downloads_first", false);
+
+            if (downloadsFirst)
+                orderString = "tbl_podcast_episodes.download DESC,".concat(orderString);
+        }
 
         final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
         final int playlistDefault = ctx.getResources().getInteger(R.integer.playlist_default);

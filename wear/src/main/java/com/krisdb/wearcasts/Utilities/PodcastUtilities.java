@@ -33,7 +33,7 @@ public class PodcastUtilities {
             final SQLiteDatabase sdb = db.select();
 
             final Cursor cursor = sdb.rawQuery(
-                    "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts1] WHERE [id] = ?",
+                    "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts] WHERE [id] = ?",
                     new String[]{String.valueOf(podcastId)});
 
             if (cursor.moveToFirst()) {

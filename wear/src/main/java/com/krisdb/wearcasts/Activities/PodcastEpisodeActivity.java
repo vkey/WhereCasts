@@ -560,7 +560,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
-                        if ((System.nanoTime() - mDownloadStartTime) > 0) {
+                        if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
                             final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
                             if (bytesPerSec < 1000000.0) {
