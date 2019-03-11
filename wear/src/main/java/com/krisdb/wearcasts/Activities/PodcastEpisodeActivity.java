@@ -84,26 +84,29 @@ import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class PodcastEpisodeActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener, WearableNavigationDrawerView.OnItemSelectedListener {
 
-    private ProgressBar mProgressBar, mProgressCircle, mProgressCircleLoading;
     private Context mContext;
     private Activity mActivity;
-    private PodcastItem mEpisode;
+
+    private ProgressBar mProgressBar, mProgressCircle, mProgressCircleLoading;
     private SeekBar mSeekBar;
     private RelativeLayout mInfoLayout, mControlsLayout;
-    private DownloadManager mDownloadManager;
     private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed;
-    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
-    private long mDownloadId, mDownloadStartTime;
-    private Handler mDownloadProgressHandler = new Handler();
     private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage;
-    private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
+
+    private PodcastItem mEpisode;
     private MediaBrowserCompat mMediaBrowserCompat;
     private WearableActionDrawerView mWearableActionDrawer;
-    private String mLocalFile;
     private android.support.v4.widget.NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
     private WeakReference<PodcastEpisodeActivity> mActivityRef;
     private WearableNavigationDrawerView mNavDrawer;
+    private Handler mDownloadProgressHandler = new Handler();
+    private DownloadManager mDownloadManager;
+
+    private String mLocalFile;
+    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
+    private long mDownloadId, mDownloadStartTime;
+    private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
 
     @Override
     public Resources.Theme getTheme() {
