@@ -1,4 +1,4 @@
-package com.krisdb.wearcasts;
+package com.krisdb.wearcasts.Controllers;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
+import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 

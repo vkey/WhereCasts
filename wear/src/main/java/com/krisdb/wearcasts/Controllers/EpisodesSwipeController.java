@@ -1,4 +1,4 @@
-package com.krisdb.wearcasts;
+package com.krisdb.wearcasts.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;

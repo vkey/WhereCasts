@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -26,32 +27,39 @@ public class PodcastUtilities {
 
     public static PodcastItem GetPodcast(final Context ctx, final int podcastId) {
         final PodcastItem podcast = new PodcastItem();
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-        final SQLiteDatabase sdb = db.select();
 
-        final Cursor cursor = sdb.rawQuery(
-                "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts] WHERE [id] = ?",
-                new String[]{String.valueOf(podcastId)});
+        try {
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+            final SQLiteDatabase sdb = db.select();
 
-        if (cursor.moveToFirst()) {
-            podcast.setPodcastId(cursor.getInt(0));
+            final Cursor cursor = sdb.rawQuery(
+                    "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts1] WHERE [id] = ?",
+                    new String[]{String.valueOf(podcastId)});
 
-            final ChannelItem channel = new ChannelItem();
-            channel.setTitle(cursor.getString(1));
-            channel.setRSSUrl(cursor.getString(2));
-            if (cursor.getString(3) != null && cursor.getString(4) != null) {
-                channel.setThumbnailUrl(cursor.getString(3));
-                channel.setThumbnailName(cursor.getString(4));
+            if (cursor.moveToFirst()) {
+                podcast.setPodcastId(cursor.getInt(0));
+
+                final ChannelItem channel = new ChannelItem();
+                channel.setTitle(cursor.getString(1));
+                channel.setRSSUrl(cursor.getString(2));
+                if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                    channel.setThumbnailUrl(cursor.getString(3));
+                    channel.setThumbnailName(cursor.getString(4));
+                }
+                podcast.setChannel(channel);
+
+                if (cursor.getString(5) != null)
+                    podcast.setDescription(cursor.getString(5));
             }
-            podcast.setChannel(channel);
 
-            if (cursor.getString(5) != null)
-                podcast.setDescription(cursor.getString(5));
+            cursor.close();
+            db.close();
+            sdb.close();
         }
-
-        cursor.close();
-        db.close();
-        sdb.close();
+        catch (SQLiteException ex)
+        {
+            ex.printStackTrace();
+        }
 
         return podcast;
     }

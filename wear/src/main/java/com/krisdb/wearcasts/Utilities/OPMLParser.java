@@ -1,4 +1,4 @@
-package com.krisdb.wearcasts;
+package com.krisdb.wearcasts.Utilities;
 
 import android.content.Context;
 
