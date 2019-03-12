@@ -98,6 +98,7 @@
     <string name="settings_podcasts_label_show_downloads">ダウンロードのみでPodcastを表示する</string>
     <string name="settings_podcasts_label_show_downloaded_episodes">ダウンロードしたエピソードのみを表示</string>
     <string name="settings_podcasts_label_downloads_first">最初にダウンロードを表示</string>
+    <string name="settings_podcasts_label_continuous_play">次のエピソードを自動的に再生</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">エピソードリストとプレイリスト</string>
     <string name="settings_podcasts_label_disable_ambient">アンビエントモードを無効にする</string>
     <string name="settings_podcasts_label_disable_ambient_summary">アンビエントモードはプレイ画面のみ</string>

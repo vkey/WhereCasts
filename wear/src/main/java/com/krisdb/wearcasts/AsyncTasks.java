@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -44,7 +45,7 @@ public class AsyncTasks {
         private String mLocalFile;
         private Interfaces.PodcastsResponse mResponse;
         private int mPlaylistID;
-        private List<PodcastItem> mPlaylistItems;
+        private List<PodcastItem> mEpisodes;
 
         public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final String localFile, final Interfaces.PodcastsResponse response)
         {
@@ -58,7 +59,7 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            mPlaylistItems = getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+            mEpisodes = mPlaylistID == ctx.getResources().getInteger(R.integer.playlist_default) ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) :  getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
                 final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);
@@ -79,7 +80,7 @@ public class AsyncTasks {
                 if (prefs.getBoolean("pref_auto_delete", true))
                     Utilities.DeleteMediaFile(ctx, mEpisode);
 
-                if (prefs.getBoolean("pref_remove_playlist_onend", false))
+                if (mPlaylistID != ctx.getResources().getInteger(R.integer.playlist_default) && prefs.getBoolean("pref_remove_playlist_onend", false))
                     db.deleteEpisodeFromPlaylists(mEpisode.getEpisodeId());
 
                 db.close();
@@ -103,7 +104,7 @@ public class AsyncTasks {
 
         @Override
         protected void onPostExecute(Void result) {
-            mResponse.processFinish(mPlaylistItems);
+            mResponse.processFinish(mEpisodes);
         }
     }
 
@@ -125,9 +126,11 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            new DBPodcastsEpisodes(ctx).deletePodcast(mPodcastID);
+            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+            db.deletePodcast(mPodcastID);
             Utilities.DeleteFiles(ctx, mPodcastID);
-            new DBPodcastsEpisodes(ctx).unsubscribe(ctx, mPodcastID);
+            db.unsubscribe(ctx, mPodcastID);
+            db.close();
             CacheUtils.deletePodcastsCache(ctx);
             return null;
         }

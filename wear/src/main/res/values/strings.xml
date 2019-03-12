@@ -97,6 +97,7 @@
     <string name="settings_podcasts_label_show_downloads">Show podcasts with downloads only</string>
     <string name="settings_podcasts_label_show_downloaded_episodes">Show only downloaded episodes</string>
     <string name="settings_podcasts_label_downloads_first">Show downloads first</string>
+    <string name="settings_podcasts_label_continuous_play">Play next episode automatically</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">In playlists and episode listing</string>
     <string name="settings_podcasts_label_disable_ambient">Disable ambient mode</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Ambient mode is on play screen only</string>

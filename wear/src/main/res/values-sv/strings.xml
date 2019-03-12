@@ -101,6 +101,7 @@
     <string name="settings_podcasts_label_show_downloads">Visa podcaster med endast nedladdningar</string>
     <string name="settings_podcasts_label_show_downloaded_episodes">Visa bara nedladdade episoder</string>
     <string name="settings_podcasts_label_downloads_first">Visa nedladdningar först</string>
+    <string name="settings_podcasts_label_continuous_play">Spela nästa avsnitt automatiskt</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">I avsnittslistor och spellistor</string>
     <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>

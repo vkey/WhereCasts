@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
@@ -503,46 +504,48 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         catch(Exception ex) {}
     }
 
-    private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> podcasts) {
+    private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
-        if (mPlaylistID != getResources().getInteger(R.integer.playlist_default)) {
-
-            if (podcasts.size() > 2) {
+        if (mPlaylistID == getResources().getInteger(R.integer.playlist_default) && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
+        {
+            setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
+            disableNoisyReceiver();
+            SyncWithMobileDevice(true);
+        }
+        else if (episodes.size() > 2) {
+        {
                 int currentPosition = 0;
 
-                if (mLocalFile != null)
-                {
-                    for (final PodcastItem playlistItem : podcasts) {
-                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile)) break;
+                if (mLocalFile != null) {
+                    for (final PodcastItem playlistItem : episodes) {
+                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile))
+                            break;
                         currentPosition++;
                     }
-                }
-                else {
-                    for (final PodcastItem playlistItem : podcasts) {
+                } else {
+                    for (final PodcastItem playlistItem : episodes) {
                         if (playlistItem.getEpisodeId() == mEpisode.getEpisodeId()) break;
                         currentPosition++;
                     }
                 }
 
-                if (direction == Enums.SkipDirection.NEXT && currentPosition < podcasts.size() - 1) //in middle
-                    mEpisode = podcasts.get(currentPosition + 1);
-                else if (direction == Enums.SkipDirection.NEXT && currentPosition == podcasts.size() - 1) //at end
-                    mEpisode = podcasts.get(1);
+                if (direction == Enums.SkipDirection.NEXT && currentPosition < episodes.size() - 1) //in middle
+                    mEpisode = episodes.get(currentPosition + 1);
+                else if (direction == Enums.SkipDirection.NEXT && currentPosition == episodes.size() - 1) //at end
+                    mEpisode = episodes.get(1);
                 else if (direction == Enums.SkipDirection.PREVIOUS && currentPosition == 1) //at beginning, go to end
-                    mEpisode = podcasts.get(podcasts.size() - 1);
-                else if (direction == Enums.SkipDirection.PREVIOUS && currentPosition <= podcasts.size() - 1) //in middle
-                    mEpisode = podcasts.get(currentPosition - 1);
+                    mEpisode = episodes.get(episodes.size() - 1);
+                else if (direction == Enums.SkipDirection.PREVIOUS && currentPosition <= episodes.size() - 1) //in middle
+                    mEpisode = episodes.get(currentPosition - 1);
 
                 String uri;
 
                 if (GetEpisodeValue(mContext, mEpisode, "download") == 1)
                     uri = Utilities.GetMediaFile(mContext, mEpisode);
-                else if (mLocalFile != null)
-                {
+                else if (mLocalFile != null) {
                     mLocalFile = mEpisode.getTitle();
                     uri = CommonUtils.GetLocalDirectory().concat(mEpisode.getTitle());
-                }
-                else
+                } else
                     uri = mEpisode.getMediaUrl().toString();
 
                 StartStream(Uri.parse(uri));
@@ -559,8 +562,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     intentMediaPlaylist.putExtra("local_file", mLocalFile);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlaylist);
             }
-        } else {
-            setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
+        }
+        else
+        {
+            setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
         }
@@ -868,14 +873,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile,
                     new Interfaces.PodcastsResponse() {
                         @Override
-                        public void processFinish(final List<PodcastItem> playlistItems) {
+                        public void processFinish(final List<PodcastItem> episodes) {
                             final Intent intentMediaCompleted = new Intent();
                             intentMediaCompleted.setAction("media_action");
                             intentMediaCompleted.putExtra("media_completed", true);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
                             stopForeground(false);
                             SystemClock.sleep(500);
-                            playlistSkip(Enums.SkipDirection.NEXT, playlistItems);
+                            playlistSkip(Enums.SkipDirection.NEXT, episodes);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

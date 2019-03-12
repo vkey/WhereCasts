@@ -35,5 +35,11 @@
             android:defaultValue="4"
             />
 
+        <SwitchPreference
+            android:key="pref_episodes_continuous_play"
+            android:title="@string/settings_podcasts_label_continuous_play"
+            android:defaultValue="true"
+            />
+
     </PreferenceCategory>
 </PreferenceScreen>

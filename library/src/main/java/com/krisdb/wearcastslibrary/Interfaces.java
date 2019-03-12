@@ -25,7 +25,7 @@ public class Interfaces {
     }
 
     public interface PodcastsResponse {
-        void processFinish(List<PodcastItem> podcasts);
+        void processFinish(List<PodcastItem> episodes);
     }
 
     public interface DirectoryResponse {
