@@ -480,7 +480,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             extras.putInt("id", mEpisode.getEpisodeId());
             extras.putString("local_file", mLocalFile);
             extras.putInt("playlistid", mPlaylistID);
-            mDownloadImage.setVisibility(View.INVISIBLE);
             //check for downloaded episode
             if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
@@ -489,9 +488,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
 
                 mCurrentState = STATE_PLAYING;
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeUp.setVisibility(View.VISIBLE);
             }
             else
                 handleNetwork(false);
@@ -593,14 +589,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
-                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-
-                        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                handleNetwork(true);
-                            }
-                        });
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mProgressCircle.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
@@ -612,9 +600,15 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         Utilities.DeleteMediaFile(mContext, mEpisode);
 
                         if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
-
                             final int count = prefs.getInt("downloads_" + mEpisode.getEpisodeId(), 0);
                             if (count < 10) {
+                                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
+                                mDownloadImage.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        CancelDownload();
+                                    }
+                                });
                                 mDownloadStartTime = System.nanoTime();
                                 Utilities.startDownload(mContext, mEpisode);
                                 editor.putInt("downloads_" + mEpisode.getEpisodeId(), count + 1);
@@ -625,11 +619,29 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
                                 if (downloadCount > 0)
                                     editor.putInt("new_downloads_count", downloadCount - 1);
+
                                 showToast(mContext, mContext.getString(R.string.alert_download_error_failed));
+                                {
+                                    mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                                    mDownloadImage.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            handleNetwork(true);
+                                        }
+                                    });
+                                }
                             }
                         }
                         else
                         {
+                            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                            mDownloadImage.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    handleNetwork(true);
+                                }
+                            });
+
                             final int downloadCount = prefs.getInt("new_downloads_count", 0);
 
                             if (downloadCount > 0)
@@ -655,6 +667,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mVolumeUp.setVisibility(View.GONE);
                         mProgressCircle.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
+                        mEpisode.setIsDownloaded(true);
 
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -791,7 +804,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mSeekBar.setVisibility(View.GONE);
                 //mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
-                CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
             }
         });
 
@@ -926,6 +938,10 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             //Log.d(mContext.getPackageName(), "Media played: " + extras.getBoolean("media_played"));
 
             if (extras.getBoolean("media_start")) {
+                if (!mEpisode.getIsDownloaded())
+                    CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
+
+                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 mInfoLayout.setVisibility(View.GONE);
                 //mVolumeDown.setVisibility(View.GONE);
@@ -1037,9 +1053,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mDurationView.setVisibility(View.VISIBLE);
                 mPositionView.setVisibility(View.VISIBLE);
                 mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
-                mDownloadImage.setVisibility(View.GONE);
                 mDownloadSpeed.setVisibility(View.INVISIBLE);
                 mProgressCircle.setVisibility(View.INVISIBLE);
+                mDownloadImage.setVisibility(View.INVISIBLE);
 
                 mWearableActionDrawer.setEnabled(true);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

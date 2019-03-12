@@ -8,7 +8,7 @@
     android:toDegrees="1080">
 
     <shape
-        android:innerRadiusRatio="3"
+        android:innerRadiusRatio="3.25"
         android:shape="ring"
         android:thicknessRatio="15"
         android:useLevel="false" >
