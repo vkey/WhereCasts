@@ -367,18 +367,20 @@ public class CommonUtils {
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem, int defaultResource) {
 
         Bitmap bitmap;
-        int borderWidthHalfImage = 4;
+        int borderWidthHalfImage = 4, borderWidth = 3;
 
         if (channelItem != null && channelItem.getThumbnailUrl() != null)
             bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory() + channelItem.getThumbnailName());
         else {
             bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
-            borderWidthHalfImage = 5;
+            borderWidthHalfImage = 6;
+            borderWidth = 5;
         }
 
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
-            borderWidthHalfImage = 5;
+            borderWidthHalfImage = 6;
+            borderWidth = 5;
         }
 
         final int bitmapWidthImage = bitmap.getWidth();
@@ -398,7 +400,7 @@ public class CommonUtils {
 
         final Paint borderImagePaint = new Paint();
         borderImagePaint.setStyle(Paint.Style.STROKE);
-        borderImagePaint.setStrokeWidth(borderWidthHalfImage*3);
+        borderImagePaint.setStrokeWidth(borderWidthHalfImage*borderWidth);
         borderImagePaint.setColor(ContextCompat.getColor(ctx, R.color.wc_logo_border));
         mcanvas.drawCircle(mcanvas.getWidth() >> 1, mcanvas.getWidth() >> 1, newBitmapSquareWidthImage >> 1, borderImagePaint);
 

@@ -127,7 +127,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //Utilities.resetHomeScreen(this);
 
         mShowPodcastList = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("new_episodes");
-        ((ImageView)findViewById(R.id.main_splash_image)).setImageDrawable(GetRoundedLogo(this, null));
 
         new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
@@ -151,7 +150,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         @Override
         protected void onPreExecute() {
-            mActivity.get().findViewById(R.id.main_splash_layout).setVisibility(View.VISIBLE);
+            final MainActivity ctx = mActivity.get();
+            ctx.findViewById(R.id.main_splash_layout).setVisibility(View.VISIBLE);
+            ((ImageView)ctx.findViewById(R.id.main_splash_image)).setImageDrawable(GetRoundedLogo(ctx, null));
         }
 
         @Override
