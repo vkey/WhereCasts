@@ -562,7 +562,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 if (episode.getDisplayThumbnail() != null) //thumbnail row
                     thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
                 else
-                    thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_title_default));
+                    thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
 
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
@@ -671,7 +671,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     if (episode.getDisplayThumbnail() != null)
                         thumb.setImageDrawable(episode.getDisplayThumbnail());
                     else
-                        thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_playlist_default));
+                        thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
 
                     date.setVisibility(View.GONE);
                 } else

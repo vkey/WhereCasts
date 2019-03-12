@@ -243,7 +243,7 @@ public class PodcastEpisodesListFragment extends Fragment {
 
         if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
             final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
-            mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel(), R.drawable.ic_thumb_title_default));
+            mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
             mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
         } else {
             mProgressPlaylistLayout.setBackgroundColor(mHeaderColor);

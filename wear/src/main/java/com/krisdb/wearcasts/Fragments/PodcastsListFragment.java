@@ -229,7 +229,7 @@ public class PodcastsListFragment extends Fragment {
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(visits < 10 ? View.VISIBLE : View.GONE);
 
-            ((ImageView)mActivity.findViewById(R.id.podcast_list_empty_logo)).setImageDrawable(GetRoundedLogo(mActivity, null, R.drawable.ic_thumb_default));
+            ((ImageView)mActivity.findViewById(R.id.podcast_list_empty_logo)).setImageDrawable(GetRoundedLogo(mActivity, null));
             mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.VISIBLE);
         }
     }

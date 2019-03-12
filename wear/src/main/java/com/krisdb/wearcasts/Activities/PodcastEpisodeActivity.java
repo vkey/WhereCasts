@@ -363,7 +363,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         setMenu();
 
-        mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel(), R.drawable.ic_thumb_default));
+        mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel()));
 
         mThemeID = Utilities.getThemeOptionId(this);
 

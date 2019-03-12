@@ -146,7 +146,7 @@ public class PodcastUtilities {
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel(), R.drawable.ic_thumb_default));
+                    podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel()));
                     podcast.setNewCount(cursor.getInt(5));
                     if (orderId == latestEpisodesSortOrderID)
                         podcast.setLatestEpisode(GetLatestEpisode(ctx, cursor.getInt(0)));

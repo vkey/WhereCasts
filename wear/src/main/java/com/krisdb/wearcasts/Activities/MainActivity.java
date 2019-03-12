@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
@@ -47,6 +49,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
@@ -64,7 +67,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
 
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);
@@ -126,6 +128,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //Utilities.resetHomeScreen(this);
 
         mShowPodcastList = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("new_episodes");
+        ((ImageView)findViewById(R.id.main_splash_image)).setImageDrawable(GetRoundedLogo(this, null));
 
         new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
@@ -162,7 +165,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(resources.getInteger(R.integer.default_home_screen))));
             final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
             final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
-            final boolean showOnlyDownloads = PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false);
 
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(resources.getInteger(R.integer.playlist_default));

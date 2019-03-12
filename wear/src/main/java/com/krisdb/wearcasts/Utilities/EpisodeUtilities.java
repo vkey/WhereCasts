@@ -591,7 +591,7 @@ public class EpisodeUtilities {
             channelItem = GetChannel(ctx, podcastId);
 
         if (playlistId == ctx.getResources().getInteger(R.integer.playlist_default))
-            titleItem.setDisplayThumbnail(GetRoundedLogo(ctx , channelItem, R.drawable.ic_thumb_title_default));
+            titleItem.setDisplayThumbnail(GetRoundedLogo(ctx , channelItem));
 
         titleItem.setPodcastId(podcastId);
 
@@ -677,7 +677,7 @@ public class EpisodeUtilities {
                     episode.setChannel(GetChannel(ctx, cursor.getInt(1)));
 
                     if (playlistId != resources.getInteger(R.integer.playlist_default))
-                        episode.setDisplayThumbnail(GetRoundedLogo(ctx, episode.getChannel(), R.drawable.ic_thumb_playlist_default));
+                        episode.setDisplayThumbnail(GetRoundedLogo(ctx, episode.getChannel()));
 
                     episodes.add(episode);
                     cursor.moveToNext();

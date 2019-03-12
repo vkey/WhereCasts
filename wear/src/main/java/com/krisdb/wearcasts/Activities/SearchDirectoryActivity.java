@@ -137,7 +137,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                 }
                 podcast.setChannel(channel);
                 podcast.setIsREST(false);
-                podcast.setDisplayThumbnail(GetRoundedLogo(mActivity, podcast.getChannel(), R.drawable.ic_thumb_default_add_podcasts));
+                podcast.setDisplayThumbnail(GetRoundedLogo(mActivity, podcast.getChannel()));
                 results.add(podcast);
 
                 cursor.moveToNext();
