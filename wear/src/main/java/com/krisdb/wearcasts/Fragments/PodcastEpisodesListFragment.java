@@ -279,7 +279,7 @@ public class PodcastEpisodesListFragment extends Fragment {
                     paramsLayout.setMargins(0, 0, 0, 20);
                 }
             } else if (Objects.equals(densityName, getString(R.string.xhdpi))) {
-                mProgressPlaylistLayout.setPadding(0, 10, 0, 10);
+                mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
                 paramsLayout.setMargins(0, 0, 0, 0);
             } else {
                 mProgressPlaylistLayout.setPadding(0, 10, 0, 10);

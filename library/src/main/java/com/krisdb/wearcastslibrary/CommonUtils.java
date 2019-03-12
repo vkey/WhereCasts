@@ -367,7 +367,7 @@ public class CommonUtils {
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem, int defaultResource) {
 
         Bitmap bitmap;
-        int borderWidthHalfImage = 4, borderWidth = 3;
+        int borderWidthHalfImage = 5, borderWidth = 3;
 
         if (channelItem != null && channelItem.getThumbnailUrl() != null)
             bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory() + channelItem.getThumbnailName());

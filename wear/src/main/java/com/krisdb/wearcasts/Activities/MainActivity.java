@@ -150,9 +150,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         @Override
         protected void onPreExecute() {
-            final MainActivity ctx = mActivity.get();
-            ctx.findViewById(R.id.main_splash_layout).setVisibility(View.VISIBLE);
-            ((ImageView)ctx.findViewById(R.id.main_splash_image)).setImageDrawable(GetRoundedLogo(ctx, null));
+            mActivity.get().findViewById(R.id.main_splash_layout).setVisibility(View.VISIBLE);
         }
 
         @Override

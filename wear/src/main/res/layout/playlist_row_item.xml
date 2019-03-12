@@ -30,9 +30,9 @@
 
     <ProgressBar
         android:id="@+id/episode_row_item_progress"
-        android:layout_width="124dp"
-        android:layout_height="124dp"
-        android:layout_marginStart="-40dp"
+        android:layout_width="123dp"
+        android:layout_height="123dp"
+        android:layout_marginStart="-39dp"
         android:background="@color/wc_transparent"
         android:progressDrawable="@drawable/circular_progress_playlist"
         style="?android:progressBarStyleHorizontal"
