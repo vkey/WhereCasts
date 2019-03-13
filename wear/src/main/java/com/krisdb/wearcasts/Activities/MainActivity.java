@@ -22,7 +22,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
@@ -48,7 +47,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
