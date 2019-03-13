@@ -71,8 +71,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.PodcastEpisodeListActivity" android:launchMode="singleTask" />
-        <activity android:name=".Activities.PodcastEpisodeActivity" android:launchMode="singleTask" />
+        <activity android:name=".Activities.EpisodeListActivity" android:launchMode="singleTask" />
+        <activity android:name=".Activities.EpisodeActivity" android:launchMode="singleTask" />
         <activity android:name=".Activities.SearchDirectoryActivity" />
         <activity android:name=".Activities.SearchEpisodesActivity" />
         <activity android:name=".Activities.AddPodcastsActivity" />

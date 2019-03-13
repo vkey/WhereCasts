@@ -25,7 +25,7 @@ import android.view.View;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
-import com.krisdb.wearcasts.Fragments.PodcastEpisodesListFragment;
+import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.Fragments.PodcastsListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -365,7 +365,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         @Override
         public Fragment getItem(final int index) {
-            return (index == 0) ? PodcastsListFragment.newInstance() : PodcastEpisodesListFragment.newInstance(mPlayListIds.get(index), 0, null);
+            return (index == 0) ? PodcastsListFragment.newInstance() : PlaylistsListFragment.newInstance(mPlayListIds.get(index));
         }
 
         @Override

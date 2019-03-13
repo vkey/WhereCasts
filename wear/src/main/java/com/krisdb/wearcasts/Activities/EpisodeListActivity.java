@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Fragments.PodcastEpisodesListFragment;
+import com.krisdb.wearcasts.Fragments.EpisodesListFragment;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
@@ -36,13 +36,13 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class PodcastEpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.OnEpisodeSelectedListener {
+public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.OnEpisodeSelectedListener {
 
     private WearableActionDrawerView mWearableActionDrawer;
     private Activity mActivity;
-    private int mPodcastId, mPlaylistId;
+    private int mPodcastId;
     private static int SEARCH_RESULTS_CODE = 131;
-    private static WeakReference<PodcastEpisodeListActivity> mActivityRef;
+    private static WeakReference<EpisodeListActivity> mActivityRef;
     private List<PodcastItem> mSelectedEpisodes;
 
     @Override
@@ -54,9 +54,8 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
         mActivityRef = new WeakReference<>(this);
 
         mPodcastId = getIntent().getExtras().getInt("podcastId");
-        mPlaylistId = getIntent().getExtras().getInt("playlistId");
 
-        final Fragment fragment = new PodcastEpisodesListFragment().newInstance(getResources().getInteger(R.integer.playlist_default), mPodcastId, null);
+        final Fragment fragment = new EpisodesListFragment().newInstance(mPodcastId, null);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
 
@@ -71,7 +70,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
             if (requestCode == SEARCH_RESULTS_CODE) {
 
                 final String query = data.getData().toString();
-                final Fragment fragment = new PodcastEpisodesListFragment().newInstance(getResources().getInteger(R.integer.playlist_default), mPodcastId, query);
+                final Fragment fragment = new EpisodesListFragment().newInstance(mPodcastId, query);
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
             }
@@ -83,7 +82,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
-        final Fragment fragment = new PodcastEpisodesListFragment().newInstance(mPlaylistId, mPodcastId, null);
+        final Fragment fragment = new EpisodesListFragment().newInstance(mPodcastId, null);
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
@@ -130,7 +129,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                 break;
             case R.id.menu_drawer_episode_list_markplayed:
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alertRead = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertRead.setMessage(getString(R.string.confirm_mark_all_played));
                     alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
@@ -158,7 +157,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
             case R.id.menu_drawer_episode_list_markunplayed:
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alertUnread = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
                     alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
@@ -234,7 +233,7 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
                 });
 
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeListActivity.this);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeListActivity.this);
                     builder.setView(playlistAddView);
                     builder.create().show();
                 }
@@ -248,8 +247,8 @@ public class PodcastEpisodeListActivity extends BaseFragmentActivity implements 
 
     @Override
     public void onAttachFragment(Fragment fragment) {
-        if (fragment instanceof PodcastEpisodesListFragment) {
-            PodcastEpisodesListFragment headlinesFragment = (PodcastEpisodesListFragment) fragment;
+        if (fragment instanceof EpisodesListFragment) {
+            EpisodesListFragment headlinesFragment = (EpisodesListFragment) fragment;
             headlinesFragment.setOnEpisodeSelectedListener(this);
         }
     }

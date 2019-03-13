@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.krisdb.wearcasts.Activities.PodcastEpisodeListActivity;
+import com.krisdb.wearcasts.Activities.EpisodeListActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -32,7 +32,6 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
     private List<PodcastItem> mPodcasts;
     private Activity mContext;
-    private int mPlaylistId;
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -49,10 +48,9 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
         }
     }
 
-    public PodcastsAdapter(final Activity activity, final List<PodcastItem> podcasts, final int playlistId) {
+    public PodcastsAdapter(final Activity activity, final List<PodcastItem> podcasts) {
         mPodcasts = podcasts;
         mContext = activity;
-        mPlaylistId = playlistId;
     }
 
     public int refreshContent()
@@ -80,10 +78,9 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(mContext, PodcastEpisodeListActivity.class);
+                final Intent intent = new Intent(mContext, EpisodeListActivity.class);
                 final Bundle bundle = new Bundle();
                 bundle.putInt("podcastId", mPodcasts.get(holder.getAdapterPosition()).getPodcastId());
-                bundle.putInt("playlistId", mPlaylistId);
                 intent.putExtras(bundle);
 
                 mContext.startActivity(intent);

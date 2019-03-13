@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,13 +43,12 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 
-public class PodcastEpisodesListFragment extends Fragment {
+public class EpisodesListFragment extends Fragment {
 
     private WearableRecyclerView mEpisodeList;
-    private int mPodcastId, mPlaylistId, mTextColor, mHeaderColor;
+    private int mPodcastId, mTextColor;
     private Activity mActivity;
     private TextView mStatus, mProgressPlaylistText;
     private ImageView mProgressThumb;
@@ -65,12 +60,11 @@ public class PodcastEpisodesListFragment extends Fragment {
     private WeakReference<Activity> mActivityRef;
     private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
 
-    public static PodcastEpisodesListFragment newInstance(final int playlistId, final int podcastId, final String query) {
+    public static EpisodesListFragment newInstance(final int podcastId, final String query) {
 
-        final PodcastEpisodesListFragment elf = new PodcastEpisodesListFragment();
+        final EpisodesListFragment elf = new EpisodesListFragment();
 
         final Bundle bundle = new Bundle();
-        bundle.putInt("playlistId", playlistId);
         bundle.putInt("podcastId", podcastId);
         bundle.putString("query", query);
         elf.setArguments(bundle);
@@ -106,7 +100,6 @@ public class PodcastEpisodesListFragment extends Fragment {
 
         if (getArguments() != null) {
             mPodcastId = getArguments().getInt("podcastId");
-            mPlaylistId = getArguments().getInt("playlistId");
             mQuery = getArguments().getString("query");
         }
 
@@ -191,7 +184,7 @@ public class PodcastEpisodesListFragment extends Fragment {
             }
         });
 
-        mSwipeRefreshLayout.setEnabled(mPlaylistId == mActivity.getResources().getInteger(R.integer.playlist_default));
+        mSwipeRefreshLayout.setEnabled(true);
 
         mTextColor = ContextCompat.getColor(mActivity, R.color.wc_white);
 
@@ -221,15 +214,12 @@ public class PodcastEpisodesListFragment extends Fragment {
 
     public void RefreshContent() {
         if (isAdded() == false) return;
-        mHeaderColor = Utilities.getHeaderColor(mActivity);
 
         final Resources resources = mActivity.getResources();
         final String densityName = CommonUtils.getDensityName(mActivity);
         final Boolean isRound = resources.getConfiguration().isScreenRound();
         final int themeId = Utilities.getThemeOptionId(mActivity);
 
-        if (mPodcastId > 0) //episodes
-        {
             if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId())
             {
                 final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(GetPodcast(mActivity, mPodcastId));
@@ -237,37 +227,13 @@ public class PodcastEpisodesListFragment extends Fragment {
                 mTextColor = colors.second;
                 mProgressPlaylistText.setTextColor(mTextColor);
             }
-        }
 
         mStatus.setTextColor(mTextColor);
 
-        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
             final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
             mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
             mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
-        } else {
-            mProgressPlaylistLayout.setBackgroundColor(mHeaderColor);
-            String title = null;
 
-            if (mPlaylistId == resources.getInteger(R.integer.playlist_inprogress))
-                title = getString(R.string.playlist_title_inprogress);
-            else if (mPlaylistId == resources.getInteger(R.integer.playlist_downloads))
-                title = getString(R.string.playlist_title_downloads);
-            //else if (mPlaylistId == resources.getInteger(R.integer.playlist_radio))
-                //title = getString(R.string.playlist_title_radio);
-            else if (mPlaylistId == resources.getInteger(R.integer.playlist_playerfm)) //third party: add title
-                title = getString(R.string.third_party_title_playerfm);
-            else if (mPlaylistId == resources.getInteger(R.integer.playlist_upnext))
-                title = getString(R.string.playlist_title_upnext);
-            else if (mPlaylistId == resources.getInteger(R.integer.playlist_local))
-                title = getString(R.string.playlist_title_local);
-            else if (mPlaylistId >= resources.getInteger(R.integer.playlist_default))
-                title = getPlaylistName(mActivity, mPlaylistId);
-
-            final SpannableString titleText = new SpannableString(title);
-            titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mProgressPlaylistText.setText(titleText);
-            mProgressPlaylistText.setTextSize(16);
             final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
 
             if (Objects.equals(densityName, getString(R.string.hdpi))) {
@@ -285,40 +251,29 @@ public class PodcastEpisodesListFragment extends Fragment {
                 mProgressPlaylistLayout.setPadding(0, 10, 0, 10);
                 paramsLayout.setMargins(0, 0, 0, 0);
             }
-        }
 
-        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
             mProgressThumb.setVisibility(View.VISIBLE);
             mStatus.setVisibility(View.VISIBLE);
             mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
-        }
-        else {
-            mProgressPlaylistLayout.setVisibility(View.VISIBLE);
-            mStatus.setVisibility(View.GONE);
-        }
 
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mPlaylistId, mQuery,
+        new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {
 
-                        if (isAdded() == false) return;
+                        if (!isAdded()) return;
 
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
+                        mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
                         mEpisodeList.setAdapter(mAdapter);
 
-                        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
-                            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes, mPlaylistId));
+                            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));
                             itemTouchhelper.attachToRecyclerView(mEpisodeList);
-                        }
 
                         if (episodes != null && episodes.size() == 1) {
-                            if (mPlaylistId == mActivity.getResources().getInteger(R.integer.playlist_default)) {
                                 mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
                                 mStatus.setVisibility(View.VISIBLE);
-                            }
                         } else {
                             if (HasNewEpisodes(mActivity, mPodcastId)) {
                                 final ContentValues cv = new ContentValues();
@@ -332,10 +287,7 @@ public class PodcastEpisodesListFragment extends Fragment {
                             mStatus.setVisibility(TextView.GONE);
                         }
 
-                        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default))
                             mProgressThumb.setVisibility(View.GONE);
-                        else
-                            mProgressPlaylistLayout.setVisibility(View.GONE);
 
                         mEpisodeList.setVisibility(View.VISIBLE);
                     }
@@ -345,8 +297,5 @@ public class PodcastEpisodesListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mPlaylistId != getResources().getInteger(R.integer.playlist_default) && mAdapter != null)
-            mAdapter.refreshList(mPodcastId);
     }
 }

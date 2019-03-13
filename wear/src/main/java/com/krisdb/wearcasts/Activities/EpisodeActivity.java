@@ -84,7 +84,7 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
-public class PodcastEpisodeActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener, WearableNavigationDrawerView.OnItemSelectedListener {
+public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener, WearableNavigationDrawerView.OnItemSelectedListener {
 
     private Context mContext;
     private Activity mActivity;
@@ -100,7 +100,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private WearableActionDrawerView mWearableActionDrawer;
     private android.support.v4.widget.NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
-    private WeakReference<PodcastEpisodeActivity> mActivityRef;
+    private WeakReference<EpisodeActivity> mActivityRef;
     private WearableNavigationDrawerView mNavDrawer;
     private Handler mDownloadProgressHandler = new Handler();
     private DownloadManager mDownloadManager;
@@ -179,8 +179,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         if (Objects.equals(CommonUtils.getDensityName(mContext), mContext.getString(R.string.hdpi)))
         {
             paramsDownloadImage.setMargins(0, 0, 14, 0);
-            paramsLoading.setMargins(0, 0, 3, 0);
-            paramsDownloading.setMargins(0, 0, -31, 0);
+            paramsLoading.setMargins(0, 0, 4, 0);
+            paramsDownloading.setMargins(0, 0, -24, 0);
         }
         else
         {
@@ -228,16 +228,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 handleNetwork(true);
             }
         });
-
-        /*
-        mVolumeDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
-            }
-        });
-        */
 
         mSkipBackImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -781,7 +771,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
                 alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
@@ -842,7 +832,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
     public void DeleteEpisode() {
         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+            final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
             alert.setMessage(getString(R.string.confirm_delete_episode_download));
             alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
 
@@ -895,7 +885,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         public void onConnected() {
             super.onConnected();
             try {
-                final MediaControllerCompat mcc = new MediaControllerCompat(PodcastEpisodeActivity.this, mMediaBrowserCompat.getSessionToken());
+                final MediaControllerCompat mcc = new MediaControllerCompat(EpisodeActivity.this, mMediaBrowserCompat.getSessionToken());
                 mcc.registerCallback(mMediaControllerCompatCallback);
                 MediaControllerCompat.setMediaController(mActivity, mcc);
                 mPlaylistID = getIntent().getExtras().getInt("playlistid");
@@ -962,9 +952,6 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             //Log.d(mContext.getPackageName(), "Media played: " + extras.getBoolean("media_played"));
 
             if (extras.getBoolean("media_start")) {
-                if (!mEpisode.getIsDownloaded())
-                    CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
-
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 mInfoLayout.setVisibility(View.GONE);
@@ -1097,7 +1084,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 startActivity(new Intent(this, AddPodcastsActivity.class));
                 break;
             case 1:
-                startActivity(new Intent(this, PodcastEpisodeActivity.class));
+                startActivity(new Intent(this, EpisodeActivity.class));
                 break;
             case 2:
                 startActivity(new Intent(this, SettingsPodcastsActivity.class));
@@ -1258,7 +1245,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 });
 
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(PodcastEpisodeActivity.this);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeActivity.this);
                     builder.setView(playlistAddView);
                     builder.create().show();
                 }

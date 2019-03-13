@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,8 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.krisdb.wearcasts.Activities.PodcastEpisodeActivity;
-import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -52,9 +50,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private List<PodcastItem> mEpisodes, mSelectedEpisodes;
     private Activity mContext;
-    private int mPlaylistId, mPlaylistDefault, mPlaylistDownloads, mPlaylistLocal, mTextColor, mHeaderColor;
+    private int mTextColor;
     private String mDensityName;
-    private Resources mResources;
     private boolean isRound, isXHDPI, isHDPI;
     private WeakReference<Activity> mActivityRef;
     private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
@@ -63,35 +60,26 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
         private final TextView title, date, duration;
-        private final ImageView thumbnail, thumbnailTitle, download;
+        private final ImageView thumbnailTitle, download;
         private final RelativeLayout layout;
-        private final ProgressBar progressEpisode;
 
         ViewHolder(final View view) {
             super(view);
             title = view.findViewById(R.id.episode_row_item_title);
             date = view.findViewById(R.id.episode_row_item_date);
             duration = view.findViewById(R.id.episode_row_item_duration);
-            thumbnail = view.findViewById(R.id.episode_row_item_thumbnail);
             thumbnailTitle = view.findViewById(R.id.episode_row_item_title_thumbnail);
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
-            progressEpisode = view.findViewById(R.id.episode_row_item_progress);
         }
     }
 
-    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
+    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int textColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
-        mPlaylistId = playlistId;
-        mResources = mContext.getResources();
-        mPlaylistDefault = mResources.getInteger(R.integer.playlist_default);
-        mPlaylistDownloads = mResources.getInteger(R.integer.playlist_downloads);
-        mPlaylistLocal = mResources.getInteger(R.integer.playlist_local);
         mDensityName = CommonUtils.getDensityName(mContext);
-        isRound = mResources.getConfiguration().isScreenRound();
-        mHeaderColor = headerColor;
+        isRound = mContext.getResources().getConfiguration().isScreenRound();
         mActivityRef = new WeakReference<>(mContext);
         mEpisodeSelectedCallback = episodeSelectedCallback;
         mSelectedEpisodes = new ArrayList<>();
@@ -102,27 +90,29 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int viewType) {
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(mPlaylistId == mPlaylistDefault ? R.layout.episode_row_item : R.layout.playlist_row_item, viewGroup, false);
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.episode_row_item, viewGroup, false);
 
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.thumbnailTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        if (holder.thumbnailTitle != null) {
+            holder.thumbnailTitle.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
 
-                final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
+                    final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
-                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putInt("podcastId", podcast.getPodcastId());
-                intent.putExtras(bundle);
+                    final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
+                    final Bundle bundle = new Bundle();
+                    bundle.putInt("podcastId", podcast.getPodcastId());
+                    intent.putExtras(bundle);
 
-                if (podcast.getPodcastId() > 0)
-                    mContext.startActivity(intent);
+                    if (podcast.getPodcastId() > 0)
+                        mContext.startActivity(intent);
 
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
+        }
 
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,19 +121,27 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-        holder.duration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initDownload(holder, holder.getAdapterPosition());
-            }
-        });
+            holder.duration.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    initDownload(holder, holder.getAdapterPosition());
+                }
+            });
 
-        holder.date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
+            holder.date.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openEpisode(holder.getAdapterPosition());
+                }
+            });
+
+            holder.date.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    showContext(holder.getAdapterPosition());
+                    return false;
+                }
+            });
 
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,31 +150,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-        if (holder.thumbnail!= null) {
-            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openEpisode(holder.getAdapterPosition());
-                }
-            });
-            holder.thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    showContext(holder.getAdapterPosition());
-                    return false;
-                }
-            });
-        }
-
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return false;
-            }
-        });
-
-        holder.date.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 showContext(holder.getAdapterPosition());
@@ -189,33 +163,10 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void initDownload(final ViewHolder holder, final int position)
     {
-        //holder.progressEpisodeDownload.setVisibility(View.VISIBLE);
-
-        if (mPlaylistId == mPlaylistLocal && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-            alert.setMessage(mContext.getString(R.string.confirm_delete_file));
-            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                int position = holder.getAdapterPosition();
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
-                    refreshList(mEpisodes.get(position).getPodcastId());
-                }
-            });
-            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-            return;
-        }
 
         int episodeId = mEpisodes.get(position).getEpisodeId();
 
-        final PodcastItem episode = GetEpisode(mContext, episodeId, mPlaylistId);
+        final PodcastItem episode = GetEpisode(mContext, episodeId);
 
         final int downloadId = Utilities.getDownloadId(mContext, episodeId);
 
@@ -258,13 +209,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     public void onClick(DialogInterface dialog, int which) {
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
 
-                        if (mPlaylistId == mPlaylistDownloads)
-                            refreshList(mEpisodes.get(position).getPodcastId());
-                        else {
                             mEpisodes.get(position).setIsDownloaded(false);
                             notifyItemChanged(position);
                             dialog.dismiss();
-                        }
                     }
                 });
                 alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
@@ -333,103 +280,23 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             //mDownloadProgressHandler.postDelayed(prog, 1000);
     }
 
-    private void showContext(final int position)
-    {
-        if (mPlaylistId == mResources.getInteger(R.integer.playlist_default))
-        {
-            final PodcastItem episode = mEpisodes.get(position);
-            if (episode.getIsSelected())
-            {
-                episode.setIsSelected(false);
-                mSelectedEpisodes.remove(episode);
-            }
-            else
-            {
-                episode.setIsSelected(true);
-                mSelectedEpisodes.add(episode);
-            }
-
-            notifyItemChanged(position);
-
-            mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
-            mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes);
-            /*
-            final Intent intent = new Intent(mContext, EpisodeContextActivity.class);
-            final Bundle bundle = new Bundle();
-            bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
-            intent.putExtras(bundle);
-            mContext.startActivity(intent);
-            */
-            return;
+    private void showContext(final int position) {
+        final PodcastItem episode = mEpisodes.get(position);
+        if (episode.getIsSelected()) {
+            episode.setIsSelected(false);
+            mSelectedEpisodes.remove(episode);
+        } else {
+            episode.setIsSelected(true);
+            mSelectedEpisodes.add(episode);
         }
-
-        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-            if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress))
-                alert.setMessage(mContext.getString(R.string.confirm_mark_finished));
-            else if (mPlaylistId == mPlaylistDownloads)
-                alert.setMessage(mContext.getString(R.string.confirm_delete_download));
-            else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
-                alert.setMessage(mContext.getString(R.string.confirm_remove_upnext));
-            else if (mPlaylistId == mPlaylistLocal || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
-                alert.setMessage(mContext.getString(R.string.confirm_remove_local));
-            else
-                alert.setMessage(mEpisodes.get(position).getFinished() ? mContext.getString(R.string.confirm_mark_unplayed) : mContext.getString(R.string.confirm_mark_played));
-
-            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
-
-                    if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress)) //in progress
-                    {
-                        final ContentValues cv = new ContentValues();
-                        cv.put("position", 0);
-                        cv.put("finished", 1);
-
-                        db.update(cv, mEpisodes.get(position).getEpisodeId());
-                    } else if (mPlaylistId == mPlaylistDownloads)
-                        Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                    else if (mPlaylistId == mResources.getInteger(R.integer.playlist_radio))
-                        db.delete(mEpisodes.get(position).getEpisodeId());
-                    else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
-                        db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
-                        db.delete(mEpisodes.get(position).getEpisodeId());
-                    } else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
-                        db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
-                    else if (mPlaylistId == mPlaylistLocal)
-                        Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
-                    else
-                        SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
-
-                    if (mPlaylistId == mResources.getInteger(R.integer.playlist_default)) {
-                        mEpisodes.get(position).setFinished(mEpisodes.get(position).getFinished() ? false : true);
-                        notifyItemChanged(position);
-                    } else
-                        refreshList(mEpisodes.get(position).getPodcastId());
-
-                    db.close();
-                    dialog.dismiss();
-                }
-            });
-
-            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            alert.show();
-        }
+        mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes);
+        mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
+        notifyItemChanged(position);
     }
 
     private void openEpisode(final int position)
     {
-        final Intent intent = new Intent(mContext, PodcastEpisodeActivity.class);
+        final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
         bundle.putInt("eid", mEpisodes.get(position).getEpisodeId());
@@ -437,7 +304,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());
 
-        bundle.putInt("playlistid", mPlaylistId);
         intent.putExtras(bundle);
 
         if (position > 0)
@@ -471,7 +337,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
         final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
-        refreshList(GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null));
+        refreshList(GetEpisodes(mContext, podcastId, 0, hidePlayed, numberOfEpisode, null));
     }
 
     @Override
@@ -482,13 +348,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final TextView date = viewHolder.date;
         final TextView duration = viewHolder.duration;
         final ImageView thumbTitle = viewHolder.thumbnailTitle;
-        final ImageView thumb = viewHolder.thumbnail;
         final ImageView download = viewHolder.download;
         final RelativeLayout layout = viewHolder.layout;
-        final ProgressBar episodeProgress = viewHolder.progressEpisode;
-        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) viewHolder.layout.getLayoutParams();
 
-        if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
+        if (episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
         else
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
@@ -498,85 +362,67 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         if (episode.getIsTitle()) //TITLE
         {
-            title.setPadding(0, 0, 0 ,0 );
+            title.setVisibility(View.GONE);
+            date.setVisibility(View.GONE);
             download.setVisibility(View.GONE);
+            duration.setVisibility(View.GONE);
+            thumbTitle.setVisibility(View.VISIBLE);
+            thumbTitle.setMaxWidth(Utilities.getThumbMaxWidth(mContext, mDensityName, isRound));
 
-            if (episodeProgress != null)
-                episodeProgress.setVisibility(View.GONE);
-
-            if (mPlaylistId != mPlaylistDefault)
-            {
-                final SpannableString titleText = new SpannableString(episode.getChannel().getTitle());
-                titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                title.setText(titleText);
-
-                title.setTextSize(16);
-                title.setGravity(Gravity.CENTER_HORIZONTAL);
-                //title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
-                title.setVisibility(View.VISIBLE);
-            }
+            if (episode.getDisplayThumbnail() != null) //thumbnail row
+                thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
             else
-                title.setVisibility(View.GONE);
+                thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
 
-            if (mPlaylistId == mPlaylistDefault) //normal episode title image
-            {
-                if (isHDPI) {
-                    if (isRound)
-                        paramsLayout.setMargins(0, 5, 0, 0);
-                    else
-                        paramsLayout.setMargins(0, 10, 0, 0);
-                }
-                else if (isXHDPI)
+            title.setPadding(0, 0, 0, 0);
+
+            layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+            title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+
+            if (isHDPI) {
+                if (isRound)
                     paramsLayout.setMargins(0, 5, 0, 0);
                 else
                     paramsLayout.setMargins(0, 10, 0, 0);
-            }
-            else //playlist title
-            {
-                if (isHDPI) {
-                    if (isRound)
-                        paramsLayout.setMargins(0, 0, 0, 70);
-                    else
-                        paramsLayout.setMargins(0, 0, 0, 60);
-                }
-                else if (isXHDPI) {
-                    if (isRound)
-                        paramsLayout.setMargins(0, 0, 0, 35);
-                    else
-                        paramsLayout.setMargins(0, 0, 0, 35);
-                }
-                else
-                    paramsLayout.setMargins(0, 0, 0, 35);
-            }
+            } else if (isXHDPI)
+                paramsLayout.setMargins(0, 5, 0, 0);
+            else
+                paramsLayout.setMargins(0, 10, 0, 0);
 
-            thumbTitle.setVisibility(View.VISIBLE);
-            thumbTitle.setMaxWidth(Utilities.getThumbMaxWidth(mContext, mDensityName, isRound));
-            duration.setVisibility(View.GONE);
-            date.setVisibility(View.GONE);
-
-            if (thumb != null)
-                thumb.setVisibility(View.GONE);
-
-            if (mPlaylistId == mPlaylistDefault) {
-                if (episode.getDisplayThumbnail() != null) //thumbnail row
-                    thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
-                else
-                    thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
-
-                layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
-                title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
-            }
-            else {
-                layout.setBackgroundColor(mHeaderColor);
-                title.setBackgroundColor(mHeaderColor);
-            }
-        }
-        else //EPISODE
+        } else //EPISODE
         {
-            date.setTextColor(mTextColor);
-            duration.setTextColor(mTextColor);
-            title.setPadding(0, 0, 40 ,0 );
+            title.setVisibility(View.VISIBLE);
+            date.setVisibility(View.VISIBLE);
             download.setVisibility(View.VISIBLE);
+            thumbTitle.setVisibility(View.GONE);
+
+            if (episode.getDuration() > 0) {
+                duration.setText(episode.getDisplayDuration());
+                duration.setVisibility(View.VISIBLE);
+                duration.setTextColor(mTextColor);
+            }
+            else
+                duration.setVisibility(View.GONE);
+
+            title.setTextColor(mTextColor);
+            title.setTextSize(14);
+            title.setGravity(Gravity.START);
+
+            date.setTextColor(mTextColor);
+            date.setText(episode.getDisplayDate());
+
+            if (episode.getFinished() == false) {
+                final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                final SpannableString spannable = new SpannableString(episode.getTitle());
+                spannable.setSpan(boldSpan, 0, episode.getTitle().length(), 0);
+                title.setText(spannable);
+            } else {
+                final SpannableString titleText = new SpannableString(episode.getTitle());
+                titleText.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                title.setText(titleText);
+            }
+
+            title.setPadding(0, 0, 40, 0);
 
             if (episode.getIsSelected()) {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
@@ -584,119 +430,29 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 duration.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
                 date.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
                 download.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
-            }
-            else {
+            } else {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+
                 duration.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 date.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             }
 
-            final int topMarginPlaylists = isXHDPI ? -85 : -100;
-            if (episodeProgress != null) {
-                if (episode.getPosition() > 0) {
-                    episodeProgress.setVisibility(View.VISIBLE);
-                    episodeProgress.setMax(episode.getDuration());
-                    episodeProgress.setProgress(episode.getPosition());
-                } else {
-                    episodeProgress.setVisibility(View.INVISIBLE);
-                }
-            }
+            final int topMarginEpisodes = isRound ? 50 : 30;
 
-            if (mPlaylistId == mPlaylistDefault && episode.getDuration() > 0) {
-                duration.setText(episode.getDisplayDuration());
-                duration.setVisibility(View.VISIBLE);
-            }
-            else
-                duration.setVisibility(View.GONE);
-
-            thumbTitle.setVisibility(View.GONE);
-            if (thumb != null)
-                thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
-
-            if (episodeProgress != null) {
-                if (mPlaylistId == mPlaylistDefault)
-                    episodeProgress.setVisibility(View.GONE);
-                else if (episode.getPosition() > 0)
-                    episodeProgress.setVisibility(View.VISIBLE);
-            }
-
-            if (mPlaylistId == mPlaylistDefault) { //episode listing
-                final int topMarginEpisodes = isRound ? 50 : 30;
-
-                if (isHDPI) {
-                    if (isRound)
-                        paramsLayout.setMargins(30, topMarginEpisodes, 40, 0);
-                    else
-                        paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
-
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
-                } else if (isXHDPI) {
-                    paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
-                } else {
+            if (isHDPI) {
+                if (isRound)
+                    paramsLayout.setMargins(30, topMarginEpisodes, 40, 0);
+                else
                     paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
-                }
-            }
-            else //playlist listing
-            {
-                if (isHDPI) {
-                    if (isRound)
-                        paramsLayout.setMargins(35, topMarginPlaylists, 35, 0);
-                    else
-                        paramsLayout.setMargins(15, topMarginPlaylists, 15, 0);
 
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
-                } else if (isXHDPI) {
-                    paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
-                } else {
-                    paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
-                    if (thumb != null)
-                        thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
-                }
+            } else if (isXHDPI) {
+                paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
+            } else {
+                paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
             }
 
-            if (thumb != null) {
-                if (mPlaylistId != mPlaylistDefault) //thumbnail row
-                {
-                    if (episode.getDisplayThumbnail() != null)
-                        thumb.setImageDrawable(episode.getDisplayThumbnail());
-                    else
-                        thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
-
-                    date.setVisibility(View.GONE);
-                } else
-                    thumb.setVisibility(View.GONE);
-            }
-            if (mPlaylistId == mPlaylistDefault) {
-                date.setText(episode.getDisplayDate());
-                date.setVisibility(View.VISIBLE);
-            }
-
-             if (episode.getFinished() == false && mPlaylistId == mPlaylistDefault) {
-                 final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                 final SpannableString spannable = new SpannableString(episode.getTitle());
-                 spannable.setSpan(boldSpan, 0, episode.getTitle().length(), 0);
-                 title.setText(spannable);
-             }
-            else {
-                 final SpannableString titleText = new SpannableString(episode.getTitle());
-                 titleText.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                 title.setText(titleText);
-             }
-
-            title.setVisibility(View.VISIBLE);
-            title.setTextSize(14);
-            title.setGravity(Gravity.START);
-            //title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
         }
     }
 
@@ -704,5 +460,4 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     public int getItemCount() {
         return mEpisodes.size();
     }
-
 }

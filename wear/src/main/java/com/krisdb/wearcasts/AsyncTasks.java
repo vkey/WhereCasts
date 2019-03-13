@@ -237,13 +237,22 @@ public class AsyncTasks {
         private List<PodcastItem> mEpisodes;
         private String mQuery;
 
-        public DisplayEpisodes(final Context context, final int podcastId, final int playlistId, final String query, final Interfaces.PodcastsResponse response) {
+        public DisplayEpisodes(final Context context, final int playlistId, final Interfaces.PodcastsResponse response) {
+            mContext = new WeakReference<>(context);
+            mPodcastId = -1;
+            mPlayListId = playlistId;
+            mQuery = null;
+            mResponse = response;
+        }
+
+        public DisplayEpisodes(final Context context, final int podcastId, final String query, final Interfaces.PodcastsResponse response) {
             mContext = new WeakReference<>(context);
             mPodcastId = podcastId;
-            mPlayListId = playlistId;
+            mPlayListId = mContext.get().getResources().getInteger(R.integer.playlist_default);
             mQuery = query;
             mResponse = response;
        }
+
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -252,7 +261,7 @@ public class AsyncTasks {
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-            final Boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
+            final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
 
             final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
 

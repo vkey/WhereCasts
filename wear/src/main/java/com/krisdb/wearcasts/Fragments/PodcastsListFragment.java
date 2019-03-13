@@ -172,7 +172,7 @@ public class PodcastsListFragment extends Fragment {
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> podcasts) {
-                        mAdapter = new PodcastsAdapter(mActivity, podcasts, mPlaylistId);
+                        mAdapter = new PodcastsAdapter(mActivity, podcasts);
                         mPodcastsList.setAdapter(mAdapter);
                         showCopy(podcasts.size());
                     }

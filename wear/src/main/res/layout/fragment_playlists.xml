@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/playlist_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/playlist_progress_text_playlist_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/playlist_progress_text_playlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/wc_white"
+                />
+    </LinearLayout>
+
+        <android.support.wear.widget.WearableRecyclerView
+            android:id="@+id/playlist_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="50dp" />
+
+    <ImageView
+        android:id="@+id/playlist_progress_text_thumbnail"
+        android:maxWidth="90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:layout_below="@+id/playlist_progress_text_playlist_layout"
+        />
+    <TextView
+        android:id="@+id/playlist_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:text="@string/text_loading_episodes"
+        />
+</RelativeLayout>

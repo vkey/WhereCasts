@@ -490,7 +490,7 @@ public class EpisodeUtilities {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-        final Boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
+        final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
 
         final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
 
@@ -559,6 +559,10 @@ public class EpisodeUtilities {
             return GetEpisodes(ctx, podcastId, playlistId, hidePlayed, limit, null, orderBy);
     }
 
+    public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final boolean hidePlayed, final int limit) {
+            return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), hidePlayed, limit, null, null);
+    }
+
     public static List<PodcastItem> SearchEpisodes(final Context ctx, final int podcastId, final String query) {
             return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), false, Integer.MAX_VALUE, query, null);
     }
@@ -579,19 +583,16 @@ public class EpisodeUtilities {
             channelItem.setTitle(ctx.getString(R.string.third_party_title_playerfm));
         else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_inprogress));
-        //else if (playlistId == resources.getInteger(R.integer.playlist_radio))
-            //channelItem.setTitle(ctx.getString(R.string.playlist_title_radio));
         else if (playlistId == resources.getInteger(R.integer.playlist_upnext))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_upnext));
         else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
             channelItem.setTitle(ctx.getString(R.string.playlist_title_unplayed));
-        else if (playlistId > ctx.getResources().getInteger(R.integer.playlist_default) && playlistExists(ctx, playlistId))
+        else if (playlistId > -1 && playlistExists(ctx, playlistId))
             channelItem.setTitle(getPlaylistName(ctx, playlistId));
-        else
+        else { //no playlist
             channelItem = GetChannel(ctx, podcastId);
-
-        if (playlistId == ctx.getResources().getInteger(R.integer.playlist_default))
             titleItem.setDisplayThumbnail(GetRoundedLogo(ctx , channelItem));
+        }
 
         titleItem.setPodcastId(podcastId);
 
@@ -637,7 +638,7 @@ public class EpisodeUtilities {
         final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
         final int playlistDefault = ctx.getResources().getInteger(R.integer.playlist_default);
 
-        if (playlistId == resources.getInteger(R.integer.playlist_default)) //regular episodes
+        if (podcastId > -1) //regular episodes
             {
                 if (hidePlayed)
                     cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ".concat(downloadsOnlySelect).concat(" AND [pid] = ? ORDER BY ").concat(orderString).concat(" LIMIT ".concat(String.valueOf(limit)))), new String[]{String.valueOf(podcastId)});

@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
@@ -40,7 +41,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.krisdb.wearcasts.Activities.PodcastEpisodeActivity;
+import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
@@ -372,8 +373,17 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mMediaPlayer.setDataSource(uri.toString());
                 }
 
-                if (uri.toString().startsWith("http"))
+                if (uri.toString().startsWith("http")) {
                     mMediaPlayer.prepareAsync();
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
+                        }
+                    });
+                }
                 else
                     mMediaPlayer.prepare();
 
@@ -616,7 +626,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         final Bundle bundle = new Bundle();
         bundle.putInt("eid", mEpisode.getEpisodeId());
 
-        final Intent notificationIntent = new Intent(mContext, PodcastEpisodeActivity.class);
+        final Intent notificationIntent = new Intent(mContext, EpisodeActivity.class);
         notificationIntent.putExtras(bundle);
 
         String channelID = mPackage.concat(".playing");

@@ -30,14 +30,12 @@ public class EpisodesSwipeController extends Callback {
     private List<PodcastItem> mEpisodes;
     private Context mContext;
     private EpisodesAdapter mAdapter;
-    private int mPlaylistID;
 
-    public EpisodesSwipeController(final Context ctx, final EpisodesAdapter adapter, final List<PodcastItem> episodes, final int playlistId)
+    public EpisodesSwipeController(final Context ctx, final EpisodesAdapter adapter, final List<PodcastItem> episodes)
     {
         mContext = ctx;
         mAdapter = adapter;
         mEpisodes = episodes;
-        mPlaylistID = playlistId;
     }
 
     @Override
@@ -67,7 +65,7 @@ public class EpisodesSwipeController extends Callback {
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        else if (mPlaylistID == mContext.getResources().getInteger(R.integer.playlist_default)) {
+        else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             final int swipeActionId = Integer.valueOf(prefs.getString("pref_episodes_swipe_action", "0"));
@@ -78,7 +76,7 @@ public class EpisodesSwipeController extends Callback {
                 final boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
                 final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
-                mEpisodes = GetEpisodes(mContext, episode.getPodcastId(), mPlaylistID, hidePlayed, numberOfEpisode, null);
+                mEpisodes = GetEpisodes(mContext, episode.getPodcastId(), hidePlayed, numberOfEpisode);
 
                 if (hidePlayed)
                     mAdapter.refreshList(mEpisodes);
