@@ -694,7 +694,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mProgressCircleLoading.setVisibility(View.VISIBLE);
         showToast(mActivity, getString(R.string.alert_episode_download_start));
-        mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+        mDownloadProgressHandler.postDelayed(downloadProgress, 5000);
     }
 
     public void CancelDownload()

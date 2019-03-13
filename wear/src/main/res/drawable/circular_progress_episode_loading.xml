@@ -8,7 +8,7 @@
     android:toDegrees="1080">
 
     <shape
-        android:innerRadiusRatio="3.25"
+        android:innerRadiusRatio="3.1"
         android:shape="ring"
         android:thicknessRatio="15"
         android:useLevel="false" >
@@ -20,7 +20,7 @@
         <gradient
             android:centerColor="#BEBEBE"
             android:centerY="0.50"
-            android:endColor="#6B6A6A"
+            android:endColor="#868585"
             android:startColor="@color/wc_transparent"
             android:type="sweep"
             android:useLevel="false" />
