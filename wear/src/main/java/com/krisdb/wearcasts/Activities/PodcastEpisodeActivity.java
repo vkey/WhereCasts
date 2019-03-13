@@ -38,6 +38,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -68,6 +69,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
@@ -87,7 +89,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
     private Context mContext;
     private Activity mActivity;
 
-    private ProgressBar mProgressBar, mProgressCircle, mProgressCircleLoading;
+    private ProgressBar mProgressBar, mProgressCircleDownloading, mProgressCircleLoading;
     private SeekBar mSeekBar;
     private RelativeLayout mInfoLayout, mControlsLayout;
     private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed;
@@ -147,7 +149,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
         mScrollView = findViewById(R.id.podcast_episode_scrollview);
         mProgressBar = findViewById(R.id.podcast_episode_progress_bar);
-        mProgressCircle = findViewById(R.id.podcast_episode_progress_circle);
+        mProgressCircleDownloading = findViewById(R.id.podcast_episode_progress_circle);
         mProgressCircleLoading = findViewById(R.id.podcast_episode_progress_loading);
         mDownloadImage = findViewById(R.id.ic_podcast_episode_download);
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
@@ -169,6 +171,23 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mLogo = findViewById(R.id.podcast_episode_title_image);
 
         mWearableActionDrawer.setOnMenuItemClickListener(this);
+
+        final ViewGroup.MarginLayoutParams paramsLoading = (ViewGroup.MarginLayoutParams)mProgressCircleLoading.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsDownloading = (ViewGroup.MarginLayoutParams)mProgressCircleDownloading.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsDownloadImage = (ViewGroup.MarginLayoutParams)mDownloadImage.getLayoutParams();
+
+        if (Objects.equals(CommonUtils.getDensityName(mContext), mContext.getString(R.string.hdpi)))
+        {
+            paramsDownloadImage.setMargins(0, 0, 14, 0);
+            paramsLoading.setMargins(0, 0, 3, 0);
+            paramsDownloading.setMargins(0, 0, -31, 0);
+        }
+        else
+        {
+            paramsDownloadImage.setMargins(0, 0, 13, 0);
+            paramsLoading.setMargins(0, 0, 1, 0);
+            paramsDownloading.setMargins(0, 0, -38, 0);
+        }
 
         mLogo.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -503,7 +522,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mDownloadImage.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressCircle.setVisibility(View.INVISIBLE);
+            mProgressCircleDownloading.setVisibility(View.INVISIBLE);
             mDownloadSpeed.setVisibility(View.INVISIBLE);
             mInfoLayout.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
@@ -540,9 +559,9 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
 
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                mProgressCircle.setMax(bytes_total);
+                mProgressCircleDownloading.setMax(bytes_total);
 
-                //mProgressCircle.setSecondaryProgress(bytes_total);
+                //mProgressCircleDownloading.setSecondaryProgress(bytes_total);
 
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
@@ -575,8 +594,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         else
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
 
-                        mProgressCircle.setProgress(bytes_downloaded);
-                        mProgressCircle.setVisibility(View.VISIBLE);
+                        mProgressCircleDownloading.setProgress(bytes_downloaded);
+                        mProgressCircleDownloading.setVisibility(View.VISIBLE);
                         mPlayPauseImage.setVisibility(View.INVISIBLE);
 
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
@@ -590,7 +609,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         break;
                     case DownloadManager.STATUS_FAILED:
                         mPlayPauseImage.setVisibility(View.VISIBLE);
-                        mProgressCircle.setVisibility(View.INVISIBLE);
+                        mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
                         mControlsLayout.setVisibility(View.VISIBLE);
@@ -665,7 +684,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
-                        mProgressCircle.setVisibility(View.INVISIBLE);
+                        mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mEpisode.setIsDownloaded(true);
 
@@ -688,13 +707,18 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mPlayPauseImage.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.VISIBLE);
         mDownloadStartTime = System.nanoTime();
-        mProgressCircle.setVisibility(View.VISIBLE);
-        mProgressCircle.setProgress(0);
+        mProgressCircleDownloading.setVisibility(View.VISIBLE);
+        mProgressCircleDownloading.setProgress(0);
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
-
+        mDownloadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CancelDownload();
+            }
+        });
         mProgressCircleLoading.setVisibility(View.VISIBLE);
         showToast(mActivity, getString(R.string.alert_episode_download_start));
-        mDownloadProgressHandler.postDelayed(downloadProgress, 5000);
+        mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
     }
 
     public void CancelDownload()
@@ -705,8 +729,8 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
         mControlsLayout.setVisibility(View.VISIBLE);
         mDownloadManager.remove(mDownloadId);
         mProgressBar.setVisibility(View.GONE);
-        mProgressCircle.setVisibility(View.INVISIBLE);
-        mProgressCircle.setProgress(0);
+        mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+        mProgressCircleDownloading.setProgress(0);
         mProgressCircleLoading.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.INVISIBLE);
         mPlayPauseImage.setVisibility(View.VISIBLE);
@@ -1054,7 +1078,7 @@ public class PodcastEpisodeActivity extends WearableActivity implements MenuItem
                 mPositionView.setVisibility(View.VISIBLE);
                 mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                 mDownloadSpeed.setVisibility(View.INVISIBLE);
-                mProgressCircle.setVisibility(View.INVISIBLE);
+                mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                 mDownloadImage.setVisibility(View.INVISIBLE);
 
                 mWearableActionDrawer.setEnabled(true);

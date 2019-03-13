@@ -513,7 +513,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                 title.setTextSize(16);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
-                title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+                //title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
                 title.setVisibility(View.VISIBLE);
             }
             else
@@ -697,7 +697,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             title.setVisibility(View.VISIBLE);
             title.setTextSize(14);
             title.setGravity(Gravity.START);
-            title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+            //title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
         }
     }
 
