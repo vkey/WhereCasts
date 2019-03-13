@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Adapters.PlaylistsAdapter;
@@ -29,7 +28,6 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 
