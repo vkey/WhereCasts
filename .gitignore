@@ -17,3 +17,5 @@ release/output.json
 .idea/caches/build_file_checksums.ser
 *.ser
 build_file_checksums.ser
+*.log
+*.ser
