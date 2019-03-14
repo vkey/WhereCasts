@@ -45,23 +45,27 @@ public class AsyncTasks {
         private PodcastItem mEpisode;
         private String mLocalFile;
         private Interfaces.PodcastsResponse mResponse;
-        private int mPlaylistID;
+        private int mPlaylistID, mPodcastID;
         private List<PodcastItem> mEpisodes;
 
-        public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final String localFile, final Interfaces.PodcastsResponse response)
+        public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final int podcastId, final String localFile, final Interfaces.PodcastsResponse response)
         {
             mContext = new WeakReference<>(context);
             mEpisode = episode;
             mLocalFile = localFile;
             mPlaylistID = playlistId;
+            mPodcastID = podcastId;
             mResponse = response;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            mEpisodes = mPlaylistID != -1 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) :  getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+
+            mEpisodes = mPodcastID > -1 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) : getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
                 final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);
 

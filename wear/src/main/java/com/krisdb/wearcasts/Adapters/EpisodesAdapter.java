@@ -135,7 +135,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -282,6 +281,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
         bundle.putInt("podcastid", mEpisodes.get(position).getPodcastId());
+        bundle.putInt("playlistid", -1);
 
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());

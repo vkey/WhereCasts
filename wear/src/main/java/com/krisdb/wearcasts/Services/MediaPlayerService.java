@@ -516,7 +516,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
-        if (mPodcastID != -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
+        if (mPodcastID > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
         {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
@@ -528,8 +528,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                 if (mLocalFile != null) {
                     for (final PodcastItem playlistItem : episodes) {
-                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile))
-                            break;
+                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile)) break;
                         currentPosition++;
                     }
                 } else {
@@ -704,7 +703,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, DateUtils.FormatPositionTime(mMediaPlayer.getCurrentPosition()).concat("/").concat(String.valueOf(DateUtils.FormatPositionTime(mMediaPlayer.getDuration()))));
 
         if (mLocalFile != null)
-            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mEpisode.getChannel().getTitle());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, mEpisode.getTitle());
 
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, mContext.getString(R.string.app_name_wc));
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DATE, mEpisode.getPubDate());
@@ -880,7 +879,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
         if (mError == false) {
-            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile,
+            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile,
                     new Interfaces.PodcastsResponse() {
                         @Override
                         public void processFinish(final List<PodcastItem> episodes) {

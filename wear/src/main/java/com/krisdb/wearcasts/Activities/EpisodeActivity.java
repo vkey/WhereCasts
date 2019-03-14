@@ -272,7 +272,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         cv.put("read", 1);
 
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
-        db.update(cv, getIntent().getExtras().getInt("eid"));
+        db.update(cv, getIntent().getExtras().getInt("episodeid"));
         db.close();
 
         if (WearableButtons.getButtonCount(this) != 1 && WearableButtons.getButtonCount(this) != 3)
@@ -333,6 +333,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             if (intent.getExtras() != null)
             {
                 mEpisodeID = intent.getExtras().getInt("episodeid");
+                mPlaylistID = -1;
                 SetContent();
             }
 
@@ -888,10 +889,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mcc.registerCallback(mMediaControllerCompatCallback);
                 MediaControllerCompat.setMediaController(mActivity, mcc);
 
-                mPlaylistID = getIntent().getExtras().getInt("playlistid");
-                mPodcastID = getIntent().getExtras().getInt("podcastid");
-                mLocalFile = getIntent().getExtras().getString("local_file");
-                mEpisodeID = getIntent().getExtras().getInt("episodeid");
+                final Bundle extras = getIntent().getExtras();
+
+                mPlaylistID = extras.getInt("playlistid");
+                mPodcastID = extras.getInt("podcastid");
+                mLocalFile = extras.getString("local_file");
+                mEpisodeID = extras.getInt("episodeid");
 
                 SetContent();
                 mActivity.findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
