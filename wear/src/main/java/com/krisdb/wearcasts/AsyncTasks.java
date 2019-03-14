@@ -59,7 +59,7 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
-            mEpisodes = mPlaylistID == ctx.getResources().getInteger(R.integer.playlist_default) ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) :  getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+            mEpisodes = mPlaylistID != -1 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) :  getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
                 final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);
@@ -80,7 +80,7 @@ public class AsyncTasks {
                 if (prefs.getBoolean("pref_auto_delete", true))
                     Utilities.DeleteMediaFile(ctx, mEpisode);
 
-                if (mPlaylistID != ctx.getResources().getInteger(R.integer.playlist_default) && prefs.getBoolean("pref_remove_playlist_onend", false))
+                if (mPlaylistID != -1 && prefs.getBoolean("pref_remove_playlist_onend", false))
                     db.deleteEpisodeFromPlaylists(mEpisode.getEpisodeId());
 
                 db.close();
@@ -248,11 +248,10 @@ public class AsyncTasks {
         public DisplayEpisodes(final Context context, final int podcastId, final String query, final Interfaces.PodcastsResponse response) {
             mContext = new WeakReference<>(context);
             mPodcastId = podcastId;
-            mPlayListId = mContext.get().getResources().getInteger(R.integer.playlist_default);
+            mPlayListId = -1;
             mQuery = query;
             mResponse = response;
        }
-
 
         @Override
         protected Void doInBackground(Void... params) {

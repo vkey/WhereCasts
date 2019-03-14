@@ -34,7 +34,6 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 public class PodcastsListFragment extends Fragment {
 
     private WearableRecyclerView mPodcastsList = null;
-    private int mPlaylistId;
     private Activity mActivity;
     private TextView mEmptyView;
     private PodcastsAdapter mAdapter;
@@ -77,8 +76,6 @@ public class PodcastsListFragment extends Fragment {
             }
         });
        */
-
-        mPlaylistId = (getArguments() != null) ? getArguments().getInt("playlistId") : mActivity.getResources().getInteger(R.integer.playlist_default);
 
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
@@ -196,7 +193,8 @@ public class PodcastsListFragment extends Fragment {
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(View.GONE);
 
-            mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.GONE);
+            if (mActivity.findViewById(R.id.podcast_list_empty_logo) != null)
+                mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.GONE);
         }
         else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);

@@ -163,7 +163,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
 
             mPlayListIds = new ArrayList<>();
-            mPlayListIds.add(resources.getInteger(R.integer.playlist_default));
+            mPlayListIds.add(-1);
 
             //third party: add check for playlist
             if (HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
@@ -182,16 +182,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mPlayListIds.add(playlist.getID());
             }
 
-            //if (hideEmpty == false || DBUtilities.HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_radio)))
-                //mPlayListIds.add(resources.getInteger(R.integer.playlist_radio));
-
             if (localFiles)
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
 
-            if (hideEmpty == false || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
+            if (!hideEmpty || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_inprogress));
 
-            if (hideEmpty == false || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
+            if (!hideEmpty || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
 
             mNumberOfPages = mPlayListIds.size();
@@ -227,6 +224,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.putInt("new_downloads_count", 0);
                 editor.apply();
             }
+
             final int visits = prefs.getInt("visits", 0) + 1;
 
             if (prefs.getInt("visits", 0) == 0)
@@ -238,7 +236,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mNavDrawer.get().getController().peekDrawer();
             }
 
-            if (visits > 40 && prefs.getBoolean("rate_app_reminded", false) == false)
+            if (visits > 40 && !prefs.getBoolean("rate_app_reminded", false))
             {
                 new AsyncTasks.WatchConnected(ctx,
                         new Interfaces.BooleanResponse() {

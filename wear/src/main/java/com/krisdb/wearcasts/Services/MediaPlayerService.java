@@ -70,7 +70,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
     private final MediaHandler mMediaHandler = new MediaHandler(this);
-    private int mPlaylistID;
+    private int mPlaylistID, mPodcastID;
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
@@ -217,7 +217,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mPlaylistID = extras.getInt("playlistid");
             mLocalFile = extras.getString("local_file");
-            mEpisode = GetEpisode(mContext, extras.getInt("id"));
+            mPodcastID = extras.getInt("podcastid");
+            mEpisode = GetEpisode(mContext, extras.getInt("episodeid"));
 
             StartStream(uri);
         }
@@ -515,7 +516,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
-        if (mPlaylistID == getResources().getInteger(R.integer.playlist_default) && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
+        if (mPodcastID != -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
         {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
@@ -624,7 +625,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
       final PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
       */
         final Bundle bundle = new Bundle();
-        bundle.putInt("eid", mEpisode.getEpisodeId());
+        bundle.putInt("episodeid", mEpisode.getEpisodeId());
 
         final Intent notificationIntent = new Intent(mContext, EpisodeActivity.class);
         notificationIntent.putExtras(bundle);

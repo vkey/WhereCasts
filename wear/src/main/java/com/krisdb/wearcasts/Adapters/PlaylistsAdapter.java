@@ -279,10 +279,10 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 alert.setMessage(mContext.getString(R.string.confirm_mark_finished));
             else if (mPlaylistId == mPlaylistDownloads)
                 alert.setMessage(mContext.getString(R.string.confirm_delete_download));
-            else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
-                alert.setMessage(mContext.getString(R.string.confirm_remove_upnext));
             else if (mPlaylistId == mPlaylistLocal || mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm))
                 alert.setMessage(mContext.getString(R.string.confirm_remove_local));
+            else if (mPlaylistId > -1)
+                alert.setMessage(mContext.getString(R.string.confirm_remove_upnext));
             else
                 alert.setMessage(mEpisodes.get(position).getFinished() ? mContext.getString(R.string.confirm_mark_unplayed) : mContext.getString(R.string.confirm_mark_played));
 
@@ -307,18 +307,14 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                         db.delete(mEpisodes.get(position).getEpisodeId());
-                    } else if (mPlaylistId > mResources.getInteger(R.integer.playlist_default))
+                    } else if (mPlaylistId > -1)
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                     else if (mPlaylistId == mPlaylistLocal)
                         Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
                     else
                         SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
 
-                    if (mPlaylistId == mResources.getInteger(R.integer.playlist_default)) {
-                        mEpisodes.get(position).setFinished(mEpisodes.get(position).getFinished() ? false : true);
-                        notifyItemChanged(position);
-                    } else
-                        refreshList();
+                    refreshList();
 
                     db.close();
                     dialog.dismiss();
@@ -342,12 +338,13 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
-        bundle.putInt("eid", mEpisodes.get(position).getEpisodeId());
+        bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
 
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());
 
         bundle.putInt("playlistid", mPlaylistId);
+        bundle.putInt("podcastid", -1);
         intent.putExtras(bundle);
 
         if (position > 0)
@@ -469,20 +466,10 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             else
                 thumb.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
 
-            if (!episode.getFinished()) {
-                final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                final SpannableString spannable = new SpannableString(episode.getTitle());
-                spannable.setSpan(boldSpan, 0, episode.getTitle().length(), 0);
-                title.setText(spannable);
-            } else {
-                final SpannableString titleText = new SpannableString(episode.getTitle());
-                titleText.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                title.setText(titleText);
-            }
-
+            title.setText(episode.getTitle());
             title.setVisibility(View.VISIBLE);
             title.setTextSize(14);
-            //title.setGravity(Gravity.START);
+            title.setGravity(Gravity.START);
         }
     }
 

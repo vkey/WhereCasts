@@ -478,26 +478,6 @@ public class EpisodeUtilities {
         return exists;
     }
 
-    public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId) {
-        return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default));
-    }
-
-    public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final String orderBy) {
-        return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), false, 200, orderBy);
-    }
-
-    public static List<PodcastItem> GetEpisodesFiltered(final Context ctx, final int podcastId) {
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-        final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
-
-        final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
-
-        return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), hidePlayed, numberOfEpisode, null);
-    }
-
-
     public static Boolean HasDownloadedFiles(final Context ctx, final int podcastId) {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         final SQLiteDatabase sdb = db.select();
@@ -551,6 +531,29 @@ public class EpisodeUtilities {
         return output;
     }
 
+    public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId) {
+        return GetEpisodes(ctx, podcastId, -1);
+    }
+
+    public static List<PodcastItem> GetPlaylistEpisodes(final Context ctx, final int playlistId) {
+        return GetEpisodes(ctx, -1, playlistId);
+    }
+
+    public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final String orderBy) {
+        return GetEpisodes(ctx, podcastId, -1, false, 200, orderBy);
+    }
+
+    public static List<PodcastItem> GetEpisodesFiltered(final Context ctx, final int podcastId) {
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
+
+        final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
+
+        return GetEpisodes(ctx, podcastId, -1, hidePlayed, numberOfEpisode, null);
+    }
+
     public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId) {
             return GetEpisodes(ctx, podcastId, playlistId, false, Integer.MAX_VALUE, null);
     }
@@ -560,11 +563,11 @@ public class EpisodeUtilities {
     }
 
     public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final boolean hidePlayed, final int limit) {
-            return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), hidePlayed, limit, null, null);
+            return GetEpisodes(ctx, podcastId, -1, hidePlayed, limit, null, null);
     }
 
     public static List<PodcastItem> SearchEpisodes(final Context ctx, final int podcastId, final String query) {
-            return GetEpisodes(ctx, podcastId, ctx.getResources().getInteger(R.integer.playlist_default), false, Integer.MAX_VALUE, query, null);
+            return GetEpisodes(ctx, podcastId, -1, false, Integer.MAX_VALUE, query, null);
     }
 
     public static List<PodcastItem> GetEpisodes(final Context ctx, final int podcastId, final int playlistId, final boolean hidePlayed, final int limit, String query, final String orderBy) {
@@ -609,7 +612,7 @@ public class EpisodeUtilities {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             int order;
 
-            if (playlistId == resources.getInteger(R.integer.playlist_default)) {
+            if (podcastId > -1) {
                 final int podcastOrder = Integer.valueOf(prefs.getString("pref_" + podcastId + "_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_sort_order))));
                 if (podcastOrder != 0)
                     order = podcastOrder;
@@ -628,7 +631,7 @@ public class EpisodeUtilities {
         if (showOnlyDownloads)
             downloadsOnlySelect = " AND tbl_podcast_episodes.download = 1";
 
-        if (playlistId == resources.getInteger(R.integer.playlist_default)) {
+        if (podcastId > -1) {
             final boolean downloadsFirst = prefs.getBoolean("pref_episodes_downloads_first", false);
 
             if (downloadsFirst)
@@ -636,7 +639,6 @@ public class EpisodeUtilities {
         }
 
         final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
-        final int playlistDefault = ctx.getResources().getInteger(R.integer.playlist_default);
 
         if (podcastId > -1) //regular episodes
             {
@@ -655,7 +657,7 @@ public class EpisodeUtilities {
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString)), null);
-            else if (playlistId > resources.getInteger(R.integer.playlist_default) || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
+            else if (playlistId > -1 || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ?".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(playlistId)});
             else
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [upnext] = 1 ORDER BY ".concat(orderString)), null);
@@ -667,17 +669,14 @@ public class EpisodeUtilities {
                     if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));
 
-                    if (playlistId != playlistDefault)
+                    if (podcastId > -1)
                         episode.setTitle(CommonUtils.truncateWords(episode.getTitle(), truncateWords));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 
-                    //if (playlistId == resources.getInteger(R.integer.playlist_inprogress) && episode.getPosition() > 0) //in progress
-                    //episode.setTitle(episode.getTitle().concat(" (").concat(DateUtils.FormatPositionTime(episode.getPosition())).concat(")"));
-
                     episode.setChannel(GetChannel(ctx, cursor.getInt(1)));
 
-                    if (playlistId != resources.getInteger(R.integer.playlist_default))
+                    if (podcastId > -1 || playlistId != -1)
                         episode.setDisplayThumbnail(GetRoundedLogo(ctx, episode.getChannel()));
 
                     episodes.add(episode);

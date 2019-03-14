@@ -213,48 +213,47 @@ public class EpisodesListFragment extends Fragment {
     }
 
     public void RefreshContent() {
-        if (isAdded() == false) return;
+        if (!isAdded()) return;
 
         final Resources resources = mActivity.getResources();
         final String densityName = CommonUtils.getDensityName(mActivity);
         final Boolean isRound = resources.getConfiguration().isScreenRound();
         final int themeId = Utilities.getThemeOptionId(mActivity);
 
-            if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId())
-            {
-                final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(GetPodcast(mActivity, mPodcastId));
-                mEpisodeListLayout.setBackgroundColor(colors.first);
-                mTextColor = colors.second;
-                mProgressPlaylistText.setTextColor(mTextColor);
-            }
+        if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId()) {
+            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(GetPodcast(mActivity, mPodcastId));
+            mEpisodeListLayout.setBackgroundColor(colors.first);
+            mTextColor = colors.second;
+            mProgressPlaylistText.setTextColor(mTextColor);
+        }
 
         mStatus.setTextColor(mTextColor);
 
-            final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
-            mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
-            mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
+        final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
+        mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
+        mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
 
-            final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
 
-            if (Objects.equals(densityName, getString(R.string.hdpi))) {
-                if (isRound) {
-                    mProgressPlaylistLayout.setPadding(0, 8, 0, 8);
-                    paramsLayout.setMargins(0, 0, 0, 40);
-                } else {
-                    mProgressPlaylistLayout.setPadding(0, 7, 0, 7);
-                    paramsLayout.setMargins(0, 0, 0, 20);
-                }
-            } else if (Objects.equals(densityName, getString(R.string.xhdpi))) {
-                mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
-                paramsLayout.setMargins(0, 0, 0, 0);
+        if (Objects.equals(densityName, getString(R.string.hdpi))) {
+            if (isRound) {
+                mProgressPlaylistLayout.setPadding(0, 8, 0, 8);
+                paramsLayout.setMargins(0, 0, 0, 40);
             } else {
-                mProgressPlaylistLayout.setPadding(0, 10, 0, 10);
-                paramsLayout.setMargins(0, 0, 0, 0);
+                mProgressPlaylistLayout.setPadding(0, 7, 0, 7);
+                paramsLayout.setMargins(0, 0, 0, 20);
             }
+        } else if (Objects.equals(densityName, getString(R.string.xhdpi))) {
+            mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
+            paramsLayout.setMargins(0, 0, 0, 0);
+        } else {
+            mProgressPlaylistLayout.setPadding(0, 10, 0, 10);
+            paramsLayout.setMargins(0, 0, 0, 0);
+        }
 
-            mProgressThumb.setVisibility(View.VISIBLE);
-            mStatus.setVisibility(View.VISIBLE);
-            mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
+        mProgressThumb.setVisibility(View.VISIBLE);
+        mStatus.setVisibility(View.VISIBLE);
+        mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
 
         mEpisodeList.setVisibility(View.INVISIBLE);
 
@@ -268,12 +267,12 @@ public class EpisodesListFragment extends Fragment {
                         mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
                         mEpisodeList.setAdapter(mAdapter);
 
-                            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));
-                            itemTouchhelper.attachToRecyclerView(mEpisodeList);
+                        final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));
+                        itemTouchhelper.attachToRecyclerView(mEpisodeList);
 
                         if (episodes != null && episodes.size() == 1) {
-                                mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
-                                mStatus.setVisibility(View.VISIBLE);
+                            mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
+                            mStatus.setVisibility(View.VISIBLE);
                         } else {
                             if (HasNewEpisodes(mActivity, mPodcastId)) {
                                 final ContentValues cv = new ContentValues();
@@ -287,7 +286,7 @@ public class EpisodesListFragment extends Fragment {
                             mStatus.setVisibility(TextView.GONE);
                         }
 
-                            mProgressThumb.setVisibility(View.GONE);
+                        mProgressThumb.setVisibility(View.GONE);
 
                         mEpisodeList.setVisibility(View.VISIBLE);
                     }

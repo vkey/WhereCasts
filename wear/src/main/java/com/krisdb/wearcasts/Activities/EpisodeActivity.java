@@ -74,7 +74,6 @@ import java.util.Objects;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisode;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markPlayed;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markUnplayed;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
@@ -106,7 +105,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private DownloadManager mDownloadManager;
 
     private String mLocalFile;
-    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
+    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
 
@@ -124,7 +123,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         super.onCreate(savedInstanceState);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (prefs.getBoolean("pref_display_ambient_disable", false) == false)
+        if (!prefs.getBoolean("pref_display_ambient_disable", false))
             setAmbientEnabled();
 
         setContentView(R.layout.activity_podcast_episode);
@@ -179,8 +178,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (Objects.equals(CommonUtils.getDensityName(mContext), mContext.getString(R.string.hdpi)))
         {
             paramsDownloadImage.setMargins(0, 0, 14, 0);
-            paramsLoading.setMargins(0, 0, 4, 0);
-            paramsDownloading.setMargins(0, 0, -24, 0);
+            paramsLoading.setMargins(0, 0, 3, 0);
+            paramsDownloading.setMargins(0, 0, -31, 0);
         }
         else
         {
@@ -333,7 +332,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         try {
             if (intent.getExtras() != null)
             {
-                mEpisodeID = intent.getExtras().getInt("eid");
+                mEpisodeID = intent.getExtras().getInt("episodeid");
                 SetContent();
             }
 
@@ -454,9 +453,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 }
             });
         }
-        //fail safe in case file failed to download;
-        if (Utilities.GetMediaFile(mActivity, mEpisode) == null)
-            SaveEpisodeValue(mActivity, mEpisode, "download", 0);
 
         if (mLocalFile == null && mEpisode.getMediaUrl() == null) {
             mPlayPauseImage.setEnabled(false);
@@ -484,11 +480,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId();
 
-        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && isCurrentlyPlaying == false)) { //play episode
+        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying)) { //play episode
             final Bundle extras = new Bundle();
             extras.putInt("id", mEpisode.getEpisodeId());
             extras.putString("local_file", mLocalFile);
             extras.putInt("playlistid", mPlaylistID);
+            extras.putInt("episodeid", mEpisodeID);
+            extras.putInt("podcastid", mPodcastID);
             //check for downloaded episode
             if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
@@ -825,6 +823,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         extras.putInt("id", mEpisode.getEpisodeId());
         extras.putString("local_file", mLocalFile);
         extras.putInt("playlistid", mPlaylistID);
+        extras.putInt("podcastid", mPodcastID);
         mCurrentState = STATE_PLAYING;
 
         MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(mEpisode.getMediaUrl().toString()), extras);
@@ -888,11 +887,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 final MediaControllerCompat mcc = new MediaControllerCompat(EpisodeActivity.this, mMediaBrowserCompat.getSessionToken());
                 mcc.registerCallback(mMediaControllerCompatCallback);
                 MediaControllerCompat.setMediaController(mActivity, mcc);
+
                 mPlaylistID = getIntent().getExtras().getInt("playlistid");
-
+                mPodcastID = getIntent().getExtras().getInt("podcastid");
                 mLocalFile = getIntent().getExtras().getString("local_file");
+                mEpisodeID = getIntent().getExtras().getInt("episodeid");
 
-                mEpisodeID = getIntent().getExtras().getInt("eid");
                 SetContent();
                 mActivity.findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
 

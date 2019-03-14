@@ -126,12 +126,21 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
             });
 
+            /*
             holder.date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     openEpisode(holder.getAdapterPosition());
                 }
             });
+
+            holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openEpisode(holder.getAdapterPosition());
+                }
+        });
+        */
 
             holder.date.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -141,12 +150,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }
             });
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
 
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -161,7 +164,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void initDownload(final ViewHolder holder, final int position)
     {
-
         int episodeId = mEpisodes.get(position).getEpisodeId();
 
         final PodcastItem episode = GetEpisode(mContext, episodeId);
@@ -297,7 +299,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
-        bundle.putInt("eid", mEpisodes.get(position).getEpisodeId());
+        bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
+        bundle.putInt("podcastid", mEpisodes.get(position).getPodcastId());
 
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());
@@ -409,7 +412,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             date.setTextColor(mTextColor);
             date.setText(episode.getDisplayDate());
 
-            if (episode.getFinished() == false) {
+            if (!episode.getFinished()) {
                 final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
                 final SpannableString spannable = new SpannableString(episode.getTitle());
                 spannable.setSpan(boldSpan, 0, episode.getTitle().length(), 0);
@@ -451,6 +454,27 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
             }
 
+            if (mSelectedEpisodes.size() > 0)
+            {
+                title.setOnClickListener(null);
+                date.setOnClickListener(null);
+            }
+            else
+            {
+                title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openEpisode(position);
+                    }
+                });
+
+                date.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openEpisode(position);
+                    }
+                });
+            }
         }
     }
 

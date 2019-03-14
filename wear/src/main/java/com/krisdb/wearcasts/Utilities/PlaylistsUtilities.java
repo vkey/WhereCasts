@@ -86,7 +86,6 @@ public class PlaylistsUtilities {
         return playlists;
     }
 
-
     public static String getPlaylistName(final Context ctx, final int playlistId) {
         String name = null;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);

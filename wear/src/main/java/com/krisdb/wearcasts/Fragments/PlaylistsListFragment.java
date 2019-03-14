@@ -86,32 +86,30 @@ public class PlaylistsListFragment extends Fragment {
     }
 
     public void RefreshContent() {
-        if (isAdded() == false) return;
+        if (!isAdded()) return;
         mHeaderColor = Utilities.getHeaderColor(mActivity);
 
         final Resources resources = mActivity.getResources();
         final String densityName = CommonUtils.getDensityName(mActivity);
-        final Boolean isRound = resources.getConfiguration().isScreenRound();
-        final int themeId = Utilities.getThemeOptionId(mActivity);
+        final boolean isRound = resources.getConfiguration().isScreenRound();
 
         mStatus.setTextColor(mTextColor);
 
         mProgressPlaylistLayout.setBackgroundColor(mHeaderColor);
+        mProgressPlaylistText.setBackgroundColor(mHeaderColor);
         String title = null;
 
         if (mPlaylistId == resources.getInteger(R.integer.playlist_inprogress))
             title = getString(R.string.playlist_title_inprogress);
         else if (mPlaylistId == resources.getInteger(R.integer.playlist_downloads))
             title = getString(R.string.playlist_title_downloads);
-            //else if (mPlaylistId == resources.getInteger(R.integer.playlist_radio))
-            //title = getString(R.string.playlist_title_radio);
         else if (mPlaylistId == resources.getInteger(R.integer.playlist_playerfm)) //third party: add title
             title = getString(R.string.third_party_title_playerfm);
         else if (mPlaylistId == resources.getInteger(R.integer.playlist_upnext))
             title = getString(R.string.playlist_title_upnext);
         else if (mPlaylistId == resources.getInteger(R.integer.playlist_local))
             title = getString(R.string.playlist_title_local);
-        else if (mPlaylistId >= resources.getInteger(R.integer.playlist_default))
+        else if (mPlaylistId > -1)
             title = getPlaylistName(mActivity, mPlaylistId);
 
         final SpannableString titleText = new SpannableString(title);
@@ -122,7 +120,7 @@ public class PlaylistsListFragment extends Fragment {
 
         if (Objects.equals(densityName, getString(R.string.hdpi))) {
             if (isRound) {
-                mProgressPlaylistLayout.setPadding(0, 8, 0, 8);
+                mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
                 paramsLayout.setMargins(0, 0, 0, 40);
             } else {
                 mProgressPlaylistLayout.setPadding(0, 7, 0, 7);
@@ -136,23 +134,15 @@ public class PlaylistsListFragment extends Fragment {
             paramsLayout.setMargins(0, 0, 0, 0);
         }
 
-        if (mPlaylistId == getResources().getInteger(R.integer.playlist_default)) {
-            mProgressThumb.setVisibility(View.VISIBLE);
-            mStatus.setVisibility(View.VISIBLE);
-            mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
-        } else {
             mProgressPlaylistLayout.setVisibility(View.VISIBLE);
             mStatus.setVisibility(View.GONE);
-        }
-
         mPlaylistList.setVisibility(View.INVISIBLE);
 
         new AsyncTasks.DisplayEpisodes(mActivity, mPlaylistId,
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {
-
-                        if (isAdded() == false) return;
+                        if (!isAdded()) return;
 
                         mAdapter = new PlaylistsAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor);
                         mPlaylistList.setAdapter(mAdapter);
