@@ -14,7 +14,7 @@ public class PodcastItem implements Serializable
     private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded, isSelected;
     private ChannelItem channel;
     private PodcastItem latestEpisode;
-    private transient Drawable thumb;
+    private transient Drawable displayThumb;
 
     public String getDisplayDate() { return displayDate; }
 
@@ -28,9 +28,9 @@ public class PodcastItem implements Serializable
 
     public void setNewCount(final int newCount) { this.newCount = newCount; }
 
-    public Drawable getDisplayThumbnail() { return thumb; }
+    public Drawable getDisplayThumbnail() { return displayThumb; }
 
-    public void setDisplayThumbnail(final Drawable thumb) { this.thumb = thumb; }
+    public void setDisplayThumbnail(final Drawable thumb) { this.displayThumb = thumb; }
 
     public void setLatestEpisode(final PodcastItem episode)
     {

@@ -56,14 +56,17 @@ public class EpisodesSwipeController extends Callback {
 
         if (episode.getIsTitle())
         {
-            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_refreshing_thumb));
-            new AsyncTasks.SaveLogo(mContext, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true,
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                            mAdapter.refreshItem(0);
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (episode.getChannel().getThumbnailUrl() != null) {
+                CommonUtils.showToast(mContext, mContext.getString(R.string.alert_refreshing_thumb));
+                new AsyncTasks.SaveLogo(mContext, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                mAdapter.refreshItem(0);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            mAdapter.refreshItem(0);
         }
         else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -76,7 +79,7 @@ public class EpisodesSwipeController extends Callback {
                 final boolean hidePlayed = prefs.getBoolean("pref_" + episode.getPodcastId() + "_hide_played", false);
                 final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
 
-                mEpisodes = GetEpisodes(mContext, episode.getPodcastId(), hidePlayed, numberOfEpisode);
+                mEpisodes = GetEpisodes(mContext, episode.getPodcastId(), hidePlayed, numberOfEpisode, null);
 
                 if (hidePlayed)
                     mAdapter.refreshList(mEpisodes);

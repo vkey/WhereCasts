@@ -41,6 +41,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private WearableActionDrawerView mWearableActionDrawer;
     private Activity mActivity;
     private int mPodcastId;
+    private String mQuery;
     private static int SEARCH_RESULTS_CODE = 131;
     private static WeakReference<EpisodeListActivity> mActivityRef;
     private List<PodcastItem> mSelectedEpisodes;
@@ -82,7 +83,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
-        final Fragment fragment = new EpisodesListFragment().newInstance(mPodcastId, null);
+        final Fragment fragment = new EpisodesListFragment().newInstance(mPodcastId, mQuery);
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
@@ -92,9 +93,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
                 break;
             case R.id.menu_drawer_episode_list_selected_markplayed_single:
-
                 final List<PodcastItem> episodes = EpisodeUtilities.GetEpisodesAfter(mActivity, mSelectedEpisodes.get(0));
-
                 final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayedSingle.updateEpisodes(episodes, "finished", 1);
                 dbMarkPlayedSingle.close();
@@ -254,10 +253,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     }
 
     @Override
-    public void onEpisodeSelected(List<PodcastItem> episodes) {
+    public void onEpisodeSelected(final List<PodcastItem> episodes, final String query) {
 
         mSelectedEpisodes = episodes;
-
+        mQuery = query;
         final Menu menu = mWearableActionDrawer.getMenu();
         menu.clear();
 

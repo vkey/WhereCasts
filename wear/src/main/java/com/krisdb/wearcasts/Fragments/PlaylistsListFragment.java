@@ -39,7 +39,6 @@ public class PlaylistsListFragment extends Fragment {
     private int mPlaylistId, mTextColor, mHeaderColor;
     private Activity mActivity;
     private TextView mStatus, mProgressPlaylistText;
-    private ImageView mProgressThumb;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
 
@@ -69,7 +68,6 @@ public class PlaylistsListFragment extends Fragment {
         mProgressPlaylistLayout = listView.findViewById(R.id.playlist_progress_text_playlist_layout);
         mProgressPlaylistText = listView.findViewById(R.id.playlist_progress_text_playlist);
         mStatus = listView.findViewById(R.id.playlist_status);
-        mProgressThumb = listView.findViewById(R.id.playlist_progress_text_thumbnail);
 
         mPlaylistList.setEdgeItemsCenteringEnabled(false);
         mPlaylistList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
@@ -116,6 +114,7 @@ public class PlaylistsListFragment extends Fragment {
         titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mProgressPlaylistText.setText(titleText);
         mProgressPlaylistText.setTextSize(16);
+
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
 
         if (Objects.equals(densityName, getString(R.string.hdpi))) {
@@ -138,7 +137,7 @@ public class PlaylistsListFragment extends Fragment {
             mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        new AsyncTasks.DisplayEpisodes(mActivity, mPlaylistId,
+        new AsyncTasks.DisplayPlaylistEpisodes(mActivity, mPlaylistId,
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {

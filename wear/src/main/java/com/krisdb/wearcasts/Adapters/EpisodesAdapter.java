@@ -41,6 +41,8 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
@@ -49,7 +51,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private List<PodcastItem> mEpisodes, mSelectedEpisodes;
     private Activity mContext;
     private int mTextColor;
-    private String mDensityName;
+    private String mDensityName, mQuery;
     private boolean isRound, isXHDPI, isHDPI;
     private WeakReference<Activity> mActivityRef;
     private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
@@ -72,11 +74,12 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
     }
 
-    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int textColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
+    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final String query, final int textColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
         mDensityName = CommonUtils.getDensityName(mContext);
+        mQuery = query;
         isRound = mContext.getResources().getConfiguration().isScreenRound();
         mActivityRef = new WeakReference<>(mContext);
         mEpisodeSelectedCallback = episodeSelectedCallback;
@@ -92,25 +95,23 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         final ViewHolder holder = new ViewHolder(view);
 
-        if (holder.thumbnailTitle != null) {
-            holder.thumbnailTitle.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
+        holder.thumbnailTitle.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
 
-                    final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
+                final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
-                    final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
-                    final Bundle bundle = new Bundle();
-                    bundle.putInt("podcastId", podcast.getPodcastId());
-                    intent.putExtras(bundle);
+                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putInt("podcastId", podcast.getPodcastId());
+                intent.putExtras(bundle);
 
-                    if (podcast.getPodcastId() > 0)
-                        mContext.startActivity(intent);
+                if (podcast.getPodcastId() > 0)
+                    mContext.startActivity(intent);
 
-                    return false;
-                }
-            });
-        }
+                return false;
+            }
+        });
 
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,36 +120,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
         });
 
-            holder.duration.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    initDownload(holder, holder.getAdapterPosition());
-                }
-            });
-
-            /*
-            holder.date.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openEpisode(holder.getAdapterPosition());
-                }
-            });
-
-            holder.title.setOnClickListener(new View.OnClickListener() {
+        holder.duration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-                }
+                initDownload(holder, holder.getAdapterPosition());
+            }
         });
-        */
 
-            holder.date.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    showContext(holder.getAdapterPosition());
-                    return false;
-                }
-            });
+        holder.date.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showContext(holder.getAdapterPosition());
+                return false;
+            }
+        });
 
 
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
@@ -269,15 +254,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             downloadEpisode(position, episode);
     }
 
-    private void downloadEpisode(final int position, final PodcastItem episode)
-    {
-            showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
+    private void downloadEpisode(final int position, final PodcastItem episode) {
+        showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
 
-            long downloadId = Utilities.startDownload(mContext, episode);
-            mEpisodes.get(position).setIsDownloaded(true);
-            notifyItemChanged(position);
-            //final DownloadProgress prog = new DownloadProgress(episode, position, downloadId);
-            //mDownloadProgressHandler.postDelayed(prog, 1000);
+        mEpisodes.get(position).setIsDownloaded(true);
+        notifyItemChanged(position);
     }
 
     private void showContext(final int position) {
@@ -289,7 +270,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             episode.setIsSelected(true);
             mSelectedEpisodes.add(episode);
         }
-        mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes);
+        mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes, mQuery);
         mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
         notifyItemChanged(position);
     }
@@ -331,16 +312,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         notifyItemChanged(position);
     }
 
-    public void refreshList(final int podcastId)
-    {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
-        final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default)));
-
-        refreshList(GetEpisodes(mContext, podcastId, 0, hidePlayed, numberOfEpisode, null));
-    }
-
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
@@ -373,7 +344,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (episode.getDisplayThumbnail() != null) //thumbnail row
                 thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
             else
-                thumbTitle.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_logo_placeholder));
+                thumbTitle.setImageDrawable(GetRoundedPlaceholderLogo(mContext));
 
             title.setPadding(0, 0, 0, 0);
 

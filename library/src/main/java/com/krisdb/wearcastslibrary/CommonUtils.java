@@ -364,6 +364,10 @@ public class CommonUtils {
         return GetRoundedLogo(ctx, channelItem, R.drawable.ic_logo_placeholder);
     }
 
+    public static RoundedBitmapDrawable GetRoundedPlaceholderLogo(final Context ctx) {
+        return GetRoundedLogo(ctx, null, R.drawable.ic_logo_placeholder);
+    }
+
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem, int defaultResource) {
 
         Bitmap bitmap;

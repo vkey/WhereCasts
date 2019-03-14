@@ -230,6 +230,7 @@ public class EpisodesListFragment extends Fragment {
         mStatus.setTextColor(mTextColor);
 
         final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
+
         mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
         mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
 
@@ -264,7 +265,7 @@ public class EpisodesListFragment extends Fragment {
 
                         if (!isAdded()) return;
 
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
+                        mAdapter = new EpisodesAdapter(mActivity, episodes, mQuery, mTextColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
                         mEpisodeList.setAdapter(mAdapter);
 
                         final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));

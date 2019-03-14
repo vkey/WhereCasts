@@ -13,6 +13,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
+import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -265,9 +266,33 @@ public class AsyncTasks {
             final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
 
             if (mQuery == null)
-                mEpisodes = GetEpisodes(ctx, mPodcastId, mPlayListId, hidePlayed, numberOfEpisode, null);
+                mEpisodes = GetEpisodes(ctx, mPodcastId, hidePlayed, numberOfEpisode, null);
             else
                 mEpisodes = SearchEpisodes(ctx, mPodcastId, mQuery);
+
+            return null;
+        }
+
+        protected void onPostExecute(Void param) {
+            mResponse.processFinish(mEpisodes);
+        }
+    }
+
+    public static class DisplayPlaylistEpisodes extends AsyncTask<Void, Void, Void> {
+        private int mPlayListId;
+        private Interfaces.PodcastsResponse mResponse;
+        private List<PodcastItem> mEpisodes;
+
+        public DisplayPlaylistEpisodes(final Context context, final int playlistId, final Interfaces.PodcastsResponse response) {
+            mContext = new WeakReference<>(context);
+            mPlayListId = playlistId;
+            mResponse = response;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            mEpisodes = PlaylistsUtilities.GetEpisodes(mContext.get(), mPlayListId);
 
             return null;
         }

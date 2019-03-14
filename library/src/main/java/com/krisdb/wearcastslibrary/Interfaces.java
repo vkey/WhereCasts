@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Interfaces {
     public interface OnEpisodeSelectedListener {
-        void onEpisodeSelected(List<PodcastItem> episodes);
+        void onEpisodeSelected(List<PodcastItem> episodes, String query);
     }
 
     public interface FetchPodcastResponse {

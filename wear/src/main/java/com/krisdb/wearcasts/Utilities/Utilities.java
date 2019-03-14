@@ -275,7 +275,9 @@ public class Utilities {
                 final ContentValues cv = new ContentValues();
                 cv.put("pid", episode.getPodcastId());
                 cv.put("title", episode.getTitle() != null ? episode.getTitle() : "");
-                cv.put("description", episode.getDescription());
+
+                if (episode.getDescription() != null)
+                    cv.put("description", episode.getDescription().trim());
 
                 if (episode.getMediaUrl() != null)
                     cv.put("mediaurl", episode.getMediaUrl().toString());
