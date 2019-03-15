@@ -58,7 +58,6 @@ public class EpisodesListFragment extends Fragment {
     private EpisodesAdapter mAdapter;
     private String mQuery;
     private WeakReference<Activity> mActivityRef;
-    private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
 
     public static EpisodesListFragment newInstance(final int podcastId, final String query) {
 
@@ -70,10 +69,6 @@ public class EpisodesListFragment extends Fragment {
         elf.setArguments(bundle);
 
         return elf;
-    }
-
-    public void setOnEpisodeSelectedListener(Activity activity) {
-        mEpisodeSelectedCallback = (Interfaces.OnEpisodeSelectedListener)activity;
     }
 
     @Override
@@ -265,7 +260,7 @@ public class EpisodesListFragment extends Fragment {
 
                         if (!isAdded()) return;
 
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mQuery, mTextColor, mSwipeRefreshLayout, mEpisodeSelectedCallback);
+                        mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, null);
                         mEpisodeList.setAdapter(mAdapter);
 
                         final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));

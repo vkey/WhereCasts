@@ -7,9 +7,6 @@ import com.google.android.gms.wearable.DataClient;
 import java.util.List;
 
 public class Interfaces {
-    public interface OnEpisodeSelectedListener {
-        void onEpisodeSelected(List<PodcastItem> episodes, String query);
-    }
 
     public interface FetchPodcastResponse {
         void processFinish(PodcastItem podcast);

@@ -36,8 +36,8 @@ import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
+import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 

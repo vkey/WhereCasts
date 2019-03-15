@@ -52,6 +52,7 @@
 
     <string name="confirm_mark_all_played">सभी को खेले गए निशान?</string>
     <string name="confirm_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें?</string>
+    <string name="confirm_download_all">सभी डाउनलोड?</string>
 
     <string name="settings_podcast_title">पॉडकास्ट सेटिंग्स</string>
     <string name="settings_podcast_sort_order_global">[चूक]</string>
@@ -152,7 +153,7 @@
     <string name="settings_podcasts_entries_header_color_dark_orange">गहरा नारंगी</string>
 
     <string name="settings_podcasts_entries_title_home_screen">होम स्क्रीन</string>
-    <string name="settings_podcasts_home_screen_default">चूक</string>
+    <string name="settings_podcasts_home_screen_default">पॉडकास्ट</string>
     <string name="settings_podcasts_home_screen_local">स्थानीय</string>
     <string name="settings_podcasts_home_screen_inprogress">चालू</string>
     <string name="settings_podcasts_home_screen_downloads">डाउनलोड</string>
@@ -256,6 +257,7 @@
     <string name="menu_episodes_mark_all_unplayed">सभी को अनपेक्षित चिह्नित करें</string>
     <string name="menu_episodes_search">खोज</string>
     <string name="menu_episodes_add_playlist">प्लेलिस्ट में सभी जोड़ें</string>
+    <string name="menu_episodes_download">सभी डाउनलोड</string>
 
     <string name="menu_episodes_mark_selected_played">मार्क का चयन किया गया</string>
     <string name="menu_episodes_mark_selected_unplayed">मार्क को अनलेप्ड के रूप में चुना गया</string>

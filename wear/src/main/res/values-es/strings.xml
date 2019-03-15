@@ -52,6 +52,7 @@
 
     <string name="confirm_mark_all_played">Marcar todo jugado?</string>
     <string name="confirm_mark_all_unplayed">Marcar todo sin jugar?</string>
+    <string name="confirm_download_all">Descargar todo?</string>
 
     <string name="settings_podcast_title">Configuraciones de podcast</string>
     <string name="settings_podcast_sort_order_global">[defecto]</string>
@@ -152,7 +153,7 @@
     <string name="settings_podcasts_entries_header_color_dark_orange">Naranja oscuro</string>
 
     <string name="settings_podcasts_entries_title_home_screen">Pantalla de inicio</string>
-    <string name="settings_podcasts_home_screen_default">Defecto</string>
+    <string name="settings_podcasts_home_screen_default">Podcasts</string>
     <string name="settings_podcasts_home_screen_local">Local</string>
     <string name="settings_podcasts_home_screen_inprogress">En progreso</string>
     <string name="settings_podcasts_home_screen_downloads">Descargas</string>
@@ -256,6 +257,7 @@
     <string name="menu_episodes_mark_all_unplayed">Marcar todo sin reproducir</string>
     <string name="menu_episodes_search">Buscar</string>
     <string name="menu_episodes_add_playlist">Agregar todo a la lista de reproducción</string>
+    <string name="menu_episodes_download">Descargar todo</string>
 
     <string name="menu_episodes_mark_selected_played">Marca seleccionada como jugada</string>
     <string name="menu_episodes_mark_selected_unplayed">Marcar seleccionado como no jugado</string>

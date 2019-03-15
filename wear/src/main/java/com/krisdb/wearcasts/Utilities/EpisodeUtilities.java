@@ -4,7 +4,6 @@ package com.krisdb.wearcasts.Utilities;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -24,8 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.DBUtilities.GetChannel;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistExists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
@@ -636,9 +633,21 @@ public class EpisodeUtilities {
         else
             order = Integer.valueOf(prefs.getString("pref_display_episodes_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_global_sort_order)))); //global sort order
 
-        final String orderString = Utilities.GetOrderClause(order);
+        String orderString = Utilities.GetOrderClause(order);
 
-        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ?".concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(episode.getPodcastId())});
+        final boolean showOnlyDownloads = prefs.getBoolean("pref_display_show_downloaded_episodes", false);
+
+        String downloadsOnlySelect = "";
+
+        if (showOnlyDownloads)
+            downloadsOnlySelect = " AND tbl_podcast_episodes.download = 1";
+
+        final boolean downloadsFirst = prefs.getBoolean("pref_episodes_downloads_first", false);
+
+        if (downloadsFirst)
+            orderString = "tbl_podcast_episodes.download DESC,".concat(orderString);
+
+        final Cursor cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [pid] = ?".concat(downloadsOnlySelect).concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(episode.getPodcastId())});
 
         int rowNumber = 0, count = 0;
         if (cursor.moveToFirst()) {

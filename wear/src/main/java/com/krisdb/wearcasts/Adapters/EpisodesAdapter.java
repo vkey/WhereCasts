@@ -5,18 +5,17 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.wear.widget.WearableRecyclerView;
+import android.support.wear.widget.drawer.WearableActionDrawerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,7 +27,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -38,24 +36,23 @@ import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
 public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
 
-    private List<PodcastItem> mEpisodes, mSelectedEpisodes;
+    public List<PodcastItem> mEpisodes;
+    public List<PodcastItem> mSelectedEpisodes;
     private Activity mContext;
     private int mTextColor;
-    private String mDensityName, mQuery;
+    private String mDensityName;
     private boolean isRound, isXHDPI, isHDPI;
     private WeakReference<Activity> mActivityRef;
-    private Interfaces.OnEpisodeSelectedListener mEpisodeSelectedCallback;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WearableActionDrawerView mWearableActionDrawer;
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -74,19 +71,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
     }
 
-    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final String query, final int textColor, final SwipeRefreshLayout refreshLayout, final Interfaces.OnEpisodeSelectedListener episodeSelectedCallback) {
+    public EpisodesAdapter(final Activity context, final List<PodcastItem> episodes, final int textColor, final SwipeRefreshLayout refreshLayout, final WearableActionDrawerView menu) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
         mDensityName = CommonUtils.getDensityName(mContext);
-        mQuery = query;
         isRound = mContext.getResources().getConfiguration().isScreenRound();
         mActivityRef = new WeakReference<>(mContext);
-        mEpisodeSelectedCallback = episodeSelectedCallback;
         mSelectedEpisodes = new ArrayList<>();
         isXHDPI = Objects.equals(mDensityName, mContext.getString(R.string.xhdpi));
         isHDPI = Objects.equals(mDensityName, mContext.getString(R.string.hdpi));
         mSwipeRefreshLayout = refreshLayout;
+        mWearableActionDrawer = menu;
     }
 
     @Override
@@ -140,6 +136,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             public boolean onLongClick(View view) {
                 showContext(holder.getAdapterPosition());
                 return false;
+            }
+        });
+
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openEpisode(holder.getAdapterPosition());
+            }
+        });
+
+        holder.date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openEpisode(holder.getAdapterPosition());
             }
         });
 
@@ -255,7 +265,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void downloadEpisode(final int position, final PodcastItem episode) {
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
-
+        Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setIsDownloaded(true);
         notifyItemChanged(position);
     }
@@ -269,7 +279,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             episode.setIsSelected(true);
             mSelectedEpisodes.add(episode);
         }
-        mEpisodeSelectedCallback.onEpisodeSelected(mSelectedEpisodes, mQuery);
+
+        final Menu menu = mWearableActionDrawer.getMenu();
+        menu.clear();
+        int menuId = R.menu.menu_drawer_episode_list;
+
+        if (mSelectedEpisodes.size() > 0) {
+            if (mSelectedEpisodes.size() == 1)
+                menuId = R.menu.menu_drawer_episode_list_selected_single;
+            else
+                menuId = R.menu.menu_drawer_episode_list_selected;
+        }
+
+        mActivityRef.get().getMenuInflater().inflate(menuId, menu);
+
         mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
         notifyItemChanged(position);
     }
@@ -423,28 +446,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
             } else {
                 paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
-            }
-
-            if (mSelectedEpisodes.size() > 0)
-            {
-                title.setOnClickListener(null);
-                date.setOnClickListener(null);
-            }
-            else
-            {
-                title.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openEpisode(position);
-                    }
-                });
-
-                date.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openEpisode(position);
-                    }
-                });
             }
         }
     }

@@ -52,6 +52,7 @@
 
     <string name="confirm_mark_all_played">Markera alla spelade?</string>
     <string name="confirm_mark_all_unplayed">Markera alla ospelade?</string>
+    <string name="confirm_download_all">Ladda ner allt?</string>
 
     <string name="settings_podcast_title">Podcast Inställningar</string>
     <string name="settings_podcast_sort_order_global">[standard]</string>
@@ -152,7 +153,7 @@
     <string name="settings_podcasts_entries_header_color_dark_orange">Dark Orange</string>
 
     <string name="settings_podcasts_entries_title_home_screen">Hemskärm</string>
-    <string name="settings_podcasts_home_screen_default">Standard</string>
+    <string name="settings_podcasts_home_screen_default">podcasts</string>
     <string name="settings_podcasts_home_screen_local">Lokal</string>
     <string name="settings_podcasts_home_screen_inprogress">Pågående</string>
     <string name="settings_podcasts_home_screen_downloads">Nedladdningar</string>
@@ -256,6 +257,7 @@
     <string name="menu_episodes_mark_all_unplayed">Markera alla ospelade</string>
     <string name="menu_episodes_search">Sök</string>
     <string name="menu_episodes_add_playlist">Lägg till allt till spellista</string>
+    <string name="menu_episodes_download">Ladda ner allt</string>
 
     <string name="menu_episodes_mark_selected_played">Markera vald som spelad</string>
     <string name="menu_episodes_mark_selected_unplayed">Markera vald som ospelad</string>

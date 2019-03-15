@@ -291,11 +291,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             vp.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
             vp.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
             vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                public void onPageScrollStateChanged(int state) {
-                }
+                public void onPageScrollStateChanged(int state) { }
 
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
                 public void onPageSelected(int position) {
                     if (mNavDrawer != null && mNavDrawer.get() != null)

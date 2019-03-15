@@ -16,6 +16,11 @@
         android:icon="@drawable/ic_podcast_add"
         />
 
+    <item android:id="@+id/menu_drawer_episode_list_download"
+        android:title="@string/menu_episodes_download"
+        android:icon="@drawable/ic_action_episode_download"
+        />
+
     <item android:id="@+id/menu_drawer_episode_list_search"
         android:title="@string/menu_episodes_search"
         android:icon="@drawable/ic_action_search"

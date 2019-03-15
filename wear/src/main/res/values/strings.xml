@@ -52,6 +52,7 @@
 
     <string name="confirm_mark_all_played">Mark all played?</string>
     <string name="confirm_mark_all_unplayed">Mark all unplayed?</string>
+    <string name="confirm_download_all">Download all?</string>
 
     <string name="settings_podcast_title">Podcast Settings</string>
     <string name="settings_podcast_label_autodownload">Auto-download latest episode</string>
@@ -149,7 +150,7 @@
     <string name="settings_podcasts_entries_header_color_dark_orange">Dark Orange</string>
 
     <string name="settings_podcasts_entries_title_home_screen">Home Screen</string>
-    <string name="settings_podcasts_home_screen_default">Default</string>
+    <string name="settings_podcasts_home_screen_default">Podcasts</string>
     <string name="settings_podcasts_home_screen_local">Local</string>
     <string name="settings_podcasts_home_screen_inprogress">In Progress</string>
     <string name="settings_podcasts_home_screen_downloads">Downloads</string>
@@ -257,6 +258,7 @@
     <string name="menu_episodes_mark_all_unplayed">Mark all unplayed</string>
     <string name="menu_episodes_search">Search</string>
     <string name="menu_episodes_add_playlist">Add all to playlist</string>
+    <string name="menu_episodes_download">Download all</string>
 
     <string name="menu_episodes_mark_selected_played">Mark selected as played</string>
     <string name="menu_episodes_mark_selected_unplayed">Mark selected as unplayed</string>

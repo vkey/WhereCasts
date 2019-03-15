@@ -183,6 +183,8 @@ public class PodcastsListFragment extends Fragment {
 
     private void showCopy(final int number)
     {
+        if (isAdded() == false) return;
+
         final ImageView swipeLeftView = mActivity.findViewById(R.id.podcast_list_swipe_left);
 
         if (number > 0)
@@ -219,10 +221,10 @@ public class PodcastsListFragment extends Fragment {
             else
                 emptyText = mActivity.getString(R.string.empty_podcast_list);
 
-            mEmptyView.setText(emptyText);
-
-            if (mEmptyView != null)
+            if (mEmptyView != null) {
+                mEmptyView.setText(emptyText);
                 mEmptyView.setVisibility(TextView.VISIBLE);
+            }
 
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(visits < 10 ? View.VISIBLE : View.GONE);

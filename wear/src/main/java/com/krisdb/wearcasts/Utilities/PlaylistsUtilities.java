@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.DBUtilities.GetChannel;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLocalFiles;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SetPodcastEpisode;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;

@@ -52,6 +52,7 @@
 
     <string name="confirm_mark_all_played">馬克都玩過了嗎?</string>
     <string name="confirm_mark_all_unplayed">標記所有未播放?</string>
+    <string name="confirm_download_all">全部下載?</string>
 
     <string name="settings_podcasts_label_header_color">標題顏色</string>
     <string name="settings_podcasts_label_header_theme">主題</string>
@@ -151,7 +152,7 @@
     <string name="settings_podcasts_entries_header_color_dark_orange">深橙色</string>
 
     <string name="settings_podcasts_entries_title_home_screen">主屏幕</string>
-    <string name="settings_podcasts_home_screen_default">默認</string>
+    <string name="settings_podcasts_home_screen_default">播客</string>
     <string name="settings_podcasts_home_screen_local">本地</string>
     <string name="settings_podcasts_home_screen_inprogress">進行中</string>
     <string name="settings_podcasts_home_screen_downloads">下載</string>
@@ -255,6 +256,7 @@
     <string name="menu_episodes_mark_all_unplayed">標記所有未播放</string>
     <string name="menu_episodes_search">搜索</string>
     <string name="menu_episodes_add_playlist">全部添加到播放列表</string>
+    <string name="menu_episodes_download">全部下載</string>
 
     <string name="menu_episodes_mark_selected_played">標記選擇為已播放</string>
     <string name="menu_episodes_mark_selected_unplayed">Mark選擇為未播放</string>
