@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.wear.widget.WearableRecyclerView;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
@@ -20,7 +21,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
@@ -61,7 +61,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         private final TextView title, date, duration;
         private final ImageView thumbnailTitle, download;
-        private final RelativeLayout layout;
+        private final ConstraintLayout layout;
 
         ViewHolder(final View view) {
             super(view);
@@ -355,7 +355,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final TextView duration = viewHolder.duration;
         final ImageView thumbTitle = viewHolder.thumbnailTitle;
         final ImageView download = viewHolder.download;
-        final RelativeLayout layout = viewHolder.layout;
+        final ConstraintLayout layout = viewHolder.layout;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) viewHolder.layout.getLayoutParams();
 
         if (episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
@@ -428,6 +428,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 title.setText(titleText);
             }
 
+            //prevent title from overlapping download image
             title.setPadding(0, 0, 40, 0);
 
             if (episode.getIsSelected()) {
