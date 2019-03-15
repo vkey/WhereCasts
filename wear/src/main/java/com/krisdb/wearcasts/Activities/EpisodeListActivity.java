@@ -17,6 +17,7 @@ import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
 import android.util.Pair;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -273,6 +274,14 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         }
     }
 
+    private void resetMenu()
+    {
+        final Menu menu = mWearableActionDrawer.getMenu();
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menu);
+        mSwipeRefreshLayout.setEnabled(true);
+    }
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
 
@@ -290,6 +299,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 }
                 mAdapter.mSelectedPositions = new ArrayList<>();
                 mAdapter.mSelectedEpisodes = new ArrayList<>();
+                resetMenu();
                 break;
             case R.id.menu_drawer_episode_list_selected_markunplayed:
                 final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
@@ -302,6 +312,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 }
                 mAdapter.mSelectedPositions = new ArrayList<>();
                 mAdapter.mSelectedEpisodes = new ArrayList<>();
+                resetMenu();
                 break;
             case R.id.menu_drawer_episode_list_selected_markplayed_single:
                 final List<PodcastItem> episodesAfter = EpisodeUtilities.GetEpisodesAfter(mActivity, mAdapter.mSelectedEpisodes.get(0));
@@ -319,6 +330,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         }
                     }
                     mAdapter.notifyDataSetChanged();
+                    resetMenu();
                 }
                 break;
             case R.id.menu_drawer_episode_list_markplayed:
@@ -337,6 +349,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 episode.setFinished(true);
                             }
                             mAdapter.notifyDataSetChanged();
+                            resetMenu();
                         }
                     });
                     alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
@@ -364,6 +377,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 episode.setFinished(false);
                             }
                             mAdapter.notifyDataSetChanged();
+                            resetMenu();
                         }
                     });
                     alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
@@ -390,6 +404,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                                 episode.setIsDownloaded(true);
 
                                             mAdapter.notifyDataSetChanged();
+                                            resetMenu();
                                         }
                                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
@@ -415,6 +430,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                     }
                                     mAdapter.mSelectedPositions = new ArrayList<>();
                                     mAdapter.mSelectedEpisodes = new ArrayList<>();
+                                    resetMenu();
                                 }
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;

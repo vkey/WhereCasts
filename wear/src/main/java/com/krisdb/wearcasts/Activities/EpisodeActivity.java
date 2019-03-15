@@ -825,6 +825,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         extras.putString("local_file", mLocalFile);
         extras.putInt("playlistid", mPlaylistID);
         extras.putInt("podcastid", mPodcastID);
+        extras.putInt("episodeid", mEpisodeID);
         mCurrentState = STATE_PLAYING;
 
         MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(mEpisode.getMediaUrl().toString()), extras);

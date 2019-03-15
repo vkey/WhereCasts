@@ -24,7 +24,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -374,7 +373,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mMediaPlayer.setDataSource(uri.toString());
                 }
 
-                if (uri.toString().startsWith("http")) {
+                if (!mEpisode.getIsDownloaded()) {
                     mMediaPlayer.prepareAsync();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -878,7 +877,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
-        if (mError == false) {
+        if (!mError) {
             new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile,
                     new Interfaces.PodcastsResponse() {
                         @Override
@@ -888,7 +887,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                             intentMediaCompleted.putExtra("media_completed", true);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
                             stopForeground(false);
-                            SystemClock.sleep(500);
+                            //SystemClock.sleep(500);
                             playlistSkip(Enums.SkipDirection.NEXT, episodes);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
