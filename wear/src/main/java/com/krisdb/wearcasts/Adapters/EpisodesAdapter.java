@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.wear.widget.WearableRecyclerView;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
@@ -31,6 +32,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +48,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     public List<PodcastItem> mEpisodes;
     public List<PodcastItem> mSelectedEpisodes;
+    public List<Integer> mSelectedPositions;
     private Activity mContext;
     private int mTextColor;
     private String mDensityName;
@@ -83,6 +86,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         isHDPI = Objects.equals(mDensityName, mContext.getString(R.string.hdpi));
         mSwipeRefreshLayout = refreshLayout;
         mWearableActionDrawer = menu;
+        mSelectedPositions = new ArrayList<>();
     }
 
     @Override
@@ -202,10 +206,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-
-                            mEpisodes.get(position).setIsDownloaded(false);
-                            notifyItemChanged(position);
-                            dialog.dismiss();
+                        mEpisodes.get(position).setIsDownloaded(false);
+                        notifyItemChanged(position);
+                        dialog.dismiss();
                     }
                 });
                 alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
@@ -275,13 +278,16 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         if (episode.getIsSelected()) {
             episode.setIsSelected(false);
             mSelectedEpisodes.remove(episode);
+            mSelectedPositions.removeAll(Arrays.asList(position));
         } else {
             episode.setIsSelected(true);
             mSelectedEpisodes.add(episode);
+            mSelectedPositions.add(position);
         }
 
         final Menu menu = mWearableActionDrawer.getMenu();
         menu.clear();
+        SystemClock.sleep(125);
         int menuId = R.menu.menu_drawer_episode_list;
 
         if (mSelectedEpisodes.size() > 0) {
@@ -322,6 +328,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         //List<PodcastItem> episodes = GetEpisodes(mContext, podcastId, mPlaylistId, hidePlayed, numberOfEpisode, null);
         //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new EpisodesDiffCallback(this.mEpisodes, episodes));
         //diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void refreshList(final int position)
+    {
+        notifyItemChanged(position);
     }
 
     public void refreshItem(final List<PodcastItem> episodes, final int position)

@@ -268,56 +268,112 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             else if (requestCode == SEARCH_RESULTS_CODE) {
 
                 mQuery = data.getData().toString();
-                refreshEpisodes();
+                RefreshContent();
             }
         }
-    }
-
-    private void refreshEpisodes()
-    {
-        new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> episodes) {
-
-                        for(final PodcastItem episode : episodes)
-                        {
-                            for(final PodcastItem selectedEpisodes : mAdapter.mSelectedEpisodes)
-                            {
-                                if (episode.getEpisodeId() == selectedEpisodes.getEpisodeId() && selectedEpisodes.getIsSelected())
-                                    episode.setIsSelected(true);
-                            }
-                        }
-
-                        mAdapter.refreshList(episodes);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
-
+        final List<PodcastItem> episodes = mAdapter.mEpisodes;
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed:
                 final DBPodcastsEpisodes dbMarkPlayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 1);
                 dbMarkPlayed.close();
-                refreshEpisodes();
-                break;
-            case R.id.menu_drawer_episode_list_selected_markplayed_single:
-                final List<PodcastItem> episodes = EpisodeUtilities.GetEpisodesAfter(mActivity, mAdapter.mSelectedEpisodes.get(0));
-                final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
-                dbMarkPlayedSingle.updateEpisodes(episodes, "finished", 1);
-                dbMarkPlayedSingle.close();
-                refreshEpisodes();
+                for (final Integer position : mAdapter.mSelectedPositions) {
+                    episodes.get(position).setFinished(true);
+                    episodes.get(position).setIsSelected(false);
+                    mAdapter.notifyItemChanged(position);
+                }
+                mAdapter.mSelectedPositions = new ArrayList<>();
+                mAdapter.mSelectedEpisodes = new ArrayList<>();
                 break;
             case R.id.menu_drawer_episode_list_selected_markunplayed:
                 final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkUnplayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 0);
                 dbMarkUnplayed.close();
-                refreshEpisodes();
+                for (final Integer position : mAdapter.mSelectedPositions) {
+                    episodes.get(position).setFinished(false);
+                    episodes.get(position).setIsSelected(false);
+                    mAdapter.notifyItemChanged(position);
+                }
+                mAdapter.mSelectedPositions = new ArrayList<>();
+                mAdapter.mSelectedEpisodes = new ArrayList<>();
+                break;
+            case R.id.menu_drawer_episode_list_selected_markplayed_single:
+                final List<PodcastItem> episodesAfter = EpisodeUtilities.GetEpisodesAfter(mActivity, mAdapter.mSelectedEpisodes.get(0));
+                final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
+                dbMarkPlayedSingle.updateEpisodes(episodesAfter, "finished", 1);
+                dbMarkPlayedSingle.close();
+                for (final PodcastItem episodeAfter : episodesAfter)
+                {
+                    for (final PodcastItem episode : episodes)
+                    {
+                        if (episodeAfter.getEpisodeId() == episode.getEpisodeId())
+                        {
+                            episode.setFinished(true);
+                            episode.setIsSelected(false);
+                        }
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.menu_drawer_episode_list_markplayed:
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
+                    alertRead.setMessage(getString(R.string.confirm_mark_all_played));
+                    alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ContentValues cv = new ContentValues();
+                            cv.put("finished", 1);
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                            db.updateAll(cv, mPodcastId);
+                            db.close();
+                            for (final PodcastItem episode : episodes) {
+                                episode.setFinished(true);
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertRead.show();
+                }
+                break;
+            case R.id.menu_drawer_episode_list_markunplayed:
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
+                    alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
+                    alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ContentValues cv = new ContentValues();
+                            cv.put("finished", 0);
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                            db.updateAll(cv, mPodcastId);
+                            db.close();
+                            for (final PodcastItem episode : episodes) {
+                                episode.setFinished(false);
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertUnread.show();
+                }
                 break;
             case R.id.menu_drawer_episode_list_download:
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -326,23 +382,24 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mEpisodes.subList(1, mAdapter.mEpisodes.size()),
+                            new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
                                     new Interfaces.AsyncResponse() {
                                         @Override
                                         public void processFinish() {
-                                            refreshEpisodes();
+                                            for (final PodcastItem episode : episodes)
+                                                episode.setIsDownloaded(true);
+
+                                            mAdapter.notifyDataSetChanged();
                                         }
                                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     });
                     alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-
                     alertRead.show();
                 }
                 break;
@@ -351,7 +408,13 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             new Interfaces.AsyncResponse() {
                                 @Override
                                 public void processFinish() {
-                                    refreshEpisodes();
+                                    for (final Integer position : mAdapter.mSelectedPositions) {
+                                        episodes.get(position).setIsDownloaded(true);
+                                        episodes.get(position).setIsSelected(false);
+                                        mAdapter.notifyItemChanged(position);
+                                    }
+                                    mAdapter.mSelectedPositions = new ArrayList<>();
+                                    mAdapter.mSelectedEpisodes = new ArrayList<>();
                                 }
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
@@ -368,61 +431,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             case R.id.menu_drawer_episode_list_search:
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
                 break;
-            case R.id.menu_drawer_episode_list_markplayed:
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
-                    alertRead.setMessage(getString(R.string.confirm_mark_all_played));
-                    alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final ContentValues cv = new ContentValues();
-                            cv.put("finished", 1);
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.updateAll(cv, mPodcastId);
-                            db.close();
-                            RefreshContent();
-                        }
-                    });
-                    alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alertRead.show();
-                }
-
-                break;
-            case R.id.menu_drawer_episode_list_markunplayed:
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
-                    alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
-                    alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final ContentValues cv = new ContentValues();
-                            cv.put("finished", 0);
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.updateAll(cv, mPodcastId);
-                            db.close();
-                            RefreshContent();
-                        }
-                    });
-                    alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alertUnread.show();
-                }
-
-                break;
-            case R.id.menu_drawer_episode_list_add_playlist:
+               case R.id.menu_drawer_episode_list_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
 
                 final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
