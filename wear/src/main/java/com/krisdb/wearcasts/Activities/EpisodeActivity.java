@@ -546,6 +546,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             final Cursor cursor = mDownloadManager.query(query);
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
+            if (mDownloadStartTime == 0)
+                mDownloadStartTime = System.nanoTime();
+
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircleDownloading.setMax(bytes_total);
@@ -564,24 +567,31 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
-                        if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
-                            final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
+                        try {
+                            if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
+                                final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
-                            if (bytesPerSec < 1000000.0) {
-                                if (bytesPerSec / 1024 == 0.00)
-                                    mProgressCircleLoading.setVisibility(View.VISIBLE);
-                                else {
-                                    mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
-                                    mDownloadSpeed.setVisibility(View.VISIBLE);
+                                if (bytesPerSec < 1000000.0) {
+                                    if (bytesPerSec / 1024 == 0.00)
+                                        mProgressCircleLoading.setVisibility(View.VISIBLE);
+                                    else {
+                                        mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
+                                        mDownloadSpeed.setVisibility(View.VISIBLE);
+                                        mProgressCircleLoading.setVisibility(View.GONE);
+                                    }
+                                } else {
+                                    mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat(" MB/s"));
                                     mProgressCircleLoading.setVisibility(View.GONE);
                                 }
-                            } else {
-                                mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat(" MB/s"));
-                                mProgressCircleLoading.setVisibility(View.GONE);
-                            }
+                            } else
+                                mDownloadSpeed.setVisibility(View.INVISIBLE);
                         }
-                        else
+                        catch (Exception ex)
+                        {
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
+                            if (mDownloadStartTime == 0)
+                                mDownloadStartTime = System.nanoTime();
+                        }
 
                         mProgressCircleDownloading.setProgress(bytes_downloaded);
                         mProgressCircleDownloading.setVisibility(View.VISIBLE);
@@ -907,7 +917,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     };
 
     private MediaControllerCompat.Callback mMediaControllerCompatCallback = new MediaControllerCompat.Callback() {
-
         @Override
         public void onExtrasChanged(Bundle extras) {
             super.onExtrasChanged(extras);
