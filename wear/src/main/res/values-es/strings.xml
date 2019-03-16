@@ -250,6 +250,7 @@
     <string name="menu_main_title_playlist_add">Agregar a la lista\nde reproducción</string>
 
     <string name="menu_episode_wifi_open">Abrir la configuración de WiFi</string>
+    <string name="menu_episode_wifi_bluietooth">Abra la configuración de Bluetooth</string>
     <string name="menu_episode_bluetooth_enable">Habilitar bluetooth</string>
     <string name="menu_episode_bluetooth_disable">Deshabilitar bluetooth</string>
 

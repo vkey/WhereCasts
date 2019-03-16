@@ -1201,6 +1201,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             case R.id.menu_drawer_episode_open_wifi:
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
+            case R.id.menu_drawer_episode_open_bluetooth:
+                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                break;
             case R.id.menu_drawer_episode_markunplayed:
                 markUnplayed(mContext, mEpisode);
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
@@ -1284,6 +1287,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         {
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
+            menu.removeItem(R.id.menu_drawer_episode_open_bluetooth);
         }
 
         menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
