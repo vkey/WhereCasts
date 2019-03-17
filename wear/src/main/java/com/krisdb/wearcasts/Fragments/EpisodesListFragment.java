@@ -166,6 +166,7 @@ public class EpisodesListFragment extends Fragment {
                 } else {
                     mStatus.setVisibility(View.GONE);
                     mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
                             new Interfaces.BackgroundSyncResponse() {
                                 @Override

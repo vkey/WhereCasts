@@ -213,7 +213,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mProgressThumb.setVisibility(View.VISIBLE);
         mStatus.setVisibility(View.VISIBLE);
         mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
-
+        mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
         new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
@@ -287,21 +287,29 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
         final int itemId = menuItem.getItemId();
         final List<PodcastItem> episodes = mAdapter.mEpisodes;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
         switch (itemId) {
-            case R.id.menu_drawer_episode_list_selected_markplayed:
+            case R.id.menu_drawer_episode_list_selected_markplayed: //Mark selected played
                 final DBPodcastsEpisodes dbMarkPlayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 1);
                 dbMarkPlayed.close();
-                for (final Integer position : mAdapter.mSelectedPositions) {
-                    episodes.get(position).setFinished(true);
-                    episodes.get(position).setIsSelected(false);
-                    mAdapter.notifyItemChanged(position);
+                if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
+                {
+                    RefreshContent();
                 }
-                mAdapter.mSelectedPositions = new ArrayList<>();
-                mAdapter.mSelectedEpisodes = new ArrayList<>();
+                else {
+                    for (final Integer position : mAdapter.mSelectedPositions) {
+                        episodes.get(position).setFinished(true);
+                        episodes.get(position).setIsSelected(false);
+                        mAdapter.notifyItemChanged(position);
+                    }
+                    mAdapter.mSelectedPositions = new ArrayList<>();
+                    mAdapter.mSelectedEpisodes = new ArrayList<>();
+                }
                 resetMenu();
                 break;
-            case R.id.menu_drawer_episode_list_selected_markunplayed:
+            case R.id.menu_drawer_episode_list_selected_markunplayed: //Mark selected unplayed
                 final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkUnplayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 0);
                 dbMarkUnplayed.close();
@@ -314,26 +322,29 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 mAdapter.mSelectedEpisodes = new ArrayList<>();
                 resetMenu();
                 break;
-            case R.id.menu_drawer_episode_list_selected_markplayed_single:
+            case R.id.menu_drawer_episode_list_selected_markplayed_single: //Mark selected played from here
                 final List<PodcastItem> episodesAfter = EpisodeUtilities.GetEpisodesAfter(mActivity, mAdapter.mSelectedEpisodes.get(0));
                 final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayedSingle.updateEpisodes(episodesAfter, "finished", 1);
                 dbMarkPlayedSingle.close();
-                for (final PodcastItem episodeAfter : episodesAfter)
+                if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
                 {
-                    for (final PodcastItem episode : episodes)
-                    {
-                        if (episodeAfter.getEpisodeId() == episode.getEpisodeId())
-                        {
+                    RefreshContent();
+                }
+                else {
+                for (final PodcastItem episodeAfter : episodesAfter) {
+                    for (final PodcastItem episode : episodes) {
+                        if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
                             episode.setFinished(true);
                             episode.setIsSelected(false);
                         }
                     }
                     mAdapter.notifyDataSetChanged();
+                }
                     resetMenu();
                 }
                 break;
-            case R.id.menu_drawer_episode_list_markplayed:
+            case R.id.menu_drawer_episode_list_markplayed: //Mark all played
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertRead.setMessage(getString(R.string.confirm_mark_all_played));
@@ -345,10 +356,15 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                             db.updateAll(cv, mPodcastId);
                             db.close();
-                            for (final PodcastItem episode : episodes) {
-                                episode.setFinished(true);
+
+                            if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
+                                RefreshContent();
+                            else {
+                                for (final PodcastItem episode : episodes)
+                                    episode.setFinished(true);
+
+                                mAdapter.notifyDataSetChanged();
                             }
-                            mAdapter.notifyDataSetChanged();
                             resetMenu();
                         }
                     });
@@ -361,7 +377,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     alertRead.show();
                 }
                 break;
-            case R.id.menu_drawer_episode_list_markunplayed:
+            case R.id.menu_drawer_episode_list_markunplayed: //Mark all unplayed
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
@@ -373,10 +389,14 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                             db.updateAll(cv, mPodcastId);
                             db.close();
-                            for (final PodcastItem episode : episodes) {
-                                episode.setFinished(false);
+                            if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
+                                RefreshContent();
+                            else {
+                                for (final PodcastItem episode : episodes)
+                                    episode.setFinished(false);
+
+                                mAdapter.notifyDataSetChanged();
                             }
-                            mAdapter.notifyDataSetChanged();
                             resetMenu();
                         }
                     });
@@ -389,7 +409,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     alertUnread.show();
                 }
                 break;
-            case R.id.menu_drawer_episode_list_download:
+            case R.id.menu_drawer_episode_list_download: //Download all
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertRead.setMessage(getString(R.string.confirm_download_all));
@@ -418,7 +438,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     alertRead.show();
                 }
                 break;
-                case R.id.menu_drawer_episode_list_selected_downloaad:
+                case R.id.menu_drawer_episode_list_selected_downloaad: //Download selected
                     new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
                             new Interfaces.AsyncResponse() {
                                 @Override
@@ -434,20 +454,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 }
                             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
-            case R.id.menu_drawer_episode_list_selected_add_playlist:
-                final Intent intent = new Intent(mActivity, EpisodeContextActivity.class);
-                final Bundle bundle = new Bundle();
-                final ArrayList<Integer> ids = new ArrayList<>();
-                for (final PodcastItem episode : mAdapter.mSelectedEpisodes)
-                    ids.add(episode.getEpisodeId());
-                bundle.putIntegerArrayList("episodeids", ids);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
-            case R.id.menu_drawer_episode_list_search:
+            case R.id.menu_drawer_episode_list_search: //Search
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
                 break;
-               case R.id.menu_drawer_episode_list_add_playlist:
+               case R.id.menu_drawer_episode_list_add_playlist: //Add all to playlist
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
 
                 final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
@@ -502,7 +512,17 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     builder.setView(playlistAddView);
                     builder.create().show();
                 }
-            break;
+                break;
+            case R.id.menu_drawer_episode_list_selected_add_playlist: //Add selected to playlist
+                final Intent intent = new Intent(mActivity, EpisodeContextActivity.class);
+                final Bundle bundle = new Bundle();
+                final ArrayList<Integer> ids = new ArrayList<>();
+                for (final PodcastItem episode : mAdapter.mSelectedEpisodes)
+                    ids.add(episode.getEpisodeId());
+                bundle.putIntegerArrayList("episodeids", ids);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
         }
 
         mWearableActionDrawer.getController().closeDrawer();
