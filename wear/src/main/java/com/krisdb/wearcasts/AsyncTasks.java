@@ -211,9 +211,11 @@ public class AsyncTasks {
     public static class DisplayPodcasts extends AsyncTask<Void, Void, Void> {
         private Interfaces.PodcastsResponse mResponse;
         private List<PodcastItem> mPodcasts;
+        private boolean mHideEmpty;
 
-        public DisplayPodcasts(final Context context, final Interfaces.PodcastsResponse response) {
+        public DisplayPodcasts(final Context context, final Boolean hideEmpty, final Interfaces.PodcastsResponse response) {
             mContext = new WeakReference<>(context);
+            mHideEmpty = hideEmpty;
             mResponse = response;
        }
 
@@ -223,10 +225,9 @@ public class AsyncTasks {
             final Context ctx = mContext.get();
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
             final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-            mPodcasts = GetPodcasts(ctx, hideEmpty, showDownloaded);
+            mPodcasts = GetPodcasts(ctx, mHideEmpty, showDownloaded);
 
             return null;
         }

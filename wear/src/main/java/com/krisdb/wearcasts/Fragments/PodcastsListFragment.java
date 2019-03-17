@@ -62,23 +62,11 @@ public class PodcastsListFragment extends Fragment {
         final View listView = inflater.inflate(R.layout.fragment_podcast_list, container, false);
 
         mPodcastsList = listView.findViewById(R.id.podcast_list);
+        mLogo = listView.findViewById(R.id.podcast_list_empty_logo);
+
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
         mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
         //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
-
-        /*
-        mPodcastsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    final Intent intentPlaylist = new Intent();
-                    intentPlaylist.setAction("fragment");
-                    intentPlaylist.putExtra("hide_paging_indicator", true);
-                    LocalBroadcastManager.getInstance(mActivity).sendBroadcast(intentPlaylist);
-                }
-            }
-        });
-       */
 
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
@@ -166,9 +154,11 @@ public class PodcastsListFragment extends Fragment {
     }
 
     private void RefreshContent() {
-        if (isAdded() == false) return;
+        if (!isAdded()) return;
 
-        new AsyncTasks.DisplayPodcasts(mActivity,
+        final Boolean hideEmpty = PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hide_empty", false);
+
+        new AsyncTasks.DisplayPodcasts(mActivity, hideEmpty,
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> podcasts) {
@@ -177,18 +167,14 @@ public class PodcastsListFragment extends Fragment {
                         showCopy(podcasts.size());
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
-        //final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new PodcastsSwipeController(mActivity, mAdapter, podcasts));
-        //itemTouchhelper.attachToRecyclerView(mPodcastsList);
-
     }
 
     private void showCopy(final int number)
     {
-        if (isAdded() == false) return;
+        if (!isAdded()) return;
 
         final ImageView swipeLeftView = mActivity.findViewById(R.id.podcast_list_swipe_left);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (number > 0)
         {
@@ -198,22 +184,10 @@ public class PodcastsListFragment extends Fragment {
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(View.GONE);
 
-            mLogo = mActivity.findViewById(R.id.podcast_list_empty_logo);
-
-            if (mLogo != null) {
+            if (mLogo != null)
                 mLogo.setVisibility(TextView.GONE);
-                mLogo.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        startActivity(new Intent(mActivity, SettingsPodcastsActivity.class));
-                        return false;
-                    }
-                });
-            }
         }
         else {
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
-
             final int visits = prefs.getInt("visits", 0);
 
             String emptyText = "";
@@ -245,6 +219,22 @@ public class PodcastsListFragment extends Fragment {
             if (mLogo != null) {
                 mLogo.setImageDrawable(GetRoundedLogo(mActivity, null));
                 mLogo.setVisibility(TextView.VISIBLE);
+                mLogo.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        new AsyncTasks.DisplayPodcasts(mActivity, false,
+                                new Interfaces.PodcastsResponse() {
+                                    @Override
+                                    public void processFinish(final List<PodcastItem> podcasts) {
+                                        mAdapter = new PodcastsAdapter(mActivity, podcasts);
+                                        mPodcastsList.setAdapter(mAdapter);
+                                        showCopy(podcasts.size());
+                                    }
+                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                        return false;
+                    }
+                });
             }
         }
     }
