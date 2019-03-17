@@ -552,7 +552,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     uri = Utilities.GetMediaFile(mContext, mEpisode);
                 else if (mLocalFile != null) {
                     mLocalFile = mEpisode.getTitle();
-                    uri = CommonUtils.GetLocalDirectory().concat(mEpisode.getTitle());
+                    uri = CommonUtils.GetLocalDirectory(mContext).concat(mEpisode.getTitle());
                 } else
                     uri = mEpisode.getMediaUrl().toString();
 

@@ -16,6 +16,8 @@ import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -44,6 +46,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.TrimEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.episodeExists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlaylist;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class Utilities {
@@ -350,7 +353,11 @@ public class Utilities {
 
         final DownloadManager.Request download = new DownloadManager.Request(Uri.parse(episode.getMediaUrl().toString()));
         download.setTitle(episode.getTitle());
-        download.setDestinationInExternalPublicDir("/WearCasts/Episodes", Utilities.GetEpisodeFileName(episode));
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+            download.setDestinationInExternalPublicDir("/WearCasts/Episodes", Utilities.GetEpisodeFileName(episode));
+        else
+            download.setDestinationInExternalFilesDir(ctx, Environment.DIRECTORY_PODCASTS,"/WearCasts/Episodes".concat(Utilities.GetEpisodeFileName(episode)));
 
         final long downloadId = manager.enqueue(download);
 
@@ -453,7 +460,7 @@ public class Utilities {
 
     public static void deleteLocal(final Context ctx, final String title)
     {
-        final File localFile = new File(GetLocalDirectory().concat(title));
+        final File localFile = new File(GetLocalDirectory(ctx).concat(title));
 
         if (localFile.exists())
             localFile.delete();
@@ -496,9 +503,9 @@ public class Utilities {
             file.delete();
     }
 
-    public static int downloadsCount()
+    public static int downloadsCount(final Context ctx)
     {
-        final File episodesDirectory = new File(GetMediaDirectory());
+        final File episodesDirectory = new File(GetMediaDirectory(ctx));
         final String[] episodes = episodesDirectory.list();
 
         return episodes.length;
@@ -518,9 +525,9 @@ public class Utilities {
         return bytes;
     }
 
-    public static int deleteAllDownloadedFiles()
+    public static int deleteAllDownloadedFiles(final Context ctx)
     {
-        final File episodesDirectory = new File(GetMediaDirectory());
+        final File episodesDirectory = new File(GetMediaDirectory(ctx));
         final String[] episodes = episodesDirectory.list();
 
         final int episodesLength = episodes.length;
@@ -531,9 +538,9 @@ public class Utilities {
         return episodesLength;
     }
 
-    public static int deleteAllThumbnails()
+    public static int deleteAllThumbnails(final Context ctx)
     {
-        final File thumbsDirectory = new File(GetThumbnailDirectory());
+        final File thumbsDirectory = new File(GetThumbnailDirectory(ctx));
         final String[] thumbs = thumbsDirectory.list();
 
         final int length = thumbs.length;
@@ -554,7 +561,7 @@ public class Utilities {
 
     public static String GetMediaFile(final Context ctx, final PodcastItem episode)
     {
-          return GetMediaDirectory().concat(GetEpisodeFileName(episode));
+          return GetMediaDirectory(ctx).concat(GetEpisodeFileName(episode));
     }
 
      static String GetMediaFileOLD(final Context ctx, final PodcastItem episode)
@@ -575,10 +582,6 @@ public class Utilities {
         db.close();
 
         return value;
-    }
-
-    public static String GetMediaDirectory() {
-        return CommonUtils.GetDirectory().concat("/Episodes/");
     }
 
     private static String GetEpisodeFileName(final PodcastItem episode) {

@@ -53,7 +53,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                     alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            int count = Utilities.deleteAllThumbnails();
+                            int count = Utilities.deleteAllThumbnails(mActivity);
 
                             String message;
 
@@ -115,13 +115,13 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
     private void setDeleteThumbnailsTitle()
     {
-        final File thumbsDirectory = new File(GetThumbnailDirectory());
+        final File thumbsDirectory = new File(GetThumbnailDirectory(mActivity));
         final String[] thumbs = thumbsDirectory.list();
 
         if (thumbs != null)
             findPreference("pref_delete_thumbs").setTitle(getString(R.string.settings_podcasts_label_downloads_thumbs_all,  thumbs.length));
 
-        long size = Utilities.getFilesSize(GetThumbnailDirectory());
+        long size = Utilities.getFilesSize(GetThumbnailDirectory(mActivity));
 
         if (size > 0)
             findPreference("pref_delete_thumbs").setSummary(android.text.format.Formatter.formatShortFileSize(getActivity(), size));

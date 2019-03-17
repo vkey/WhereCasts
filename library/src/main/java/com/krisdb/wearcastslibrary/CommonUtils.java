@@ -17,6 +17,8 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.Uri;
 import android.os.BatteryManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -318,29 +320,9 @@ public class CommonUtils {
         return str;
     }
 
-    public static int GetDuration(String url)
+    public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast)
     {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(url, new HashMap<String, String>());
-        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-        return Integer.parseInt(durationStr);
-    }
-
-    public static Uri GetLogoUri(PodcastItem podcast, String path)
-    {
-        String fileName = podcast.getChannel().getThumbnailName();
-        File thumbnail = new File(path, fileName);
-
-        if (thumbnail.exists())
-            return Uri.fromFile(thumbnail);
-
-        return null;
-    }
-
-    public static Pair<Integer, Integer> GetBackgroundColor(final PodcastItem podcast)
-    {
-        final Bitmap bitmap = BitmapFactory.decodeFile(CommonUtils.GetThumbnailDirectory() + podcast.getChannel().getThumbnailName());
+        final Bitmap bitmap = BitmapFactory.decodeFile(CommonUtils.GetThumbnailDirectory(ctx) + podcast.getChannel().getThumbnailName());
 
         if (bitmap == null)
             return new Pair<>(0, -3355444);
@@ -374,7 +356,7 @@ public class CommonUtils {
         int borderWidthHalfImage = 5, borderWidth = 3;
 
         if (channelItem != null && channelItem.getThumbnailUrl() != null)
-            bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory() + channelItem.getThumbnailName());
+            bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory(ctx) + channelItem.getThumbnailName());
         else {
             bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
             borderWidthHalfImage = 6;
@@ -415,23 +397,6 @@ public class CommonUtils {
         return roundedImageBitmapDrawable;
     }
 
-    public static RoundedBitmapDrawable GetRoundedLogoOLD(final Context ctx, final ChannelItem channelItem, int defaultResource) {
-        RoundedBitmapDrawable rdb;
-
-        if (channelItem != null && channelItem.getThumbnailUrl() != null)
-            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), GetThumbnailDirectory() + channelItem.getThumbnailName());
-        else
-            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), BitmapFactory.decodeResource(ctx.getResources(), defaultResource));
-            //rbd.setCornerRadius(Math.max(src.getWidth(), src.getHeight()) / 2.0f);
-
-        if (rdb.getBitmap() == null)
-            rdb = RoundedBitmapDrawableFactory.create(ctx.getResources(), BitmapFactory.decodeResource(ctx.getResources(), defaultResource));
-
-        rdb.setCircular(true);
-
-        return rdb;
-    }
-
     public static Bitmap resizedBitmap(Bitmap bm, int newWidth, int newHeight) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -455,37 +420,34 @@ public class CommonUtils {
         if (podcast.getChannel() == null || podcast.getChannel().getThumbnailName() == null)
             output = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_thumb_default);
         else
-            output = BitmapFactory.decodeFile(GetThumbnailDirectory() + podcast.getChannel().getThumbnailName());
+            output = BitmapFactory.decodeFile(GetThumbnailDirectory(ctx) + podcast.getChannel().getThumbnailName());
 
         return output;
     }
 
-    public static File GetLogoFile(final PodcastItem podcast, final String path)
-    {
-        return new File(path, podcast.getChannel().getThumbnailName());
+    public static String GetThumbnailDirectory(final Context ctx) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+            return getExternalStorageDirectory() + "/WearCasts/Images/Thumbnails/";
+        else
+            return ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/WearCasts/Thumbnails/";
     }
 
-    public static String GetDirectory() {
-        return getExternalStorageDirectory() + "/WearCasts";
+    public static String GetLocalDirectory(final Context ctx) {
+        return getExternalStorageDirectory() + "/WearCasts/Local/";
     }
 
-    public static String GetThumbnailDirectory() {
-        return GetDirectory() + "/Images/Thumbnails/";
-    }
-
-    public static String GetLocalDirectory() {
-        return GetDirectory() + "/Local/";
+    public static String GetMediaDirectory(final Context ctx) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+            return getExternalStorageDirectory() + "/WearCasts/Episodes/";
+        else
+            return ctx.getExternalFilesDir(Environment.DIRECTORY_PODCASTS) + "/WearCasts/Episodes/";
     }
 
     public static String GetThumbnailName(final ChannelItem channel) {
-        return CleanString(stripHTML(channel.getTitle())) + ".png";
+        return CleanString(stripHTML(channel.getTitle())).concat(".png");
     }
 
-    public static String GetThumbnailFullPath(ChannelItem channel) {
-        return GetThumbnailDirectory() + GetThumbnailName(channel);
-    }
-
-    public static boolean isValidUrl(final String url) {
+   public static boolean isValidUrl(final String url) {
         final Pattern p = Patterns.WEB_URL;
         final Matcher m = p.matcher(url.toLowerCase());
 

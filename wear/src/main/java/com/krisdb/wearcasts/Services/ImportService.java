@@ -135,7 +135,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
 
-                    final File dirLocal = new File(GetLocalDirectory());
+                    final File dirLocal = new File(GetLocalDirectory(mContext));
 
                     if (dirLocal.exists() == false)
                         dirLocal.mkdirs();
@@ -151,7 +151,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                                     try {
                                         int size = 1024;
-                                        final File f = new File(GetLocalDirectory().concat(fileName));
+                                        final File f = new File(GetLocalDirectory(mContext).concat(fileName));
                                         final OutputStream outputStream = new FileOutputStream(f);
                                         final byte buffer[] = new byte[size];
 

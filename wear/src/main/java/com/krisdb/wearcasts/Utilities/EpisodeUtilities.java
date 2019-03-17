@@ -436,7 +436,7 @@ public class EpisodeUtilities {
         titleItem.setIsTitle(true);
         titleItem.setChannel(channelItem);
         episodes.add(titleItem);
-        final File dirLocal = new File(GetLocalDirectory());
+        final File dirLocal = new File(GetLocalDirectory(ctx));
 
         if (dirLocal.exists()) {
             final File[] files = dirLocal.listFiles();

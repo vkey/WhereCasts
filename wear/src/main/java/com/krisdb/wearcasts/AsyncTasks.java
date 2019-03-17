@@ -94,7 +94,7 @@ public class AsyncTasks {
             {
                 if (prefs.getBoolean("pref_auto_delete", true))
                 {
-                    final File localFile = new File(GetLocalDirectory().concat(mLocalFile));
+                    final File localFile = new File(GetLocalDirectory(ctx).concat(mLocalFile));
 
                     if (localFile.exists())
                         localFile.delete();
@@ -424,7 +424,7 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
 
-            final File dirThumbs = new File(GetThumbnailDirectory());
+            final File dirThumbs = new File(GetThumbnailDirectory(mContext.get()));
 
             final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
 
@@ -444,7 +444,7 @@ public class AsyncTasks {
 
             for (final PodcastItem podcast : podcasts) {
                 if (podcast.getChannel().getThumbnailUrl() != null)
-                    CommonUtils.SavePodcastLogo(mContext.get(), podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(), podcast.getChannel().getThumbnailName(), mContext.get().getResources().getInteger(R.integer.podcast_art_download_width));
+                    CommonUtils.SavePodcastLogo(mContext.get(), podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(mContext.get()), podcast.getChannel().getThumbnailName(), mContext.get().getResources().getInteger(R.integer.podcast_art_download_width));
             }
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());

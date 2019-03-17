@@ -212,7 +212,7 @@ public class AsyncTasks {
                         }
 
                         if (mSaveThumbs && channel.getThumbnailUrl() != null)
-                            CommonUtils.SavePodcastLogo(ctx, channel.getThumbnailUrl().toString(), GetThumbnailDirectory(), channel.getThumbnailName(), ctx.getResources().getInteger(R.integer.podcast_art_download_width), mForceRefresh);
+                            CommonUtils.SavePodcastLogo(ctx, channel.getThumbnailUrl().toString(), GetThumbnailDirectory(ctx), channel.getThumbnailName(), ctx.getResources().getInteger(R.integer.podcast_art_download_width), mForceRefresh);
 
                         final PodcastItem podcast = new PodcastItem();
                         podcast.setTitle(podcastObj.getString("name"));
@@ -454,7 +454,7 @@ public class AsyncTasks {
             CommonUtils.SavePodcastLogo(
                     mContext.get(),
                     mUrl,
-                    GetThumbnailDirectory(),
+                    GetThumbnailDirectory(mContext.get()),
                     mFileName,
                     mContext.get().getResources().getInteger(R.integer.podcast_art_download_width),
                     mForce

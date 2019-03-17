@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
+import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -38,6 +40,7 @@ public class PodcastsListFragment extends Fragment {
     private TextView mEmptyView;
     private PodcastsAdapter mAdapter;
     private WeakReference<Activity> mActivityRef;
+    private ImageView mLogo;
 
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
@@ -195,8 +198,18 @@ public class PodcastsListFragment extends Fragment {
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(View.GONE);
 
-            if (mActivity.findViewById(R.id.podcast_list_empty_logo) != null)
-                mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.GONE);
+            mLogo = mActivity.findViewById(R.id.podcast_list_empty_logo);
+
+            if (mLogo != null) {
+                mLogo.setVisibility(TextView.GONE);
+                mLogo.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        startActivity(new Intent(mActivity, SettingsPodcastsActivity.class));
+                        return false;
+                    }
+                });
+            }
         }
         else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
@@ -229,8 +242,10 @@ public class PodcastsListFragment extends Fragment {
             if (swipeLeftView != null)
                 swipeLeftView.setVisibility(visits < 10 ? View.VISIBLE : View.GONE);
 
-            ((ImageView)mActivity.findViewById(R.id.podcast_list_empty_logo)).setImageDrawable(GetRoundedLogo(mActivity, null));
-            mActivity.findViewById(R.id.podcast_list_empty_logo).setVisibility(TextView.VISIBLE);
+            if (mLogo != null) {
+                mLogo.setImageDrawable(GetRoundedLogo(mActivity, null));
+                mLogo.setVisibility(TextView.VISIBLE);
+            }
         }
     }
 

@@ -21,7 +21,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import static com.krisdb.wearcasts.Utilities.Utilities.GetMediaDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
 
 public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener  {
     private static WeakReference<Activity> mActivityRef;
@@ -65,7 +65,7 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialog, int which) {
-                           int count = Utilities.deleteAllDownloadedFiles();
+                           int count = Utilities.deleteAllDownloadedFiles(mActivityRef.get());
 
                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(getActivity());
                            final ContentValues cv = new ContentValues();
@@ -122,13 +122,13 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
    private void setDeleteDownloadsTitle()
    {
-       final File episodesDirectory = new File(GetMediaDirectory());
+       final File episodesDirectory = new File(GetMediaDirectory(mActivityRef.get()));
        final String[] episodes = episodesDirectory.list();
 
        if (episodes != null)
            findPreference("pref_delete_downloads").setTitle(getString(R.string.settings_podcasts_label_downloads_delete_all,  episodes.length));
 
-       long size = Utilities.getFilesSize(GetMediaDirectory());
+       long size = Utilities.getFilesSize(GetMediaDirectory(mActivityRef.get()));
 
        if (size > 0)
            findPreference("pref_delete_downloads").setSummary(android.text.format.Formatter.formatShortFileSize(getActivity(), size));

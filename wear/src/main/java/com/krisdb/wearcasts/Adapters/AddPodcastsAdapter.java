@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -175,6 +176,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             final RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)title.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             title.setLayoutParams(layoutParams);
+            title.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
 
             viewHolder.add.setVisibility(View.GONE);
             viewHolder.description.setVisibility(View.GONE);
@@ -212,6 +214,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
             viewHolder.description.setVisibility(View.VISIBLE);
             viewHolder.episodesExpand.setVisibility(View.VISIBLE);
+            title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
             viewHolder.layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));

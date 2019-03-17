@@ -79,7 +79,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                         mPlayer.start();
                     }
 
-                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && Utilities.downloadsCount() == 1) {
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false) && Utilities.downloadsCount(context) == 1) {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();

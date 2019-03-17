@@ -217,7 +217,7 @@ public class EpisodesListFragment extends Fragment {
         final int themeId = Utilities.getThemeOptionId(mActivity);
 
         if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId()) {
-            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(GetPodcast(mActivity, mPodcastId));
+            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, GetPodcast(mActivity, mPodcastId));
             mEpisodeListLayout.setBackgroundColor(colors.first);
             mTextColor = colors.second;
             mProgressPlaylistText.setTextColor(mTextColor);

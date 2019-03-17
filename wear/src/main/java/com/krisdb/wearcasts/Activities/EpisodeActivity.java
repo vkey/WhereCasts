@@ -380,7 +380,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         if (mThemeID == Enums.ThemeOptions.DYNAMIC.getThemeId() && mEpisode.getChannel() != null && mEpisode.getChannel().getThumbnailName() != null) {
 
-            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mEpisode);
+            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, mEpisode);
             textColor = colors.second;
 
             mScrollView.setBackgroundColor(colors.first);
@@ -491,7 +491,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             //check for downloaded episode
             if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
-                final String uri = (mLocalFile != null) ? GetLocalDirectory().concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
+                final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
 
                 MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
 

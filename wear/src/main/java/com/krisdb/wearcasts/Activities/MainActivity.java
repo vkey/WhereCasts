@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -314,11 +315,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             } else
                 tabs.setVisibility(View.GONE);
 */
-            ActivityCompat.requestPermissions(ctx, new String[]
-                    {
-                            WRITE_EXTERNAL_STORAGE,
-                            READ_PHONE_STATE
-                    }, PERMISSIONS_CODE);
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                ActivityCompat.requestPermissions(ctx, new String[]
+                        {
+                                WRITE_EXTERNAL_STORAGE,
+                                READ_PHONE_STATE
+                        }, PERMISSIONS_CODE);
+            }
         }
     }
 
@@ -380,12 +383,12 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     if (requestCode == PERMISSIONS_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                final File dirThumbs = new File(GetThumbnailDirectory());
+                final File dirThumbs = new File(GetThumbnailDirectory(this));
 
                 if (dirThumbs.exists() == false)
                     dirThumbs.mkdirs();
 
-                final File dirLocal = new File(GetLocalDirectory());
+                final File dirLocal = new File(GetLocalDirectory(this));
 
                 if (dirLocal.exists() == false)
                     dirLocal.mkdirs();
