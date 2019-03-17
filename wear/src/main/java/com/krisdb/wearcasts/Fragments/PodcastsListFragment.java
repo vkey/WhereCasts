@@ -20,8 +20,6 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
-import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
