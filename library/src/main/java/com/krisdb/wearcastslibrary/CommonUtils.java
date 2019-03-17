@@ -427,20 +427,20 @@ public class CommonUtils {
 
     public static String GetThumbnailDirectory(final Context ctx) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
-            return getExternalStorageDirectory() + "/WearCasts/Images/Thumbnails/";
+            return getExternalStorageDirectory() + "/WearCasts/Images/Thumbnails/"; //legacy
         else
-            return ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/WearCasts/Thumbnails/";
+            return ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + ctx.getString(R.string.directory_thumbnails);
     }
 
     public static String GetLocalDirectory(final Context ctx) {
-        return getExternalStorageDirectory() + "/WearCasts/Local/";
+        return getExternalStorageDirectory() + ctx.getString(R.string.directory_local);
     }
 
     public static String GetMediaDirectory(final Context ctx) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
-            return getExternalStorageDirectory() + "/WearCasts/Episodes/";
+            return getExternalStorageDirectory() + ctx.getString(R.string.directory_episodes);
         else
-            return ctx.getExternalFilesDir(Environment.DIRECTORY_PODCASTS) + "/WearCasts/Episodes/";
+            return ctx.getExternalFilesDir(Environment.DIRECTORY_PODCASTS) + ctx.getString(R.string.directory_episodes);
     }
 
     public static String GetThumbnailName(final ChannelItem channel) {

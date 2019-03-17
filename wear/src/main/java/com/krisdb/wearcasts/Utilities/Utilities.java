@@ -355,9 +355,9 @@ public class Utilities {
         download.setTitle(episode.getTitle());
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
-            download.setDestinationInExternalPublicDir("/WearCasts/Episodes", Utilities.GetEpisodeFileName(episode));
+            download.setDestinationInExternalPublicDir(ctx.getString(com.krisdb.wearcastslibrary.R.string.directory_episodes), Utilities.GetEpisodeFileName(episode));
         else
-            download.setDestinationInExternalFilesDir(ctx, Environment.DIRECTORY_PODCASTS,"/WearCasts/Episodes".concat(Utilities.GetEpisodeFileName(episode)));
+            download.setDestinationInExternalFilesDir(ctx, Environment.DIRECTORY_PODCASTS,ctx.getString(com.krisdb.wearcastslibrary.R.string.directory_episodes).concat(Utilities.GetEpisodeFileName(episode)));
 
         final long downloadId = manager.enqueue(download);
 
