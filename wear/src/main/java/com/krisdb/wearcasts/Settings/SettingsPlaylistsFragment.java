@@ -1,19 +1,15 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
-import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -23,12 +19,17 @@ import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
-public class SettingsPlaylistsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings_playlists);
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
@@ -47,6 +48,15 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
+                et.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+
+                        return false;
+                    }
+                });
+                /*
                 et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
                 et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -73,6 +83,7 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                         return false;
                     }
                 });
+                */
                 category.addPreference(et);
             }
         }

@@ -103,6 +103,24 @@ public class Utilities {
         return output;
     }
 
+    public static int getPreferenceTheme(final Context ctx)
+    {
+        final int option = getThemeOptionId(ctx);
+
+        int output;
+
+        if (option == Enums.PreferenceThemeOptions.DARK.getThemeId())
+            output = R.style.PreferenceDark;
+        else if (option == Enums.PreferenceThemeOptions.LIGHT.getThemeId())
+            output = R.style.PreferenceLight;
+        else if (option == Enums.PreferenceThemeOptions.AMOLED.getThemeId())
+            output = R.style.PreferenceAMOLED;
+        else
+            output = R.style.PreferenceMain;
+
+        return output;
+    }
+
     public static void resetHomeScreen(final Context ctx)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

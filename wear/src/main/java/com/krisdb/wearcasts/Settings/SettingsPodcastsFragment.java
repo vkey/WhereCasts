@@ -4,12 +4,12 @@ package com.krisdb.wearcasts.Settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.krisdb.wearcasts.R;
 
-public class SettingsPodcastsFragment extends PreferenceFragment {
+public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
 
     private Activity mActivity;
 
@@ -18,6 +18,10 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
 
         super.onCreate(savedInstanceState);
 
+   }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings_podcasts);
 
         mActivity = getActivity();
