@@ -12,6 +12,7 @@
         <Preference android:key="pref_updates" android:title="@string/settings_podcasts_title_updates" android:icon="@drawable/ic_settings_updates" />
         <Preference android:key="pref_downloads" android:title="@string/settings_podcasts_title_downloads" android:icon="@drawable/ic_settings_downloads" />
         <Preference android:key="pref_playback" android:title="@string/settings_podcasts_title_playback" android:icon="@drawable/ic_settings_playback" />
+        <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />
 
     </PreferenceCategory>
 </PreferenceScreen>

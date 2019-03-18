@@ -96,20 +96,13 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             findPreference("pref_updates_new_episodes_disable_end").setSummary("");
         }
 
-        findPreference("pref_sync_podcasts").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                handleNetwork(true);
-                return false;
-            }
-        });
-
         findPreference("pref_sync_art").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 handleNetwork(false);
                 return false;
             }
         });
-        SetContent(0);
+        SetContent();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -173,30 +166,18 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 }).show();
             }
         } else {
-            if (syncPodcasts) {
-                findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int episodeCount, final int downloadCount) {
-                                SetContent(episodeCount);
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
+
                 findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
                         new Interfaces.AsyncResponse() {
                             @Override
                             public void processFinish() {
-                                SetContent(0);
+                                SetContent();
                                 setDeleteThumbnailsTitle();
                                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
         }
     }
 
@@ -204,7 +185,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     public void onResume() {
         super.onResume();
         if (mNoResume == false)
-            SetContent(0);
+            SetContent();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -214,49 +195,27 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             mNoResume = true;
-            if (requestCode == 1) {
-                findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int count, final int downloads) {
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                SetContent(count); }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                SetContent(0);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+
+            findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
+            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {
+                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                            SetContent();
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
-    private void SetContent(final int newEpisodes)
+    private void SetContent()
     {
         if (mActivity == null || isAdded() == false) return;
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-        final String podcastDate = prefs.getString("last_podcast_sync_date", "");
         final String thumbnailDate = prefs.getString("last_thumbnail_sync_date", "");
-
-        if (newEpisodes > 0)
-            findPreference("pref_sync_podcasts").setSummary(newEpisodes == 1 ? getString(R.string.plurals_single_new_episode) : getString(R.string.plurals_multiple_new_episodes, newEpisodes));
-        else if (podcastDate.length() > 0) {
-            findPreference("pref_sync_podcasts").setSummary(getString(R.string.last_updated)
-                    .concat(":\n")
-                    .concat(DateUtils.GetDisplayDate(mActivity, podcastDate, "EEE MMM dd H:mm:ss Z yyyy"))
-                    .concat(" @ ")
-                    .concat(DateUtils.GetTime(DateUtils.ConvertDate(podcastDate, "EEE MMM dd H:mm:ss Z yyyy"))));
-        }
 
         if (thumbnailDate.length() > 0) {
             findPreference("pref_sync_art").setSummary(getString(R.string.last_updated)
@@ -269,7 +228,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         findPreference("updateInterval").setSummary(((ListPreference)findPreference("updateInterval")).getEntry());
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
-
 
     @Override
     public void onPause() {
@@ -319,6 +277,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             findPreference("pref_download_sound_disable_end").setSummary(((ListPreference) findPreference("pref_download_sound_disable_end")).getEntry());
 
 
-        SetContent(0);
+        SetContent();
     }
 }
