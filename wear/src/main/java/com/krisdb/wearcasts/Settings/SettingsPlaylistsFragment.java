@@ -47,8 +47,6 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
-<<<<<<< HEAD
-=======
                 et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
                 et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -75,7 +73,7 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                         return false;
                     }
                 });
->>>>>>> parent of 638f5a8... preferences update
+
                 category.addPreference(et);
             }
         }

@@ -115,6 +115,7 @@
     <string name="settings_podcasts_label_updates_interval">अंतराल का आधुनिकीकरण</string>
     <string name="settings_podcasts_label_updates_charging">केवल चार्ज करते समय अद्यतन करें</string>
     <string name="settings_podcasts_label_updates_sound">जब नए एपिसोड पाए जाते हैं तो ध्वनि चलाएं</string>
+    <string name="settings_podcasts_label_updates_notification">नया एपिसोड नोटिफ़िकेशन दिखाएं</string>
     <string name="settings_podcasts_label_updates_enabled_summary">केवल तब चलता है जब डिवाइस चार्ज हो रहा है</string>
     <string name="settings_podcasts_label_auto_delete">समाप्त होने पर डाउनलोड की गई फ़ाइलों को हटाएं</string>
     <string name="settings_podcasts_label_downloads_restart_failed">यदि यह विफल हो जाता है तो स्वचालित रूप से डाउनलोड को पुनरारंभ करें</string>

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -137,7 +138,7 @@ public class PodcastsListFragment extends Fragment {
                 new AsyncTasks.SyncPodcasts(mActivity, 0, false,
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) {
+                            public void processFinish(final int episodeCount, final int downloadCount) {
                                 RefreshContent();
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

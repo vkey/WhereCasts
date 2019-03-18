@@ -82,8 +82,8 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         });
 
         final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_updates_new_episodes_sound");
-        findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
-        findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
+        //findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
+        //findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
 
         if (cbSound.isChecked()) {
             findPreference("pref_updates_new_episodes_disable_start").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_start")).getEntry());
@@ -177,7 +177,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 new AsyncTasks.SyncPodcasts(mActivity, 0, true,
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) {
+                            public void processFinish(final int episodeCount, final int downloadCount) {
                                 SetContent();
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -230,13 +230,13 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     {
         if (mActivity == null || isAdded() == false) return;
 
-        final SwitchPreference cbUpdatesEnabled = (SwitchPreference)findPreference("updatesEnabled");
-        final CheckBoxPreference cbUpdatesCharging = (CheckBoxPreference)getPreferenceScreen().findPreference("updateCharging");
-        final ListPreference lpUpdateInterval = (ListPreference)findPreference("updateInterval");
+        //final SwitchPreference cbUpdatesEnabled = (SwitchPreference)findPreference("updatesEnabled");
+        //final CheckBoxPreference cbUpdatesCharging = (CheckBoxPreference)getPreferenceScreen().findPreference("updateCharging");
+        //final ListPreference lpUpdateInterval = (ListPreference)findPreference("updateInterval");
 
-        final Boolean updatesEnabled = cbUpdatesEnabled.isChecked();
-        lpUpdateInterval.setEnabled(updatesEnabled);
-        cbUpdatesCharging.setEnabled(updatesEnabled);
+        //final boolean updatesEnabled = cbUpdatesEnabled.isChecked();
+        //lpUpdateInterval.setEnabled(updatesEnabled);
+        //cbUpdatesCharging.setEnabled(updatesEnabled);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
@@ -274,12 +274,12 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-/*
+
         if (key.equals("pref_updates_new_episodes_sound")) {
             final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_updates_new_episodes_sound");
 
-            findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
-            findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
+            //findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
+            //findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
 
             if (!cbSound.isChecked()) {
                 findPreference("pref_updates_new_episodes_disable_start").setSummary("");
@@ -300,10 +300,8 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         if (key.equals("updatesEnabled") || key.equals("updateInterval") || key.equals("updateCharging")) {
             if (((SwitchPreference)findPreference("updatesEnabled")).isChecked())
                 Utilities.StartJob(mActivity.getApplicationContext());
-                //Utilities.StartAlarm(mActivity.getApplicationContext());
             else
                 Utilities.CancelJob(mActivity.getApplicationContext());
-            //Utilities.CancelAlarm(mActivity.getApplicationContext());
         }
 
         if (key.equals("pref_download_sound_disable_start"))
@@ -314,6 +312,5 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
 
         SetContent();
-        */
     }
 }

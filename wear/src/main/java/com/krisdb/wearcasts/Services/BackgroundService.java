@@ -22,6 +22,7 @@ import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -75,47 +76,6 @@ public class BackgroundService extends JobService {
                             if (newEpisodeCount > 0) {
                                 final int episodeCount = prefs.getInt("new_episode_count", 0) + newEpisodeCount;
                                 final int downloadCount = prefs.getInt("new_downloads_count", 0) + downloads;
-
-                                String displayMessage = episodeCount > 1 ? getString(R.string.plurals_multiple_new_episodes, episodeCount) : getString(R.string.plurals_single_new_episode);
-
-                                if (downloadCount > 0)
-                                    displayMessage = displayMessage.concat("\n").concat(downloadCount > 1 ? getString(R.string.notification_downloads_count, downloadCount) : getString(R.string.notification_download_count));
-
-                                final Intent notificationIntent = new Intent(ctx, MainActivity.class);
-                                final Bundle bundle = new Bundle();
-                                bundle.putBoolean("new_episodes", true);
-                                notificationIntent.putExtras(bundle);
-                                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                                final PendingIntent intent = PendingIntent.getActivity(ctx, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                                    final String channelID = ctx.getPackageName().concat(".newepisodes");
-
-                                    final NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                                    final NotificationChannel mChannel = new NotificationChannel(channelID, getString(R.string.notification_channel_newepisodes), NotificationManager.IMPORTANCE_DEFAULT);
-                                    mChannel.setDescription(displayMessage);
-                                    mNotificationManager.createNotificationChannel(mChannel);
-
-                                    final Notification notification = new NotificationCompat.Builder(ctx, channelID)
-                                            .setContentIntent(intent)
-                                            .setSmallIcon(R.drawable.ic_notification)
-                                            .setContentTitle(getString(R.string.app_name_wc))
-                                            .setContentText(displayMessage).build();
-
-                                    mNotificationManager.notify(102, notification);
-                                } else {
-                                    final NotificationCompat.Builder notificationBuilder =
-                                            new NotificationCompat.Builder(ctx)
-                                                    .setSmallIcon(R.drawable.ic_notification)
-                                                    .setContentTitle(getString(R.string.app_name_wc))
-                                                    .setContentText(displayMessage)
-                                                    .setContentIntent(intent);
-
-                                    NotificationManagerCompat.from(ctx).notify(102, notificationBuilder.build());
-                                }
 
                                 editor.putInt("new_episode_count", episodeCount);
                                 editor.putInt("new_downloads_count", downloadCount);

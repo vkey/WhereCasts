@@ -361,6 +361,8 @@ public class AsyncTasks {
             if (mDisableToast == false)
                 showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
 
+            Utilities.showNewEpisodesNotification(mContext.get(), mNewEpisodes, mDownloadCount);
+
             mResponse.processFinish(mNewEpisodes, mDownloadCount);
         }
     }

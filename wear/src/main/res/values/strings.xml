@@ -115,6 +115,7 @@
     <string name="settings_podcasts_label_updates_interval">Update Interval</string>
     <string name="settings_podcasts_label_updates_charging">Update while charging only</string>
     <string name="settings_podcasts_label_updates_sound">Play sound when new episodes are found</string>
+    <string name="settings_podcasts_label_updates_notification">Show new episode notification</string>
     <string name="settings_podcasts_label_auto_delete">Delete downloaded files when finished</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Restart a download automatically if it fails</string>
     <string name="settings_podcasts_label_disable_bluetooth">Disable Bluetooth while downloading</string>

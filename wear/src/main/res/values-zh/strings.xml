@@ -117,6 +117,7 @@
     <string name="settings_podcasts_label_updates_interval">更新間隔</string>
     <string name="settings_podcasts_label_updates_charging">只在充電時更新</string>
     <string name="settings_podcasts_label_updates_sound">找到新劇集時播放聲音</string>
+    <string name="settings_podcasts_label_updates_notification">顯示新的劇集通知</string>
     <string name="settings_podcasts_label_updates_enabled_summary">僅在設備充電時運行</string>
     <string name="settings_podcasts_label_auto_delete">完成後刪除下載的文件</string>
     <string name="settings_podcasts_label_downloads_restart_failed">如果失敗，則自動重新啟動下載</string>

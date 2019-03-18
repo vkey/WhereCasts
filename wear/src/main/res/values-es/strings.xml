@@ -118,6 +118,7 @@
     <string name="settings_podcasts_label_updates_interval">Intervalo de actualización</string>
     <string name="settings_podcasts_label_updates_charging">Actualizar solo durante la carga</string>
     <string name="settings_podcasts_label_updates_sound">Reproducir sonido cuando se encuentran nuevos episodios</string>
+    <string name="settings_podcasts_label_updates_notification">Mostrar nueva notificación de episodio</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Se ejecuta solo cuando el dispositivo se está cargando</string>
     <string name="settings_podcasts_label_auto_delete">Eliminar archivos descargados cuando haya terminado</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Reinicie una descarga automáticamente si falla</string>

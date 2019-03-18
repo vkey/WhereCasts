@@ -19,20 +19,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
-<<<<<<< HEAD
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.preference.SwitchPreferenceCompat;
-=======
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
->>>>>>> parent of 638f5a8... preferences update
-
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -92,8 +81,6 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         etRename.setSummary(R.string.rename);
         etRename.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
         etRename.setOrder(count++);
-<<<<<<< HEAD
-=======
 
         etRename.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -109,7 +96,6 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 return false;
             }
         });
->>>>>>> parent of 638f5a8... preferences update
 
         etRename.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -135,7 +121,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
             }
         });
 
-        final SwitchPreferenceCompat cbAutoDownload = new SwitchPreferenceCompat(mActivity);
+        final SwitchPreference cbAutoDownload = new SwitchPreference(mActivity);
         cbAutoDownload.setTitle(R.string.settings_podcast_label_autodownload);
         cbAutoDownload.setKey("pref_" + mPodcastId + "_auto_download");
         cbAutoDownload.setChecked(false);

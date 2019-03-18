@@ -2,6 +2,10 @@ package com.krisdb.wearcasts.Utilities;
 
 
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.bluetooth.BluetoothAdapter;
@@ -11,16 +15,21 @@ import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
@@ -73,6 +82,52 @@ public class Utilities {
         items.add(navItemSettings);
 
         return items;
+    }
+
+    public static void showNewEpisodesNotification(final Context ctx, final int episodeCount, final int downloadCount)
+    {
+        if (episodeCount == 0 || !PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_updates_notification", true)) return;
+
+        String displayMessage = episodeCount > 1 ? ctx.getString(R.string.plurals_multiple_new_episodes, episodeCount) : ctx.getString(R.string.plurals_single_new_episode);
+
+        if (downloadCount > 0)
+            displayMessage = displayMessage.concat("\n").concat(downloadCount > 1 ? ctx.getString(R.string.notification_downloads_count, downloadCount) : ctx.getString(R.string.notification_download_count));
+
+        final Intent notificationIntent = new Intent(ctx, MainActivity.class);
+        final Bundle bundle = new Bundle();
+        bundle.putBoolean("new_episodes", true);
+        notificationIntent.putExtras(bundle);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        final PendingIntent intent = PendingIntent.getActivity(ctx, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            final String channelID = ctx.getPackageName().concat(".newepisodes");
+
+            final NotificationManager mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            final NotificationChannel mChannel = new NotificationChannel(channelID, ctx.getString(R.string.notification_channel_newepisodes), NotificationManager.IMPORTANCE_DEFAULT);
+            mChannel.setDescription(displayMessage);
+            mNotificationManager.createNotificationChannel(mChannel);
+
+            final Notification notification = new NotificationCompat.Builder(ctx, channelID)
+                    .setContentIntent(intent)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle(ctx.getString(R.string.app_name_wc))
+                    .setContentText(displayMessage).build();
+
+            mNotificationManager.notify(102, notification);
+        } else {
+            final NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(ctx)
+                            .setSmallIcon(R.drawable.ic_notification)
+                            .setContentTitle(ctx.getString(R.string.app_name_wc))
+                            .setContentText(displayMessage)
+                            .setContentIntent(intent);
+
+            NotificationManagerCompat.from(ctx).notify(102, notificationBuilder.build());
+        }
     }
 
     public static Boolean hasPremium(final Context ctx)

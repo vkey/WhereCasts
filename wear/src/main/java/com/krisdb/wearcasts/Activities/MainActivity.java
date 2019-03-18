@@ -478,8 +478,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
-                        public void processFinish(final int count, final int downloads) {
-                            if (count > 0) {
+                        public void processFinish(final int episodeCount, final int downloadCount) {
+                            if (episodeCount > 0) {
                                 mShowPodcastList = true;
                                 new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                             }

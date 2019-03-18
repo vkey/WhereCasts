@@ -118,6 +118,7 @@
     <string name="settings_podcasts_label_updates_interval">Intervalle de mise à jour</string>
     <string name="settings_podcasts_label_updates_charging">Mettre à jour en chargeant seulement</string>
     <string name="settings_podcasts_label_updates_sound">Jouer le son quand de nouveaux épisodes sont trouvés</string>
+    <string name="settings_podcasts_label_updates_notification">Afficher la notification d\'un nouvel épisode</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Fonctionne uniquement lorsque l\'appareil est en charge</string>
     <string name="settings_podcasts_label_auto_delete">Supprimer les fichiers téléchargés lorsque vous avez terminé</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Redémarrer un téléchargement automatiquement s\'il échoue</string>

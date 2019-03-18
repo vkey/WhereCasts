@@ -4,13 +4,13 @@
 
     <PreferenceCategory android:title="@string/settings_podcasts_settings_updates_display">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="syncOnStart"
             android:title="@string/settings_podcasts_label_sync_startup"
             android:defaultValue="false"
             />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="updatesEnabled"
             android:title="@string/settings_podcasts_label_updates_enabled"
             android:defaultValue="true"
@@ -33,7 +33,14 @@
             android:dependency="updatesEnabled"
             />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
+            android:key="pref_updates_notification"
+            android:title="@string/settings_podcasts_label_updates_notification"
+            android:defaultValue="true"
+            android:dependency="updatesEnabled"
+            />
+
+        <SwitchPreference
             android:key="pref_updates_new_episodes_sound"
             android:title="@string/settings_podcasts_label_updates_sound"
             android:defaultValue="true"
@@ -46,7 +53,7 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
-            android:dependency="updatesEnabled"
+            android:dependency="pref_updates_new_episodes_sound"
             />
 
         <ListPreference
@@ -55,7 +62,7 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
-            android:dependency="updatesEnabled"
+            android:dependency="pref_updates_new_episodes_sound"
             />
 
         <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />
