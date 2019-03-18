@@ -5,10 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.wear.widget.WearableLinearLayoutManager;
-import android.support.wear.widget.WearableRecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -30,6 +26,11 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.wear.widget.WearableLinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
+
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
 
 public class PlaylistsListFragment extends Fragment {
@@ -40,6 +41,7 @@ public class PlaylistsListFragment extends Fragment {
     private TextView mStatus, mProgressPlaylistText;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
+
 
     public static PlaylistsListFragment newInstance(final int playlistId) {
 

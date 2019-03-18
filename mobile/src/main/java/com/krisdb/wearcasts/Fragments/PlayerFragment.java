@@ -12,10 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -35,10 +31,15 @@ import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class PlayerFragment extends Fragment  {
+public class PlayerFragment extends Fragment {
 
     private Handler mPositionHandler = new Handler();
     private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage;

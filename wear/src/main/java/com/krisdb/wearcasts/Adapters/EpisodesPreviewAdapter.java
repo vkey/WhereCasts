@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -16,6 +15,8 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class EpisodesPreviewAdapter extends RecyclerView.Adapter<EpisodesPreviewAdapter.ViewHolder> {
 

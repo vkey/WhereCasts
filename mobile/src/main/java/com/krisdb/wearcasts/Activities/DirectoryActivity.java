@@ -8,12 +8,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
 import com.krisdb.wearcasts.Fragments.PodcastListFragment;
 import com.krisdb.wearcasts.R;
@@ -30,6 +25,12 @@ import com.krisdb.wearcastslibrary.PodcastCategory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class DirectoryActivity extends AppCompatActivity {
     private ViewPager mViewPager;
@@ -94,6 +95,7 @@ public class DirectoryActivity extends AppCompatActivity {
 
         void addFrag(Fragment fragment, String title) {
             mFragmentList.add(fragment);
+
             mFragmentTitleList.add(title);
         }
 

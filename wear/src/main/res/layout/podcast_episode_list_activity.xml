@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wear.widget.drawer.WearableDrawerLayout
+<androidx.wear.widget.drawer.WearableDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_episode_list_layout"
@@ -31,18 +31,18 @@
                 />
         </LinearLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/episode_list_swipe_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.wear.widget.WearableRecyclerView
+            <androidx.wear.widget.WearableRecyclerView
                 android:id="@+id/episode_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="50dp"
                 />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         <ImageView
             android:id="@+id/episode_list_progress_text_thumbnail"
             android:maxWidth="90dp"
@@ -67,11 +67,11 @@
             />
     </RelativeLayout>
 
-    <android.support.wear.widget.drawer.WearableActionDrawerView
+    <androidx.wear.widget.drawer.WearableActionDrawerView
         android:id="@+id/drawer_action_episode_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:actionMenu="@menu/menu_drawer_episode_list"
         />
 
-</android.support.wear.widget.drawer.WearableDrawerLayout>
+</androidx.wear.widget.drawer.WearableDrawerLayout>

@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.wear.widget.WearableRecyclerView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -23,6 +21,9 @@ import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.wear.widget.WearableRecyclerView;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;

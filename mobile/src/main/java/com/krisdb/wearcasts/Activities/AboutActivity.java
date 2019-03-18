@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.MenuItem;
@@ -14,6 +13,8 @@ import com.krisdb.wearcasts.BuildConfig;
 import com.krisdb.wearcasts.R;
 
 import java.util.Calendar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class AboutActivity extends AppCompatActivity {

@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -21,12 +18,17 @@ import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.lang.ref.WeakReference;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+
 import static android.app.Activity.RESULT_OK;
 
-public class SettingsPodcastsFragment extends PreferenceFragment {
+public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
 
     private Activity mActivity;
-    private static WeakReference<Activity> mActivityRef;
+    private static WeakReference<FragmentActivity> mActivityRef;
     private Boolean mNoResume = false;
 
     @Override
@@ -34,6 +36,10 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
 
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings_podcasts);
         mActivityRef = new WeakReference<>(getActivity());
 

@@ -5,21 +5,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.tabs.TabLayout;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class PhoneMainActivity extends AppCompatActivity {
     private static int mNumberOfPages = 2;
@@ -51,7 +52,6 @@ public class PhoneMainActivity extends AppCompatActivity {
                         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
 
                         //adapter.addFrag(UserAddActivity.newInstance(connected), getString(R.string.tab_add));
-                        //adapter.addFrag(RadioFragment.newInstance(connected), getString(R.string.tab_radio));
                         //adapter.addFrag(PremiumActivity.newInstance(connected), getString(R.string.tab_premium));
 
                         mViewPager.setAdapter(adapter);
@@ -72,6 +72,7 @@ public class PhoneMainActivity extends AppCompatActivity {
         }
 
         @Override
+
         public Fragment getItem(int index) {
             return mFragmentList.get(index);
         }

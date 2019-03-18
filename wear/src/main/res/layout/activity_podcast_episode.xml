@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wear.widget.drawer.WearableDrawerLayout
+<androidx.wear.widget.drawer.WearableDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/podcast_episode_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,8 +14,10 @@
             android:id="@+id/podcast_episode_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="80dp"
             android:visibility="invisible">
 
             <android.widget.TextClock
@@ -67,7 +69,7 @@
                     android:src="@drawable/ic_action_episode_skip_back"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="5dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     />
@@ -78,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="21dp"
+                    android:layout_marginStart="16dp"
                     android:visibility="invisible"
                     android:background="?android:attr/selectableItemBackground"
                     android:textSize="12sp"
@@ -96,7 +98,6 @@
                     android:id="@+id/ic_podcast_episode_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="?android:attr/selectableItemBackground"
@@ -106,7 +107,6 @@
                     android:id="@+id/podcast_episode_progress_loading"
                     android:layout_width="37dp"
                     android:layout_height="37dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:indeterminate="true"
@@ -120,7 +120,6 @@
                     android:id="@+id/podcast_episode_progress_circle"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_marginEnd="-16dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="@color/wc_transparent"
@@ -252,7 +251,7 @@
                 />
         </RelativeLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <android.support.wear.widget.drawer.WearableNavigationDrawerView
         android:id="@+id/drawer_nav_episode"
@@ -260,9 +259,9 @@
         android:layout_height="match_parent"
         />
 
-    <android.support.wear.widget.drawer.WearableActionDrawerView
+    <androidx.wear.widget.drawer.WearableActionDrawerView
         android:id="@+id/drawer_action_episode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-</android.support.wear.widget.drawer.WearableDrawerLayout>
+</androidx.wear.widget.drawer.WearableDrawerLayout>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -21,6 +20,8 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 public class SearchEpisodesActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int SPEECH_REQUEST_CODE = 1;

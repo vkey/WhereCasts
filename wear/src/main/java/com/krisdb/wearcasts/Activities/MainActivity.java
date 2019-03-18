@@ -14,14 +14,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.View;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -42,6 +34,16 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -356,7 +358,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         super.onPause();
     }
 
-    private static class FragmentPagerAdapter extends android.support.v4.app.FragmentStatePagerAdapter {
+    private static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         FragmentPagerAdapter(final FragmentManager fm) {
             super(fm);

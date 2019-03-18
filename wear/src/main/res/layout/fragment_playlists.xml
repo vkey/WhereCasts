@@ -24,7 +24,7 @@
                 />
     </LinearLayout>
 
-        <android.support.wear.widget.WearableRecyclerView
+        <androidx.wear.widget.WearableRecyclerView
             android:id="@+id/playlist_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

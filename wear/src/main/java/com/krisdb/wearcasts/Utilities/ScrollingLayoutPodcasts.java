@@ -1,8 +1,9 @@
 package com.krisdb.wearcasts.Utilities;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.wear.widget.WearableLinearLayoutManager;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.WearableLinearLayoutManager;
 
 public class ScrollingLayoutPodcasts extends WearableLinearLayoutManager.LayoutCallback {
     /** How much should we scale the icon at most. */

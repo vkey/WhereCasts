@@ -23,13 +23,9 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.wear.widget.drawer.WearableActionDrawerView;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.input.WearableButtons;
 import android.util.Log;
@@ -71,6 +67,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.wear.widget.drawer.WearableActionDrawerView;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
+
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisode;
@@ -97,7 +99,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private PodcastItem mEpisode;
     private MediaBrowserCompat mMediaBrowserCompat;
     private WearableActionDrawerView mWearableActionDrawer;
-    private android.support.v4.widget.NestedScrollView mScrollView;
+    private NestedScrollView mScrollView;
     private static List<NavItem> mNavItems;
     private WeakReference<EpisodeActivity> mActivityRef;
     private WearableNavigationDrawerView mNavDrawer;

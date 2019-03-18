@@ -8,9 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.wear.widget.WearableRecyclerView;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,6 +34,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 

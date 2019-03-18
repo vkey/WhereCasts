@@ -1,11 +1,12 @@
 package com.krisdb.wearcasts.Activities;
 
 import android.content.res.Resources;
-import android.preference.PreferenceActivity;
 
 import com.krisdb.wearcasts.Utilities.Utilities;
 
-public abstract class BasePreferenceActivity extends PreferenceActivity {
+import androidx.fragment.app.FragmentActivity;
+
+public abstract class BasePreferenceActivity extends FragmentActivity {
     @Override
     public Resources.Theme getTheme() {
         final Resources.Theme theme = super.getTheme();

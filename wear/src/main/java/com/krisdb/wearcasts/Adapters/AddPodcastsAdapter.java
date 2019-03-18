@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.wear.widget.WearableRecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -33,7 +30,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.WearableRecyclerView;
+
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
+
 
 public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcastsAdapter.ViewHolder> {
 

@@ -4,9 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
@@ -16,7 +13,10 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
-public class PodcastsSwipeController extends Callback {
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class PodcastsSwipeController extends ItemTouchHelper.Callback {
 
     private List<PodcastItem> mPodcasts;
     private Context mContext;

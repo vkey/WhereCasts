@@ -19,11 +19,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.util.Pair;
 import android.util.Patterns;
@@ -52,6 +47,12 @@ import java.net.URL;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.palette.graphics.Palette;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.getExternalStorageDirectory;
