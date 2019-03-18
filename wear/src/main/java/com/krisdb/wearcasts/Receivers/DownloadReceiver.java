@@ -68,7 +68,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                     final String disableStart = prefs.getString("pref_download_sound_disable_start", "0");
                     final String disableEnd = prefs.getString("pref_download_sound_disable_end", "0");
 
-                    Boolean playSound = prefs.getBoolean("pref_download_complete_sound", true);
+                    boolean playSound = prefs.getBoolean("pref_download_complete_sound", true);
 
                     if (playSound && DateUtils.isTimeBetweenTwoTime(disableStart, disableEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
                         playSound = false;

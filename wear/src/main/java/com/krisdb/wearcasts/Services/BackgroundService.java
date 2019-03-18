@@ -72,7 +72,7 @@ public class BackgroundService extends JobService {
                                 final String disableStart = prefs.getString("pref_updates_new_episodes_disable_start", "0");
                                 final String disableEnd = prefs.getString("pref_updates_new_episodes_disable_end", "0");
 
-                                Boolean playSound = prefs.getBoolean("pref_updates_new_episodes_sound", true);
+                                boolean playSound = prefs.getBoolean("pref_updates_new_episodes_sound", true);
 
                                 if (playSound && DateUtils.isTimeBetweenTwoTime(disableStart, disableEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
                                     playSound = false;
