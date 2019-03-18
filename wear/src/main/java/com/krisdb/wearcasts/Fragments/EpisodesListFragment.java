@@ -208,6 +208,14 @@ public class EpisodesListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        //mDownloadProgressHandler.removeCallbacks(downloadProgress);
+        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        super.onPause();
+    }
+
     public void RefreshContent() {
         if (!isAdded()) return;
 

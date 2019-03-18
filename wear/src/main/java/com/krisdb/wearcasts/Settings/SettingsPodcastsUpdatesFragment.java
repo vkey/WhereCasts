@@ -14,6 +14,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
@@ -174,21 +175,25 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         } else {
             if (syncPodcasts) {
                 findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true,
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
                             public void processFinish(final int episodeCount, final int downloadCount) {
                                 SetContent();
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
-                new AsyncTasks.SyncArt(mActivity,
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
                         new Interfaces.AsyncResponse() {
                             @Override
                             public void processFinish() {
                                 SetContent();
                                 setDeleteThumbnailsTitle();
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -200,6 +205,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         super.onResume();
         if (mNoResume == false)
             SetContent();
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -210,17 +216,24 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             mNoResume = true;
             if (requestCode == 1) {
                 findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true,
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) { SetContent(); }
+                            public void processFinish(final int count, final int downloads) {
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                SetContent(); }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
-                new AsyncTasks.SyncArt(mActivity,
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
                         new Interfaces.AsyncResponse() {
                             @Override
-                            public void processFinish() { SetContent();}
+                            public void processFinish() {
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                SetContent();
+                            }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
@@ -269,6 +282,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         super.onPause();
         mNoResume = false;
 
+        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 

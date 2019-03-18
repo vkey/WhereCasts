@@ -385,12 +385,12 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
                 final File dirThumbs = new File(GetThumbnailDirectory(this));
 
-                if (dirThumbs.exists() == false)
+                if (!dirThumbs.exists())
                     dirThumbs.mkdirs();
 
                 final File dirLocal = new File(GetLocalDirectory(this));
 
-                if (dirLocal.exists() == false)
+                if (!dirLocal.exists())
                     dirLocal.mkdirs();
             }
         }
@@ -452,7 +452,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }).show();
             }
         }
-        else if (CommonUtils.HighBandwidthNetwork(this) == false)
+        else if (!CommonUtils.HighBandwidthNetwork(this))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);

@@ -1,12 +1,14 @@
 package com.krisdb.wearcasts;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -307,11 +309,83 @@ public class AsyncTasks {
         }
     }
 
-    public static class SyncPodcasts extends AsyncTask<Void, Void, Void> {
+
+    public static class SyncArt extends AsyncTask<Void, String, Void>
+    {
+        private Interfaces.AsyncResponse mResponse;
+        private Preference mPreference = null;
+
+        public SyncArt(final Context context, final Preference preference, final Interfaces.AsyncResponse response)
+        {
+            mContext = new WeakReference<>(context);
+            mPreference = preference;
+            mResponse = response;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... podcast) {
+            super.onProgressUpdate(podcast);
+
+            if (podcast != null && podcast.length > 0)
+                mPreference.setSummary(podcast[0]);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //Utilities.showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_started));
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            final File dirThumbs = new File(GetThumbnailDirectory(mContext.get()));
+
+            final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
+
+            if (!dirThumbs.exists())
+                dirThumbs.mkdirs();
+            else {
+                for (final PodcastItem podcast : podcasts)
+                {
+                    if (podcast.getChannel() != null && podcast.getChannel().getThumbnailName() != null) {
+                        final File thumb = new File(dirThumbs, podcast.getChannel().getThumbnailName());
+
+                        if (thumb.exists())
+                            thumb.delete();
+                    }
+                }
+            }
+
+            for (final PodcastItem podcast : podcasts) {
+                if (mPreference != null)
+                    publishProgress(podcast.getChannel().getTitle());
+
+                if (podcast.getChannel().getThumbnailUrl() != null)
+                    CommonUtils.SavePodcastLogo(mContext.get(), podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(mContext.get()), podcast.getChannel().getThumbnailName(), mContext.get().getResources().getInteger(R.integer.podcast_art_download_width));
+            }
+
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("last_thumbnail_sync_date", new Date().toString());
+            editor.apply();
+
+            return null;
+        }
+
+        protected void onPostExecute(Void param)
+        {
+            //Utilities.showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
+            mResponse.processFinish();
+        }
+    }
+
+
+    public static class SyncPodcasts extends AsyncTask<Void, String, Void> {
         private int mPodcastId, mNewEpisodes, mDownloadCount;
         private int[] mQuantities;
         private Interfaces.BackgroundSyncResponse mResponse;
         private Boolean mDisableToast;
+        private Preference mPreference = null;
 
         public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Interfaces.BackgroundSyncResponse response) {
             mContext = new WeakReference<>(context);
@@ -320,10 +394,26 @@ public class AsyncTasks {
             mDisableToast = disableToast;
         }
 
+        public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Preference preference, final Interfaces.BackgroundSyncResponse response) {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+            mPodcastId = podcastId;
+            mDisableToast = disableToast;
+            mPreference = preference;
+        }
+
         @Override
         protected void onPreExecute() {
-            if (mDisableToast == false)
+            if (!mDisableToast)
                 showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_started));
+        }
+
+        @Override
+        protected void onProgressUpdate(String... podcast) {
+            super.onProgressUpdate(podcast);
+
+            if (podcast != null && podcast.length > 0)
+                mPreference.setSummary(podcast[0]);
         }
 
         @Override
@@ -331,10 +421,11 @@ public class AsyncTasks {
             mQuantities = new int[1];
             mNewEpisodes = 0;
             mDownloadCount = 0;
+            final Context ctx = mContext.get();
             if (mPodcastId > 0)
             {
-                final PodcastItem podcast = GetPodcast(mContext.get(), mPodcastId);
-                mQuantities = ProcessEpisodes(mContext.get(), podcast);
+                final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
+                mQuantities = ProcessEpisodes(ctx, podcast);
                 mNewEpisodes = mNewEpisodes + mQuantities[0];
                 mDownloadCount = mDownloadCount + mQuantities[1];
             }
@@ -343,13 +434,16 @@ public class AsyncTasks {
                 final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
 
                 for (final PodcastItem podcast : podcasts) {
-                    mQuantities = ProcessEpisodes(mContext.get(), podcast);
+                    if (mPreference != null)
+                        publishProgress(podcast.getChannel().getTitle());
+
+                    mQuantities = ProcessEpisodes(ctx, podcast);
                     mNewEpisodes = mNewEpisodes + mQuantities[0];
                     mDownloadCount = mDownloadCount + mQuantities[1];
                 }
             }
 
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putString("last_podcast_sync_date", new Date().toString());
             editor.apply();
@@ -407,62 +501,6 @@ public class AsyncTasks {
             return null;
         }
 
-    }
-
-    public static class SyncArt extends AsyncTask<Void, Void, Void>
-    {
-        private Interfaces.AsyncResponse mResponse;
-
-        public SyncArt(final Context context, final Interfaces.AsyncResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //Utilities.showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_started));
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            final File dirThumbs = new File(GetThumbnailDirectory(mContext.get()));
-
-            final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
-
-            if (dirThumbs.exists() == false)
-               dirThumbs.mkdirs();
-            else {
-                for (final PodcastItem podcast : podcasts)
-                {
-                    if (podcast.getChannel() != null && podcast.getChannel().getThumbnailName() != null) {
-                        final File thumb = new File(dirThumbs, podcast.getChannel().getThumbnailName());
-
-                        if (thumb.exists())
-                            thumb.delete();
-                    }
-                }
-            }
-
-            for (final PodcastItem podcast : podcasts) {
-                if (podcast.getChannel().getThumbnailUrl() != null)
-                    CommonUtils.SavePodcastLogo(mContext.get(), podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(mContext.get()), podcast.getChannel().getThumbnailName(), mContext.get().getResources().getInteger(R.integer.podcast_art_download_width));
-            }
-
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
-            final SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("last_thumbnail_sync_date", new Date().toString());
-            editor.apply();
-
-            return null;
-        }
-
-        protected void onPostExecute(Void param)
-        {
-            //Utilities.showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
-            mResponse.processFinish();
-        }
     }
 
     public static class GetPodcastEpisodes extends AsyncTask<Void, Void, Void> {
