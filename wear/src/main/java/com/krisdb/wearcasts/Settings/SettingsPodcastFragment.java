@@ -3,6 +3,7 @@ package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,8 +11,15 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v14.preference.SwitchPreference;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
+<<<<<<< HEAD
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -19,11 +27,17 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+=======
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
+>>>>>>> parent of 638f5a8... preferences update
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -36,7 +50,7 @@ import java.util.List;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 
-public class SettingsPodcastFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
     private int mPodcastId;
@@ -57,11 +71,6 @@ public class SettingsPodcastFragment extends PreferenceFragmentCompat implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
-
         addPreferencesFromResource(R.xml.settings_podcast);
 
         mActivity = getActivity();
@@ -81,7 +90,26 @@ public class SettingsPodcastFragment extends PreferenceFragmentCompat implements
         etRename.setText(mPodcast.getChannel().getTitle());
         etRename.setTitle(mPodcast.getChannel().getTitle());
         etRename.setSummary(R.string.rename);
+        etRename.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
         etRename.setOrder(count++);
+<<<<<<< HEAD
+=======
+
+        etRename.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE){
+                    etRename.setText(v.getText().toString());
+                    etRename.setTitle(v.getText().toString());
+                    CacheUtils.deletePodcastsCache(mActivity);
+                    etRename.onClick(etRename.getDialog(), Dialog.BUTTON_POSITIVE);
+                    etRename.getDialog().dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+>>>>>>> parent of 638f5a8... preferences update
 
         etRename.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

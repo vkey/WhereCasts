@@ -5,10 +5,10 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.ListPreference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
-public class SettingsPodcastsEpisodesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastsEpisodesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     //private Activity mActivity;
 
@@ -26,10 +26,6 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragmentCompat i
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-      }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings_podcasts_episodes);
 
         final Activity mActivity = getActivity();

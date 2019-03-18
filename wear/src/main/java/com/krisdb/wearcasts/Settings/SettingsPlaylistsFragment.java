@@ -1,15 +1,19 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -19,17 +23,12 @@ import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
-public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPlaylistsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings_playlists);
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
@@ -48,6 +47,35 @@ public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implemen
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
+<<<<<<< HEAD
+=======
+                et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+                et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            final String text = v.getText().toString();
+
+                            if (text.length() == 0) {
+                                CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+                                return true;
+                            }
+                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+
+                            db.updatePlaylist(text, playlist.getID());
+                            db.close();
+
+                            et.setText(text);
+                            et.setTitle(text);
+                            et.onClick(et.getDialog(), Dialog.BUTTON_POSITIVE);
+                            et.getDialog().dismiss();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+>>>>>>> parent of 638f5a8... preferences update
                 category.addPreference(et);
             }
         }

@@ -19,6 +19,7 @@
         <item name="android:background">@color/wc_background_amoled</item>
     </style>
 
+<<<<<<< HEAD
     <style name="PreferenceMain" parent="Main">
         <item name="android:paddingTop">1dp</item>
         <item name="android:paddingBottom">1dp</item>
@@ -41,6 +42,8 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
+=======
+>>>>>>> parent of 638f5a8... preferences update
     <style name="podcast_list_unread_count">
         <item name="android:textSize">11sp</item>
         <item name="android:padding">3dp</item>

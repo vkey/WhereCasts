@@ -71,25 +71,6 @@ public class Enums {
         }
     }
 
-    public enum PreferenceThemeOptions
-    {
-        DEFAULT (0),
-        DARK (1),
-        LIGHT (2),
-        AMOLED(3),
-        DYNAMIC (4);
-
-        private final int theme;
-
-        PreferenceThemeOptions(int theme) {
-            this.theme = theme;
-        }
-
-        public int getThemeId() {
-            return this.theme;
-        }
-    }
-
     public enum FontSize
     {
         SMALL (0),
