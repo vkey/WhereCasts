@@ -18,6 +18,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -81,30 +82,6 @@ public class SettingsPodcastFragment extends PreferenceFragmentCompat implements
         etRename.setTitle(mPodcast.getChannel().getTitle());
         etRename.setSummary(R.string.rename);
         etRename.setOrder(count++);
-        etRename.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                return false;
-            }
-        });
-
-    /*
-        etRename.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
-        etRename.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    etRename.setText(v.getText().toString());
-                    etRename.setTitle(v.getText().toString());
-                    CacheUtils.deletePodcastsCache(mActivity);
-                    etRename.onClick(etRename.getDialog(), Dialog.BUTTON_POSITIVE);
-                    etRename.getDialog().dismiss();
-                    return true;
-                }
-                return false;
-            }
-        });
-        */
 
         etRename.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -130,7 +107,7 @@ public class SettingsPodcastFragment extends PreferenceFragmentCompat implements
             }
         });
 
-        final SwitchPreference cbAutoDownload = new SwitchPreference(mActivity);
+        final SwitchPreferenceCompat cbAutoDownload = new SwitchPreferenceCompat(mActivity);
         cbAutoDownload.setTitle(R.string.settings_podcast_label_autodownload);
         cbAutoDownload.setKey("pref_" + mPodcastId + "_auto_download");
         cbAutoDownload.setChecked(false);

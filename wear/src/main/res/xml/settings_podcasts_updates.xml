@@ -4,13 +4,13 @@
 
     <PreferenceCategory android:title="@string/settings_podcasts_settings_updates_display">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="syncOnStart"
             android:title="@string/settings_podcasts_label_sync_startup"
             android:defaultValue="false"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="updatesEnabled"
             android:title="@string/settings_podcasts_label_updates_enabled"
             android:defaultValue="true"
@@ -23,19 +23,21 @@
             android:entryValues="@array/interval_values"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:defaultValue="@integer/default_update_interval"
+            android:dependency="updatesEnabled"
             />
 
         <CheckBoxPreference
             android:key="updateCharging"
             android:title="@string/settings_podcasts_label_updates_charging"
             android:defaultValue="true"
+            android:dependency="updatesEnabled"
             />
 
-
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_updates_new_episodes_sound"
             android:title="@string/settings_podcasts_label_updates_sound"
             android:defaultValue="true"
+            android:dependency="updatesEnabled"
             />
 
         <ListPreference
@@ -44,6 +46,7 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
+            android:dependency="updatesEnabled"
             />
 
         <ListPreference
@@ -52,6 +55,7 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
+            android:dependency="updatesEnabled"
             />
 
         <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />

@@ -277,7 +277,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat im
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-
+/*
         if (key.equals("pref_updates_new_episodes_sound")) {
             final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_updates_new_episodes_sound");
 
@@ -317,5 +317,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat im
 
 
         SetContent();
+        */
     }
 }

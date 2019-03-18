@@ -48,42 +48,6 @@ public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implemen
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
-                et.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
-
-                        return false;
-                    }
-                });
-                /*
-                et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-                et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            final String text = v.getText().toString();
-
-                            if (text.length() == 0) {
-                                CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
-                                return true;
-                            }
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-
-                            db.updatePlaylist(text, playlist.getID());
-                            db.close();
-
-                            et.setText(text);
-                            et.setTitle(text);
-                            et.onClick(et.getDialog(), Dialog.BUTTON_POSITIVE);
-                            et.getDialog().dismiss();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                */
                 category.addPreference(et);
             }
         }
