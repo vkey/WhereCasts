@@ -15,4 +15,6 @@ public abstract class BasePreferenceActivity extends FragmentActivity {
 
         return theme;
     }
+
+
 }

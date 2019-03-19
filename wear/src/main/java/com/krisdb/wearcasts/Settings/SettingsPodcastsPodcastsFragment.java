@@ -1,17 +1,17 @@
 package com.krisdb.wearcasts.Settings;
 
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsPodcastsPodcastsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastsPodcastsFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

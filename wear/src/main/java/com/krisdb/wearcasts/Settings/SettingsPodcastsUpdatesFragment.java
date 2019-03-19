@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Settings;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -30,7 +30,7 @@ import androidx.preference.SwitchPreference;
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
-public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastsUpdatesFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
     private Boolean mNoResume = false;

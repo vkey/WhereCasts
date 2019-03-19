@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 
@@ -18,7 +19,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
-public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPlaylistsFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     private Activity mActivity;
 
     @Override

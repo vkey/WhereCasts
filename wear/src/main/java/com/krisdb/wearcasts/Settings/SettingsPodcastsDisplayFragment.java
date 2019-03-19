@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
 
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -23,7 +24,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
-public class SettingsPodcastsDisplayFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastsDisplayFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
 
@@ -41,7 +42,7 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragmentCompat im
         mActivity = getActivity();
         final Resources resources = getResources();
 
-        final PreferenceCategory category = (PreferenceCategory)findPreference("display_settings");
+        final PreferenceCategory category = findPreference("display_settings");
 
         final List<PlaylistItem> playlists = getPlaylists(mActivity, false);
         int size = playlists.size();

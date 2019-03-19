@@ -396,7 +396,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             else
                 paramsLayout.setMargins(0, 10, 0, 0);
 
-        } else //EPISODE
+        }
+        else //EPISODE
         {
             title.setVisibility(View.VISIBLE);
             date.setVisibility(View.VISIBLE);
@@ -455,11 +456,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 else
                     paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
 
-            } else if (isXHDPI) {
-                paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
-            } else {
-                paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
             }
+            else if (isXHDPI)
+                paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
+            else
+                paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
         }
     }
 

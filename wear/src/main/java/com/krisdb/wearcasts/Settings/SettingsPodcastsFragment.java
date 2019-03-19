@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -25,7 +26,7 @@ import androidx.preference.PreferenceManager;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
+public class SettingsPodcastsFragment extends BasePreferenceFragmentCompat {
 
     private Activity mActivity;
     private static WeakReference<FragmentActivity> mActivityRef;
@@ -33,7 +34,6 @@ public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
     }

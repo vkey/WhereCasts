@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:key="display_settings" android:title="@string/settings_podcasts_settings_title_display">
 
@@ -12,6 +13,7 @@
             android:defaultValue="0"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:foreground="?android:attr/selectableItemBackground"
+            app:iconSpaceReserved="false"
             />
 
         <ListPreference
@@ -21,6 +23,7 @@
             android:entryValues="@array/header_color_values"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:defaultValue="10"
+            app:iconSpaceReserved="false"
             />
 
         <!--
@@ -50,4 +53,4 @@
 
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

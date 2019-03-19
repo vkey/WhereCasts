@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -24,7 +25,7 @@ import androidx.preference.SwitchPreference;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
 
-public class SettingsPodcastsDownloadsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener  {
+public class SettingsPodcastsDownloadsFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener  {
     private static WeakReference<FragmentActivity> mActivityRef;
 
    @Override

@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Settings;
 
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.os.SystemClock;
 import android.support.wearable.input.WearableButtons;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -16,7 +16,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsPodcastsPlaybackFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsPodcastsPlaybackFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
 
