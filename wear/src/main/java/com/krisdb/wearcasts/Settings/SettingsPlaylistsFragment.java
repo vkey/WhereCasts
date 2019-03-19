@@ -1,11 +1,24 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+<<<<<<< HEAD
 
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
+=======
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
+
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+>>>>>>> parent of 638f5a8... preferences update
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 
@@ -19,16 +32,23 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
+<<<<<<< HEAD
 public class SettingsPlaylistsFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+=======
+public class SettingsPlaylistsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+>>>>>>> parent of 638f5a8... preferences update
     private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+=======
+>>>>>>> parent of 638f5a8... preferences update
         addPreferencesFromResource(R.xml.settings_playlists);
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
@@ -47,7 +67,10 @@ public class SettingsPlaylistsFragment extends BasePreferenceFragmentCompat impl
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
+<<<<<<< HEAD
                 /*
+=======
+>>>>>>> parent of 638f5a8... preferences update
                 et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
                 et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -74,7 +97,6 @@ public class SettingsPlaylistsFragment extends BasePreferenceFragmentCompat impl
                         return false;
                     }
                 });
-                */
                 category.addPreference(et);
             }
         }

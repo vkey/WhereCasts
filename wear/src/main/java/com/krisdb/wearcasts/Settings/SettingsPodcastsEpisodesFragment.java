@@ -4,6 +4,13 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+<<<<<<< HEAD
+=======
+import android.preference.ListPreference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.support.v4.content.ContextCompat;
+>>>>>>> parent of 638f5a8... preferences update
 
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -19,7 +26,11 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
+<<<<<<< HEAD
 public class SettingsPodcastsEpisodesFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+=======
+public class SettingsPodcastsEpisodesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+>>>>>>> parent of 638f5a8... preferences update
 
     //private Activity mActivity;
 
@@ -27,11 +38,14 @@ public class SettingsPodcastsEpisodesFragment extends BasePreferenceFragmentComp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+<<<<<<< HEAD
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
+=======
+>>>>>>> parent of 638f5a8... preferences update
         addPreferencesFromResource(R.xml.settings_podcasts_episodes);
 
         final Activity mActivity = getActivity();

@@ -7,7 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.view.WindowManager;
+=======
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
+>>>>>>> parent of 638f5a8... preferences update
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
@@ -30,20 +39,32 @@ import androidx.preference.SwitchPreference;
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
+<<<<<<< HEAD
 public class SettingsPodcastsUpdatesFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
     private Boolean mNoResume = false;
     private static WeakReference<FragmentActivity> mActivityRef;
+=======
+public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private Activity mActivity;
+    private Boolean mNoResume = false;
+    private static WeakReference<Activity> mActivityRef;
+>>>>>>> parent of 638f5a8... preferences update
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
 
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+=======
+
+>>>>>>> parent of 638f5a8... preferences update
         addPreferencesFromResource(R.xml.settings_podcasts_updates);
         mActivityRef = new WeakReference<>(getActivity());
 

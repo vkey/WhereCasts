@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.krisdb.wearcasts.Activities.BasePreferenceActivity;
 
-public class SettingsPodcastsPlaybackActivity extends BasePreferenceActivity {
+public class SettingsPodcastsGeneralActivity extends BasePreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,7 +15,7 @@ public class SettingsPodcastsPlaybackActivity extends BasePreferenceActivity {
         final FragmentManager fm = getFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
 
-        final SettingsPodcastsPlaybackFragment pf = new SettingsPodcastsPlaybackFragment();
+        final SettingsPodcastsGeneralFragment pf = new SettingsPodcastsGeneralFragment();
         ft.replace(android.R.id.content, pf);
         ft.commit();
     }
