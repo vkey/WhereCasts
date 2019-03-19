@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.media.MediaBrowserCompat;
@@ -55,6 +56,8 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
+import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -107,7 +110,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private DownloadManager mDownloadManager;
 
     private String mLocalFile;
-    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
+    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID, mFailedCount;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
 
@@ -358,7 +361,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
            }
        }
         else {
-            mEpisodeID = -1;
            SetContent();
        }
     }
@@ -616,69 +618,20 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mVolumeUp.setVisibility(View.GONE);
                         mDownloadManager.remove(mDownloadId);
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        Utilities.DeleteMediaFile(mContext, mEpisode);
-
                         if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
-                            final int count = prefs.getInt("downloads_" + mEpisode.getEpisodeId(), 0);
-                            if (count < 10) {
-                                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
-                                mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        CancelDownload();
-                                    }
-                                });
-                                mDownloadStartTime = System.nanoTime();
-                                Utilities.startDownload(mContext, mEpisode);
-                                editor.putInt("downloads_" + mEpisode.getEpisodeId(), count + 1);
-                                showToast(mContext, mContext.getString(R.string.alert_download_error_restart));
-                            } else {
-                                editor.putInt("downloads_" + mEpisode.getEpisodeId(), 0);
-                                final int downloadCount = prefs.getInt("new_downloads_count", 0);
-
-                                if (downloadCount > 0)
-                                    editor.putInt("new_downloads_count", downloadCount - 1);
-
-                                showToast(mContext, mContext.getString(R.string.alert_download_error_failed));
-                                {
-                                    mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-                                    mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            handleNetwork(true);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        else
-                        {
-                            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                            SystemClock.sleep(200);
+                            mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
+                            mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+                            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                             mDownloadImage.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    handleNetwork(true);
+                                    CancelDownload();
                                 }
                             });
-
-                            final int downloadCount = prefs.getInt("new_downloads_count", 0);
-
-                            if (downloadCount > 0)
-                                editor.putInt("new_downloads_count", downloadCount - 1);
+                            mDownloadStartTime = System.nanoTime();
                         }
-                        editor.apply();
-                        /*
-                        if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
-                            SystemClock.sleep(3000);
-                            mDownloadId = GetDownloadIDByEpisode(mContext, mEpisode);
-                            mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
-                        }
-                        else {
-                            showToast(mActivity, Utilities.GetDownloadErrorReason(mContext, reason));
-                            mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
-                        }
-                        */
+                        break;
                     case DownloadManager.STATUS_SUCCESSFUL:
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
                         mPlayPauseImage.setVisibility(View.VISIBLE);
@@ -696,15 +649,38 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             }
                         });
                         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                        break;
                 }
             }
             cursor.close();
         }
     };
 
+    private Runnable failedDownload = new Runnable() {
+        @Override
+        public void run() {
+            final int newId = EpisodeUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
+            Log.d(mContext.getPackageName(), "[Download] New ID: " + newId);
+            Log.d(mContext.getPackageName(), "[Download] Episode ID (Activity): " + mEpisode.getEpisodeId());
+
+            if (mFailedCount > 10)
+                mDownloadProgressHandler.removeCallbacksAndMessages(failedDownload);
+            else if (newId == 0 || newId == mDownloadId) {
+                mDownloadProgressHandler.postDelayed(failedDownload, 1000);
+                mFailedCount++;
+            }
+            else {
+                mDownloadId = newId;
+                Utilities.DeleteMediaFile(mContext, mEpisode);
+                Log.d(mContext.getPackageName(), "[Download] Download ID (new): " + mDownloadId);
+                mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+                mDownloadProgressHandler.removeCallbacksAndMessages(failedDownload);
+            }
+        }
+    };
+
     private void DownloadEpisode() {
         mDownloadId = Utilities.startDownload(mContext, mEpisode);
-
         mPlayPauseImage.setVisibility(View.INVISIBLE);
         mDownloadSpeed.setVisibility(View.VISIBLE);
         mDownloadStartTime = System.nanoTime();
@@ -719,6 +695,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         });
         mProgressCircleLoading.setVisibility(View.VISIBLE);
         showToast(mActivity, getString(R.string.alert_episode_download_start));
+        Log.d(mContext.getPackageName(), "[Download] Download ID (initial): " + mDownloadId);
+
         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
     }
 
@@ -758,6 +736,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     }
 
     private void handleNetwork(final Boolean download) {
+        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -766,7 +745,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), download ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), download ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -787,7 +766,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), download ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), download ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -798,6 +777,27 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         dialog.dismiss();
                     }
                 }).show();
+            }
+        }
+        else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (download)
+                            DownloadEpisode();
+                        else
+                            StreamEpisode();
+                        dialog.dismiss();
+                    }
+                });
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("initialDownload", false);
+                editor.apply();
             }
         }
         else {

@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -27,6 +28,7 @@ import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
+import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
@@ -84,8 +86,25 @@ public class DownloadReceiver extends BroadcastReceiver {
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();
                     }
-                } else if (status == DownloadManager.STATUS_FAILED) {
+                } else if (status == DownloadManager.STATUS_FAILED) { //FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED
+                    clearFailedDownload(context, episode);
+                    final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
 
+                    final SharedPreferences.Editor editor = prefs.edit();
+
+                    if (prefs.getBoolean("pref_downloads_restart_on_failure", true) && downloadCount < 10) {
+                        long id = Utilities.startDownload(context, episode);
+                        Log.d(context.getPackageName(), "[Download] Download ID (Receiver): " + id);
+                        editor.putInt("downloads_" + episode.getEpisodeId(), downloadCount + 1);
+                        editor.apply();
+                        showToast(context, context.getString(R.string.alert_download_error_restart));
+                    }
+                    else {
+                        showToast(context, context.getString(R.string.alert_download_error_failed));
+                        editor.putInt("downloads_" + episode.getEpisodeId(), 0);
+                    }
+
+                    editor.apply();
                 }
             }
 
@@ -151,6 +170,5 @@ public class DownloadReceiver extends BroadcastReceiver {
             editor.putInt("new_downloads_count", downloadCount - 1);
             editor.apply();
         }
-
     }
 }
