@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -169,6 +170,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final PodcastItem episode = GetEpisode(mContext, episodeId);
 
         final int downloadId = Utilities.getDownloadId(mContext, episodeId);
+        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (downloadId > 0) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -264,7 +266,26 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     }
                 }).show();
             }
-        } else
+        }
+        else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadEpisode(position, episode);
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("initialDownload", false);
+                editor.apply();
+            }
+        }
+        else
             downloadEpisode(position, episode);
     }
 

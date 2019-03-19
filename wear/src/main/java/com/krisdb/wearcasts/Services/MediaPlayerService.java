@@ -373,7 +373,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mMediaPlayer.setDataSource(uri.toString());
                 }
 
-                if (!mEpisode.getIsDownloaded() && mLocalFile == null) {
+                if (mLocalFile != null)
+                    mMediaPlayer.prepare();
+                else if (!mEpisode.getIsDownloaded()) {
                     mMediaPlayer.prepareAsync();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {

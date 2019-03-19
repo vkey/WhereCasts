@@ -57,7 +57,6 @@ import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
-import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -641,7 +640,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mEpisode.setIsDownloaded(true);
-
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -653,29 +651,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 }
             }
             cursor.close();
-        }
-    };
-
-    private Runnable failedDownload = new Runnable() {
-        @Override
-        public void run() {
-            final int newId = EpisodeUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
-            Log.d(mContext.getPackageName(), "[Download] New ID: " + newId);
-            Log.d(mContext.getPackageName(), "[Download] Episode ID (Activity): " + mEpisode.getEpisodeId());
-
-            if (mFailedCount > 10)
-                mDownloadProgressHandler.removeCallbacksAndMessages(failedDownload);
-            else if (newId == 0 || newId == mDownloadId) {
-                mDownloadProgressHandler.postDelayed(failedDownload, 1000);
-                mFailedCount++;
-            }
-            else {
-                mDownloadId = newId;
-                Utilities.DeleteMediaFile(mContext, mEpisode);
-                Log.d(mContext.getPackageName(), "[Download] Download ID (new): " + mDownloadId);
-                mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
-                mDownloadProgressHandler.removeCallbacksAndMessages(failedDownload);
-            }
         }
     };
 
@@ -781,8 +756,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
                 alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
                 alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
@@ -793,7 +767,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             StreamEpisode();
                         dialog.dismiss();
                     }
-                });
+                }).show();
 
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("initialDownload", false);
