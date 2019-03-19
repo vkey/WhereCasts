@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts.Settings;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,28 +8,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-<<<<<<< HEAD
-<<<<<<< HEAD
-import android.view.WindowManager;
-=======
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
->>>>>>> parent of 638f5a8... preferences update
-=======
-import android.preference.PreferenceManager;
-import android.support.v14.preference.SwitchPreference;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
->>>>>>> parent of 16d73e0... revet
+import android.provider.Settings;
+import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
-import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -38,57 +26,19 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
-
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-public class SettingsPodcastsUpdatesFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private Activity mActivity;
-    private Boolean mNoResume = false;
-    private static WeakReference<FragmentActivity> mActivityRef;
-=======
 public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
     private Boolean mNoResume = false;
     private static WeakReference<Activity> mActivityRef;
->>>>>>> parent of 638f5a8... preferences update
-=======
-public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private Activity mActivity;
-    private Boolean mNoResume = false;
-    private static WeakReference<android.support.v4.app.FragmentActivity> mActivityRef;
->>>>>>> parent of 16d73e0... revet
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-=======
-
->>>>>>> parent of 638f5a8... preferences update
-=======
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
->>>>>>> parent of 16d73e0... revet
         addPreferencesFromResource(R.xml.settings_podcasts_updates);
         mActivityRef = new WeakReference<>(getActivity());
 
@@ -183,7 +133,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat im
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), syncPodcasts ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -203,7 +153,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat im
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), syncPodcasts ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -217,17 +167,17 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragmentCompat im
             }
         } else {
 
-                findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                SetContent();
-                                setDeleteThumbnailsTitle();
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
+            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {
+                            SetContent();
+                            setDeleteThumbnailsTitle();
+                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

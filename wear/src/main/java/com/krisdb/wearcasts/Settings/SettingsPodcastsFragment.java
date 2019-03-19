@@ -8,66 +8,33 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-<<<<<<< HEAD
-<<<<<<< HEAD
-import android.view.WindowManager;
-=======
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
->>>>>>> parent of 638f5a8... preferences update
-=======
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
->>>>>>> parent of 16d73e0... revet
+import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
-import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import java.lang.ref.WeakReference;
-
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SettingsPodcastsFragment extends BasePreferenceFragmentCompat {
-=======
 public class SettingsPodcastsFragment extends PreferenceFragment {
->>>>>>> parent of 638f5a8... preferences update
-=======
-public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
->>>>>>> parent of 16d73e0... revet
 
     private Activity mActivity;
-    private static WeakReference<FragmentActivity> mActivityRef;
+    private static WeakReference<Activity> mActivityRef;
     private Boolean mNoResume = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-=======
->>>>>>> parent of 638f5a8... preferences update
-=======
-   }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
->>>>>>> parent of 16d73e0... revet
         addPreferencesFromResource(R.xml.settings_podcasts);
         mActivityRef = new WeakReference<>(getActivity());
 
@@ -140,7 +107,7 @@ public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
                         dialog.dismiss();
                     }
                 });
@@ -160,7 +127,7 @@ public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
                         dialog.dismiss();
                     }
                 });
@@ -173,16 +140,16 @@ public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
                 }).show();
             }
         } else {
-                findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int episodeCount, final int downloadCount) {
-                                SetContent(episodeCount);
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
+            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
+                    new Interfaces.BackgroundSyncResponse() {
+                        @Override
+                        public void processFinish(final int episodeCount, final int downloadCount) {
+                            SetContent(episodeCount);
+                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -202,6 +169,12 @@ public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private void SetContent(final int newEpisodes)

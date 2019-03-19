@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -22,9 +24,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
-
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SearchEpisodes;
@@ -309,7 +308,6 @@ public class AsyncTasks {
         }
     }
 
-
     public static class SyncArt extends AsyncTask<Void, String, Void>
     {
         private Interfaces.AsyncResponse mResponse;
@@ -378,7 +376,6 @@ public class AsyncTasks {
             mResponse.processFinish();
         }
     }
-
 
     public static class SyncPodcasts extends AsyncTask<Void, String, Void> {
         private int mPodcastId, mNewEpisodes, mDownloadCount;
@@ -461,7 +458,6 @@ public class AsyncTasks {
             mResponse.processFinish(mNewEpisodes, mDownloadCount);
         }
     }
-
     public static class SyncWithMobileDevice extends AsyncTask<Void, Void, Void> {
 
         private PodcastItem mEpisode;

@@ -253,7 +253,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <android.support.wear.widget.drawer.WearableNavigationDrawerView
+    <androidx.wear.widget.drawer.WearableNavigationDrawerView
         android:id="@+id/drawer_nav_episode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

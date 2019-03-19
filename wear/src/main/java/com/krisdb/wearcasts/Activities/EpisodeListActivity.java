@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -115,7 +116,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
                                 dialog.dismiss();
                             }
                         });
@@ -136,7 +137,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), 1);
+                                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
                                 dialog.dismiss();
                             }
                         });

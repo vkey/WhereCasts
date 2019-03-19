@@ -96,7 +96,6 @@
                     android:id="@+id/ic_podcast_episode_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="9dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="?android:attr/selectableItemBackground"
@@ -106,7 +105,6 @@
                     android:id="@+id/podcast_episode_progress_loading"
                     android:layout_width="37dp"
                     android:layout_height="37dp"
-                    android:layout_marginEnd="3dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:indeterminate="true"
@@ -120,7 +118,6 @@
                     android:id="@+id/podcast_episode_progress_circle"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_marginEnd="-16dp"
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="@color/wc_transparent"
@@ -223,7 +220,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/podcast_episode_info_layout"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
                 android:layout_marginBottom="10dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_action_episode_volume"
@@ -255,7 +251,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <android.support.wear.widget.drawer.WearableNavigationDrawerView
+    <androidx.wear.widget.drawer.WearableNavigationDrawerView
         android:id="@+id/drawer_nav_episode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -45,8 +45,7 @@
     <string name="confirm_delete_episode_download">Löschen Sie den Herunterladen dieser Episode?</string>
     <string name="confirm_delete_podcast">Abonnement von diesem Podcast abbestellen?</string>
 
-    <string name="confirm_initial_download_message">Herunterladen über WiFi oder Mobilfunk wird empfohlen Möchten Sie Bluetooth bei jedem Download deaktivieren (dies kann in den Einstellungen geändert werden)?</string>
-
+    <string name="confirm_initial_download_message">Das Herunterladen über Bluetooth kann langsam und unzuverlässig sein.\nDas Herunterladen über WLAN oder Mobilfunk wird empfohlen.</string>
     <string name="confirm_mark_played">Als gespielt markieren?</string>
     <string name="confirm_mark_unplayed">Als nicht abgespielt markieren?</string>
 

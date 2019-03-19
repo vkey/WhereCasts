@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Supprimer le téléchargement de cet épisode?</string>
     <string name="confirm_delete_podcast">Se désabonner de ce podcast?</string>
 
-    <string name="confirm_initial_download_message">Le téléchargement sur WiFi ou cellulaire est recommandé. Voulez-vous désactiver Bluetooth à chaque téléchargement (cela peut être modifié dans les paramètres)?</string>
+    <string name="confirm_initial_download_message">Le téléchargement via Bluetooth peut être lent et peu fiable.\nLe téléchargement via WiFi ou cellulaire est recommandé.</string>
 
     <string name="confirm_mark_played">Marquer comme joué?</string>
     <string name="confirm_mark_unplayed">Marquer comme non joué?</string>

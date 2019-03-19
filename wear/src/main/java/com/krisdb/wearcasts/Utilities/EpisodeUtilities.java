@@ -127,7 +127,7 @@ public class EpisodeUtilities {
         return episodes;
     }
 
-    static int GetDownloadIDByEpisode(final Context ctx, final PodcastItem episode) {
+    public static int GetDownloadIDByEpisode(final Context ctx, final PodcastItem episode) {
         int downloadId = -1;
 
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);

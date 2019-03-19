@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">このエピソードのダウンロードを削除しますか?</string>
     <string name="confirm_delete_podcast">このポッドキャストの購読を停止するには?</string>
 
-    <string name="confirm_initial_download_message">WiFiまたは携帯電話でのダウンロードをお勧めします.ダウンロードするたびにBluetoothを無効にしますか？これは設定で変更できます.?</string>
+    <string name="confirm_initial_download_message">Bluetooth経由でダウンロードするのは遅くて信頼できない場合があります。.\nWiFiまたは携帯電話を介してダウンロードすることをお勧めします.</string>
 
     <string name="confirm_mark_played">演奏としてマークしますか?</string>
     <string name="confirm_mark_unplayed">再生されていないとマークしますか?</string>

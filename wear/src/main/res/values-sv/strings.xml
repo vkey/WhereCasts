@@ -45,8 +45,7 @@
     <string name="confirm_delete_episode_download">Ta bort den här episodens nedladdning?</string>
     <string name="confirm_delete_podcast">Avsluta prenumerationen från den här podcasten?</string>
 
-    <string name="confirm_initial_download_message">Nedladdning via WiFi eller mobil rekommenderas. Vill du avaktivera Bluetooth när du laddar ner (det här kan ändras i inställningarna)?</string>
-
+    <string name="confirm_initial_download_message">Nedladdning via Bluetooth kan vara långsam och opålitlig.\nNedladdning via WiFi eller mobil rekommenderas.</string>
     <string name="confirm_mark_played">Markera som spelat?</string>
     <string name="confirm_mark_unplayed">Markera som ospelad?</string>
 

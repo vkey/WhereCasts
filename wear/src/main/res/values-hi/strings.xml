@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">इस एपिसोड के डाउनलोड को हटाएं?</string>
     <string name="confirm_delete_podcast">इस पॉडकास्ट से सदस्यता रद्द करें?</string>
 
-    <string name="confirm_initial_download_message">वाईफाई या सेलुलर पर डाउनलोड करने की अनुशंसा की जाती है। क्या आप डाउनलोड करते समय ब्लूटूथ को अक्षम करना चाहते हैं (इसे सेटिंग्स में बदला जा सकता है)?</string>
+    <string name="confirm_initial_download_message">ब्लूटूथ पर डाउनलोड करना धीमा और अविश्वसनीय हो सकता है.\nवाईफाई या सेलुलर पर डाउनलोड करने की सिफारिश की जाती है.</string>
 
     <string name="confirm_mark_played">चिह्नित के रूप में चिह्नित करें?</string>
     <string name="confirm_mark_unplayed">अनप्लेड के रूप में चिह्नित करें?</string>

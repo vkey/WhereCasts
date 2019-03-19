@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Delete this episode\'s download?</string>
     <string name="confirm_delete_podcast">Unsubscribe from this podcast?</string>
 
-    <string name="confirm_initial_download_message">Downloading over WiFi or cellular is recommended. Would you like to disable Bluetooth whenever you download (this can be changed in the settings)?</string>
+    <string name="confirm_initial_download_message">Downloading over Bluetooth can be slow and unreliable.\nDownloading over WiFi or cellular is recommended.</string>
 
     <string name="confirm_mark_played">Mark as played?</string>
     <string name="confirm_mark_unplayed">Mark as unplayed?</string>
