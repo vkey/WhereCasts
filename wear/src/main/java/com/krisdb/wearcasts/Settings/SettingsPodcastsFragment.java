@@ -9,11 +9,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import android.view.WindowManager;
 =======
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 >>>>>>> parent of 638f5a8... preferences update
+=======
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+>>>>>>> parent of 16d73e0... revet
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
@@ -22,6 +27,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 import java.lang.ref.WeakReference;
 
@@ -36,6 +42,9 @@ public class SettingsPodcastsFragment extends BasePreferenceFragmentCompat {
 =======
 public class SettingsPodcastsFragment extends PreferenceFragment {
 >>>>>>> parent of 638f5a8... preferences update
+=======
+public class SettingsPodcastsFragment extends PreferenceFragmentCompat {
+>>>>>>> parent of 16d73e0... revet
 
     private Activity mActivity;
     private static WeakReference<FragmentActivity> mActivityRef;
@@ -46,12 +55,19 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 =======
 >>>>>>> parent of 638f5a8... preferences update
+=======
+   }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+>>>>>>> parent of 16d73e0... revet
         addPreferencesFromResource(R.xml.settings_podcasts);
         mActivityRef = new WeakReference<>(getActivity());
 

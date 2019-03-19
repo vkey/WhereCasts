@@ -1,10 +1,10 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
@@ -19,6 +19,14 @@ import android.widget.TextView;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 >>>>>>> parent of 638f5a8... preferences update
+=======
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+
+>>>>>>> parent of 16d73e0... revet
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 
@@ -33,15 +41,20 @@ import androidx.preference.PreferenceFragmentCompat;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class SettingsPlaylistsFragment extends BasePreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 =======
 public class SettingsPlaylistsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 >>>>>>> parent of 638f5a8... preferences update
+=======
+public class SettingsPlaylistsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+>>>>>>> parent of 16d73e0... revet
     private Activity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
 <<<<<<< HEAD
     }
 
@@ -49,6 +62,13 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 =======
 >>>>>>> parent of 638f5a8... preferences update
+=======
+
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+>>>>>>> parent of 16d73e0... revet
         addPreferencesFromResource(R.xml.settings_playlists);
 
         final PreferenceCategory category = (PreferenceCategory)findPreference("playlist_settings");
@@ -67,6 +87,7 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                 et.setText(playlist.getName());
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 /*
@@ -113,6 +134,8 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
 =======
                 */
 >>>>>>> parent of 4ed3b6d... updates
+=======
+>>>>>>> parent of 16d73e0... revet
                 category.addPreference(et);
             }
         }

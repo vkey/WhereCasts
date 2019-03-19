@@ -1,8 +1,6 @@
 package com.krisdb.wearcasts.Settings;
 
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.krisdb.wearcasts.Activities.BasePreferenceActivity;
@@ -13,6 +11,7 @@ public class SettingsPodcastsDownloadsActivity extends BasePreferenceActivity {
         super.onCreate(savedInstanceState);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsPodcastsDownloadsFragment()).commit();
 =======
         final FragmentManager fm = getFragmentManager();
@@ -22,5 +21,9 @@ public class SettingsPodcastsDownloadsActivity extends BasePreferenceActivity {
         ft.replace(android.R.id.content, pf);
         ft.commit();
 >>>>>>> parent of 638f5a8... preferences update
+=======
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsPodcastsDownloadsFragment()).commit();
+
+>>>>>>> parent of 16d73e0... revet
     }
 }

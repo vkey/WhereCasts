@@ -5,11 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 >>>>>>> parent of 638f5a8... preferences update
+=======
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+>>>>>>> parent of 16d73e0... revet
 import android.support.wearable.input.WearableButtons;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -19,6 +25,7 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -27,6 +34,9 @@ public class SettingsPodcastsPlaybackFragment extends BasePreferenceFragmentComp
 =======
 public class SettingsPodcastsPlaybackFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 >>>>>>> parent of 638f5a8... preferences update
+=======
+public class SettingsPodcastsPlaybackFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+>>>>>>> parent of 16d73e0... revet
 
     private Activity mActivity;
 
@@ -35,11 +45,18 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
        super.onCreate(savedInstanceState);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
+=======
+     }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+>>>>>>> parent of 16d73e0... revet
         addPreferencesFromResource(R.xml.settings_podcasts_playback);
 
         mActivity = getActivity();
@@ -83,6 +100,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
         }
+<<<<<<< HEAD
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 =======
@@ -132,6 +150,11 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
    }
 >>>>>>> parent of 638f5a8... preferences update
+=======
+
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+>>>>>>> parent of 16d73e0... revet
 
     @Override
     public void onPause() {

@@ -20,7 +20,10 @@
     </style>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 16d73e0... revet
     <style name="PreferenceMain" parent="Main">
 <<<<<<< HEAD
         <item name="android:paddingLeft">1dp</item>
@@ -47,7 +50,10 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
+<<<<<<< HEAD
 >>>>>>> parent of 7bc423c... styles
+=======
+>>>>>>> parent of 16d73e0... revet
     <style name="podcast_list_unread_count">
         <item name="android:textSize">11sp</item>
         <item name="android:padding">3dp</item>
