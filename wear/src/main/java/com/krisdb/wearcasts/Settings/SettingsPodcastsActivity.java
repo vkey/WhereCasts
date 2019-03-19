@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Settings;
 
-
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
