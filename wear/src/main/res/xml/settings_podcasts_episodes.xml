@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:key="display_episodes" android:title="@string/settings_podcasts_settings_title_episodes">
 
@@ -13,14 +13,14 @@
             android:defaultValue="20"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_display_show_downloaded_episodes"
             android:title="@string/settings_podcasts_label_show_downloaded_episodes"
             android:summary="@string/settings_podcasts_label_show_downloaded_episodes_summary"
             android:defaultValue="false"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_episodes_downloads_first"
             android:title="@string/settings_podcasts_label_downloads_first"
             android:defaultValue="false"
@@ -35,11 +35,11 @@
             android:defaultValue="4"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_episodes_continuous_play"
             android:title="@string/settings_podcasts_label_continuous_play"
             android:defaultValue="true"
             />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

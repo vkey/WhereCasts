@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_downloads">
+    <PreferenceCategory android:key="pref_downloads" android:title="@string/settings_podcasts_settings_title_downloads">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_auto_delete"
             android:title="@string/settings_podcasts_label_auto_delete"
             android:defaultValue="true"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_downloads_restart_on_failure"
             android:title="@string/settings_podcasts_label_downloads_restart_failed"
             android:defaultValue="true"
@@ -24,7 +24,7 @@
             />
         -->
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_download_complete_sound"
             android:title="@string/settings_podcasts_label_download_complete_sound"
             android:defaultValue="true"
@@ -46,7 +46,7 @@
             android:entryValues="@array/hours_values"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_high_bandwidth"
             android:title="@string/settings_podcasts_label_high_bandwidth"
             android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
@@ -61,4 +61,4 @@
             />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Ta bort den här episodens nedladdning?</string>
     <string name="confirm_delete_podcast">Avsluta prenumerationen från den här podcasten?</string>
 
-    <string name="confirm_initial_download_message">Nedladdning via WiFi eller mobil rekommenderas. Vill du avaktivera Bluetooth när du laddar ner (det här kan ändras i inställningarna)?</string>
+    <string name="confirm_initial_download_message">Nedladdning via Bluetooth kan vara långsam och opålitlig.\nNedladdning via WiFi eller mobil rekommenderas.</string>
 
     <string name="confirm_mark_played">Markera som spelat?</string>
     <string name="confirm_mark_unplayed">Markera som ospelad?</string>
@@ -340,8 +340,9 @@
     <string name="alert_file_deleted">1 filen raderad</string>
     <string name="alert_files_deleted">%d filer raderade</string>
 
-    <string name="validation_podcast_rename_title">Ange en titel</string>
+    <string name="validation_podcast_rename_title">Titel krävs</string>
     <string name="validation_podcast_rename_length">Titellängd för stor</string>
+    <string name="validation_playlist_rename_length">Titel för lång (12 max)</string>
 
     <string name="plurals_single_new_episode">1 nytt avsnitt</string>
     <string name="plurals_multiple_new_episodes">%d nya episoder</string>

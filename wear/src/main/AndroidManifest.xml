@@ -77,16 +77,16 @@
         <activity android:name=".Activities.SearchEpisodesActivity" />
         <activity android:name=".Activities.AddPodcastsActivity" />
         <activity android:name=".Activities.EpisodeContextActivity" />
-        <activity android:name=".Settings.SettingsPodcastsActivity" />
 
-        <activity android:name=".Settings.SettingsPodcastActivity" />
-        <activity android:name=".Settings.SettingsPodcastsUpdatesActivity" />
-        <activity android:name=".Settings.SettingsPodcastsDisplayActivity" />
-        <activity android:name=".Settings.SettingsPodcastsEpisodesActivity" />
-        <activity android:name=".Settings.SettingsPodcastsPodcastsActivity" />
-        <activity android:name=".Settings.SettingsPodcastsPlaybackActivity" />
-        <activity android:name=".Settings.SettingsPodcastsDownloadsActivity" />
-        <activity android:name=".Settings.SettingsPlaylistsActivity" />
+        <activity android:name=".Settings.SettingsPodcastsActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsUpdatesActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsDisplayActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsEpisodesActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsPodcastsActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsPlaybackActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPodcastsDownloadsActivity" android:theme="@style/Theme.PrefSettings" />
+        <activity android:name=".Settings.SettingsPlaylistsActivity" android:theme="@style/Theme.PrefSettings" />
 
         <receiver android:name=".Receivers.DownloadReceiver">
             <intent-filter>
@@ -101,7 +101,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

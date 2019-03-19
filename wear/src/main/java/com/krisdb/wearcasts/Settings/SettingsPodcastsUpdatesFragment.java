@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -138,7 +139,7 @@ public class SettingsPodcastsUpdatesFragment extends BasePreferenceFragmentCompa
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), syncPodcasts ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -158,7 +159,7 @@ public class SettingsPodcastsUpdatesFragment extends BasePreferenceFragmentCompa
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), syncPodcasts ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
                         dialog.dismiss();
                     }
                 });

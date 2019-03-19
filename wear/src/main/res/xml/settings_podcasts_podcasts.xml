@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:key="podcasts_settings" android:title="@string/settings_podcasts_settings_title_podcasts">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_hide_empty"
             android:title="@string/settings_podcasts_label_hide_nonew_podcasts"
             android:defaultValue="false"
             />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_display_show_downloaded"
             android:title="@string/settings_podcasts_label_show_downloads"
             android:defaultValue="false"
@@ -26,4 +26,4 @@
             />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

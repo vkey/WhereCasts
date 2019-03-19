@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -88,7 +89,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
             alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), WIFI_RESULT_CODE);
+                    startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), WIFI_RESULT_CODE);
                     dialog.dismiss();
                 }
             });

@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.wear.widget.WearableRecyclerView;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
@@ -161,13 +164,13 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         return holder;
     }
 
-    private void initDownload(final ViewHolder holder, final int position)
-    {
+    private void initDownload(final ViewHolder holder, final int position) {
         int episodeId = mEpisodes.get(position).getEpisodeId();
 
         final PodcastItem episode = GetEpisode(mContext, episodeId);
 
         final int downloadId = Utilities.getDownloadId(mContext, episodeId);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (downloadId > 0) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -220,16 +223,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 });
                 alert.show();
             }
-        }
-        else if (CommonUtils.getActiveNetwork(mContext) == null)
-        {
+        } else if (CommonUtils.getActiveNetwork(mContext) == null) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
                 alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                         dialog.dismiss();
                     }
                 });
@@ -241,8 +242,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     }
                 }).show();
             }
-        }
-        else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
+        } else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
@@ -250,7 +250,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                         dialog.dismiss();
                     }
                 });
@@ -262,6 +262,22 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         dialog.dismiss();
                     }
                 }).show();
+            }
+        } else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadEpisode(position, episode);
+                        dialog.dismiss();
+                    }
+                }).show();
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("initialDownload", false);
+                editor.apply();
             }
         } else
             downloadEpisode(position, episode);

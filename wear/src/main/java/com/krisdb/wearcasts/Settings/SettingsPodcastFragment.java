@@ -16,6 +16,7 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Fragments.BasePreferenceFragmentCompat;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -32,7 +33,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
@@ -74,59 +75,45 @@ public class SettingsPodcastFragment extends BasePreferenceFragmentCompat implem
 
         mPodcast = GetPodcast(mActivity, mPodcastId);
 
-        final PreferenceCategory category = (PreferenceCategory)findPreference("podcast_settings");
+        final PreferenceCategory category = findPreference("podcast_settings");
 
         int count = 0;
 
         final EditTextPreference etRename = new EditTextPreference(mActivity);
+        etRename.setKey("pref_" + mPodcastId + "_name");
         etRename.setText(mPodcast.getChannel().getTitle());
         etRename.setTitle(mPodcast.getChannel().getTitle());
         etRename.setSummary(R.string.rename);
-        /*
-        etRename.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
         etRename.setOrder(count++);
-
-        etRename.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    etRename.setText(v.getText().toString());
-                    etRename.setTitle(v.getText().toString());
-                    CacheUtils.deletePodcastsCache(mActivity);
-                    etRename.onClick(etRename.getDialog(), Dialog.BUTTON_POSITIVE);
-                    etRename.getDialog().dismiss();
-                    return true;
-                }
-                return false;
-            }
-        });
-        */
 
         etRename.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final String value = (String) newValue;
+                final String text = newValue.toString();
 
-                if (value == null || value.length() == 0) {
+                if (text == null || text.length() == 0) {
                     CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_title));
                     return true;
                 }
 
-                if (value.length() > 100) {
+                if (text.length() > 100) {
                     CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
                     return true;
                 }
 
                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                 final ContentValues cv = new ContentValues();
-                cv.put("title", value);
+                cv.put("title", text);
                 db.updatePodcast(cv, mPodcast.getPodcastId());
                 db.close();
+
+                etRename.setText(text);
+                etRename.setTitle(text);
                 return true;
             }
         });
 
-        final SwitchPreference cbAutoDownload = new SwitchPreference(mActivity);
+        final SwitchPreferenceCompat cbAutoDownload = new SwitchPreferenceCompat(mActivity);
         cbAutoDownload.setTitle(R.string.settings_podcast_label_autodownload);
         cbAutoDownload.setKey("pref_" + mPodcastId + "_auto_download");
         cbAutoDownload.setChecked(false);
@@ -148,7 +135,7 @@ public class SettingsPodcastFragment extends BasePreferenceFragmentCompat implem
         lpDownloadsSaved.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
         lpDownloadsSaved.setOrder(count++);
 
-        final SwitchPreference cbDownloadNext = new SwitchPreference(mActivity);
+        final SwitchPreferenceCompat cbDownloadNext = new SwitchPreferenceCompat(mActivity);
         cbDownloadNext.setTitle(R.string.settings_podcast_label_download_next);
         cbDownloadNext.setKey("pref_" + mPodcastId + "_download_next");
         cbDownloadNext.setChecked(false);
@@ -254,7 +241,7 @@ public class SettingsPodcastFragment extends BasePreferenceFragmentCompat implem
             lpEndStopTime.setEnabled(false);
         }
 
-        final SwitchPreference cbHidePlayed = new SwitchPreference(mActivity);
+        final SwitchPreferenceCompat cbHidePlayed = new SwitchPreferenceCompat(mActivity);
         cbHidePlayed.setTitle(R.string.settings_podcast_label_hideplayed);
         cbHidePlayed.setKey("pref_" + mPodcastId + "_hide_played");
         cbHidePlayed.setChecked(false);
@@ -398,7 +385,7 @@ public class SettingsPodcastFragment extends BasePreferenceFragmentCompat implem
         if (key.equals("pref_" + mPodcastId + "_auto_assign_playlist"))
             findPreference("pref_" + mPodcastId + "_auto_assign_playlist").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_auto_assign_playlist")).getEntry());
 
-        if (key.equals("pref_" + mPodcastId + "_download_next") && ((SwitchPreference)findPreference("pref_" + mPodcastId + "_download_next")).isChecked())
+        if (key.equals("pref_" + mPodcastId + "_download_next") && ((SwitchPreferenceCompat)findPreference("pref_" + mPodcastId + "_download_next")).isChecked())
             CommonUtils.showToast(mActivity, getString(R.string.settings_podcast_label_download_next_alert));
     }
 }

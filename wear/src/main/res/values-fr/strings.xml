@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Supprimer le téléchargement de cet épisode?</string>
     <string name="confirm_delete_podcast">Se désabonner de ce podcast?</string>
 
-    <string name="confirm_initial_download_message">Le téléchargement sur WiFi ou cellulaire est recommandé. Voulez-vous désactiver Bluetooth à chaque téléchargement (cela peut être modifié dans les paramètres)?</string>
+    <string name="confirm_initial_download_message">Le téléchargement via Bluetooth peut être lent et peu fiable.\nLe téléchargement via WiFi ou cellulaire est recommandé.</string>
 
     <string name="confirm_mark_played">Marquer comme joué?</string>
     <string name="confirm_mark_unplayed">Marquer comme non joué?</string>
@@ -340,8 +340,9 @@
     <string name="alert_file_deleted">1 fichier supprimé</string>
     <string name="alert_files_deleted">%d fichiers supprimés</string>
 
-    <string name="validation_podcast_rename_title">Entrez un titre</string>
+    <string name="validation_podcast_rename_title">Titre requis</string>
     <string name="validation_podcast_rename_length">La longueur du titre est trop grande</string>
+    <string name="validation_playlist_rename_length">Titre trop long (12 max)</string>
 
     <string name="plurals_single_new_episode">1 new episode</string>
     <string name="plurals_multiple_new_episodes">%d nouveaux épisodes</string>

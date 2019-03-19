@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">このエピソードのダウンロードを削除しますか?</string>
     <string name="confirm_delete_podcast">このポッドキャストの購読を停止するには?</string>
 
-    <string name="confirm_initial_download_message">WiFiまたは携帯電話でのダウンロードをお勧めします.ダウンロードするたびにBluetoothを無効にしますか？これは設定で変更できます.?</string>
+    <string name="confirm_initial_download_message">Bluetooth経由でダウンロードするのは遅くて信頼できない場合があります。.\nWiFiまたは携帯電話を介してダウンロードすることをお勧めします.</string>
 
     <string name="confirm_mark_played">演奏としてマークしますか?</string>
     <string name="confirm_mark_unplayed">再生されていないとマークしますか?</string>
@@ -340,8 +340,9 @@
     <string name="alert_file_deleted">1 ファイルを削除しました</string>
     <string name="alert_files_deleted">%d ファイルが削除された</string>
 
-    <string name="validation_podcast_rename_title">タイトルを入力</string>
+    <string name="validation_podcast_rename_title">タイトルが必要です</string>
     <string name="validation_podcast_rename_length">タイトルの長さが大きすぎます</string>
+    <string name="validation_playlist_rename_length">タイトルが長すぎます（最大12）</string>
 
     <string name="plurals_single_new_episode">1 新しいエピソード</string>
     <string name="plurals_multiple_new_episodes">%d 新しいエピソード</string>

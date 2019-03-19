@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/settings_podcasts_title">
 
-        <Preference android:key="pref_display" android:title="@string/settings_podcasts_title_display" android:icon="@drawable/ic_settings_display" app:iconSpaceReserved="false" />
+        <Preference android:key="pref_display" android:title="@string/settings_podcasts_title_display" android:icon="@drawable/ic_settings_display" />
         <Preference android:key="pref_podcasts" android:title="@string/settings_podcasts_title_podcasts" android:icon="@drawable/ic_settings_podcasts" />
         <Preference android:key="pref_episodes" android:title="@string/settings_podcasts_title_episodes" android:icon="@drawable/ic_settings_episodes" />
         <Preference android:key="pref_playlists" android:title="@string/settings_podcasts_title_playlists" android:icon="@drawable/ic_settings_playlists" />
@@ -15,4 +15,4 @@
         <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

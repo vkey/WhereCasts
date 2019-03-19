@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_playback">
 
@@ -31,10 +31,10 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
-           <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="pref_hardware_override_episode"
             android:defaultValue="false"
             />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

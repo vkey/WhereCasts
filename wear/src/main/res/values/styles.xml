@@ -1,9 +1,29 @@
 <resources>
 
-    <style name="Main" parent="Theme.AppCompat.NoActionBar">
+    <style name="Main" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:buttonTint">@color/wc_checkboxes</item>
         <item name="android:textColor">@color/wc_text</item>
         <item name="colorAccent">@color/wc_checkboxes</item>
+    </style>
+
+    <style name="Theme.PrefSettings" parent="Main">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:titleTextStyle">@style/CenteredTitle</item>
+        <item name="android:windowTitleStyle">@style/CenteredTitle</item>
+        <item name="android:alertDialogTheme">@style/PopupMenuStyle</item>
+        <item name="android:background">@color/wc_transparent</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="Main">
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="CenteredTitle" parent="Main">
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="Dark" parent="Main">

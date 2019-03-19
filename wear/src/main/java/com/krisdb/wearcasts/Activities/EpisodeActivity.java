@@ -55,6 +55,7 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -348,7 +349,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     @Override
     public void onResume() {
         super.onResume();
-
        if (mMediaBrowserCompat != null && mMediaBrowserCompat.isConnected() == false) {
            try {
                mMediaBrowserCompat.connect();
@@ -358,7 +358,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
            }
        }
         else {
-            mEpisodeID = -1;
            SetContent();
        }
     }
@@ -411,8 +410,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
             if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId()) {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                int position = GetEpisodeValue(mActivity, mEpisode, "position");
-                int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
+                final int position = GetEpisodeValue(mActivity, mEpisode, "position");
+                final int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
                 mSeekBar.setMax(duration);
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
@@ -758,6 +757,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     }
 
     private void handleNetwork(final Boolean download) {
+        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -766,7 +767,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), download ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), download ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -787,7 +788,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"), download ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), download ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -798,6 +799,26 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         dialog.dismiss();
                     }
                 }).show();
+            }
+        }else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (download)
+                            DownloadEpisode();
+                        else
+                            StreamEpisode();
+                        dialog.dismiss();
+                    }
+                });
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("initialDownload", false);
+                editor.apply();
             }
         }
         else {

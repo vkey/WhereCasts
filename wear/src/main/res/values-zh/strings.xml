@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">刪除這個劇集的下載?</string>
     <string name="confirm_delete_podcast">取消訂閱這個播客?</string>
 
-    <string name="confirm_initial_download_message">建議通過WiFi或蜂窩網絡下載。 您是否要在下載時禁用藍牙（可以在設置中更改）?</string>
+    <string name="confirm_initial_download_message">通過藍牙下載可能很慢且不可靠.\n建議通過WiFi或蜂窩網絡下載.</string>
 
     <string name="confirm_mark_played">標記為已播放?</string>
     <string name="confirm_mark_unplayed">標記為未播放?</string>
@@ -339,8 +339,9 @@
     <string name="alert_file_deleted">1 文件已刪除</string>
     <string name="alert_files_deleted">%d 文件已刪除</string>
 
-    <string name="validation_podcast_rename_title">輸入一個標題</string>
+    <string name="validation_podcast_rename_title">標題要求</string>
     <string name="validation_podcast_rename_length">標題長度太大</string>
+    <string name="validation_playlist_rename_length">標題太長（最多12個）</string>
 
     <string name="plurals_single_new_episode">1 新的情節</string>
     <string name="plurals_multiple_new_episodes">%d 新的情節</string>
