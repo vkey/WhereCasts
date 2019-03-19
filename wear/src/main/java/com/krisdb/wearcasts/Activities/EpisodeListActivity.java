@@ -153,6 +153,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 } else {
                     mStatus.setVisibility(View.GONE);
                     mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
                             new Interfaces.BackgroundSyncResponse() {
                                 @Override
@@ -195,6 +196,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
 
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsThumb = (ViewGroup.MarginLayoutParams) mProgressThumb.getLayoutParams();
 
         if (Objects.equals(densityName, getString(R.string.hdpi))) {
             if (isRound) {
@@ -203,6 +205,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             } else {
                 mProgressPlaylistLayout.setPadding(0, 7, 0, 7);
                 paramsLayout.setMargins(0, 0, 0, 20);
+                paramsThumb.setMargins(0, 20, 0, 0);
             }
         } else if (Objects.equals(densityName, getString(R.string.xhdpi))) {
             mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
