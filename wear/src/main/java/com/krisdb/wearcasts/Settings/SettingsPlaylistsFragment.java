@@ -68,9 +68,21 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                 et.setTitle(playlist.getName());
                 et.setSummary(R.string.rename);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 /*
 =======
 >>>>>>> parent of 638f5a8... preferences update
+=======
+                et.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+
+                        return false;
+                    }
+                });
+                /*
+>>>>>>> parent of 4ed3b6d... updates
                 et.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
 
                 et.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -97,6 +109,10 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                         return false;
                     }
                 });
+<<<<<<< HEAD
+=======
+                */
+>>>>>>> parent of 4ed3b6d... updates
                 category.addPreference(et);
             }
         }

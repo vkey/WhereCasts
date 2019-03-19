@@ -23,28 +23,28 @@
             android:entryValues="@array/interval_values"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:defaultValue="@integer/default_update_interval"
-            android:dependency="updatesEnabled"
             />
 
         <CheckBoxPreference
             android:key="updateCharging"
             android:title="@string/settings_podcasts_label_updates_charging"
             android:defaultValue="true"
-            android:dependency="updatesEnabled"
             />
 
+<<<<<<< HEAD
         <SwitchPreference
             android:key="pref_updates_notification"
             android:title="@string/settings_podcasts_label_updates_notification"
             android:defaultValue="true"
             android:dependency="updatesEnabled"
             />
+=======
+>>>>>>> parent of 4ed3b6d... updates
 
         <SwitchPreference
             android:key="pref_updates_new_episodes_sound"
             android:title="@string/settings_podcasts_label_updates_sound"
             android:defaultValue="true"
-            android:dependency="updatesEnabled"
             />
 
         <ListPreference
@@ -53,7 +53,10 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
+<<<<<<< HEAD
             android:dependency="pref_updates_new_episodes_sound"
+=======
+>>>>>>> parent of 4ed3b6d... updates
             />
 
         <ListPreference
@@ -62,7 +65,10 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:entries="@array/hours_text"
             android:entryValues="@array/hours_values"
+<<<<<<< HEAD
             android:dependency="pref_updates_new_episodes_sound"
+=======
+>>>>>>> parent of 4ed3b6d... updates
             />
 
         <Preference android:key="pref_sync_art" android:title="@string/settings_podcasts_label_sync_thumbnails" />
