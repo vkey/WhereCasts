@@ -143,8 +143,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         }
 
         final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
-//TODO:
-        /*
+
         new AsyncTasks.SyncPodcasts(mContext, podcastId,
                 new Interfaces.BackgroundSyncResponse() {
                     @Override
@@ -154,7 +153,6 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-*/
         showToast(mContext, mContext.getString(R.string.alert_podcast_added));
         CacheUtils.deletePodcastsCache(mContext);
     }
