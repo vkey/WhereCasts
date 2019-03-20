@@ -25,7 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -33,14 +32,11 @@ import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.BackgroundService;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
-import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,12 +44,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLatestEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.TrimEpisodes;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.episodeExists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlaylist;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;

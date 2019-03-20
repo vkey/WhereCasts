@@ -16,11 +16,9 @@ import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Receivers.DownloadReceiver;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -30,10 +28,12 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
-;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
+
+;
 
 public class BackgroundService extends JobService {
     boolean isWorking = false;
@@ -149,6 +149,9 @@ public class BackgroundService extends JobService {
     public static ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
+            Log.d(mContext.get().getPackageName(), "[downloads] network available");
+            Log.d(mContext.get().getPackageName(), "[downloads] network available downloads size: " + mDownloadEpisodes.size());
+
             for(final PodcastItem episode : mDownloadEpisodes)
                Utilities.startDownload(mContext.get(), episode);
         }
@@ -161,6 +164,7 @@ public class BackgroundService extends JobService {
                 mManager.bindProcessToNetwork(null);
                 mManager.unregisterNetworkCallback(mNetworkCallback);
             }
+            Log.d(context.getPackageName(), "[downloads] network released broadcast received");
 
             try {mBroadcastManger.unregisterReceiver(mDownloadsComplete); }
             catch(Exception ignored){}

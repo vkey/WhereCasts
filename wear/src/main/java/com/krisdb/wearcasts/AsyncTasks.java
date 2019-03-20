@@ -5,15 +5,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -38,7 +33,6 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.getNextEpisodeNotD
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistItems;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
-import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;

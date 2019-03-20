@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.Receivers;
 
 import android.app.DownloadManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,8 +9,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.Network;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,7 +20,6 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +27,6 @@ import java.util.Objects;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcasts.Services.BackgroundService.mNetworkCallback;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;

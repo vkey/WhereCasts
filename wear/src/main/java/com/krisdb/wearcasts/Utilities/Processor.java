@@ -1,14 +1,9 @@
 package com.krisdb.wearcasts.Utilities;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
