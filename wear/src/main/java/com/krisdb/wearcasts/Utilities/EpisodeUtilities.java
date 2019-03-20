@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Utilities;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +17,7 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +29,7 @@ import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class EpisodeUtilities {
     private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download";
+    private static WeakReference<Context> mContext;
 
     public static void markPlayed(final Context ctx, final PodcastItem episode)
     {

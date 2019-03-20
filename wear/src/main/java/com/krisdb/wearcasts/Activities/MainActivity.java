@@ -30,6 +30,7 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -481,8 +482,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
-                        public void processFinish(final int episodeCount, final int downloadCount) {
-                            if (episodeCount > 0) {
+                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                            if (newEpisodeCount > 0) {
                                 mShowPodcastList = true;
                                 new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                             }
@@ -498,7 +499,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) {
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                 mShowPodcastList = true;
                                 new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                             }

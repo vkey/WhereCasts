@@ -5,16 +5,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
+import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -22,6 +28,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +38,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.getNextEpisodeNotD
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistItems;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
-import static com.krisdb.wearcasts.Utilities.Utilities.ProcessEpisodes;
+import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
@@ -379,11 +386,17 @@ public class AsyncTasks {
 
     public static class SyncPodcasts extends AsyncTask<Void, String, Void> {
         private int mPodcastId, mNewEpisodes, mDownloadCount;
-        private int[] mQuantities;
         private Interfaces.BackgroundSyncResponse mResponse;
         private Boolean mDisableToast;
         private Preference mPreference = null;
+        private List<PodcastItem> mDownloadEpisodes;
 
+        public SyncPodcasts(final Context context, final int podcastId, final Interfaces.BackgroundSyncResponse response) {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+            mPodcastId = podcastId;
+            mDisableToast = true;
+        }
         public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Interfaces.BackgroundSyncResponse response) {
             mContext = new WeakReference<>(context);
             mResponse = response;
@@ -415,16 +428,19 @@ public class AsyncTasks {
 
         @Override
         protected Void doInBackground(Void... params) {
-            mQuantities = new int[1];
             mNewEpisodes = 0;
             mDownloadCount = 0;
+            mDownloadEpisodes = new ArrayList<>();
             final Context ctx = mContext.get();
+
+            final Processor processor = new Processor(ctx);
+
             if (mPodcastId > 0)
             {
                 final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
-                mQuantities = ProcessEpisodes(ctx, podcast);
-                mNewEpisodes = mNewEpisodes + mQuantities[0];
-                mDownloadCount = mDownloadCount + mQuantities[1];
+                processor.processEpisodes(podcast);
+                mNewEpisodes = processor.newEpisodesCount;
+                mDownloadCount = processor.downloadCount;
             }
             else
             {
@@ -434,30 +450,38 @@ public class AsyncTasks {
                     if (mPreference != null)
                         publishProgress(podcast.getChannel().getTitle());
 
-                    mQuantities = ProcessEpisodes(ctx, podcast);
-                    mNewEpisodes = mNewEpisodes + mQuantities[0];
-                    mDownloadCount = mDownloadCount + mQuantities[1];
+                    processor.processEpisodes(podcast);
+                    mNewEpisodes = processor.newEpisodesCount;
+                    mDownloadCount = processor.downloadCount;
                 }
             }
 
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            final SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("last_podcast_sync_date", new Date().toString());
-            editor.apply();
+            if (processor.downloadEpisodes.size() > 0)
+            {
+                mDownloadEpisodes = processor.downloadEpisodes;
+            }
+
+            if (mPodcastId == 0) {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("last_podcast_sync_date", new Date().toString());
+                editor.apply();
+            }
 
             return null;
         }
 
         protected void onPostExecute(Void param) {
-            if (mDisableToast == false)
+            if (!mDisableToast)
                 showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
 
-            if (mPreference == null)
+            if (mPreference == null && mPodcastId == 0)
                 Utilities.showNewEpisodesNotification(mContext.get(), mNewEpisodes, mDownloadCount);
 
-            mResponse.processFinish(mNewEpisodes, mDownloadCount);
+            mResponse.processFinish(mNewEpisodes, mDownloadCount, mDownloadEpisodes);
         }
     }
+
     public static class SyncWithMobileDevice extends AsyncTask<Void, Void, Void> {
 
         private PodcastItem mEpisode;
@@ -498,35 +522,5 @@ public class AsyncTasks {
             return null;
         }
 
-    }
-
-    public static class GetPodcastEpisodes extends AsyncTask<Void, Void, Void> {
-
-        int mPodcastId;
-        private Interfaces.IntResponse mResponse;
-        private int mCount;
-
-        public GetPodcastEpisodes(final Context context, final int podcastId, final Interfaces.IntResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mPodcastId = podcastId;
-            mResponse = response;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            final PodcastItem podcast = GetPodcast(mContext.get(), mPodcastId);
-            final int[] response = ProcessEpisodes(mContext.get(), podcast);
-
-            mCount = response[0];
-
-            return null;
-        }
-
-        protected void onPostExecute(Void param)
-        {
-            mResponse.processFinish(mCount);
-        }
     }
 }

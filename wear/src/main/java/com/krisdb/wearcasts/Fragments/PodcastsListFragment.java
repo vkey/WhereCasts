@@ -125,7 +125,7 @@ public class PodcastsListFragment extends Fragment {
             new AsyncTasks.SyncPodcasts(mActivity, 0, false,
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
-                        public void processFinish(final int count, final int downloads) {
+                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                             RefreshContent();
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -139,7 +139,7 @@ public class PodcastsListFragment extends Fragment {
                 new AsyncTasks.SyncPodcasts(mActivity, 0, false,
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int episodeCount, final int downloadCount) {
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                 RefreshContent();
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

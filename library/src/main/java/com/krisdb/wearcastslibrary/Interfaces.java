@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.wearable.DataClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interfaces {
@@ -34,7 +35,7 @@ public class Interfaces {
     }
 
     public interface BackgroundSyncResponse {
-        void processFinish(int newEpisodes, int downloadedEpisodes);
+        void processFinish(int newEpisodes, int downloadedEpisodes, List<PodcastItem> downloads);
     }
 
     public interface BooleanResponse {

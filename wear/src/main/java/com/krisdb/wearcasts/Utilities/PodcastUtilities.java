@@ -122,12 +122,19 @@ public class PodcastUtilities {
                 sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
+                        .concat("ORDER BY ")
+                        .concat(orderString);
+
+            /*
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                        .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
+                        .concat("FROM [tbl_podcasts] ")
                         .concat("LEFT JOIN tbl_podcast_episodes ")
                         .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
                         .concat("GROUP BY tbl_podcast_episodes.pid ")
                         .concat("ORDER BY ")
                         .concat(orderString);
-
+*/
             final Cursor cursor = sdb.rawQuery(sql, null);
 
             if (cursor.moveToFirst()) {

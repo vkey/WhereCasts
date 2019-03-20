@@ -154,8 +154,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaHandler.removeCallbacksAndMessages(null);
 
         disableNoisyReceiver();
-        stopForeground(true);
-        //Log.d(mPackage, "MediaPlayerService Media player service stopped");
+        stopForeground(false);
+        Log.d(mPackage, "MediaPlayerService Media player service stopped");
     }
 
     private MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {

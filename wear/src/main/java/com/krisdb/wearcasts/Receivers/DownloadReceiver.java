@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts.Receivers;
 
 import android.app.DownloadManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -20,17 +23,24 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.krisdb.wearcasts.Services.BackgroundService.mNetworkCallback;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
+import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class DownloadReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -47,9 +57,9 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
-            final DownloadManager manager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
+            final DownloadManager managerDownload = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
 
-            final Cursor cursor = manager.query(query);
+            final Cursor cursor = managerDownload.query(query);
 
             if (cursor.moveToFirst()) {
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
@@ -93,13 +103,12 @@ public class DownloadReceiver extends BroadcastReceiver {
                     final SharedPreferences.Editor editor = prefs.edit();
 
                     if (prefs.getBoolean("pref_downloads_restart_on_failure", true) && downloadCount < 10) {
-                        long id = Utilities.startDownload(context, episode);
+                        long id = startDownload(context, episode);
                         Log.d(context.getPackageName(), "[Download] Download ID (Receiver): " + id);
                         editor.putInt("downloads_" + episode.getEpisodeId(), downloadCount + 1);
                         editor.apply();
                         showToast(context, context.getString(R.string.alert_download_error_restart));
-                    }
-                    else {
+                    } else {
                         showToast(context, context.getString(R.string.alert_download_error_failed));
                         editor.putInt("downloads_" + episode.getEpisodeId(), 0);
                     }
@@ -110,15 +119,12 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             cursor.close();
 
-            /*
-            if (prefs.getBoolean("enable_bluetooth", false) && isCurrentDownload(context) == false)
-            {
-                final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
-                if (adapter != null && adapter.isEnabled() == false)
-                    adapter.enable();
+            if (prefs.getBoolean("pref_high_bandwidth", true) && !isCurrentDownload(context)) {
+                final Intent intentComplete = new Intent();
+                intentComplete.setAction("downloads_complete");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
+                Log.d(context.getPackageName(), "[downloads] network released broadcast sent");
             }
-            */
 
             //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
             {
@@ -150,8 +156,7 @@ public class DownloadReceiver extends BroadcastReceiver {
         }
     }
 
-    private void clearFailedDownload(final Context context, final PodcastItem episode)
-    {
+    private void clearFailedDownload(final Context context, final PodcastItem episode) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         final ContentValues cvFailed = new ContentValues();

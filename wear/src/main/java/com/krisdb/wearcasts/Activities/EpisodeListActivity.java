@@ -157,7 +157,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
                             new Interfaces.BackgroundSyncResponse() {
                                 @Override
-                                public void processFinish(final int count, final int downloads) {
+                                public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                     mSwipeRefreshLayout.setRefreshing(false);
                                     RefreshContent();
                                     mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -264,7 +264,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) {
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                 mSwipeRefreshLayout.setRefreshing(false);
                                 RefreshContent();
                                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

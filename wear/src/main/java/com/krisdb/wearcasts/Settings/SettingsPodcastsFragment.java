@@ -18,8 +18,10 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -144,8 +146,8 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
             new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
-                        public void processFinish(final int episodeCount, final int downloadCount) {
-                            SetContent(episodeCount);
+                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                            SetContent(newEpisodeCount);
                             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -162,9 +164,9 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                 new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
                         new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void processFinish(final int count, final int downloads) {
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                SetContent(count); }
+                                SetContent(newEpisodeCount); }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
