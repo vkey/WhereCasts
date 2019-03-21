@@ -569,6 +569,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     case DownloadManager.STATUS_RUNNING:
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                         try {
                             if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
@@ -630,6 +631,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             });
                             mDownloadStartTime = System.nanoTime();
                         }
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
@@ -647,6 +649,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             }
                         });
                         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                 }
             }
@@ -693,6 +696,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mVolumeUp.setVisibility(View.GONE);
         Utilities.DeleteMediaFile(mActivity, mEpisode);
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mDownloadImage.setOnClickListener(new View.OnClickListener() {
             @Override
