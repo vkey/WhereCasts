@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_downloads">
+    <PreferenceCategory android:key="pref_downloads" android:title="@string/settings_podcasts_settings_title_downloads">
 
         <SwitchPreference
             android:key="pref_auto_delete"
@@ -50,6 +50,13 @@
             android:key="pref_high_bandwidth"
             android:title="@string/settings_podcasts_label_high_bandwidth"
             android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
+            android:defaultValue="true"
+            />
+
+        <SwitchPreference
+            android:key="pref_downloads_disable_bluetooth"
+            android:title="@string/settings_podcasts_label_disable_bluetooth"
+            android:summary="@string/settings_podcasts_label_disable_bluetooth_summary"
             android:defaultValue="true"
             />
 

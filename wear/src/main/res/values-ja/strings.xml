@@ -119,7 +119,6 @@
 \    <string name="settings_podcasts_label_updates_enabled_summary">デバイスが充電中のときにのみ実行されます</string>
     <string name="settings_podcasts_label_auto_delete">終了時にダウンロードしたファイルを削除する</string>
     <string name="settings_podcasts_label_downloads_restart_failed">ダウンロードが失敗した場合は自動的に再起動します</string>
-    <string name="settings_podcasts_label_disable_bluetooth">ダウンロード中にBluetoothを無効にする</string>
     <string name="settings_podcasts_label_download_complete_sound">ダウンロードが完了したらサウンドを再生する</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">からのサウンドを無効にする</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">サウンドを無効にする</string>
@@ -129,11 +128,15 @@
     <string name="settings_podcasts_label_playback_speed">再生速度</string>
     <string name="settings_podcasts_label_playback_skip_back">スキップバック</string>
     <string name="settings_podcasts_label_playback_skip_forward">スキップフォワード</string>
+    <string name="settings_podcasts_label_playback_remove_notification">通知を削除</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">一時停止およびアプリ終了時</string>
     <string name="settings_podcasts_label_playback_playlists">終了時にプレイリストからエピソードを削除する</string>
     <string name="settings_podcasts_label_hardware_button">ハードウェアボタンで再生をコントロールする</string>
     <string name="settings_podcasts_label_hardware_buttons">ハードウェアボタンによる再生の制御</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">再生/一時停止（再生画面でのみ機能する）</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">上：ボリュームアップ\n中：再生/一時停止\nボタン：音量を下げる\n(再生画面でのみ機能する)</string>
+    <string name="settings_podcasts_label_disable_bluetooth">Bluetoothを無効にする</string>
+    <string name="settings_podcasts_label_disable_bluetooth_summary">自動ダウンロード時のみ</string>
     <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">同期、ストリーミングまたはダウンロードの前に</string>
     <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>

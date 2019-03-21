@@ -31,7 +31,15 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
-           <SwitchPreference
+        <SwitchPreference
+            android:key="pref_remove_notification"
+            android:title="@string/settings_podcasts_label_playback_remove_notification"
+            android:summary="@string/settings_podcasts_label_playback_remove_notification_summary"
+            android:defaultValue="false"
+            />
+
+
+        <SwitchPreference
             android:key="pref_hardware_override_episode"
             android:defaultValue="false"
             />
