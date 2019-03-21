@@ -453,7 +453,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
 
             //prevent title from overlapping download image
-            title.setPadding(0, 0, 40, 0);
+            title.setPadding(0, 0, 50, 0);
 
             if (episode.getIsSelected()) {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
