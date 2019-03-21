@@ -119,7 +119,6 @@
     <string name="settings_podcasts_label_updates_enabled_summary">केवल तब चलता है जब डिवाइस चार्ज हो रहा है</string>
     <string name="settings_podcasts_label_auto_delete">समाप्त होने पर डाउनलोड की गई फ़ाइलों को हटाएं</string>
     <string name="settings_podcasts_label_downloads_restart_failed">यदि यह विफल हो जाता है तो स्वचालित रूप से डाउनलोड को पुनरारंभ करें</string>
-    <string name="settings_podcasts_label_disable_bluetooth">डाउनलोड करते समय ब्लूटूथ अक्षम करें</string>
     <string name="settings_podcasts_label_download_complete_sound">डाउनलोड पूर्ण होने पर ध्वनि चलाएं</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">से ध्वनि अक्षम करें</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">ध्वनि को अक्षम करें</string>
@@ -129,11 +128,15 @@
     <string name="settings_podcasts_label_playback_speed">प्लेबैक स्पीड</string>
     <string name="settings_podcasts_label_playback_skip_back">वापस छोड़ें</string>
     <string name="settings_podcasts_label_playback_skip_forward">छोड़कर आगे बढ़ो</string>
+    <string name="settings_podcasts_label_playback_remove_notification">अधिसूचना निकालें</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">विराम और ऐप से बाहर निकलने पर</string>
     <string name="settings_podcasts_label_playback_playlists">समाप्त होने पर प्लेलिस्ट से एपिसोड निकालें</string>
     <string name="settings_podcasts_label_hardware_button">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons_1_summary">चलाएं / रोकें (केवल स्क्रीन खेलने पर काम करता है)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">टॉप: वॉल्यूम ऊपर\nमध्य: खेलें / रोकें\nबटन: वॉल्यूम नीचें\n(केवल स्क्रीन खेलने पर काम करता है)</string>
+    <string name="settings_podcasts_label_disable_bluetooth">ब्लूटूथ को अक्षम करें</string>
+    <string name="settings_podcasts_label_disable_bluetooth_summary">केवल जब ऑटो-डाउनलोडिंग</string>
     <string name="settings_podcasts_label_high_bandwidth">उच्च बैंडविड्थ नेटवर्क की जांच करें</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">सिंक्रनाइज़ करने से पहले, स्ट्रीमिंग या डाउनलोड करना</string>
     <string name="settings_podcasts_label_downloads_delete_all">सभी डाउनलोड हटाने के लिए क्लिक करें (%d)</string>
