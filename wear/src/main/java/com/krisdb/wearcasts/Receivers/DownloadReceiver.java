@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts.Receivers;
 
 import android.app.DownloadManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -99,7 +100,6 @@ public class DownloadReceiver extends BroadcastReceiver {
 
                     if (prefs.getBoolean("pref_downloads_restart_on_failure", true) && downloadCount < 10) {
                         long id = startDownload(context, episode);
-                        Log.d(context.getPackageName(), "[Download] Download ID (Receiver): " + id);
                         editor.putInt("downloads_" + episode.getEpisodeId(), downloadCount + 1);
                         editor.apply();
                         showToast(context, context.getString(R.string.alert_download_error_restart));
@@ -114,11 +114,21 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             cursor.close();
 
-            if (prefs.getBoolean("pref_high_bandwidth", true) && !isCurrentDownload(context)) {
+            if (prefs.getBoolean("pref_high_bandwidth", true) && prefs.getBoolean("from_job", false) && !isCurrentDownload(context)) {
                 final Intent intentComplete = new Intent();
                 intentComplete.setAction("downloads_complete");
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
-                Log.d(context.getPackageName(), "[downloads] network released broadcast sent");
+                Log.d(context.getPackageName(), "[downloads] RECEIVER network released broadcast sent");
+
+                if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && prefs.getBoolean("from_job", false) && Utilities.BluetoothEnabled() == false)
+                {
+                    Log.d(context.getPackageName(), "[downloads] RECEIVER bluetooth enabled");
+                    if (BluetoothAdapter.getDefaultAdapter() != null)
+                        BluetoothAdapter.getDefaultAdapter().enable();
+                }
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("from_job", false);
+                editor.apply();
             }
 
             //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
@@ -129,7 +139,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                     final int downloadsSaved = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
 
                     if (downloadsSaved > 0) {
-                        List<PodcastItem> downloads = GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
+                        final List<PodcastItem> downloads = GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
 
                         if (downloads.size() > 0) {
 
@@ -163,6 +173,7 @@ public class DownloadReceiver extends BroadcastReceiver {
         db.close();
 
         Utilities.DeleteMediaFile(context, episode);
+
         final SharedPreferences.Editor editor = prefs.edit();
         final int downloadCount = prefs.getInt("new_downloads_count", 0);
 

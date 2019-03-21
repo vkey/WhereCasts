@@ -154,7 +154,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaHandler.removeCallbacksAndMessages(null);
 
         disableNoisyReceiver();
-        stopForeground(false);
+        stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
         Log.d(mPackage, "MediaPlayerService Media player service stopped");
     }
 
@@ -287,6 +287,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     {
         if (disableTelephony && mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             if (mLocalFile == null)
@@ -301,7 +302,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             }
             else
             {
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), getCurrentPosition(mMediaPlayer));
                 editor.apply();
@@ -321,8 +321,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPaused);
             disableNoisyReceiver();
 
-            stopForeground(false);
-            showNotification(true, false);
+            stopForeground(prefs.getBoolean("pref_remove_notification", false));
+            if (!prefs.getBoolean("pref_remove_notification", false))
+                showNotification(true, false);
 
             if (mLocalFile == null)
                 SyncWithMobileDevice();
@@ -599,32 +600,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void showNotification(final Boolean pause, final Boolean update) {
 
-        /*
-        final Intent mainIntent = new Intent(mContext, MainActivity.class);
-
-        final Bundle bundleListing = new Bundle();
-        bundleListing.putInt("podcastId", mEpisode.getPodcastId());
-        bundleListing.putInt("playlistId", mPlaylistID);
-
-        final Intent listingIntent = new Intent(mContext, PodcastEpisodeListActivity.class);
-        listingIntent.putExtras(bundleListing);
-
-        final Bundle bundleEpisode = new Bundle();
-        bundleEpisode.putInt("eid", mEpisode.getEpisodeId());
-        bundleEpisode.putInt("podcastId", mEpisode.getPodcastId());
-        bundleEpisode.putInt("playlistId", mPlaylistID);
-
-        final Intent episodeIntent = new Intent(mContext, PodcastEpisodeFragment.class);
-        episodeIntent.putExtras(bundleEpisode);
-
-        final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
-                .addNextIntent(mainIntent)
-                .addNextIntent(listingIntent)
-                .addNextIntent(episodeIntent);
-
-      final PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-      */
-        final Bundle bundle = new Bundle();
+         final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());
 
         final Intent notificationIntent = new Intent(mContext, EpisodeActivity.class);

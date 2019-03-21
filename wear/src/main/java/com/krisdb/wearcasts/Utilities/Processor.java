@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
@@ -11,7 +12,6 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +35,6 @@ public class Processor {
 
     public void processEpisodes(final PodcastItem podcast)
     {
-        downloadEpisodes = new ArrayList<>();
         final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_episode_limit", "50"));
 
         final List<PodcastItem> newEpisodes = FeedParser.parse(podcast, limit);
@@ -87,7 +86,6 @@ public class Processor {
 
                 if (autoDownload) {
                     downloadEpisodes.add(newEpisode);
-
                     SaveEpisodeValue(mContext, newEpisode, "download", 1); //so auto-download before doesn't re-download this episode
                     downloadCount++;
                 }
@@ -100,6 +98,10 @@ public class Processor {
             }
         }
         db.close();
+
+        Log.d(mContext.getPackageName(), "[downloads] PROCESSOR download count: " + downloadEpisodes.size());
+
+
         TrimEpisodes(mContext, podcast);
 
         final int episodesDownloadedCount = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloaded_episodes_count", "0"));

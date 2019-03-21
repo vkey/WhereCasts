@@ -2,6 +2,7 @@ package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
@@ -47,13 +49,11 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
             findPreference("pref_download_sound_disable_end").setSummary("");
         }
 
-       /*
        if (BluetoothAdapter.getDefaultAdapter() == null)
        {
-           PreferenceCategory category = (PreferenceCategory)findPreference("pref_general");
-           category.removePreference(findPreference("pref_disable_bluetooth"));
+           PreferenceCategory category = (PreferenceCategory)findPreference("pref_downloads");
+           category.removePreference(findPreference("pref_downloads_disable_bluetooth"));
        }
-       */
 
         setDeleteDownloadsTitle();
 

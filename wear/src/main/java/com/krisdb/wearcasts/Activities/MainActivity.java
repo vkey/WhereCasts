@@ -256,11 +256,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                                         public void onClick(DialogInterface dialog, int which) {
                                             final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
                                             CommonUtils.DeviceSync(ctx, dataMap);
-
-                                            final SharedPreferences.Editor editor = prefs.edit();
-                                            editor.putBoolean("rate_app_reminded", true);
-                                            editor.apply();
-
                                             dialog.dismiss();
                                         }
                                     });
@@ -275,6 +270,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                                 }
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("rate_app_reminded", true);
+                editor.apply();
             }
 
             if (visits > 20 && prefs.getBoolean("updatesEnabled", true) && prefs.getBoolean("updatesRefactor", true)) {

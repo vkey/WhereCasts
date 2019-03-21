@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -310,6 +311,7 @@ public class Utilities {
         final long downloadId = manager.enqueue(download);
 
         SaveEpisodeValue(ctx, episode, "downloadid", downloadId);
+        Log.d(ctx.getPackageName(), "[downloads] download started id: " + downloadId);
 
         return downloadId;
     }

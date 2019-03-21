@@ -141,7 +141,7 @@ public class CommonUtils {
     */
     public static boolean isCurrentDownload(final Context ctx) {
         final DownloadManager.Query q = new DownloadManager.Query();
-        q.setFilterByStatus(DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);
+        q.setFilterByStatus(DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING | DownloadManager.STATUS_PAUSED);
 
         final DownloadManager m = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
 

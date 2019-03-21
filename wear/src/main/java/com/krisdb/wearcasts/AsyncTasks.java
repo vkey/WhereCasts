@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -428,7 +429,7 @@ public class AsyncTasks {
             final Context ctx = mContext.get();
 
             final Processor processor = new Processor(ctx);
-
+            processor.downloadEpisodes = new ArrayList<>();
             if (mPodcastId > 0)
             {
                 final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
@@ -449,6 +450,9 @@ public class AsyncTasks {
                     mDownloadCount = processor.downloadCount;
                 }
             }
+
+            Log.d(ctx.getPackageName(), "[downloads] ASYNC download count: " + processor.downloadEpisodes.size());
+            Log.d(ctx.getPackageName(), "[downloads] ASYNC download date: " + new Date());
 
             if (processor.downloadEpisodes.size() > 0)
             {
