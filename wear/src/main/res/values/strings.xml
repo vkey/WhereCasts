@@ -117,6 +117,7 @@
     <string name="settings_podcasts_label_updates_sound">Play sound when new episodes are found</string>
     <string name="settings_podcasts_label_updates_notification">Show new episode notification</string>
     <string name="settings_podcasts_label_auto_delete">Delete downloaded files when finished</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">Auto delete</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Restart a download automatically if it fails</string>
     <string name="settings_podcasts_label_download_complete_sound">Play sound when download completes</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Disable sound from</string>

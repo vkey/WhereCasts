@@ -1,0 +1,17 @@
+<resources>
+    <string-array name="downloads_auto_delete_values">
+        <item>0</item>
+        <item>1</item>
+        <item>24</item>
+        <item>48</item>
+        <item>168</item>
+    </string-array>
+
+    <string-array name="downloads_auto_delete_text">
+        <item>Never</item>
+        <item>After Playing</item>
+        <item>After 24 hours</item>
+        <item>After 2 days</item>
+        <item>After 1 week</item>
+    </string-array>
+</resources>

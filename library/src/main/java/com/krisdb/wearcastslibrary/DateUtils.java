@@ -26,6 +26,14 @@ public class DateUtils {
         }
     }
 
+    public static Date addHoursToDate(Date date, int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+
+        return calendar.getTime();
+    }
+
     public static boolean isTimeBetweenTwoTime(String argStartTime, String argEndTime, String argCurrentTime){
         String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
 

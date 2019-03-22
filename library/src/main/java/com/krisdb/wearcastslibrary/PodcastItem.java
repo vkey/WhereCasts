@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class PodcastItem implements Serializable
 {
-    private String title, description, pubDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
+    private String title, description, pubDate, downloadDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
     private URL mediaurl, episodeUrl;
     private int pid, eid, position, duration, newCount, playlistid;
     private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded, isSelected;
@@ -60,6 +60,16 @@ public class PodcastItem implements Serializable
     public String getPubDate()
     {
         return pubDate;
+    }
+
+    public void setDownloadDate(final String date)
+    {
+        this.downloadDate = date;
+    }
+
+    public String getDownloadDate()
+    {
+        return downloadDate;
     }
 
     public void setRead(final Boolean read)

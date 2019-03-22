@@ -118,6 +118,7 @@
     <string name="settings_podcasts_label_updates_notification">新しいエピソード通知を表示</string>
 \    <string name="settings_podcasts_label_updates_enabled_summary">デバイスが充電中のときにのみ実行されます</string>
     <string name="settings_podcasts_label_auto_delete">終了時にダウンロードしたファイルを削除する</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">自動削除</string>
     <string name="settings_podcasts_label_downloads_restart_failed">ダウンロードが失敗した場合は自動的に再起動します</string>
     <string name="settings_podcasts_label_download_complete_sound">ダウンロードが完了したらサウンドを再生する</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">からのサウンドを無効にする</string>

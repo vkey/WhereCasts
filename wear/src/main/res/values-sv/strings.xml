@@ -120,6 +120,7 @@
     <string name="settings_podcasts_label_updates_notification">Visa ny episodmeddelande</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Körs endast när enheten laddas</string>
     <string name="settings_podcasts_label_auto_delete">Ta bort nedladdade filer när du är klar</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">Automatisk radering</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Starta om en nedladdning automatiskt om den misslyckas</string>
     <string name="settings_podcasts_label_download_complete_sound">Spela ljud när nedladdningen är klar</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Inaktivera ljud från</string>

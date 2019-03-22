@@ -49,6 +49,8 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
             findPreference("pref_download_sound_disable_end").setSummary("");
         }
 
+        findPreference("pref_downloads_auto_delete").setSummary(((ListPreference) findPreference("pref_downloads_auto_delete")).getEntry());
+
        if (BluetoothAdapter.getDefaultAdapter() == null)
        {
            PreferenceCategory category = (PreferenceCategory)findPreference("pref_downloads");
@@ -162,6 +164,9 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
                 findPreference("pref_download_sound_disable_end").setSummary(((ListPreference) findPreference("pref_download_sound_disable_end")).getEntry());
             }
         }
+
+        if (key.equals("pref_downloads_auto_delete"))
+            findPreference("pref_downloads_auto_delete").setSummary(((ListPreference) findPreference("pref_downloads_auto_delete")).getEntry());
 
         if (key.equals("pref_download_sound_disable_start"))
             findPreference("pref_download_sound_disable_start").setSummary(((ListPreference) findPreference("pref_download_sound_disable_start")).getEntry());

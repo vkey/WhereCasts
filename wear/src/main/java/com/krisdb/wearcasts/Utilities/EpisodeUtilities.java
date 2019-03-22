@@ -28,7 +28,7 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class EpisodeUtilities {
-    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download";
+    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload";
     private static WeakReference<Context> mContext;
 
     public static void markPlayed(final Context ctx, final PodcastItem episode)
@@ -699,6 +699,7 @@ public class EpisodeUtilities {
         episode.setDuration(cursor.getInt(cache.getColumnIndex(cursor, "duration")));
         episode.setDisplayDuration(DateUtils.FormatPositionTime(cursor.getInt(cache.getColumnIndex(cursor, "duration"))));
         episode.setIsDownloaded(cursor.getInt(cache.getColumnIndex(cursor, "download")) == 1);
+        episode.setDownloadDate(cursor.getString(cache.getColumnIndex(cursor, "dateDownload")));
         //episode.setIsRadio(cursor.getInt(cache.getColumnIndex(cursor, "radio")) == 1);
 
         return episode;

@@ -121,6 +121,7 @@
     <string name="settings_podcasts_label_updates_notification">Afficher la notification d\'un nouvel épisode</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Fonctionne uniquement lorsque l\'appareil est en charge</string>
     <string name="settings_podcasts_label_auto_delete">Supprimer les fichiers téléchargés lorsque vous avez terminé</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">Suppression automatique</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Redémarrer un téléchargement automatiquement s\'il échoue</string>
     <string name="settings_podcasts_label_download_complete_sound">Lire le son lorsque le téléchargement est terminé</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Désactiver le son de</string>

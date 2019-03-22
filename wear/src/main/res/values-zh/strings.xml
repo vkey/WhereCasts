@@ -119,6 +119,7 @@
     <string name="settings_podcasts_label_updates_notification">顯示新的劇集通知</string>
     <string name="settings_podcasts_label_updates_enabled_summary">僅在設備充電時運行</string>
     <string name="settings_podcasts_label_auto_delete">完成後刪除下載的文件</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">自動刪除</string>
     <string name="settings_podcasts_label_downloads_restart_failed">如果失敗，則自動重新啟動下載</string>
     <string name="settings_podcasts_label_download_complete_sound">下載完成時播放聲音</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">禁用聲音</string>

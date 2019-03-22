@@ -120,6 +120,7 @@
     <string name="settings_podcasts_label_updates_notification">Neue Episode anzeigen</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Läuft nur, wenn das Gerät geladen wird</string>
     <string name="settings_podcasts_label_auto_delete">Löschen Sie heruntergeladene Dateien, wenn Sie fertig sind</string>
+    <string name="settings_podcasts_label_downloads_auto_delete">Automatisches Löschen</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Starten Sie einen Download automatisch neu, wenn es fehlschlägt</string>
     <string name="settings_podcasts_label_download_complete_sound">Wiedergabe nach Abschluss des Downloads</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Deaktivieren Sie den Ton von</string>

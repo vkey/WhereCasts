@@ -119,7 +119,8 @@
     <string name="settings_podcasts_label_updates_sound">Reproducir sonido cuando se encuentran nuevos episodios</string>
     <string name="settings_podcasts_label_updates_notification">Mostrar nueva notificación de episodio</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Se ejecuta solo cuando el dispositivo se está cargando</string>
-    <string name="settings_podcasts_label_auto_delete">Eliminar archivos descargados cuando haya terminado</string>
+    <string name="settings_podcasts_label_auto_delete">Eliminar archivos descargados cuando haya terminado</string>\
+    <string name="settings_podcasts_label_downloads_auto_delete">Eliminar automáticamente</string>
     <string name="settings_podcasts_label_downloads_restart_failed">Reinicie una descarga automáticamente si falla</string>
     <string name="settings_podcasts_label_download_complete_sound">Reproducir sonido cuando la descarga finalice</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Deshabilitar el sonido de</string>

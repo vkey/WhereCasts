@@ -19,6 +19,8 @@ import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.DateUtils;
+import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SearchEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.getNextEpisodeNotDownloaded;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistItems;
@@ -85,7 +88,7 @@ public class AsyncTasks {
                 cv.put("position", 0);
                 db.update(cv, mEpisode.getEpisodeId());
 
-                if (prefs.getBoolean("pref_auto_delete", true))
+                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
                     Utilities.DeleteMediaFile(ctx, mEpisode);
 
                 if (mPlaylistID != -1 && prefs.getBoolean("pref_remove_playlist_onend", false))
@@ -95,7 +98,7 @@ public class AsyncTasks {
             }
             else
             {
-                if (prefs.getBoolean("pref_auto_delete", true))
+                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
                 {
                     final File localFile = new File(GetLocalDirectory(ctx).concat(mLocalFile));
 
@@ -437,8 +440,7 @@ public class AsyncTasks {
                 mNewEpisodes = processor.newEpisodesCount;
                 mDownloadCount = processor.downloadCount;
             }
-            else
-            {
+            else {
                 final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
 
                 for (final PodcastItem podcast : podcasts) {
@@ -448,6 +450,38 @@ public class AsyncTasks {
                     processor.processEpisodes(podcast);
                     mNewEpisodes = processor.newEpisodesCount;
                     mDownloadCount = processor.downloadCount;
+
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+                    final int downloadsToDeleteNumber = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
+
+                    if (downloadsToDeleteNumber > 0) {
+                        List<PodcastItem> downloads1 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId(), downloadsToDeleteNumber);
+
+                        if (downloads1.size() > 0) {
+                            for (final PodcastItem download : downloads1) {
+                                Utilities.DeleteMediaFile(ctx, download);
+                                SystemClock.sleep(500);
+                            }
+                        }
+                    }
+
+                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
+
+                    if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                        List<PodcastItem> downloads2 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId());
+
+                        for (final PodcastItem download : downloads2) {
+                            final Date downloadDate = DateUtils.ConvertDate(download.getDownloadDate(), "yyyy-MM-dd HH:mm:ss");
+                            final Date compareDate = DateUtils.addHoursToDate(new Date(), autoDeleteID);
+
+                            if (downloadDate.after(compareDate)) {
+                                Utilities.DeleteMediaFile(ctx, download);
+                                SystemClock.sleep(500);
+                            }
+                        }
+
+                    }
                 }
             }
 
@@ -477,6 +511,58 @@ public class AsyncTasks {
                 Utilities.showNewEpisodesNotification(mContext.get(), mNewEpisodes, mDownloadCount);
 
             mResponse.processFinish(mNewEpisodes, mDownloadCount, mDownloadEpisodes);
+        }
+    }
+
+    public static class CleanupDownloads extends AsyncTask<Void, String, Void> {
+        private Interfaces.AsyncResponse mResponse;
+
+        public CleanupDownloads(final Context context, final Interfaces.AsyncResponse response) {
+            mContext = new WeakReference<>(context);
+            mResponse = response;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final Context ctx = mContext.get();
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
+            final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
+
+            for (final PodcastItem podcast : podcasts) {
+
+                final int downloadsToDeleteNumber = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
+
+                if (downloadsToDeleteNumber > 0) {
+                    List<PodcastItem> downloads1 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId(), downloadsToDeleteNumber);
+
+                    for (final PodcastItem download : downloads1) {
+                        Utilities.DeleteMediaFile(ctx, download);
+                        SystemClock.sleep(200);
+                    }
+                }
+
+                if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                    final List<PodcastItem> downloads2 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId());
+
+                    for (final PodcastItem download : downloads2) {
+                        final Date downloadDate = DateUtils.addHoursToDate(DateUtils.ConvertDate(download.getDownloadDate(), "yyyy-MM-dd HH:mm:ss"), autoDeleteID);
+                        final Date compareDate = new Date();
+
+                        //if the download date plus expiration hours, is not after today's day it's expired
+                        if (downloadDate.before(compareDate)) {
+                            Utilities.DeleteMediaFile(ctx, download);
+                            SystemClock.sleep(200);
+                        }
+                    }
+
+                }
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void param) {
+            mResponse.processFinish();
         }
     }
 

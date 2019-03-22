@@ -10,15 +10,19 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
+import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
@@ -120,8 +124,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 Log.d(context.getPackageName(), "[downloads] RECEIVER network released broadcast sent");
 
-                if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && prefs.getBoolean("from_job", false) && Utilities.BluetoothEnabled() == false)
-                {
+                if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && prefs.getBoolean("from_job", false) && !Utilities.BluetoothEnabled() && Utilities.WifiEnabled(context)) {
                     Log.d(context.getPackageName(), "[downloads] RECEIVER bluetooth enabled");
                     if (BluetoothAdapter.getDefaultAdapter() != null)
                         BluetoothAdapter.getDefaultAdapter().enable();
@@ -130,34 +133,15 @@ public class DownloadReceiver extends BroadcastReceiver {
                 editor.putBoolean("from_job", false);
                 editor.apply();
             }
+        }
 
-            //if (prefs.getBoolean("cleanup_downloads", false) && isCurrentDownload(context) == false)
-            {
-                final List<PodcastItem> podcasts = GetPodcasts(context);
-
-                for (final PodcastItem podcast : podcasts) {
-                    final int downloadsSaved = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
-
-                    if (downloadsSaved > 0) {
-                        final List<PodcastItem> downloads = GetEpisodesWithDownloads(context, podcast.getPodcastId(), downloadsSaved);
-
-                        if (downloads.size() > 0) {
-
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
-
-                            for (final PodcastItem download : downloads) {
-                                Utilities.DeleteMediaFile(context, download);
-                                SystemClock.sleep(500);
-                            }
-                            db.close();
-                        }
-                    }
-
-                }
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("cleanup_downloads", false);
-                editor.apply();
-            }
+        if (!isCurrentDownload(context))
+        {
+             new AsyncTasks.CleanupDownloads(context,
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {}
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

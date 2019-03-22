@@ -21,6 +21,7 @@ import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -170,6 +171,16 @@ public class Utilities {
     public static Boolean HasBluetooth()
     {
         return BluetoothAdapter.getDefaultAdapter() != null;
+    }
+
+    public static Boolean WifiEnabled(final Context ctx)
+    {
+        return HasWifi(ctx) && ((WifiManager)ctx.getSystemService(Context.WIFI_SERVICE)).isWifiEnabled();
+    }
+
+    public static Boolean HasWifi(final Context ctx)
+    {
+        return ctx.getSystemService(Context.WIFI_SERVICE) != null;
     }
 
     public static int getHeaderColor(final Context ctx) {

@@ -14,24 +14,30 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
+import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
 public class BackgroundService extends JobService {
@@ -73,23 +79,22 @@ public class BackgroundService extends JobService {
     }
 
     private void doWork(JobParameters jobParameters) {
+        final Context ctx = mContext.get();
 
-        //Log.d(getPackageName(), "Updated Started");
-        final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
+        final List<PodcastItem> podcasts = GetPodcasts(ctx);
 
         if (podcasts.size() > 0) {
             new AsyncTasks.SyncPodcasts(this, 0, true,
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int newEpisodeCount, final int downloadCount, final List<PodcastItem> downloadEpisodes) {
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.get());
+                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
                             final SharedPreferences.Editor editor = prefs.edit();
                             Log.d(getPackageName(), "[downloads] SERVICE new episode count: " + newEpisodeCount);
                             Log.d(getPackageName(), "[downloads] SERVICE new download count: " + downloadCount);
                             Log.d(getPackageName(), "[downloads] SERVICE new downloads size: " + downloadEpisodes.size());
 
                             if (newEpisodeCount > 0) {
-
                                 //used to track failed download attempts
                                 final int episodeCount = prefs.getInt("new_episode_count", 0) + newEpisodeCount;
                                 final int downloadCount2 = prefs.getInt("new_downloads_count", 0) + downloadCount;
@@ -106,25 +111,23 @@ public class BackgroundService extends JobService {
                                     playSound = false;
 
                                 if (playSound) {
-                                    final MediaPlayer mPlayer = MediaPlayer.create(mContext.get(), R.raw.new_episodes);
+                                    final MediaPlayer mPlayer = MediaPlayer.create(ctx, R.raw.new_episodes);
                                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                     mPlayer.start();
                                 }
                                 Log.d(getPackageName(), "[downloads] SERVICE download count: " + downloadEpisodes.size());
+                                Log.d(getPackageName(), "[downloads] SERVICE wifi enabled: " + Utilities.WifiEnabled(ctx));
 
-                                if (downloadEpisodes.size() > 0)
-                                {
-                                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && Utilities.BluetoothEnabled())
-                                    {
+                                if (downloadEpisodes.size() > 0) {
+                                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && Utilities.BluetoothEnabled() && Utilities.WifiEnabled(ctx)) {
                                         BluetoothAdapter.getDefaultAdapter().disable();
-                                        Log.d(mContext.get().getPackageName(), "[downloads] SERVICE bluetooth disabled");
+                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE bluetooth disabled");
                                     }
 
                                     mDownloadEpisodes = downloadEpisodes;
-                                    if (prefs.getBoolean("pref_high_bandwidth", true))
-                                    {
-                                        mManager = (ConnectivityManager) mContext.get().getSystemService(Context.CONNECTIVITY_SERVICE);
-                                        Log.d(mContext.get().getPackageName(), "[downloads] SERVICE network requested");
+                                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                                        mManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE network requested");
 
                                         editor.putBoolean("from_job", true);
                                         editor.apply();
@@ -137,11 +140,11 @@ public class BackgroundService extends JobService {
                                                 .build();
 
                                         mManager.requestNetwork(request, mNetworkCallback);
-                                    }
-                                    else
-                                    {
-                                        for(final PodcastItem episode : downloadEpisodes)
-                                            Utilities.startDownload(mContext.get(), episode);
+                                    } else {
+                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE no network request");
+
+                                        for (final PodcastItem episode : downloadEpisodes)
+                                            Utilities.startDownload(ctx, episode);
                                     }
                                 }
                             }
@@ -152,6 +155,7 @@ public class BackgroundService extends JobService {
                             editor.apply();
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
         //Log.d(this.getPackageName(), "Updated Finished");
 
@@ -163,6 +167,8 @@ public class BackgroundService extends JobService {
         @Override
         public void onAvailable(Network network) {
             Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available");
+            Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available date: " + new Date());
+
             Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available downloads size: " + mDownloadEpisodes.size());
 
             for(final PodcastItem episode : mDownloadEpisodes)

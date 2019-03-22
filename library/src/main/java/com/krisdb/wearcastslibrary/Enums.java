@@ -52,6 +52,25 @@ public class Enums {
         }
     }
 
+    public enum AutoDelete
+    {
+        NEVER (0),
+        PLAYED (1),
+        TWENTYFOURHOURS (2),
+        TWODAYS (3),
+        ONEEEK (4);
+
+        private final int autodeleteid;
+
+        AutoDelete(int id) {
+            this.autodeleteid = id;
+        }
+
+        public int getAutoDeleteID() {
+            return this.autodeleteid;
+        }
+    }
+
     public enum ThemeOptions
     {
         DEFAULT (0),
