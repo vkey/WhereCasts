@@ -1,5 +1,6 @@
 package com.krisdb.wearcasts.Activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -319,11 +320,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 tabs.setVisibility(View.GONE);
 */
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                ActivityCompat.requestPermissions(ctx, new String[]
-                        {
-                                WRITE_EXTERNAL_STORAGE,
-                                READ_PHONE_STATE
-                        }, PERMISSIONS_CODE);
+                if (ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ctx, new String[]
+                            {
+                                    WRITE_EXTERNAL_STORAGE,
+                                    READ_PHONE_STATE
+                            }, PERMISSIONS_CODE);
+                }
             }
         }
     }
