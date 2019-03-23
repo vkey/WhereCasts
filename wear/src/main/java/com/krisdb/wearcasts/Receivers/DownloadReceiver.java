@@ -11,10 +11,8 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
@@ -26,15 +24,12 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
-import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
