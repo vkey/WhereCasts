@@ -14,30 +14,28 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.SystemClock;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
-import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
 public class BackgroundService extends JobService {
@@ -47,6 +45,9 @@ public class BackgroundService extends JobService {
     private static WeakReference<Context> mContext;
     private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
+    private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
+    private static TimeOutHandler mTimeOutHandler;
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
     public BackgroundService() {}
 
@@ -58,6 +59,7 @@ public class BackgroundService extends JobService {
         isWorking = true;
         mContext = new WeakReference<>(getApplicationContext());
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
+        mTimeOutHandler = new TimeOutHandler(this);
 
         try {mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch(Exception ignored){}
@@ -140,7 +142,13 @@ public class BackgroundService extends JobService {
                                                 .build();
 
                                         mManager.requestNetwork(request, mNetworkCallback);
-                                    } else {
+
+                                        mTimeOutHandler.sendMessageDelayed(
+                                                mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
+                                                NETWORK_CONNECTIVITY_TIMEOUT_MS);
+
+
+                                } else {
                                         Log.d(ctx.getPackageName(), "[downloads] SERVICE no network request");
 
                                         for (final PodcastItem episode : downloadEpisodes)
@@ -170,7 +178,7 @@ public class BackgroundService extends JobService {
             Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available date: " + new Date());
 
             Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available downloads size: " + mDownloadEpisodes.size());
-
+            mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
             for(final PodcastItem episode : mDownloadEpisodes)
                Utilities.startDownload(mContext.get(), episode);
         }
@@ -179,14 +187,44 @@ public class BackgroundService extends JobService {
     private BroadcastReceiver mDownloadsComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mManager != null && mNetworkCallback != null) {
-                mManager.bindProcessToNetwork(null);
-                mManager.unregisterNetworkCallback(mNetworkCallback);
-            }
+            unregisterNetworkCallback();
             Log.d(context.getPackageName(), "[downloads] CALLBACK released broadcast received");
 
             try {mBroadcastManger.unregisterReceiver(mDownloadsComplete); }
             catch(Exception ignored){}
         }
     };
+
+    private static class TimeOutHandler extends Handler {
+        private final WeakReference<BackgroundService> mMainActivityWeakReference;
+
+        TimeOutHandler(BackgroundService service) {
+            mMainActivityWeakReference = new WeakReference<>(service);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            BackgroundService service = mMainActivityWeakReference.get();
+
+            if (service != null) {
+                switch (msg.what) {
+                    case MESSAGE_CONNECTIVITY_TIMEOUT:
+                        Log.d(mContext.get().getPackageName(), "[downloads] Network connection timeout");
+                        service.unregisterNetworkCallback();
+
+                        for (final PodcastItem episode : mDownloadEpisodes)
+                            Utilities.startDownload(mContext.get(), episode);
+
+                        break;
+                }
+            }
+        }
+    }
+
+    private void unregisterNetworkCallback() {
+        if (mNetworkCallback != null) {
+            mManager.unregisterNetworkCallback(mNetworkCallback);
+            mNetworkCallback = null;
+        }
+    }
 }
