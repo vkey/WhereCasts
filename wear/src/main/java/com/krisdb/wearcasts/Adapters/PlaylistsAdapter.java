@@ -436,15 +436,10 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     paramsLayout.setMargins(35, topMarginPlaylists, 35, 0);
                 else
                     paramsLayout.setMargins(15, topMarginPlaylists, 15, 0);
-
-                thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_hdpi));
-            } else if (isXHDPI) {
+            } else if (isXHDPI)
                 paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
-                thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_xhdpi));
-            } else {
+            else
                 paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
-                thumb.setMaxWidth((int) mContext.getResources().getDimension(R.dimen.thumb_width_playlist_list_default));
-            }
 
             if (episode.getDisplayThumbnail() != null)
                 thumb.setImageDrawable(episode.getDisplayThumbnail());
