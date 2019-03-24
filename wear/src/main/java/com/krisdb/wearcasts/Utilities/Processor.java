@@ -99,9 +99,6 @@ public class Processor {
         }
         db.close();
 
-        Log.d(mContext.getPackageName(), "[downloads] PROCESSOR download count: " + downloadEpisodes.size());
-
-
         TrimEpisodes(mContext, podcast);
 
         final int episodesDownloadedCount = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloaded_episodes_count", "0"));

@@ -61,11 +61,9 @@ public class DownloadReceiver extends BroadcastReceiver {
                 final String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                    //Log.d(context.getPackageName(), "Background service: Download Finished (" + episode.getTitle() + ")");
                     final ContentValues cvSuccess = new ContentValues();
                     cvSuccess.put("download", 1);
                     cvSuccess.put("downloadid", 0);
-                    //cvSuccess.put("downloadurl", path);
                     cvSuccess.put("dateDownload", DateUtils.GetDate());
 
                     final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
@@ -113,29 +111,29 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             cursor.close();
 
-            if (prefs.getBoolean("pref_high_bandwidth", true) && prefs.getBoolean("from_job", false) && !isCurrentDownload(context)) {
-                final Intent intentComplete = new Intent();
-                intentComplete.setAction("downloads_complete");
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
-                Log.d(context.getPackageName(), "[downloads] RECEIVER network released broadcast sent");
+            if (!isCurrentDownload(context)) {
+                if (prefs.getBoolean("from_job", false)) {
+                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                        final Intent intentComplete = new Intent();
+                        intentComplete.setAction("downloads_complete");
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
+                    }
 
-                if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && prefs.getBoolean("from_job", false) && !Utilities.BluetoothEnabled() && Utilities.WifiEnabled(context)) {
-                    Log.d(context.getPackageName(), "[downloads] RECEIVER bluetooth enabled");
-                    if (BluetoothAdapter.getDefaultAdapter() != null)
-                        BluetoothAdapter.getDefaultAdapter().enable();
+                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && !Utilities.BluetoothEnabled()) {
+                        if (BluetoothAdapter.getDefaultAdapter() != null)
+                            BluetoothAdapter.getDefaultAdapter().enable();
+                    }
+
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("from_job", false);
+                    editor.apply();
                 }
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("from_job", false);
-                editor.apply();
             }
-        }
-
-        if (!isCurrentDownload(context))
-        {
-             new AsyncTasks.CleanupDownloads(context,
+            new AsyncTasks.CleanupDownloads(context,
                     new Interfaces.AsyncResponse() {
                         @Override
-                        public void processFinish() {}
+                        public void processFinish() {
+                        }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

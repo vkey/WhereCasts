@@ -338,6 +338,7 @@
     <string name="alert_error_sorting_latest_episodes">Se produjo un error al ordenar los últimos episodios. Esto generalmente significa una mala fecha para un podcast.</string>
 
     <string name="alert_network_waiting">esperando por la red…</string>
+    <string name="alert_downloads_no_network">Sus podcasts no se pudieron descargar automáticamente debido a una conexión a Internet lenta o inexistente.</string>
 
     <string name="alert_file_none_deleted">No se borraron archivos</string>
     <string name="alert_file_deleted">1 archivo borrado</string>

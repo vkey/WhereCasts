@@ -340,6 +340,7 @@
     <string name="alert_error_sorting_latest_episodes">An error occurred sorting by latest episodes. This usually means a bad date for a podcast.</string>
 
     <string name="alert_network_waiting">Waiting for network…</string>
+    <string name="alert_downloads_no_network">Your podcasts failed to auto-download due to a slow or no Internet connection.</string>
 
     <string name="alert_file_none_deleted">No files deleted</string>
     <string name="alert_file_deleted">1 file deleted</string>

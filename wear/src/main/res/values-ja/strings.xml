@@ -339,6 +339,7 @@
     <string name="alert_error_sorting_latest_episodes">最新のエピソードでソートする際にエラーが発生しました. これは、通常、ポッドキャストの悪い日付を意味します.</string>
 
     <string name="alert_network_waiting">ネットワークを待っている…</string>
+    <string name="alert_downloads_no_network">インターネット接続が遅い、またはインターネットに接続されていないため、Podcastを自動ダウンロードできませんでした.</string>
 
     <string name="alert_file_none_deleted">ファイルが削除されていない</string>
     <string name="alert_file_deleted">1 ファイルを削除しました</string>

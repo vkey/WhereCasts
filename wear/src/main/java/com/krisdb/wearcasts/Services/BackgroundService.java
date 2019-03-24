@@ -15,8 +15,10 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -25,10 +27,15 @@ import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
@@ -49,10 +56,12 @@ public class BackgroundService extends JobService {
     private static TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
-    public BackgroundService() {}
+    public BackgroundService() {
+    }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() {
+    }
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -61,10 +70,10 @@ public class BackgroundService extends JobService {
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
 
-        try {mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
-        catch(Exception ignored){}
-        Log.d(getPackageName(), "[downloads] job start");
-
+        try {
+            mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete"));
+            }
+        catch (Exception ignored) {}
         doWork(params);
 
         return isWorking;
@@ -75,7 +84,6 @@ public class BackgroundService extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         jobCancelled = true;
         boolean needsReschedule = isWorking;
-        Log.d(getPackageName(), "[downloads] job stop (reschedule): " + needsReschedule);
         jobFinished(jobParameters, needsReschedule);
         return needsReschedule;
     }
@@ -92,9 +100,6 @@ public class BackgroundService extends JobService {
                         public void processFinish(final int newEpisodeCount, final int downloadCount, final List<PodcastItem> downloadEpisodes) {
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
                             final SharedPreferences.Editor editor = prefs.edit();
-                            Log.d(getPackageName(), "[downloads] SERVICE new episode count: " + newEpisodeCount);
-                            Log.d(getPackageName(), "[downloads] SERVICE new download count: " + downloadCount);
-                            Log.d(getPackageName(), "[downloads] SERVICE new downloads size: " + downloadEpisodes.size());
 
                             if (newEpisodeCount > 0) {
                                 //used to track failed download attempts
@@ -117,22 +122,19 @@ public class BackgroundService extends JobService {
                                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                     mPlayer.start();
                                 }
-                                Log.d(getPackageName(), "[downloads] SERVICE download count: " + downloadEpisodes.size());
-                                Log.d(getPackageName(), "[downloads] SERVICE wifi enabled: " + Utilities.WifiEnabled(ctx));
 
                                 if (downloadEpisodes.size() > 0) {
-                                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && Utilities.BluetoothEnabled() && Utilities.WifiEnabled(ctx)) {
+                                    //only disable bluetooth if wifi is enabled, otherwise there will be no connection
+                                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && Utilities.BluetoothEnabled() && Utilities.WifiEnabled(ctx))
                                         BluetoothAdapter.getDefaultAdapter().disable();
-                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE bluetooth disabled");
-                                    }
 
                                     mDownloadEpisodes = downloadEpisodes;
+
+                                    editor.putBoolean("from_job", true);
+                                    editor.apply();
+
                                     if (prefs.getBoolean("pref_high_bandwidth", true)) {
                                         mManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE network requested");
-
-                                        editor.putBoolean("from_job", true);
-                                        editor.apply();
 
                                         final NetworkRequest request = new NetworkRequest.Builder()
                                                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -146,27 +148,22 @@ public class BackgroundService extends JobService {
                                         mTimeOutHandler.sendMessageDelayed(
                                                 mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                                                 NETWORK_CONNECTIVITY_TIMEOUT_MS);
-
-
-                                } else {
-                                        Log.d(ctx.getPackageName(), "[downloads] SERVICE no network request");
-
-                                        for (final PodcastItem episode : downloadEpisodes)
+                                    } else {
+                                        for (final PodcastItem episode : mDownloadEpisodes)
                                             Utilities.startDownload(ctx, episode);
                                     }
                                 }
                             }
 
-                            CacheUtils.deletePodcastsCache(mContext.get());
+                            CacheUtils.deletePodcastsCache(ctx);
 
                             editor.putString("last_podcast_sync_date", new Date().toString());
                             editor.apply();
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        }
-        //Log.d(this.getPackageName(), "Updated Finished");
 
+        }
         isWorking = false;
         jobFinished(jobParameters, false);
     }
@@ -174,13 +171,16 @@ public class BackgroundService extends JobService {
     public static ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
-            Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available");
-            Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available date: " + new Date());
-
-            Log.d(mContext.get().getPackageName(), "[downloads] CALLBACK network available downloads size: " + mDownloadEpisodes.size());
             mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-            for(final PodcastItem episode : mDownloadEpisodes)
-               Utilities.startDownload(mContext.get(), episode);
+            for (final PodcastItem episode : mDownloadEpisodes)
+                Utilities.startDownload(mContext.get(), episode);
+        }
+
+        @Override
+        public void onLost(Network network) {
+            final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext.get()).edit();
+            editor.putBoolean("show_no_network_message", true);
+            editor.apply();
         }
     };
 
@@ -188,10 +188,9 @@ public class BackgroundService extends JobService {
         @Override
         public void onReceive(Context context, Intent intent) {
             unregisterNetworkCallback();
-            Log.d(context.getPackageName(), "[downloads] CALLBACK released broadcast received");
-
-            try {mBroadcastManger.unregisterReceiver(mDownloadsComplete); }
-            catch(Exception ignored){}
+            try {
+                mBroadcastManger.unregisterReceiver(mDownloadsComplete);
+            } catch (Exception ignored) {}
         }
     };
 
@@ -209,12 +208,11 @@ public class BackgroundService extends JobService {
             if (service != null) {
                 switch (msg.what) {
                     case MESSAGE_CONNECTIVITY_TIMEOUT:
-                        Log.d(mContext.get().getPackageName(), "[downloads] Network connection timeout");
                         service.unregisterNetworkCallback();
-
-                        for (final PodcastItem episode : mDownloadEpisodes)
-                            Utilities.startDownload(mContext.get(), episode);
-
+                        mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                        final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext.get()).edit();
+                        editor.putBoolean("show_no_network_message", true);
+                        editor.apply();
                         break;
                 }
             }
@@ -222,8 +220,9 @@ public class BackgroundService extends JobService {
     }
 
     private void unregisterNetworkCallback() {
-        if (mNetworkCallback != null) {
+        if (mManager != null && mNetworkCallback != null) {
             mManager.unregisterNetworkCallback(mNetworkCallback);
+            mManager.bindProcessToNetwork(null);
             mNetworkCallback = null;
         }
     }

@@ -79,11 +79,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         //CommonUtils.showToast(this, CommonUtils.getDensityName(this));
 
-        //final SQLiteDatabase sdb = DatabaseHelper.select(this);
-        //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubdate] DESC LIMIT 1)");
+        //final android.database.sqlite.SQLiteDatabase sdb1 = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
+        //sdb1.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 15 ORDER BY [pubdate] DESC LIMIT 1)");
 
-        //final SQLiteDatabase sdb = DatabaseHelper.select(this);
-        //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
+        //final android.database.sqlite.SQLiteDatabase sdb2 = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
+        //sdb2.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
 
         //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = -7");
@@ -223,6 +223,22 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("new_episode_count", 0);
                 editor.apply();
+            }
+            if (prefs.getBoolean("show_no_network_message", false)) {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                    alert.setMessage(ctx.getString(R.string.alert_downloads_no_network));
+                    alert.setNeutralButton(ctx.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("show_no_network_message", false);
+                    editor.apply();
+                }
             }
 
             if (prefs.getInt("new_downloads_count", 0) > 0) {

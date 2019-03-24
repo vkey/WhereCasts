@@ -337,6 +337,7 @@
     <string name="alert_error_sorting_latest_episodes">按最新劇集排序時出錯. 這通常意味著播客的糟糕日期.</string>
 
     <string name="alert_network_waiting">等待網絡…</string>
+    <string name="alert_downloads_no_network">由於Internet連接緩慢或無法連接，您的播客無法自動下載.</string>
 
     <string name="alert_file_none_deleted">沒有文件被刪除</string>
     <string name="alert_file_deleted">1 文件已刪除</string>

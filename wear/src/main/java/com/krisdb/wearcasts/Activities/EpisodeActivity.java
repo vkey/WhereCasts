@@ -1234,6 +1234,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             db.close();
 
                             showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+                            finish();
                         }
                     }
 

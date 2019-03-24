@@ -338,6 +338,7 @@
     <string name="alert_error_sorting_latest_episodes">Ett fel inträffade sortering efter senaste episoderna. Detta betyder vanligtvis ett dåligt datum för en podcast.</string>
 
     <string name="alert_network_waiting">väntar på nätverk…</string>
+    <string name="alert_downloads_no_network">Dina podsändningar misslyckades automatiskt nedladdning på grund av en långsam eller ingen Internetanslutning.</string>
 
     <string name="alert_file_none_deleted">Inga filer raderade</string>
     <string name="alert_file_deleted">1 filen raderad</string>

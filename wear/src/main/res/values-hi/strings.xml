@@ -339,6 +339,7 @@
     <string name="alert_error_sorting_latest_episodes">नवीनतम एपिसोड द्वारा क्रमबद्ध एक त्रुटि हुई। आमतौर पर इसका मतलब पॉडकास्ट के लिए एक बुरी तारीख है.</string>
 
     <string name="alert_network_waiting">नेटवर्क की प्रतीक्षा…</string>
+    <string name="alert_downloads_no_network">धीमे या बिना इंटरनेट कनेक्शन के आपके पॉडकास्ट ऑटो-डाउनलोड करने में विफल रहे.</string>
 
     <string name="alert_file_none_deleted">कोई फाइल नहीं हटाई गई</string>
     <string name="alert_file_deleted">1 फ़ाइल हटा दी गई</string>

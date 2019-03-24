@@ -485,13 +485,8 @@ public class AsyncTasks {
                 }
             }
 
-            Log.d(ctx.getPackageName(), "[downloads] ASYNC download count: " + processor.downloadEpisodes.size());
-            Log.d(ctx.getPackageName(), "[downloads] ASYNC download date: " + new Date());
-
             if (processor.downloadEpisodes.size() > 0)
-            {
                 mDownloadEpisodes = processor.downloadEpisodes;
-            }
 
             if (mPodcastId == 0) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

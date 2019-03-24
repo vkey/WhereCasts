@@ -13,8 +13,8 @@
     <dimen name="thumb_width_add_list_xhdpi">50dp</dimen>
 
     <dimen name="thumb_width_playlist_list_default">50dp</dimen>
-    <dimen name="thumb_width_playlist_list_hdpi">40dp</dimen>
-    <dimen name="thumb_width_playlist_list_xhdpi">40dp</dimen>
+    <dimen name="thumb_width_playlist_list_hdpi">45dp</dimen>
+    <dimen name="thumb_width_playlist_list_xhdpi">45dp</dimen>
 
     <dimen name="thumbs_width_episode_list_title_hdpi_square">55dp</dimen>
     <dimen name="thumbs_width_episode_list_title_hdpi_round">70dp</dimen>
