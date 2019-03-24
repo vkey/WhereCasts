@@ -14,25 +14,27 @@
         android:id="@+id/episode_row_item_title_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
         android:visibility="gone"
         />
 
     <TextView
         android:id="@+id/episode_row_item_title"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:breakStrategy="simple"
-        app:layout_constraintTop_toTopOf="parent"
         android:lineSpacingExtra="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/episode_row_item_download"
         />
 
     <ImageView
@@ -44,15 +46,17 @@
         android:paddingStart="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
+        android:foreground="?android:attr/selectableItemBackground"
         />
 
     <TextView
         android:id="@+id/episode_row_item_date"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/episode_row_item_title"
+        app:layout_constraintEnd_toStartOf="@+id/episode_row_item_duration"
         android:layout_marginTop="4dp"
         />
 

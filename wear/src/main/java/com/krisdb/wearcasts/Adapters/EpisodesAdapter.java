@@ -386,7 +386,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         else
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
 
-        //download.setVisibility((mPlaylistId == mPlaylistDefault || mPlaylistId == mPlaylistDownloads) ? View.VISIBLE : View.GONE);
         title.setTextColor(mTextColor);
 
         if (episode.getIsTitle()) //TITLE
@@ -402,8 +401,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
             else
                 thumbTitle.setImageDrawable(GetRoundedPlaceholderLogo(mContext));
-
-            title.setPadding(0, 0, 0, 0);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
@@ -451,9 +448,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 titleText.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 title.setText(titleText);
             }
-
-            //prevent title from overlapping download image
-            title.setPadding(0, 0, 50, 0);
 
             if (episode.getIsSelected()) {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));

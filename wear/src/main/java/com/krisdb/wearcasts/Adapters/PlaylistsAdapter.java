@@ -33,6 +33,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.wear.widget.WearableRecyclerView;
 
@@ -55,8 +56,8 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
         private final TextView title;
-        private final ImageView thumbnail, download;
-        private final RelativeLayout layout;
+        private final ImageView thumbnail,download;
+        private final ConstraintLayout layout;
         private final ProgressBar progressEpisode;
 
         ViewHolder(final View view) {
@@ -371,7 +372,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final TextView title = viewHolder.title;
         final ImageView thumb = viewHolder.thumbnail;
         final ImageView download = viewHolder.download;
-        final RelativeLayout layout = viewHolder.layout;
+        final ConstraintLayout layout = viewHolder.layout;
         final ProgressBar episodeProgress = viewHolder.progressEpisode;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
 
@@ -384,7 +385,6 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
         if (episode.getIsTitle()) //TITLE
         {
-            title.setPadding(0, 0, 0 ,0 );
             title.setText(episode.getChannel().getTitle());
             download.setVisibility(View.GONE);
             episodeProgress.setVisibility(View.GONE);
@@ -399,43 +399,37 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 0, 0, 60);
+                    paramsLayout.setMargins(0, 0, 0, 10);
                 else
-                    paramsLayout.setMargins(0, 0, 0, 60);
+                    paramsLayout.setMargins(0, 0, 0, 10);
             } else if (isXHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 0, 0, 35);
+                    paramsLayout.setMargins(0, 0, 0, 10);
                 else
-                    paramsLayout.setMargins(0, 0, 0, 35);
+                    paramsLayout.setMargins(0, 0, 0, 20);
             } else
-                paramsLayout.setMargins(0, 0, 0, 35);
+                paramsLayout.setMargins(0, 0, 0, 20);
 
             layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
         }
         else //EPISODE
         {
-            title.setPadding(0, 0, 40, 0);
             download.setVisibility(View.VISIBLE);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
 
-            final int topMarginPlaylists = -85;
-            if (episodeProgress != null) {
-                if (episode.getPosition() > 0) {
-                    episodeProgress.setVisibility(View.VISIBLE);
-                    episodeProgress.setMax(episode.getDuration());
-                    episodeProgress.setProgress(episode.getPosition());
-                } else {
-                    episodeProgress.setVisibility(View.INVISIBLE);
-                }
-            }
+            if (episode.getPosition() > 0) {
+                episodeProgress.setVisibility(View.VISIBLE);
+                episodeProgress.setMax(episode.getDuration());
+                episodeProgress.setProgress(episode.getPosition());
+            } else
+                episodeProgress.setVisibility(View.GONE);
+
+            final int topMarginPlaylists = 20;
 
             thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
-
-            if (episodeProgress != null && episode.getPosition() > 0)
-                    episodeProgress.setVisibility(View.VISIBLE);
 
             if (isHDPI) {
                 if (isRound)

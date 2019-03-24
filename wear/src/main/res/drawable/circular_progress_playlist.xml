@@ -3,15 +3,16 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/progress">
         <rotate
-            android:fromDegrees="270"
+            android:fromDegrees="0"
             android:pivotX="50%"
             android:pivotY="50%"
             android:toDegrees="270">
 
             <shape
                 android:innerRadiusRatio="6.5"
+                android:innerRadius="18dp"
                 android:shape="ring"
-                android:thicknessRatio="60.0"
+                android:thicknessRatio="20.0"
                 android:useLevel="true">
 
                 <rotate

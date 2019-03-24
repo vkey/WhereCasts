@@ -23,6 +23,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.wear.widget.WearableRecyclerView;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
@@ -38,7 +39,7 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
         private final TextView title, count;
         private final ImageView thumbnail;
-        private final RelativeLayout layout;
+        private final ConstraintLayout layout;
 
         ViewHolder(View view) {
             super(view);
