@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,7 @@ public class PodcastsListFragment extends Fragment {
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
 
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
@@ -103,7 +102,7 @@ public class PodcastsListFragment extends Fragment {
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                         dialog.dismiss();
                     }
                 });
@@ -156,9 +155,11 @@ public class PodcastsListFragment extends Fragment {
 
     private static class TimeOutHandler extends Handler {
         private final WeakReference<PodcastsListFragment> mActivityWeakReference;
+        private final PodcastsListFragment mFragment;
 
         TimeOutHandler(final PodcastsListFragment fragment) {
             mActivityWeakReference = new WeakReference<>(fragment);
+            mFragment = fragment;
         }
 
         @Override
@@ -175,7 +176,7 @@ public class PodcastsListFragment extends Fragment {
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    mFragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                                     dialog.dismiss();
                                 }
                             });
@@ -204,6 +205,21 @@ public class PodcastsListFragment extends Fragment {
         if (mNetworkCallback != null) {
             mManager.unregisterNetworkCallback(mNetworkCallback);
             mNetworkCallback = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                new AsyncTasks.SyncPodcasts(mActivity, 0, false,
+                        new Interfaces.BackgroundSyncResponse() {
+                            @Override
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                                RefreshContent();
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 

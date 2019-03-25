@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -71,7 +70,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -247,7 +246,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        mContext.startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                         dialog.dismiss();
                     }
                 });
@@ -347,7 +346,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mActivityRef.get().startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    mActivityRef.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                                     dialog.dismiss();
                                 }
                             });

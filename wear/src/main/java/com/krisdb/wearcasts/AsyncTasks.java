@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;

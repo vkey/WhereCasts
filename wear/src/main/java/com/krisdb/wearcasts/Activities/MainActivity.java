@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.view.View;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -461,7 +460,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                         dialog.dismiss();
                     }
                 });
@@ -482,7 +481,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                         dialog.dismiss();
                     }
                 });
@@ -507,22 +506,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                             }
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                mShowPodcastList = true;
-                                new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
         }
     }
 }

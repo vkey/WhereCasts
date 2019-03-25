@@ -94,7 +94,6 @@ public class CommonUtils {
 
             final int bandwidth = manager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
 
-            showToast(ctx, "bandwidth: " + bandwidth);
             return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth_kbs);
         }
 

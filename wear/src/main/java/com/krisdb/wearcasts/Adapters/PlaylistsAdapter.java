@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
@@ -228,7 +226,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        mContext.startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                         dialog.dismiss();
                     }
                 });
@@ -249,7 +247,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        mContext.startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                         dialog.dismiss();
                     }
                 });

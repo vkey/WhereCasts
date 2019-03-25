@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.Receivers;
 
 import android.app.DownloadManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
@@ -113,6 +111,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             if (!isCurrentDownload(context)) {
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);

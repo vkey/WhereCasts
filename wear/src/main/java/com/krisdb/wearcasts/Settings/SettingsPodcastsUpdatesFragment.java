@@ -19,7 +19,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
-import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -45,7 +44,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +147,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                         dialog.dismiss();
                     }
                 });
@@ -239,7 +238,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    fragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                                     dialog.dismiss();
                                 }
                             });
@@ -269,6 +268,26 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             mNetworkCallback = null;
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                                SetContent();
+                                setDeleteThumbnailsTitle();
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    }
+
 
     @Override
     public void onResume() {

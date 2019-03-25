@@ -58,7 +58,6 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Services.BackgroundService;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
@@ -75,7 +74,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
@@ -119,12 +117,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
 
     private String mLocalFile;
     private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
+    private static boolean mDownload;
 
     @Override
     public Resources.Theme getTheme() {
@@ -738,6 +737,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     }
 
     private void handleNetwork(final Boolean download) {
+        mDownload = download;
         final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
@@ -747,7 +747,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), download ? 1 : 2);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
                         dialog.dismiss();
                     }
                 });
@@ -817,7 +817,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
                                     dialog.dismiss();
                                 }
                             });
@@ -845,6 +845,16 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (mNetworkCallback != null) {
             mManager.unregisterNetworkCallback(mNetworkCallback);
             mNetworkCallback = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1)
+                DownloadEpisode();
+            else if (requestCode == 2)
+                StreamEpisode();
         }
     }
 
@@ -1231,7 +1241,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
                 break;
             case R.id.menu_drawer_episode_open_wifi:
-                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                 break;
             case R.id.menu_drawer_episode_open_bluetooth:
                 startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));

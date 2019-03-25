@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Services;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,27 +14,18 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
@@ -135,7 +125,6 @@ public class BackgroundService extends JobService {
 
                                     if (prefs.getBoolean("pref_high_bandwidth", true)) {
                                         unregisterNetworkCallback();
-
                                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                                             @Override
                                             public void onAvailable(final Network network) {

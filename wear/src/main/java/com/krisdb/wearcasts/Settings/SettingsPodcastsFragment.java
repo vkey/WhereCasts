@@ -17,9 +17,6 @@ import android.os.Message;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -33,10 +30,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.core.content.ContextCompat;
-
 import static android.app.Activity.RESULT_OK;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class SettingsPodcastsFragment extends PreferenceFragment {
 
@@ -47,7 +41,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +53,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
 
         mActivity = getActivity();
         mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         findPreference("pref_updates").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
@@ -128,7 +123,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
+                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                         dialog.dismiss();
                     }
                 });
@@ -144,7 +139,6 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity)) {
             unregisterNetworkCallback();
             CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
-            mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -218,7 +212,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    fragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
                                     dialog.dismiss();
                                 }
                             });
@@ -246,6 +240,24 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         if (mNetworkCallback != null) {
             mManager.unregisterNetworkCallback(mNetworkCallback);
             mNetworkCallback = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
+                        new Interfaces.BackgroundSyncResponse() {
+                            @Override
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                                SetContent(newEpisodeCount);
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
