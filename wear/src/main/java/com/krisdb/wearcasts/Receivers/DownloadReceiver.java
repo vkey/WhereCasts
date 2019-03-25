@@ -89,7 +89,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();
                     }
-                } else if (status == DownloadManager.STATUS_FAILED) { //FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED FAILED
+                } else if (status == DownloadManager.STATUS_FAILED) {
                     clearFailedDownload(context, episode);
                     final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
 
@@ -112,29 +112,23 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
-                if (prefs.getBoolean("from_job", false)) {
-                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
-                        final Intent intentComplete = new Intent();
-                        intentComplete.setAction("downloads_complete");
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
-                    }
-
-                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && !Utilities.BluetoothEnabled()) {
-                        if (BluetoothAdapter.getDefaultAdapter() != null)
-                            BluetoothAdapter.getDefaultAdapter().enable();
-                    }
-
-                    final SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("from_job", false);
-                    editor.apply();
+                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+                    final Intent intentComplete = new Intent();
+                    intentComplete.setAction("downloads_complete");
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("from_job", false);
+                editor.apply();
+
+                new AsyncTasks.CleanupDownloads(context,
+                        new Interfaces.AsyncResponse() {
+                            @Override
+                            public void processFinish() {
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
-            new AsyncTasks.CleanupDownloads(context,
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

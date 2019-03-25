@@ -2,11 +2,18 @@ package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -24,6 +31,7 @@ import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
@@ -33,6 +41,11 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     private Activity mActivity;
     private Boolean mNoResume = false;
     private static WeakReference<Activity> mActivityRef;
+    private ConnectivityManager mManager;
+    private ConnectivityManager.NetworkCallback mNetworkCallback;
+    private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
+    private TimeOutHandler mTimeOutHandler;
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,12 +55,14 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         mActivityRef = new WeakReference<>(getActivity());
 
         mActivity = getActivity();
+        mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
         setDeleteThumbnailsTitle();
 
         findPreference("pref_delete_thumbs").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-
                     final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                     alert.setMessage(getString(R.string.confirm_delete_all_thumbs));
                     alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
@@ -97,7 +112,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
         findPreference("pref_sync_art").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                handleNetwork(false);
+                handleNetwork();
                 return false;
             }
         });
@@ -122,7 +137,8 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             findPreference("pref_delete_thumbs").setSummary("");
     }
 
-    private void handleNetwork(final Boolean syncPodcasts) {
+    private void handleNetwork() {
+        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
@@ -132,7 +148,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 1);
                         dialog.dismiss();
                     }
                 });
@@ -145,27 +161,49 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 }).show();
             }
         }
-        else if (CommonUtils.HighBandwidthNetwork(mActivity) == false) {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), syncPodcasts ? 1 : 2);
-                        dialog.dismiss();
-                    }
-                });
+        else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity)) {
+            unregisterNetworkCallback();
+            CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
 
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
+            mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(final Network network) {
+                    mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
+                        }
+                    });
+
+                    mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
+                            new Interfaces.AsyncResponse() {
+                                @Override
+                                public void processFinish() {
+                                    SetContent();
+                                    setDeleteThumbnailsTitle();
+                                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                }
+                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            };
+
+            final NetworkRequest request = new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build();
+
+            mManager.requestNetwork(request, mNetworkCallback);
+
+            mTimeOutHandler.sendMessageDelayed(
+                    mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
+                    NETWORK_CONNECTIVITY_TIMEOUT_MS);
+
         } else {
-
             findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
@@ -180,6 +218,58 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         }
     }
 
+    private static class TimeOutHandler extends Handler {
+        private final WeakReference<SettingsPodcastsUpdatesFragment> mActivityWeakReference;
+
+        TimeOutHandler(final SettingsPodcastsUpdatesFragment fragment) {
+            mActivityWeakReference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final SettingsPodcastsUpdatesFragment fragment = mActivityWeakReference.get();
+
+            if (fragment != null) {
+                switch (msg.what) {
+                    case MESSAGE_CONNECTIVITY_TIMEOUT:
+                        final Activity ctx = mActivityRef.get();
+                        if (ctx != null && !ctx.isFinishing()) {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                            alert.setMessage(ctx.getString(R.string.alert_episode_network_no_high_bandwidth));
+                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                        }
+                        fragment.unregisterNetworkCallback();
+                        break;
+                }
+            }
+        }
+    }
+
+    private void releaseHighBandwidthNetwork() {
+        mManager.bindProcessToNetwork(null);
+        unregisterNetworkCallback();
+    }
+
+    private void unregisterNetworkCallback() {
+        if (mNetworkCallback != null) {
+            mManager.unregisterNetworkCallback(mNetworkCallback);
+            mNetworkCallback = null;
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -187,25 +277,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             SetContent();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            mNoResume = true;
-
-            findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
-            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            SetContent();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
     }
 
     private void SetContent()
@@ -235,6 +306,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
         mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        releaseHighBandwidthNetwork();
     }
 
     @Override

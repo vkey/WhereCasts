@@ -56,13 +56,6 @@
             android:defaultValue="true"
             />
 
-        <SwitchPreference
-            android:key="pref_downloads_disable_bluetooth"
-            android:title="@string/settings_podcasts_label_disable_bluetooth"
-            android:summary="@string/settings_podcasts_label_disable_bluetooth_summary"
-            android:defaultValue="true"
-            />
-
         <Preference android:key="pref_delete_downloads" />
 
         <Preference

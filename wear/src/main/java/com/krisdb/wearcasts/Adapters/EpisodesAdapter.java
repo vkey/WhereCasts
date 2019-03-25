@@ -3,11 +3,18 @@ package com.krisdb.wearcasts.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.Spannable;
@@ -33,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,9 +64,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private int mTextColor;
     private String mDensityName;
     private boolean isRound, isXHDPI, isHDPI;
-    private WeakReference<Activity> mActivityRef;
+    private static WeakReference<Activity> mActivityRef;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private WearableActionDrawerView mWearableActionDrawer;
+    private ConnectivityManager mManager;
+    private ConnectivityManager.NetworkCallback mNetworkCallback;
+    private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
+    private TimeOutHandler mTimeOutHandler;
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -90,6 +103,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mSwipeRefreshLayout = refreshLayout;
         mWearableActionDrawer = menu;
         mSelectedPositions = new ArrayList<>();
+        mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -245,45 +260,29 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }).show();
             }
         }
-        else if (CommonUtils.HighBandwidthNetwork(mContext) == false) {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+        else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mContext)) {
+            unregisterNetworkCallback();
+            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_search));
+            mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(final Network network) {
+                    mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                    downloadEpisode(downloadId, episode);
+                }
+            };
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                        dialog.dismiss();
-                    }
-                });
+            final NetworkRequest request = new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build();
 
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+            mManager.requestNetwork(request, mNetworkCallback);
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        }
-        else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        downloadEpisode(position, episode);
-                        dialog.dismiss();
-                    }
-                });
-                alert.show();
-
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("initialDownload", false);
-                editor.apply();
-            }
+            mTimeOutHandler.sendMessageDelayed(
+                    mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
+                    NETWORK_CONNECTIVITY_TIMEOUT_MS);
         }
         else
             downloadEpisode(position, episode);
@@ -324,6 +323,55 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
         notifyItemChanged(position);
+    }
+
+    private static class TimeOutHandler extends Handler {
+        private final WeakReference<EpisodesAdapter> mActivityWeakReference;
+
+        TimeOutHandler(final EpisodesAdapter adapter) {
+            mActivityWeakReference = new WeakReference<>(adapter);
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final EpisodesAdapter adapter = mActivityWeakReference.get();
+
+            if (adapter != null) {
+                switch (msg.what) {
+                    case MESSAGE_CONNECTIVITY_TIMEOUT:
+                        final Activity ctx = mActivityRef.get();
+
+                        if (ctx != null && !ctx.isFinishing()) {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                            alert.setMessage(ctx.getString(R.string.alert_episode_network_no_high_bandwidth));
+                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mActivityRef.get().startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                        }
+                        adapter.unregisterNetworkCallback();
+                        break;
+                }
+            }
+        }
+    }
+
+    private void unregisterNetworkCallback() {
+        if (mNetworkCallback != null) {
+            mManager.unregisterNetworkCallback(mNetworkCallback);
+            mManager.bindProcessToNetwork(null);
+            mNetworkCallback = null;
+        }
     }
 
     private void openEpisode(final int position)

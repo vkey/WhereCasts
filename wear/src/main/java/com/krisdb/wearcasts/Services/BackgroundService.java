@@ -52,6 +52,8 @@ public class BackgroundService extends JobService {
     private static WeakReference<Context> mContext;
     private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
+    private ConnectivityManager.NetworkCallback mNetworkCallback;
+
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private static TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
@@ -64,11 +66,12 @@ public class BackgroundService extends JobService {
     }
 
     @Override
-    public boolean onStartJob(JobParameters params) {
+    public boolean onStartJob(final JobParameters params) {
         isWorking = true;
         mContext = new WeakReference<>(getApplicationContext());
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         try {
             mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete"));
@@ -81,14 +84,14 @@ public class BackgroundService extends JobService {
 
     // Called if the job was cancelled before being finished
     @Override
-    public boolean onStopJob(JobParameters jobParameters) {
+    public boolean onStopJob(final JobParameters jobParameters) {
         jobCancelled = true;
         boolean needsReschedule = isWorking;
         jobFinished(jobParameters, needsReschedule);
         return needsReschedule;
     }
 
-    private void doWork(JobParameters jobParameters) {
+    private void doWork(final JobParameters jobParameters) {
         final Context ctx = mContext.get();
 
         final List<PodcastItem> podcasts = GetPodcasts(ctx);
@@ -124,9 +127,6 @@ public class BackgroundService extends JobService {
                                 }
 
                                 if (downloadEpisodes.size() > 0) {
-                                    //only disable bluetooth if wifi is enabled, otherwise there will be no connection
-                                    if (prefs.getBoolean("pref_downloads_disable_bluetooth", true) && Utilities.BluetoothEnabled() && Utilities.WifiEnabled(ctx))
-                                        BluetoothAdapter.getDefaultAdapter().disable();
 
                                     mDownloadEpisodes = downloadEpisodes;
 
@@ -134,7 +134,16 @@ public class BackgroundService extends JobService {
                                     editor.apply();
 
                                     if (prefs.getBoolean("pref_high_bandwidth", true)) {
-                                        mManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                        unregisterNetworkCallback();
+
+                                        mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                                            @Override
+                                            public void onAvailable(final Network network) {
+                                                mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                                                for (final PodcastItem episode : mDownloadEpisodes)
+                                                    Utilities.startDownload(mContext.get(), episode);
+                                            }
+                                        };
 
                                         final NetworkRequest request = new NetworkRequest.Builder()
                                                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -168,25 +177,9 @@ public class BackgroundService extends JobService {
         jobFinished(jobParameters, false);
     }
 
-    public static ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
-        @Override
-        public void onAvailable(Network network) {
-            mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-            for (final PodcastItem episode : mDownloadEpisodes)
-                Utilities.startDownload(mContext.get(), episode);
-        }
-
-        @Override
-        public void onLost(Network network) {
-            final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext.get()).edit();
-            editor.putBoolean("show_no_network_message", true);
-            editor.apply();
-        }
-    };
-
     private BroadcastReceiver mDownloadsComplete = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             unregisterNetworkCallback();
             try {
                 mBroadcastManger.unregisterReceiver(mDownloadsComplete);
@@ -197,13 +190,13 @@ public class BackgroundService extends JobService {
     private static class TimeOutHandler extends Handler {
         private final WeakReference<BackgroundService> mMainActivityWeakReference;
 
-        TimeOutHandler(BackgroundService service) {
+        TimeOutHandler(final BackgroundService service) {
             mMainActivityWeakReference = new WeakReference<>(service);
         }
 
         @Override
-        public void handleMessage(Message msg) {
-            BackgroundService service = mMainActivityWeakReference.get();
+        public void handleMessage(final Message msg) {
+            final BackgroundService service = mMainActivityWeakReference.get();
 
             if (service != null) {
                 switch (msg.what) {
