@@ -2,18 +2,11 @@ package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -29,7 +22,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
 

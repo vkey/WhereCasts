@@ -26,7 +26,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;

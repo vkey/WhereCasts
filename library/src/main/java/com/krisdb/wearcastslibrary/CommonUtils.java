@@ -18,7 +18,6 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
