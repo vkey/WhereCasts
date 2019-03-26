@@ -223,6 +223,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.putInt("new_episode_count", 0);
                 editor.apply();
             }
+            /*
             if (prefs.getBoolean("show_no_network_message", false)) {
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
@@ -239,6 +240,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     editor.apply();
                 }
             }
+            */
 
             if (prefs.getInt("new_downloads_count", 0) > 0) {
                 final SharedPreferences.Editor editor = prefs.edit();

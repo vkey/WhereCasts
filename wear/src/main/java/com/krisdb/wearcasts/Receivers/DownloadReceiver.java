@@ -24,8 +24,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.Date;
 import java.util.Objects;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
 import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
@@ -110,9 +108,9 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
-                //if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
-                if (prefs.getBoolean("from_job", false)) {
 
+                /*
+                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
@@ -121,6 +119,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);
                 editor.apply();
+                */
 
                 new AsyncTasks.CleanupDownloads(context,
                         new Interfaces.AsyncResponse() {

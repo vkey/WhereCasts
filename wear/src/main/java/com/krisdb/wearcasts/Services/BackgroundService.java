@@ -2,20 +2,11 @@ package com.krisdb.wearcasts.Services;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -29,24 +20,23 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
 public class BackgroundService extends JobService {
     boolean isWorking = false;
     boolean jobCancelled = false;
-    private static List<PodcastItem> mDownloadEpisodes;
     private static WeakReference<Context> mContext;
+
+    /*
+    private static List<PodcastItem> mDownloadEpisodes;
     private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
-
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private static TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
+    */
 
     public BackgroundService() {
     }
@@ -59,6 +49,7 @@ public class BackgroundService extends JobService {
     public boolean onStartJob(final JobParameters params) {
         isWorking = true;
         mContext = new WeakReference<>(getApplicationContext());
+        /*
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -67,6 +58,7 @@ public class BackgroundService extends JobService {
             mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete"));
             }
         catch (Exception ignored) {}
+        */
         doWork(params);
 
         return isWorking;
@@ -118,6 +110,7 @@ public class BackgroundService extends JobService {
                                     mPlayer.start();
                                 }
 
+                                /*
                                 if (downloadEpisodes.size() > 0) {
 
                                     mDownloadEpisodes = downloadEpisodes;
@@ -153,8 +146,8 @@ public class BackgroundService extends JobService {
                                     //Utilities.startDownload(ctx, episode);
                                     //}
                                 }
+                                */
                             }
-
                             CacheUtils.deletePodcastsCache(ctx);
 
                             editor.putString("last_podcast_sync_date", new Date().toString());
@@ -167,7 +160,7 @@ public class BackgroundService extends JobService {
         isWorking = false;
         jobFinished(jobParameters, false);
     }
-
+/*
     private BroadcastReceiver mDownloadsComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
@@ -210,4 +203,5 @@ public class BackgroundService extends JobService {
             mNetworkCallback = null;
         }
     }
+    */
 }
