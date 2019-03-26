@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Constants;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -37,6 +39,7 @@ import androidx.fragment.app.Fragment;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
@@ -48,12 +51,13 @@ public class PodcastsListFragment extends Fragment {
     private PodcastsAdapter mAdapter;
     private static WeakReference<Activity> mActivityRef;
     private ImageView mLogo;
+    /*
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
-
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
+    */
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
     }
@@ -65,8 +69,8 @@ public class PodcastsListFragment extends Fragment {
 
         mActivity = getActivity();
         mActivityRef = new WeakReference<>(mActivity);
-        mTimeOutHandler = new TimeOutHandler(this);
-        mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //mTimeOutHandler = new TimeOutHandler(this);
+        //mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -92,7 +96,7 @@ public class PodcastsListFragment extends Fragment {
 
     private void handleNetwork()
     {
-        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
+        //final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
@@ -115,10 +119,32 @@ public class PodcastsListFragment extends Fragment {
                 }).show();
             }
         }
+        else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Constants.WifiIntent),1);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        /*
         else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity))
         {
             unregisterNetworkCallback();
-            CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
+            //CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -141,6 +167,7 @@ public class PodcastsListFragment extends Fragment {
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         }
+        */
         else
         {
             new AsyncTasks.SyncPodcasts(mActivity, 0, false,
@@ -153,6 +180,7 @@ public class PodcastsListFragment extends Fragment {
         }
     }
 
+    /*
     private static class TimeOutHandler extends Handler {
         private final WeakReference<PodcastsListFragment> mActivityWeakReference;
         private final PodcastsListFragment mFragment;
@@ -222,7 +250,7 @@ public class PodcastsListFragment extends Fragment {
             }
         }
     }
-
+*/
     @Override
     public void onActivityCreated(final Bundle icicle) {
 
@@ -320,7 +348,5 @@ public class PodcastsListFragment extends Fragment {
         super.onResume();
         if (mAdapter != null)
             showCopy(mAdapter.refreshContent());
-
-        releaseHighBandwidthNetwork();
     }
 }

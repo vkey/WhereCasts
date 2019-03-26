@@ -413,6 +413,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
                 if (!dirLocal.exists())
                     dirLocal.mkdirs();
+
+                if (mNavDrawer != null && mNavDrawer.get() != null)
+                    mNavDrawer.get().getController().peekDrawer();
             }
         }
     }

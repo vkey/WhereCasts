@@ -95,12 +95,14 @@ public class BackgroundService extends JobService {
                             final SharedPreferences.Editor editor = prefs.edit();
 
                             if (newEpisodeCount > 0) {
-                                //used to track failed download attempts
+                                //used to track failed download attempts and total notification over night
                                 final int episodeCount = prefs.getInt("new_episode_count", 0) + newEpisodeCount;
                                 final int downloadCount2 = prefs.getInt("new_downloads_count", 0) + downloadCount;
 
                                 editor.putInt("new_episode_count", episodeCount);
                                 editor.putInt("new_downloads_count", downloadCount2);
+
+                                Utilities.showNewEpisodesNotification(mContext.get(), episodeCount, downloadCount2);
 
                                 final String disableStart = prefs.getString("pref_updates_new_episodes_disable_start", "0");
                                 final String disableEnd = prefs.getString("pref_updates_new_episodes_disable_end", "0");
@@ -123,7 +125,7 @@ public class BackgroundService extends JobService {
                                     editor.putBoolean("from_job", true);
                                     editor.apply();
 
-                                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                                    //if (prefs.getBoolean("pref_high_bandwidth", true)) {
                                         unregisterNetworkCallback();
                                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                                             @Override
@@ -146,10 +148,10 @@ public class BackgroundService extends JobService {
                                         mTimeOutHandler.sendMessageDelayed(
                                                 mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                                                 NETWORK_CONNECTIVITY_TIMEOUT_MS);
-                                    } else {
-                                        for (final PodcastItem episode : mDownloadEpisodes)
-                                            Utilities.startDownload(ctx, episode);
-                                    }
+                                    //} else {
+                                    //for (final PodcastItem episode : mDownloadEpisodes)
+                                    //Utilities.startDownload(ctx, episode);
+                                    //}
                                 }
                             }
 

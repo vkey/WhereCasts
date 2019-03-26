@@ -32,6 +32,7 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Constants;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -66,11 +67,13 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private static WeakReference<Activity> mActivityRef;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private WearableActionDrawerView mWearableActionDrawer;
+    /*
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
+    */
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -102,8 +105,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mSwipeRefreshLayout = refreshLayout;
         mWearableActionDrawer = menu;
         mSelectedPositions = new ArrayList<>();
-        mTimeOutHandler = new TimeOutHandler(this);
-        mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //mTimeOutHandler = new TimeOutHandler(this);
+        //mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -259,14 +262,53 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 }).show();
             }
         }
+        else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
+                alert.setNeutralButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadEpisode(position, episode);
+                        dialog.dismiss();
+                    }
+                }).show();
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("initialDownload", false);
+                editor.apply();
+            }
+        }
+        else if (CommonUtils.HighBandwidthNetwork(mContext) == false)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.alert_episode_network_no_high_bandwidth));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent(Constants.WifiIntent));
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        /*
         else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mContext)) {
             unregisterNetworkCallback();
-            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_search));
+            //CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_search));
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(final Network network) {
                     mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                    downloadEpisode(downloadId, episode);
+                    downloadEpisode(position, episode);
                 }
             };
 
@@ -283,6 +325,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         }
+        */
         else
             downloadEpisode(position, episode);
     }
@@ -323,7 +366,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mSwipeRefreshLayout.setEnabled(mSelectedEpisodes.size() == 0);
         notifyItemChanged(position);
     }
-
+    /*
     private static class TimeOutHandler extends Handler {
         private final WeakReference<EpisodesAdapter> mActivityWeakReference;
 
@@ -372,6 +415,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             mNetworkCallback = null;
         }
     }
+    */
 
     private void openEpisode(final int position)
     {

@@ -8,6 +8,7 @@
     android:layout_gravity="center"
     android:padding="5dp"
     android:foreground="?android:attr/selectableItemBackground"
+    android:background="@color/wc_transparent"
     android:orientation="horizontal">
 
     <ImageView

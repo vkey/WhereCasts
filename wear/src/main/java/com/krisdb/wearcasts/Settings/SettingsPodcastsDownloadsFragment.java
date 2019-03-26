@@ -51,12 +51,6 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
         findPreference("pref_downloads_auto_delete").setSummary(((ListPreference) findPreference("pref_downloads_auto_delete")).getEntry());
 
-       if (BluetoothAdapter.getDefaultAdapter() == null)
-       {
-           PreferenceCategory category = (PreferenceCategory)findPreference("pref_downloads");
-           category.removePreference(findPreference("pref_downloads_disable_bluetooth"));
-       }
-
         setDeleteDownloadsTitle();
 
         findPreference("pref_delete_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

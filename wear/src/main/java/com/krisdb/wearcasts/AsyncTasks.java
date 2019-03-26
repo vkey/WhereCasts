@@ -501,9 +501,6 @@ public class AsyncTasks {
             if (!mDisableToast)
                 showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
 
-            if (mPreference == null && mPodcastId == 0)
-                Utilities.showNewEpisodesNotification(mContext.get(), mNewEpisodes, mDownloadCount);
-
             mResponse.processFinish(mNewEpisodes, mDownloadCount, mDownloadEpisodes);
         }
     }

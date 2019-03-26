@@ -110,7 +110,8 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
-                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+                //if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+                if (prefs.getBoolean("from_job", false)) {
 
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");

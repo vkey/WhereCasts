@@ -87,6 +87,9 @@ public class CommonUtils {
     }
     public static Boolean HighBandwidthNetwork(final Context ctx)
     {
+        /*
+        if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true)) return true;
+
         final Network activeNetwork = getActiveNetwork(ctx);
 
         if (activeNetwork != null) {
@@ -96,7 +99,7 @@ public class CommonUtils {
 
             return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth_kbs);
         }
-
+*/
         return true;
     }
 

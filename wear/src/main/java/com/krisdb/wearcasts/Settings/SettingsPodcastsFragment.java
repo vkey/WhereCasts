@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Constants;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -37,11 +38,13 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
     private Activity mActivity;
     private static WeakReference<Activity> mActivityRef;
     private Boolean mNoResume = false;
+    /*
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(5);
+    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,8 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         mActivityRef = new WeakReference<>(getActivity());
 
         mActivity = getActivity();
-        mTimeOutHandler = new TimeOutHandler(this);
-        mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //mTimeOutHandler = new TimeOutHandler(this);
+        //mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         findPreference("pref_updates").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
@@ -113,7 +116,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
     }
 
     private void handleNetwork() {
-        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
+        //final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (CommonUtils.getActiveNetwork(mActivity) == null)
         {
@@ -136,9 +139,31 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                 }).show();
             }
         }
+        else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Constants.WifiIntent),1);
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
+        /*
         else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity)) {
             unregisterNetworkCallback();
-            CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
+            //CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -149,10 +174,10 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                         @Override
                         public void run() {
                             findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
+                            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                     });
 
-                    mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
                             new Interfaces.BackgroundSyncResponse() {
                                 @Override
@@ -177,7 +202,9 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
 
-        } else {
+        }
+        */
+        else {
             findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
@@ -190,7 +217,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
+    /*
     private static class TimeOutHandler extends Handler {
         private final WeakReference<SettingsPodcastsFragment> mActivityWeakReference;
 
@@ -242,7 +269,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
             mNetworkCallback = null;
         }
     }
-
+    */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -265,7 +292,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
     public void onPause() {
         super.onPause();
         mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        releaseHighBandwidthNetwork();
+        //releaseHighBandwidthNetwork();
     }
 
     private void SetContent(final int newEpisodes)

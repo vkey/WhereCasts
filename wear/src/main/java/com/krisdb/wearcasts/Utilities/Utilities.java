@@ -322,7 +322,6 @@ public class Utilities {
         final long downloadId = manager.enqueue(download);
 
         SaveEpisodeValue(ctx, episode, "downloadid", downloadId);
-        Log.d(ctx.getPackageName(), "[downloads] download started id: " + downloadId);
 
         return downloadId;
     }
