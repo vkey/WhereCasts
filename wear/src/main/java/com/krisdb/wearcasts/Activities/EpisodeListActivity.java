@@ -499,6 +499,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                         @Override
                         public void onAvailable(final Network network) {
+                            mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
                             downloadEpisodes(itemId, episodes);
                         }
                     };
@@ -638,7 +639,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     case MESSAGE_CONNECTIVITY_TIMEOUT:
                         if (!activity.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-                            alert.setMessage(activity.getString(R.string.alert_episode_network_no_high_bandwidth));
+                            alert.setMessage(activity.getString(R.string.alert_episode_network_notfound));
                             alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

@@ -375,7 +375,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
                         if (ctx != null && !ctx.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                            alert.setMessage(ctx.getString(R.string.alert_episode_network_no_high_bandwidth));
+                            alert.setMessage(ctx.getString(R.string.alert_episode_network_notfound));
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

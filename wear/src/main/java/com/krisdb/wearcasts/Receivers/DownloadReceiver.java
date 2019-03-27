@@ -120,7 +120,8 @@ public class DownloadReceiver extends BroadcastReceiver {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
 
-                Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
+                if (prefs.getBoolean("pref_disable_bluetooth", false))
+                    Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
 
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);
