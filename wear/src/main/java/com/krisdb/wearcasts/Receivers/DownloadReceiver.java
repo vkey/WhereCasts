@@ -11,7 +11,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
@@ -111,10 +110,10 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
-                Log.d(context.getPackageName(), "[downloads] download complete");
+                //Log.d(context.getPackageName(), "[downloads] download complete");
 
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
-                    Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
+                    //Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
 
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");

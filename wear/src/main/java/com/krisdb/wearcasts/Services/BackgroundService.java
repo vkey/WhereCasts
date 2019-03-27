@@ -17,13 +17,11 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -63,7 +61,7 @@ public class BackgroundService extends JobService {
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        Log.d(mContext.get().getPackageName(), "[downloads] job started");
+        //Log.d(mContext.get().getPackageName(), "[downloads] job started");
 
         try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch (Exception ignored) {}
@@ -94,8 +92,8 @@ public class BackgroundService extends JobService {
                         public void processFinish(final int newEpisodeCount, final int downloadCount, final List<PodcastItem> downloadEpisodes) {
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
                             final SharedPreferences.Editor editor = prefs.edit();
-                            Log.d(mContext.get().getPackageName(), "[downloads] new episodes: " + newEpisodeCount);
-                            Log.d(mContext.get().getPackageName(), "[downloads] new downloads: " + downloadCount);
+                            //Log.d(mContext.get().getPackageName(), "[downloads] new episodes: " + newEpisodeCount);
+                            //Log.d(mContext.get().getPackageName(), "[downloads] new downloads: " + downloadCount);
 
                             if (newEpisodeCount > 0) {
                                 //used to track failed download attempts and total notification over night
@@ -136,7 +134,7 @@ public class BackgroundService extends JobService {
                                             @Override
                                             public void onAvailable(final Network network) {
                                                 mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                                                Log.d(mContext.get().getPackageName(), "[downloads] network found");
+                                                //Log.d(mContext.get().getPackageName(), "[downloads] network found");
                                                 for (final PodcastItem episode : mDownloadEpisodes)
                                                     Utilities.startDownload(mContext.get(), episode);
                                             }
@@ -151,7 +149,7 @@ public class BackgroundService extends JobService {
 
                                         mManager.requestNetwork(request, mNetworkCallback);
 
-                                        Log.d(mContext.get().getPackageName(), "[downloads] requesting network");
+                                        //Log.d(mContext.get().getPackageName(), "[downloads] requesting network");
 
                                         mTimeOutHandler.sendMessageDelayed(
                                                 mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
@@ -180,7 +178,7 @@ public class BackgroundService extends JobService {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             unregisterNetworkCallback();
-            Log.d(context.getPackageName(), "[downloads] network release received");
+            //Log.d(context.getPackageName(), "[downloads] network release received");
             try {
                 mBroadcastManger.unregisterReceiver(mDownloadsComplete);
             } catch (Exception ignored) {}
