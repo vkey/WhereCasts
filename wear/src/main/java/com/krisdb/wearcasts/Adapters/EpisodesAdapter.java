@@ -387,6 +387,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                             alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Utilities.enableBlutooth(ctx);
                                     dialog.dismiss();
                                 }
                             }).show();

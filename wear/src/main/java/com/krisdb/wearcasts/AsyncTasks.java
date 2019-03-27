@@ -431,7 +431,7 @@ public class AsyncTasks {
             final Context ctx = mContext.get();
 
             final Processor processor = new Processor(ctx);
-            //processor.downloadEpisodes = new ArrayList<>();
+            processor.downloadEpisodes = new ArrayList<>();
             if (mPodcastId > 0)
             {
                 final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
@@ -484,8 +484,8 @@ public class AsyncTasks {
                 }
             }
 
-            //if (processor.downloadEpisodes.size() > 0)
-                //mDownloadEpisodes = processor.downloadEpisodes;
+            if (processor.downloadEpisodes.size() > 0)
+                mDownloadEpisodes = processor.downloadEpisodes;
 
             if (mPodcastId == 0) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

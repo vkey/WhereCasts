@@ -47,6 +47,20 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
             findPreference("pref_download_sound_disable_end").setSummary("");
         }
 
+        final SwitchPreference cbDisableBluetooth = (SwitchPreference)findPreference("pref_disable_bluetooth");
+        findPreference("pref_disable_bluetooth_start").setEnabled(cbSound.isChecked());
+        findPreference("pref_disable_bluetooth_end").setEnabled(cbSound.isChecked());
+
+        if (cbDisableBluetooth.isChecked()) {
+            findPreference("pref_disable_bluetooth_start").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_start")).getEntry());
+            findPreference("pref_disable_bluetooth_end").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_end")).getEntry());
+        }
+        else
+        {
+            findPreference("pref_disable_bluetooth_start").setSummary("");
+            findPreference("pref_disable_bluetooth_end").setSummary("");
+        }
+
         findPreference("pref_downloads_auto_delete").setSummary(((ListPreference) findPreference("pref_downloads_auto_delete")).getEntry());
 
         setDeleteDownloadsTitle();
@@ -154,6 +168,23 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
             {
                 findPreference("pref_download_sound_disable_start").setSummary(((ListPreference) findPreference("pref_download_sound_disable_start")).getEntry());
                 findPreference("pref_download_sound_disable_end").setSummary(((ListPreference) findPreference("pref_download_sound_disable_end")).getEntry());
+            }
+        }
+
+        if (key.equals("pref_disable_bluetooth")) {
+            final SwitchPreference cbDisableBluetooth = (SwitchPreference)findPreference("pref_disable_bluetooth");
+
+            findPreference("pref_disable_bluetooth_start").setEnabled(cbDisableBluetooth.isChecked());
+            findPreference("pref_disable_bluetooth_end").setEnabled(cbDisableBluetooth.isChecked());
+
+            if (!cbDisableBluetooth.isChecked()) {
+                findPreference("pref_disable_bluetooth_start").setSummary("");
+                findPreference("pref_disable_bluetooth_end").setSummary("");
+            }
+            else
+            {
+                findPreference("pref_disable_bluetooth_start").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_start")).getEntry());
+                findPreference("pref_disable_bluetooth_end").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_end")).getEntry());
             }
         }
 

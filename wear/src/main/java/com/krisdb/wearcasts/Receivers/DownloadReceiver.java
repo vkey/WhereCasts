@@ -111,8 +111,17 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
+                Log.d(context.getPackageName(), "[downloads] download complete");
 
-                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false)) {
+                final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
+                final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
+
+                boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+                if (disableBluetooth && DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
+                    disableBluetooth = false;
+
+                if (prefs.getBoolean("from_job", false) && disableBluetooth) {
                     Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
 
                     final Intent intentComplete = new Intent();
@@ -120,7 +129,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
 
-                if (prefs.getBoolean("pref_disable_bluetooth", false))
+                if (disableBluetooth)
                     Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
 
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -130,8 +139,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                 new AsyncTasks.CleanupDownloads(context,
                         new Interfaces.AsyncResponse() {
                             @Override
-                            public void processFinish() {
-                            }
+                            public void processFinish() {}
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }

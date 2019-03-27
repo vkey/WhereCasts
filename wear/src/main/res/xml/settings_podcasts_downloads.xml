@@ -57,6 +57,24 @@
             android:defaultValue="false"
         />
 
+        <ListPreference
+            android:key="pref_disable_bluetooth_start"
+            android:title="@string/settings_podcasts_label_download_disable_bluetooth_start"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            android:dependency=""
+            />
+
+        <ListPreference
+            android:key="pref_disable_bluetooth_end"
+            android:title="@string/settings_podcasts_label_download_disable_bluetooth_end"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            android:entries="@array/hours_text"
+            android:entryValues="@array/hours_values"
+            />
+
+
         <Preference android:key="pref_delete_downloads" />
 
         <Preference

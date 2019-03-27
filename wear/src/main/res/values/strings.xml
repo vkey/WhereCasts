@@ -122,6 +122,8 @@
     <string name="settings_podcasts_label_download_complete_sound">Play sound when download completes</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Disable sound from</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">Disable sound to</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_start">Disable Bluetooth from</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_end">Disable Bluetooth to</string>
     <string name="settings_podcasts_label_playback_speed">Playback Speed</string>
     <string name="settings_podcasts_label_playback_skip_back">Skip Back</string>
     <string name="settings_podcasts_label_playback_skip_forward">Skip Forward</string>

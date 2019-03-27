@@ -857,6 +857,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Utilities.enableBlutooth(activity);
                                     dialog.dismiss();
                                 }
                             }).show();

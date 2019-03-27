@@ -49,12 +49,10 @@ public class BackgroundService extends JobService {
     private static TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
-    public BackgroundService() {
-    }
+    public BackgroundService() { }
 
     @Override
-    public void onCreate() {
-    }
+    public void onCreate() { }
 
     @Override
     public boolean onStartJob(final JobParameters params) {
@@ -64,6 +62,7 @@ public class BackgroundService extends JobService {
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        Log.d(mContext.get().getPackageName(), "[downloads] job started");
 
         try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch (Exception ignored) {}
@@ -94,6 +93,8 @@ public class BackgroundService extends JobService {
                         public void processFinish(final int newEpisodeCount, final int downloadCount, final List<PodcastItem> downloadEpisodes) {
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
                             final SharedPreferences.Editor editor = prefs.edit();
+                            Log.d(mContext.get().getPackageName(), "[downloads] new episodes: " + newEpisodeCount);
+                            Log.d(mContext.get().getPackageName(), "[downloads] new downloads: " + downloadCount);
 
                             if (newEpisodeCount > 0) {
                                 //used to track failed download attempts and total notification over night
@@ -126,10 +127,19 @@ public class BackgroundService extends JobService {
                                     editor.putBoolean("from_job", true);
                                     editor.apply();
 
-                                    if (prefs.getBoolean("pref_disable_bluetooth", false)) {
+                                    final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
+                                    final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
+
+                                    boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+                                    if (disableBluetooth && DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
+                                        disableBluetooth = false;
+
+                                    if (disableBluetooth) {
+
                                         unregisterNetworkCallback();
 
-                                        if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+                                        if (Utilities.BluetoothEnabled())
                                             Utilities.disableBluetooth(mContext.get(), false);
 
                                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
@@ -162,6 +172,7 @@ public class BackgroundService extends JobService {
                                     }
                                 }
                             }
+
                             CacheUtils.deletePodcastsCache(ctx);
 
                             editor.putString("last_podcast_sync_date", new Date().toString());

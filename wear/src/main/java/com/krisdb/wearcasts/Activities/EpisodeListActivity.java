@@ -651,6 +651,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Utilities.enableBlutooth(activity);
                                     dialog.dismiss();
                                 }
                             }).show();
