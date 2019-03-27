@@ -30,5 +30,6 @@
     <string name="none">Ingen</string>
     <string name="select">Välj</string>
     <string name="never">Aldrig</string>
+    <string name="always">Alltid</string>
 
 </resources>

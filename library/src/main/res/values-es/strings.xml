@@ -30,5 +30,6 @@
     <string name="none">Ninguna</string>
     <string name="select">Seleccionar</string>
     <string name="never">Nunca</string>
+    <string name="always">Siempre</string>
 
 </resources>

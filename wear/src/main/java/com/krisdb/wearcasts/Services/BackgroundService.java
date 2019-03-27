@@ -23,6 +23,7 @@ import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -127,20 +128,9 @@ public class BackgroundService extends JobService {
                                     editor.putBoolean("from_job", true);
                                     editor.apply();
 
-                                    final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
-                                    final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
-
-                                    boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
-
-                                    if (disableBluetooth && DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
-                                        disableBluetooth = false;
-
-                                    if (disableBluetooth) {
+                                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext.get(), false)) {
 
                                         unregisterNetworkCallback();
-
-                                        if (Utilities.BluetoothEnabled())
-                                            Utilities.disableBluetooth(mContext.get(), false);
 
                                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                                             @Override

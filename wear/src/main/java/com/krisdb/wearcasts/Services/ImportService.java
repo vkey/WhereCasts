@@ -145,10 +145,9 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
 
-                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext.get())) {
                         unregisterNetworkCallback();
 
-                        Utilities.disableBluetooth(mContext.get());
                         CommonUtils.showToast(mContext.get(), getString(R.string.alert_episode_network_waiting));
 
                         final PodcastItem finalEpisode = episode;

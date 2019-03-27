@@ -113,15 +113,7 @@ public class DownloadReceiver extends BroadcastReceiver {
             if (!isCurrentDownload(context)) {
                 Log.d(context.getPackageName(), "[downloads] download complete");
 
-                final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
-                final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
-
-                boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
-
-                if (disableBluetooth && DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss")))
-                    disableBluetooth = false;
-
-                if (prefs.getBoolean("from_job", false) && disableBluetooth) {
+                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
                     Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
 
                     final Intent intentComplete = new Intent();
@@ -129,8 +121,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
 
-                if (disableBluetooth)
-                    Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
+                Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));
 
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);

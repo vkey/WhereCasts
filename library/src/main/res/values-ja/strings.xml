@@ -30,5 +30,6 @@
     <string name="none">なし</string>
     <string name="select">選択</string>
     <string name="never">絶対に</string>
+    <string name="always">常に</string>
 
 </resources>

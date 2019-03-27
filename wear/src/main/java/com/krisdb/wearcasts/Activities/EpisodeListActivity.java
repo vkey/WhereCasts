@@ -489,11 +489,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         editor.apply();
                     }
                 }
-                else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())  {
+                else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mActivity)) {
 
                     unregisterNetworkCallback();
 
-                    Utilities.disableBluetooth(mActivity);
                     CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
@@ -651,7 +650,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBlutooth(activity);
+                                    Utilities.enableBluetooth(activity);
                                     dialog.dismiss();
                                 }
                             }).show();

@@ -1,0 +1,57 @@
+<resources>
+    <string-array name="hours_disable_bluetooth_values">
+        <item>0</item>
+        <item>13:00:00</item>
+        <item>14:00:00</item>
+        <item>15:00:00</item>
+        <item>16:00:00</item>
+        <item>17:00:00</item>
+        <item>18:00:00</item>
+        <item>19:00:00</item>
+        <item>20:00:00</item>
+        <item>21:00:00</item>
+        <item>22:00:00</item>
+        <item>23:00:00</item>
+        <item>24:00:00</item>
+        <item>01:00:00</item>
+        <item>02:00:00</item>
+        <item>03:00:00</item>
+        <item>04:00:00</item>
+        <item>05:00:00</item>
+        <item>06:00:00</item>
+        <item>07:00:00</item>
+        <item>08:00:00</item>
+        <item>09:00:00</item>
+        <item>10:00:00</item>
+        <item>11:00:00</item>
+        <item>12:00:00</item>
+    </string-array>
+
+    <string-array name="hours_disable_bluetooth_text">
+        <item>@string/always</item>
+        <item>1:00 PM</item>
+        <item>2:00 PM</item>
+        <item>3:00 PM</item>
+        <item>4:00 PM</item>
+        <item>5:00 PM</item>
+        <item>6:00 PM</item>
+        <item>7:00 PM</item>
+        <item>8:00 PM</item>
+        <item>9:00 PM</item>
+        <item>10:00 PM</item>
+        <item>11:00 PM</item>
+        <item>12:00 AM</item>
+        <item>1:00 AM</item>
+        <item>2:00 AM</item>
+        <item>3:00 AM</item>
+        <item>4:00 AM</item>
+        <item>5:00 AM</item>
+        <item>6:00 AM</item>
+        <item>7:00 AM</item>
+        <item>8:00 AM</item>
+        <item>9:00 AM</item>
+        <item>10:00 AM</item>
+        <item>11:00 AM</item>
+        <item>12:00 PM</item>
+    </string-array>
+</resources>

@@ -790,11 +790,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 editor.apply();
             }
         }
-        else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+        else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext))
         {
             unregisterNetworkCallback();
 
-            Utilities.disableBluetooth(mContext);
             CommonUtils.showToast(mContext, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
@@ -857,7 +856,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBlutooth(activity);
+                                    Utilities.enableBluetooth(activity);
                                     dialog.dismiss();
                                 }
                             }).show();

@@ -33,11 +33,13 @@ import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.BackgroundService;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -162,29 +164,52 @@ public class Utilities {
         editor.apply();
     }
 
-    public static void disableBluetooth(final Context ctx)
+    public static boolean disableBluetooth(final Context ctx)
     {
-        disableBluetooth(ctx, true);
+        return disableBluetooth(ctx, true);
     }
 
-    public static void disableBluetooth(final Context ctx, final boolean showToast)
+    public static void enableBluetooth(final Context ctx)
     {
-        BluetoothAdapter.getDefaultAdapter().disable();
-        if (showToast)
-            CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_disabled_end));
+        enableBluetooth(ctx, true);
     }
 
-    public static void enableBlutooth(final Context ctx)
-    {
-        enableBlutooth(ctx, true);
+    public static void enableBluetooth(final Context ctx, final boolean showToast) {
+        if (!BluetoothEnabled()) {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+            final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
+            final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
+
+            final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+            if (disableBluetooth && Objects.equals(disableBluetoothStart, "0") && Objects.equals(disableBluetoothEnd, "0") || DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss"))) {
+                BluetoothAdapter.getDefaultAdapter().enable();
+
+                if (showToast)
+                    CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_enabled));
+            }
+        }
     }
 
-    public static void enableBlutooth(final Context ctx, final boolean showToast)
-    {
-        BluetoothAdapter.getDefaultAdapter().enable();
+    public static boolean disableBluetooth(final Context ctx, final boolean showToast) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-        if (showToast)
-            CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_enabled));
+        final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
+        final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
+
+        final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+        if (disableBluetooth && Objects.equals(disableBluetoothStart, "0") && Objects.equals(disableBluetoothEnd, "0") || DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss"))) {
+            BluetoothAdapter.getDefaultAdapter().disable();
+
+            if (showToast)
+                CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_disabled_end));
+
+            return true;
+        }
+
+        return false;
     }
 
     public static Boolean BluetoothEnabled()

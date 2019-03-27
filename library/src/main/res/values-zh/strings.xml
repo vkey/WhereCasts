@@ -30,4 +30,6 @@
     <string name="none">沒有</string>
     <string name="select">選擇</string>
     <string name="never">決不</string>
+    <string name="always">總是</string>
+
 </resources>

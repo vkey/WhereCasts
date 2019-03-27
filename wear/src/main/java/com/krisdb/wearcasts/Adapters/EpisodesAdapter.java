@@ -287,13 +287,10 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 editor.apply();
             }
         }
-        else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
-       {
+        else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext)) {
             unregisterNetworkCallback();
 
-            Utilities.disableBluetooth(mContext);
-
-           CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
+            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -387,7 +384,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                             alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBlutooth(ctx);
+                                    Utilities.enableBluetooth(ctx);
                                     dialog.dismiss();
                                 }
                             }).show();

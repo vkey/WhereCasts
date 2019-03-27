@@ -196,5 +196,11 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
         if (key.equals("pref_download_sound_disable_end"))
             findPreference("pref_download_sound_disable_end").setSummary(((ListPreference) findPreference("pref_download_sound_disable_end")).getEntry());
+
+        if (key.equals("pref_disable_bluetooth_start"))
+            findPreference("pref_disable_bluetooth_start").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_start")).getEntry());
+
+        if (key.equals("pref_disable_bluetooth_end"))
+            findPreference("pref_disable_bluetooth_end").setSummary(((ListPreference) findPreference("pref_disable_bluetooth_end")).getEntry());
     }
 }
