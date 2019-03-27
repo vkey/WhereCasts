@@ -3,8 +3,14 @@ package com.krisdb.wearcasts.Services;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.tasks.Task;
@@ -36,29 +42,40 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByTitle;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
 public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener {
 
-    private Context mContext;
+    private static WeakReference<Context> mContext;
+    private ConnectivityManager mManager;
+    private ConnectivityManager.NetworkCallback mNetworkCallback;
+    private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
+    private static TimeOutHandler mTimeOutHandler;
+    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
-        Wearable.getDataClient(mContext).addListener(this);
-        Wearable.getCapabilityClient(mContext).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+        mContext = new WeakReference<>(getApplicationContext());
+
+        mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        Wearable.getDataClient(mContext.get()).addListener(this);
+        Wearable.getCapabilityClient(mContext.get()).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Wearable.getDataClient(mContext).removeListener(this);
-        Wearable.getCapabilityClient(mContext).removeListener(this);
+        Wearable.getDataClient(mContext.get()).removeListener(this);
+        Wearable.getCapabilityClient(mContext.get()).removeListener(this);
     }
 
     @Override
@@ -127,15 +144,45 @@ public class ImportService extends WearableListenerService implements DataClient
                 db.close();
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
-                    if (CommonUtils.getActiveNetwork(mContext) == null)
-                        CommonUtils.showToast(mContext, getString(R.string.alert_no_network));
-                    else
-                        Utilities.startDownload(mContext, episode);
+
+                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                        unregisterNetworkCallback();
+
+                        if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+                            Utilities.disableBluetooth(mContext.get());
+
+                        final PodcastItem finalEpisode = episode;
+                        mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                            @Override
+                            public void onAvailable(final Network network) {
+                                mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                                Utilities.startDownload(mContext.get(), finalEpisode);
+                            }
+                        };
+
+                        final NetworkRequest request = new NetworkRequest.Builder()
+                                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                                .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                                .build();
+
+                        mManager.requestNetwork(request, mNetworkCallback);
+
+                        mTimeOutHandler.sendMessageDelayed(
+                                mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
+                                NETWORK_CONNECTIVITY_TIMEOUT_MS);
+                    } else {
+                        if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+                            Utilities.disableBluetooth(mContext.get());
+
+                        Utilities.startDownload(mContext.get(), episode);
+                    }
                 }
 
                 if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
 
-                    final File dirLocal = new File(GetLocalDirectory(mContext));
+                    final File dirLocal = new File(GetLocalDirectory(mContext.get()));
 
                     if (dirLocal.exists() == false)
                         dirLocal.mkdirs();
@@ -151,7 +198,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                                     try {
                                         int size = 1024;
-                                        final File f = new File(GetLocalDirectory(mContext).concat(fileName));
+                                        final File f = new File(GetLocalDirectory(mContext.get()).concat(fileName));
                                         final OutputStream outputStream = new FileOutputStream(f);
                                         final byte buffer[] = new byte[size];
 
@@ -275,5 +322,36 @@ public class ImportService extends WearableListenerService implements DataClient
         dataMap.getDataMap().putInt("progress", progress);
 
         CommonUtils.DeviceSync(this, dataMap);
+    }
+
+    private static class TimeOutHandler extends Handler {
+        private final WeakReference<ImportService> mMainActivityWeakReference;
+
+        TimeOutHandler(final ImportService service) {
+            mMainActivityWeakReference = new WeakReference<>(service);
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final ImportService service = mMainActivityWeakReference.get();
+
+            if (service != null) {
+                switch (msg.what) {
+                    case MESSAGE_CONNECTIVITY_TIMEOUT:
+                        service.unregisterNetworkCallback();
+                        mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                        CommonUtils.showToast(mContext.get(), mContext.get().getString(R.string.alert_no_network));
+                        break;
+                }
+            }
+        }
+    }
+
+    private void unregisterNetworkCallback() {
+        if (mManager != null && mNetworkCallback != null) {
+            mManager.unregisterNetworkCallback(mNetworkCallback);
+            mManager.bindProcessToNetwork(null);
+            mNetworkCallback = null;
+        }
     }
 }

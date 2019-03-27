@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Ta bort den här episodens nedladdning?</string>
     <string name="confirm_delete_podcast">Avsluta prenumerationen från den här podcasten?</string>
 
-    <string name="confirm_initial_download_message">Nedladdning via Bluetooth kan vara långsam och opålitlig.\nNedladdning via WiFi eller mobil rekommenderas.</string>
+    <string name="confirm_initial_download_message">Nedladdning via Bluetooth kan vara långsam och opålitlig.\n\nVill du stänga av Bluetooth innan du laddar ner det?\n(Det här kan ställas in i inställningarna)</string>
     <string name="confirm_mark_played">Markera som spelat?</string>
     <string name="confirm_mark_unplayed">Markera som ospelad?</string>
 
@@ -138,7 +138,7 @@
     <string name="settings_podcasts_label_disable_bluetooth">Inaktivera Bluetooth</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Bara när du automatiskt laddar ner</string>
     <string name="settings_podcasts_label_high_bandwidth">Kontrollera nätverksnätverk med hög bandbredd</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Före synkronisering, streaming eller nedladdning</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Innan du hämtar eller streamar</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicka för att radera alla miniatyrbilder (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Klicka för att radera alla nedladdningar (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Avbryt alla nedladdningar</string>

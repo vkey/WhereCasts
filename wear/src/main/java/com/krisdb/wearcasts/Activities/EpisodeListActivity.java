@@ -3,12 +3,19 @@ package com.krisdb.wearcasts.Activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Pair;
 import android.view.Menu;
@@ -44,6 +51,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -75,13 +83,12 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private RelativeLayout mEpisodeListLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EpisodesAdapter mAdapter;
-    /*
+
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
-    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +98,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mActivity = this;
         mActivityRef = new WeakReference<>(this);
 
-        //mTimeOutHandler = new TimeOutHandler(this);
-        //mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        mTimeOutHandler = new TimeOutHandler(this);
+        mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         mPodcastId = getIntent().getExtras().getInt("podcastId");
         mQuery = getIntent().getExtras().getString("query");
@@ -297,20 +304,19 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
     }
 
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
         final List<PodcastItem> episodes = mAdapter.mEpisodes;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
-        /*
         final NetworkRequest request = new NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build();
-                */
 
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed: //Mark selected played
@@ -355,15 +361,15 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     RefreshContent();
                 }
                 else {
-                for (final PodcastItem episodeAfter : episodesAfter) {
-                    for (final PodcastItem episode : episodes) {
-                        if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
-                            episode.setFinished(true);
-                            episode.setIsSelected(false);
+                    for (final PodcastItem episodeAfter : episodesAfter) {
+                        for (final PodcastItem episode : episodes) {
+                            if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
+                                episode.setFinished(true);
+                                episode.setIsSelected(false);
+                            }
                         }
+                        mAdapter.notifyDataSetChanged();
                     }
-                    mAdapter.notifyDataSetChanged();
-                }
                     resetMenu();
                 }
                 break;
@@ -433,7 +439,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     alertUnread.show();
                 }
                 break;
-            case R.id.menu_drawer_episode_list_download: //Download all
+            case R.id.menu_drawer_episode_list_download:
+            case R.id.menu_drawer_episode_list_selected_downloaad:
                 if (CommonUtils.getActiveNetwork(mActivity) == null)
                 {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -455,60 +462,44 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         }).show();
                     }
                 }
-                else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
-                {
+                else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeListActivity.this);
+                        alert.setMessage(getString(R.string.confirm_initial_download_message));
                         alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(Constants.WifiIntent));
+                                final SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("pref_disable_bluetooth", true);
+                                editor.apply();
+                                downloadEpisodes(itemId, episodes);
                                 dialog.dismiss();
                             }
                         });
-
                         alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                downloadEpisodes(itemId, episodes);
                                 dialog.dismiss();
                             }
                         }).show();
+
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("initialDownload", false);
+                        editor.apply();
                     }
                 }
-                /*
-                else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity)) {
+                else if (prefs.getBoolean("pref_high_bandwidth", true)) {
+
                     unregisterNetworkCallback();
+
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+                        Utilities.disableBluetooth(mActivity);
+
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                         @Override
                         public void onAvailable(final Network network) {
-                            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                                final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
-                                alertRead.setMessage(getString(R.string.confirm_download_all));
-                                alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
-                                                new Interfaces.AsyncResponse() {
-                                                    @Override
-                                                    public void processFinish() {
-                                                        for (final PodcastItem episode : episodes)
-                                                            episode.setIsDownloaded(true);
-
-                                                        mAdapter.notifyDataSetChanged();
-                                                        resetMenu();
-                                                    }
-                                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                    }
-                                });
-                                alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                alertRead.show();
-                            }
+                            downloadEpisodes(itemId, episodes);
                         }
                     };
 
@@ -518,115 +509,17 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                             NETWORK_CONNECTIVITY_TIMEOUT_MS);
                 }
-                */
-                else{
-                    new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
-                            new Interfaces.AsyncResponse() {
-                                @Override
-                                public void processFinish() {
-                                    for (final PodcastItem episode : episodes)
-                                        episode.setIsDownloaded(true);
-
-                                    mAdapter.notifyDataSetChanged();
-                                    resetMenu();
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
+                    Utilities.disableBluetooth(mActivity);
+                    downloadEpisodes(itemId, episodes);
                 }
+                else
+                    downloadEpisodes(itemId, episodes);
                 break;
-                case R.id.menu_drawer_episode_list_selected_downloaad: //Download selected
-                    if (CommonUtils.getActiveNetwork(mActivity) == null)
-                    {
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                            alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-                    }
-                    else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
-                    {
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                            alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
-                            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(Constants.WifiIntent));
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-                    }                    /*
-                    else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity)) {
-
-                        unregisterNetworkCallback();
-                    mNetworkCallback = new ConnectivityManager.NetworkCallback() {
-                        @Override
-                        public void onAvailable(final Network network) {
-                            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
-                                    new Interfaces.AsyncResponse() {
-                                        @Override
-                                        public void processFinish() {
-                                            for (final Integer position : mAdapter.mSelectedPositions) {
-                                                episodes.get(position).setIsDownloaded(true);
-                                                episodes.get(position).setIsSelected(false);
-                                                mAdapter.notifyItemChanged(position);
-                                            }
-                                            mAdapter.mSelectedPositions = new ArrayList<>();
-                                            mAdapter.mSelectedEpisodes = new ArrayList<>();
-                                            resetMenu();
-                                        }
-                                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        }
-                    };
-
-                    mManager.requestNetwork(request, mNetworkCallback);
-
-                    mTimeOutHandler.sendMessageDelayed(
-                            mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
-                            NETWORK_CONNECTIVITY_TIMEOUT_MS);
-                    }
-                    */
-                    else{
-                        new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
-                                new Interfaces.AsyncResponse() {
-                                    @Override
-                                    public void processFinish() {
-                                        for (final Integer position : mAdapter.mSelectedPositions) {
-                                            episodes.get(position).setIsDownloaded(true);
-                                            episodes.get(position).setIsSelected(false);
-                                            mAdapter.notifyItemChanged(position);
-                                        }
-                                        mAdapter.mSelectedPositions = new ArrayList<>();
-                                        mAdapter.mSelectedEpisodes = new ArrayList<>();
-                                        resetMenu();
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                    break;
             case R.id.menu_drawer_episode_list_search: //Search
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
                 break;
-               case R.id.menu_drawer_episode_list_add_playlist: //Add all to playlist
+            case R.id.menu_drawer_episode_list_add_playlist: //Add all to playlist
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
 
                 final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
@@ -698,7 +591,41 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
         return true;
     }
-    /*
+
+    private void downloadEpisodes(final int itemId, final List<PodcastItem> episodes)
+    {
+        if (itemId == R.id.menu_drawer_episode_list_selected_downloaad) {
+            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {
+                            for (final Integer position : mAdapter.mSelectedPositions) {
+                                episodes.get(position).setIsDownloaded(true);
+                                episodes.get(position).setIsSelected(false);
+                                mAdapter.notifyItemChanged(position);
+                            }
+                            mAdapter.mSelectedPositions = new ArrayList<>();
+                            mAdapter.mSelectedEpisodes = new ArrayList<>();
+                            resetMenu();
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else
+        {
+            new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
+                    new Interfaces.AsyncResponse() {
+                        @Override
+                        public void processFinish() {
+                            for (final PodcastItem episode : episodes)
+                                episode.setIsDownloaded(true);
+
+                            mAdapter.notifyDataSetChanged();
+                            resetMenu();
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     private static class TimeOutHandler extends Handler {
         private final WeakReference<EpisodeListActivity> mActivityWeakReference;
 
@@ -744,5 +671,4 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             mNetworkCallback = null;
         }
     }
-    */
 }

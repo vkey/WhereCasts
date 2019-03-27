@@ -25,7 +25,7 @@ public class Processor {
 
     private Context mContext;
     public int newEpisodesCount, downloadCount;
-    //public List<PodcastItem> downloadEpisodes;
+    public List<PodcastItem> downloadEpisodes;
 
     public Processor(final Context ctx)
     {
@@ -84,18 +84,10 @@ public class Processor {
                     db.addEpisodeToPlaylist(autoAssignPlaylistId, (int) episodeId);
 
                 if (autoDownload) {
-                    startDownload(mContext, newEpisode);
-                    SaveEpisodeValue(mContext, newEpisode, "download", 1); //so auto-download before doesn't re-download this episode
-                    downloadCount++;
-                }
-
-                /*
-                if (autoDownload) {
                     downloadEpisodes.add(newEpisode);
                     SaveEpisodeValue(mContext, newEpisode, "download", 1); //so auto-download before doesn't re-download this episode
                     downloadCount++;
                 }
-                */
 
                 newEpisodesCount++;
             }

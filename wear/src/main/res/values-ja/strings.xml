@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">このエピソードのダウンロードを削除しますか?</string>
     <string name="confirm_delete_podcast">このポッドキャストの購読を停止するには?</string>
 
-    <string name="confirm_initial_download_message">Bluetooth経由でダウンロードするのは遅くて信頼できない場合があります。.\nWiFiまたは携帯電話を介してダウンロードすることをお勧めします.</string>
+    <string name="confirm_initial_download_message">Bluetooth経由でダウンロードするのは遅くて信頼できない場合があります.\n\nダウンロードする前にBluetoothを無効にしますか?\n（これは設定で切り替えることができます）</string>
 
     <string name="confirm_mark_played">演奏としてマークしますか?</string>
     <string name="confirm_mark_unplayed">再生されていないとマークしますか?</string>
@@ -139,7 +139,7 @@
     <string name="settings_podcasts_label_disable_bluetooth">Bluetoothを無効にする</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">自動ダウンロード時のみ</string>
     <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">同期、ストリーミングまたはダウンロードの前に</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">ダウンロードやストリーミングの前に</string>
     <string name="settings_podcasts_label_downloads_delete_all">すべてのダウンロードを削除するにはクリックしてください (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">すべてのサムネイルを削除するにはクリックしてください (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">すべてのダウンロードをキャンセルする</string>

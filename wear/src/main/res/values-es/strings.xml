@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">¿Eliminar la descarga de este episodio?</string>
     <string name="confirm_delete_podcast">Anular la suscripción a este podcast?</string>
 
-    <string name="confirm_initial_download_message">La descarga a través de Bluetooth puede ser lenta y poco confiable.\nSe recomienda la descarga a través de WiFi o celular..</string>
+    <string name="confirm_initial_download_message">La descarga a través de Bluetooth puede ser lenta y poco confiable.\n\n¿Te gustaría deshabilitar Bluetooth antes de descargar?\n(Esto se puede cambiar en la configuración).</string>
     <string name="confirm_mark_played">Marcar como jugado?</string>
     <string name="confirm_mark_unplayed">Marcar como no jugado?</string>
 
@@ -138,7 +138,7 @@
     <string name="settings_podcasts_label_disable_bluetooth">Deshabilitar bluetooth</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Sólo cuando se descarga automáticamente</string>
     <string name="settings_podcasts_label_high_bandwidth">Comprobar la red de ancho de banda alto</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Antes de sincronizar, transmitir o descargar</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Antes de descargar o transmitir</string>
     <string name="settings_podcasts_label_downloads_delete_all">Haga clic para eliminar todas las descargas (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Haga clic para eliminar todas las miniaturas (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Cancelar todas las descargas</string>

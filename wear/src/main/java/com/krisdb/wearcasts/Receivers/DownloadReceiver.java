@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
@@ -23,6 +24,8 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
 import java.util.Objects;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
@@ -109,17 +112,20 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             if (!isCurrentDownload(context)) {
 
-                /*
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+                    Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
+
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
 
+                if (prefs.getBoolean("pref_disable_bluetooth", false))
+                    Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
+
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);
                 editor.apply();
-                */
 
                 new AsyncTasks.CleanupDownloads(context,
                         new Interfaces.AsyncResponse() {

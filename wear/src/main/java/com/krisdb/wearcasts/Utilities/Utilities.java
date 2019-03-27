@@ -162,6 +162,31 @@ public class Utilities {
         editor.apply();
     }
 
+    public static void disableBluetooth(final Context ctx)
+    {
+        disableBluetooth(ctx, true);
+    }
+
+    public static void disableBluetooth(final Context ctx, final boolean showToast)
+    {
+        BluetoothAdapter.getDefaultAdapter().disable();
+        if (showToast)
+            CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_disabled_end));
+    }
+
+    public static void enableBlutooth(final Context ctx)
+    {
+        enableBlutooth(ctx, true);
+    }
+
+    public static void enableBlutooth(final Context ctx, final boolean showToast)
+    {
+        BluetoothAdapter.getDefaultAdapter().enable();
+
+        if (showToast)
+            CommonUtils.showToast(ctx, ctx.getString(R.string.alert_disable_bluetooth_enabled));
+    }
+
     public static Boolean BluetoothEnabled()
     {
         return HasBluetooth() && BluetoothAdapter.getDefaultAdapter().isEnabled();

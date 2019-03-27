@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">Löschen Sie den Herunterladen dieser Episode?</string>
     <string name="confirm_delete_podcast">Abonnement von diesem Podcast abbestellen?</string>
 
-    <string name="confirm_initial_download_message">Das Herunterladen über Bluetooth kann langsam und unzuverlässig sein.\nDas Herunterladen über WLAN oder Mobilfunk wird empfohlen.</string>
+    <string name="confirm_initial_download_message">Das Herunterladen über Bluetooth kann langsam und unzuverlässig sein.\n\nMöchten Sie Bluetooth vor dem Download deaktivieren?\n(Dies kann in den Einstellungen umgeschaltet werden)</string>
     <string name="confirm_mark_played">Als gespielt markieren?</string>
     <string name="confirm_mark_unplayed">Als nicht abgespielt markieren?</string>
 
@@ -138,7 +138,7 @@
     <string name="settings_podcasts_label_disable_bluetooth">Deaktivieren Sie Bluetooth</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Nur beim automatischen Download</string>
     <string name="settings_podcasts_label_high_bandwidth">Überprüfen Sie das Netzwerk mit hoher Bandbreite</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">Vor dem Synchronisieren, Streamen oder Herunterladen</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">Vor dem Herunterladen oder Streaming</string>
     <string name="settings_podcasts_label_downloads_delete_all">Klicken Sie hier, um alle Downloads zu löschen (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">Klicken Sie, um alle Miniaturansichten zu löschen (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">Alle Downloads abbrechen</string>

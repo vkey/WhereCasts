@@ -2,12 +2,22 @@ package com.krisdb.wearcasts.Services;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
@@ -20,6 +30,9 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
@@ -28,7 +41,6 @@ public class BackgroundService extends JobService {
     boolean jobCancelled = false;
     private static WeakReference<Context> mContext;
 
-    /*
     private static List<PodcastItem> mDownloadEpisodes;
     private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
@@ -36,7 +48,6 @@ public class BackgroundService extends JobService {
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private static TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(10);
-    */
 
     public BackgroundService() {
     }
@@ -49,16 +60,14 @@ public class BackgroundService extends JobService {
     public boolean onStartJob(final JobParameters params) {
         isWorking = true;
         mContext = new WeakReference<>(getApplicationContext());
-        /*
+
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        try {
-            mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete"));
-            }
+        try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch (Exception ignored) {}
-        */
+
         doWork(params);
 
         return isWorking;
@@ -110,7 +119,6 @@ public class BackgroundService extends JobService {
                                     mPlayer.start();
                                 }
 
-                                /*
                                 if (downloadEpisodes.size() > 0) {
 
                                     mDownloadEpisodes = downloadEpisodes;
@@ -118,12 +126,17 @@ public class BackgroundService extends JobService {
                                     editor.putBoolean("from_job", true);
                                     editor.apply();
 
-                                    //if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
                                         unregisterNetworkCallback();
+
+                                        if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
+                                            Utilities.disableBluetooth(mContext.get(), false);
+
                                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                                             @Override
                                             public void onAvailable(final Network network) {
                                                 mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+                                                Log.d(mContext.get().getPackageName(), "[downloads] network found");
                                                 for (final PodcastItem episode : mDownloadEpisodes)
                                                     Utilities.startDownload(mContext.get(), episode);
                                             }
@@ -138,15 +151,16 @@ public class BackgroundService extends JobService {
 
                                         mManager.requestNetwork(request, mNetworkCallback);
 
+                                        Log.d(mContext.get().getPackageName(), "[downloads] requesting network");
+
                                         mTimeOutHandler.sendMessageDelayed(
                                                 mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                                                 NETWORK_CONNECTIVITY_TIMEOUT_MS);
-                                    //} else {
-                                    //for (final PodcastItem episode : mDownloadEpisodes)
-                                    //Utilities.startDownload(ctx, episode);
-                                    //}
+                                    } else {
+                                        for (final PodcastItem episode : mDownloadEpisodes)
+                                            Utilities.startDownload(ctx, episode);
+                                    }
                                 }
-                                */
                             }
                             CacheUtils.deletePodcastsCache(ctx);
 
@@ -160,11 +174,12 @@ public class BackgroundService extends JobService {
         isWorking = false;
         jobFinished(jobParameters, false);
     }
-/*
+
     private BroadcastReceiver mDownloadsComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             unregisterNetworkCallback();
+            Log.d(context.getPackageName(), "[downloads] network release received");
             try {
                 mBroadcastManger.unregisterReceiver(mDownloadsComplete);
             } catch (Exception ignored) {}
@@ -203,5 +218,4 @@ public class BackgroundService extends JobService {
             mNetworkCallback = null;
         }
     }
-    */
 }

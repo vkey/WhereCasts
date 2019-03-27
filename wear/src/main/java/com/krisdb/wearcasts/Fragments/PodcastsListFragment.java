@@ -40,13 +40,7 @@ public class PodcastsListFragment extends Fragment {
     private PodcastsAdapter mAdapter;
     private static WeakReference<Activity> mActivityRef;
     private ImageView mLogo;
-    /*
-    private ConnectivityManager mManager;
-    private ConnectivityManager.NetworkCallback mNetworkCallback;
-    private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
-    private TimeOutHandler mTimeOutHandler;
-    private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
-    */
+
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
     }
@@ -58,8 +52,6 @@ public class PodcastsListFragment extends Fragment {
 
         mActivity = getActivity();
         mActivityRef = new WeakReference<>(mActivity);
-        //mTimeOutHandler = new TimeOutHandler(this);
-        //mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -108,55 +100,6 @@ public class PodcastsListFragment extends Fragment {
                 }).show();
             }
         }
-        else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
-        {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Constants.WifiIntent),1);
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        }
-        /*
-        else if (prefs.getBoolean("pref_high_bandwidth", true) && !CommonUtils.HighBandwidthNetwork(mActivity))
-        {
-            unregisterNetworkCallback();
-            //CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_network_search));
-
-            mNetworkCallback = new ConnectivityManager.NetworkCallback() {
-                @Override
-                public void onAvailable(final Network network) {
-                    mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-
-                }
-            };
-
-            final NetworkRequest request = new NetworkRequest.Builder()
-                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    .build();
-
-            mManager.requestNetwork(request, mNetworkCallback);
-
-            mTimeOutHandler.sendMessageDelayed(
-                    mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
-                    NETWORK_CONNECTIVITY_TIMEOUT_MS);
-        }
-        */
         else
         {
             new AsyncTasks.SyncPodcasts(mActivity, 0, false,
@@ -169,77 +112,6 @@ public class PodcastsListFragment extends Fragment {
         }
     }
 
-    /*
-    private static class TimeOutHandler extends Handler {
-        private final WeakReference<PodcastsListFragment> mActivityWeakReference;
-        private final PodcastsListFragment mFragment;
-
-        TimeOutHandler(final PodcastsListFragment fragment) {
-            mActivityWeakReference = new WeakReference<>(fragment);
-            mFragment = fragment;
-        }
-
-        @Override
-        public void handleMessage(final Message msg) {
-            final PodcastsListFragment fragment = mActivityWeakReference.get();
-
-            if (fragment != null) {
-                switch (msg.what) {
-                    case MESSAGE_CONNECTIVITY_TIMEOUT:
-                        final Activity ctx = mActivityRef.get();
-                        if (ctx != null && !ctx.isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                            alert.setMessage(ctx.getString(R.string.alert_episode_network_no_high_bandwidth));
-                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mFragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-
-                        fragment.unregisterNetworkCallback();
-                        break;
-                }
-            }
-        }
-    }
-
-    private void releaseHighBandwidthNetwork() {
-        mManager.bindProcessToNetwork(null);
-        unregisterNetworkCallback();
-    }
-
-    private void unregisterNetworkCallback() {
-        if (mNetworkCallback != null) {
-            mManager.unregisterNetworkCallback(mNetworkCallback);
-            mNetworkCallback = null;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                new AsyncTasks.SyncPodcasts(mActivity, 0, false,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                RefreshContent();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        }
-    }
-*/
     @Override
     public void onActivityCreated(final Bundle icicle) {
 

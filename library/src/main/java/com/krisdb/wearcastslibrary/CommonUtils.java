@@ -18,6 +18,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
@@ -86,7 +87,6 @@ public class CommonUtils {
     }
     public static Boolean HighBandwidthNetwork(final Context ctx)
     {
-        /*
         if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true)) return true;
 
         final Network activeNetwork = getActiveNetwork(ctx);
@@ -98,7 +98,6 @@ public class CommonUtils {
 
             return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth_kbs);
         }
-*/
         return true;
     }
 

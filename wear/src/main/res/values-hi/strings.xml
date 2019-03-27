@@ -45,7 +45,7 @@
     <string name="confirm_delete_episode_download">इस एपिसोड के डाउनलोड को हटाएं?</string>
     <string name="confirm_delete_podcast">इस पॉडकास्ट से सदस्यता रद्द करें?</string>
 
-    <string name="confirm_initial_download_message">ब्लूटूथ पर डाउनलोड करना धीमा और अविश्वसनीय हो सकता है.\nवाईफाई या सेलुलर पर डाउनलोड करने की सिफारिश की जाती है.</string>
+    <string name="confirm_initial_download_message">ब्लूटूथ पर डाउनलोड करना धीमा और अविश्वसनीय हो सकता है।.\n\nक्या आप डाउनलोड करने से पहले ब्लूटूथ को अक्षम करना चाहेंगे?\n(यह सेटिंग्स में टॉगल किया जा सकता है)</string>
 
     <string name="confirm_mark_played">चिह्नित के रूप में चिह्नित करें?</string>
     <string name="confirm_mark_unplayed">अनप्लेड के रूप में चिह्नित करें?</string>
@@ -139,7 +139,7 @@
     <string name="settings_podcasts_label_disable_bluetooth">ब्लूटूथ को अक्षम करें</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">केवल जब ऑटो-डाउनलोडिंग</string>
     <string name="settings_podcasts_label_high_bandwidth">उच्च बैंडविड्थ नेटवर्क की जांच करें</string>
-    <string name="settings_podcasts_label_high_bandwidth_summary">सिंक्रनाइज़ करने से पहले, स्ट्रीमिंग या डाउनलोड करना</string>
+    <string name="settings_podcasts_label_high_bandwidth_summary">सिंडाउनलोड करने या स्ट्रीमिंग करने से पहले</string>
     <string name="settings_podcasts_label_downloads_delete_all">सभी डाउनलोड हटाने के लिए क्लिक करें (%d)</string>
     <string name="settings_podcasts_label_downloads_thumbs_all">सभी थंबनेल हटाने के लिए क्लिक करें (%d)</string>
     <string name="settings_podcasts_label_downloads_cancel">सभी डाउनलोड रद्द करें</string>

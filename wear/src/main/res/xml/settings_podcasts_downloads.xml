@@ -19,14 +19,6 @@
             android:defaultValue="true"
             />
 
-        <!--
-        <SwitchPreference
-            android:key="pref_disable_bluetooth"
-            android:title="@string/settings_podcasts_label_disable_bluetooth"
-            android:defaultValue="false"
-            />
-        -->
-
         <SwitchPreference
             android:key="pref_download_complete_sound"
             android:title="@string/settings_podcasts_label_download_complete_sound"
@@ -49,14 +41,20 @@
             android:entryValues="@array/hours_values"
             />
 
-        <!--
         <SwitchPreference
             android:key="pref_high_bandwidth"
             android:title="@string/settings_podcasts_label_high_bandwidth"
             android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
             android:defaultValue="true"
             />
-            -->
+
+
+        <SwitchPreference
+            android:key="pref_disable_bluetooth"
+            android:title="@string/settings_podcasts_label_disable_bluetooth"
+            android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
+            android:defaultValue="false"
+        />
 
         <Preference android:key="pref_delete_downloads" />
 
