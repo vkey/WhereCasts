@@ -126,7 +126,7 @@ public class BackgroundService extends JobService {
                                     editor.putBoolean("from_job", true);
                                     editor.apply();
 
-                                    if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                                    if (prefs.getBoolean("pref_disable_bluetooth", false)) {
                                         unregisterNetworkCallback();
 
                                         if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())

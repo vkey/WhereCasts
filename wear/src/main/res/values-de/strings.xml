@@ -318,6 +318,7 @@
     <string name="alert_disable_bluetooth_enabled">Bluetooth aktiviert</string>
     <string name="alert_episode_download_start">wird heruntergeladen…</string>
     <string name="alert_episode_network_search">Suche nach einem Netzwerk mit hoher Bandbreite…</string>
+    <string name="alert_episode_network_waiting">Auf Verbindung warten…</string>
     <string name="alert_episode_network_notfound">Kein Netzwerk gefunden. Möchten Sie die WLAN-Einstellungen öffnen?</string>
     <string name="alert_episode_network_no_high_bandwidth">Kein Netzwerk mit hoher Bandbreite gefunden. Öffnen Sie die WLAN-Einstellungen?</string>
     <string name="alert_playlist_delete">Bist du sicher?</string>

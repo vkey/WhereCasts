@@ -320,6 +320,7 @@
     <string name="alert_disable_bluetooth_enabled">Bluetooth enabled</string>
     <string name="alert_episode_download_start">Downloading…</string>
     <string name="alert_episode_network_search">Searching for high bandwidth network…</string>
+    <string name="alert_episode_network_waiting">Waiting for connection…</string>
     <string name="alert_episode_network_notfound">No network found. Would you like to open the WiFi settings?</string>
     <string name="alert_episode_network_no_high_bandwidth">No high-bandwidth network found.\nOpen WiFi settings?\n(this can be disabled in settings)</string>
     <string name="alert_playlist_delete">Are you sure?</string>

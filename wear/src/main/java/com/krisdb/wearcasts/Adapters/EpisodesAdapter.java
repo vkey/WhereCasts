@@ -287,14 +287,13 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 editor.apply();
             }
         }
-        else if (prefs.getBoolean("pref_high_bandwidth", true))
+        else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
        {
             unregisterNetworkCallback();
 
-           if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
-               Utilities.disableBluetooth(mContext);
+            Utilities.disableBluetooth(mContext);
 
-           CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_search));
+           CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -317,12 +316,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         }
-        else {
-            if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
-                Utilities.disableBluetooth(mContext);
-
+        else
             downloadEpisode(position, episode);
-        }
     }
 
     private void downloadEpisode(final int position, final PodcastItem episode) {

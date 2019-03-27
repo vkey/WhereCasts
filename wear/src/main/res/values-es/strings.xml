@@ -317,6 +317,7 @@
     <string name="alert_disable_bluetooth_enabled">Bluetooth habilitado</string>
     <string name="alert_episode_download_start">Descargando…</string>
     <string name="alert_episode_network_search">Buscando una red de ancho de banda alto…</string>
+    <string name="alert_episode_network_waiting">Esperando la conexión…</string>
     <string name="alert_episode_network_notfound">No se encontró red ¿Le gustaría abrir la configuración de WiFi?</string>
     <string name="alert_episode_network_no_high_bandwidth">No se encontró una red de alto ancho de banda. Abrir la configuración de WiFi?</string>
     <string name="alert_playlist_delete">Estás seguro?</string>

@@ -41,13 +41,14 @@
             android:entryValues="@array/hours_values"
             />
 
+        <!--
         <SwitchPreference
             android:key="pref_high_bandwidth"
             android:title="@string/settings_podcasts_label_high_bandwidth"
             android:summary="@string/settings_podcasts_label_high_bandwidth_summary"
             android:defaultValue="true"
             />
-
+        -->
 
         <SwitchPreference
             android:key="pref_disable_bluetooth"

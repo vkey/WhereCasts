@@ -318,6 +318,7 @@
     <string name="alert_disable_bluetooth_enabled">Bluetooth対応</string>
     <string name="alert_episode_download_start">ダウンロード…</string>
     <string name="alert_episode_network_search">高帯域幅ネットワークの検索…</string>
+    <string name="alert_episode_network_waiting">接続待ち…</string>
     <string name="alert_episode_network_notfound">ネットワークが見つかりませんでした. WiFi設定を開きますか?</string>
     <string name="alert_episode_network_no_high_bandwidth">高帯域幅ネットワークが見つかりません。 WiFi設定を開く?</string>
     <string name="alert_playlist_delete">本気ですか?</string>

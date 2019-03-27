@@ -489,12 +489,12 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         editor.apply();
                     }
                 }
-                else if (prefs.getBoolean("pref_high_bandwidth", true)) {
+                else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())  {
 
                     unregisterNetworkCallback();
 
-                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
-                        Utilities.disableBluetooth(mActivity);
+                    Utilities.disableBluetooth(mActivity);
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                         @Override
@@ -508,10 +508,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     mTimeOutHandler.sendMessageDelayed(
                             mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                             NETWORK_CONNECTIVITY_TIMEOUT_MS);
-                }
-                else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
-                    Utilities.disableBluetooth(mActivity);
-                    downloadEpisodes(itemId, episodes);
                 }
                 else
                     downloadEpisodes(itemId, episodes);

@@ -112,7 +112,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             if (!isCurrentDownload(context)) {
 
-                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_high_bandwidth", true)) {
+                if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false)) {
                     Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
 
                     final Intent intentComplete = new Intent();
@@ -120,8 +120,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
                 }
 
-                if (prefs.getBoolean("pref_disable_bluetooth", false))
-                    Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
+                Utilities.enableBlutooth(context, !prefs.getBoolean("from_job", false));
 
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);
