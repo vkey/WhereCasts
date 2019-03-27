@@ -144,18 +144,18 @@ public class ImportService extends WearableListenerService implements DataClient
                 db.close();
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
+                    final Context ctx = mContext.get();
 
-                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext.get())) {
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(ctx)) {
                         unregisterNetworkCallback();
-
-                        CommonUtils.showToast(mContext.get(), getString(R.string.alert_episode_network_waiting));
 
                         final PodcastItem finalEpisode = episode;
                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                             @Override
                             public void onAvailable(final Network network) {
                                 mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                                Utilities.startDownload(mContext.get(), finalEpisode);
+                                Utilities.startDownload(ctx, finalEpisode);
+                                CommonUtils.showToast(ctx, getString(R.string.alert_episode_download_start));
                             }
                         };
 
@@ -173,7 +173,7 @@ public class ImportService extends WearableListenerService implements DataClient
                                 NETWORK_CONNECTIVITY_TIMEOUT_MS);
                     }
                     else
-                        Utilities.startDownload(mContext.get(), episode);
+                        CommonUtils.showToast(ctx, getString(R.string.alert_episode_download_start));
                 }
 
                 if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
