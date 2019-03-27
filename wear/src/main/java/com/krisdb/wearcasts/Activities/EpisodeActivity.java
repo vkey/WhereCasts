@@ -825,6 +825,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled()) {
             Utilities.disableBluetooth(mContext);
+            SystemClock.sleep(200);
             handleNetwork(download);
         }
         else {
