@@ -478,7 +478,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }).show();
             }
         }
-        else
+            else
         {
             new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
                     new Interfaces.BackgroundSyncResponse() {
