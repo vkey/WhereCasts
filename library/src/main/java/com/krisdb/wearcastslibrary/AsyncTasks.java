@@ -317,7 +317,8 @@ public class AsyncTasks {
                 final HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
                 conn.setConnectTimeout(3000);
                 conn.setReadTimeout(5000);
-                conn.setRequestProperty("X-Mashape-Key", mContext.get().getString(R.string.listennotes_api_key));
+                conn.setRequestProperty("X-ListenAPI-Key", mContext.get().getString(R.string.listennotes_api_key));
+                //conn.setRequestProperty("X-Mashape-Key", mContext.get().getString(R.string.listennotes_api_key));
                 conn.setRequestProperty("Accept", "application/json");
 
                 if (conn.getResponseCode() == 200) {

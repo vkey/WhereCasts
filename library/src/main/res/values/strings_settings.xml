@@ -33,8 +33,10 @@
         <item>10</item>
     </string-array>
 
-    <string name="listennotes_api_key">rbQFb1CaETmshkKAgoiAPot1YqW0p1cvYXljsnHqjVf3E6rvvZ</string>
-    <string name="listennotes_rest">https://listennotes.p.mashape.com/api/v1/search?sort_by_date=0&amp;language=%1$s&amp;type=podcast&amp;q=%2$s</string>
+    <string name="listennotes_api_key">dc47a38c4f98413fbbc3744ea8e23cd3</string>
+    <string name="listennotes_rest">https://listen-api.listennotes.com/api/v2/search?sort_by_date=0&amp;language=%1$s&amp;type=podcast&amp;q=%2$s</string>
+    <!--<string name="listennotes_api_key">rbQFb1CaETmshkKAgoiAPot1YqW0p1cvYXljsnHqjVf3E6rvvZ</string>-->
+    <!--<string name="listennotes_rest">https://listennotes.p.mashape.com/api/v1/search?sort_by_date=0&amp;language=%1$s&amp;type=podcast&amp;q=%2$s</string>-->
     <string name="ldpi">ldpi</string>
     <string name="mdpi">mdpi</string>
     <string name="hdpi">hdpi</string>
