@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.Adapters.AddPodcastsAdapter;
@@ -43,7 +42,7 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class SearchDirectoryActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int SPEECH_REQUEST_CODE = 1;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private TextView mProgressText;
     private Activity mActivity;
     private View mSearchVoiceImage;
@@ -59,7 +58,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
         setContentView(R.layout.search_directory_activity);
         mActivity = this;
 
-        mProgressBar = findViewById(R.id.search_progress_bar);
+        //mProgressBar = findViewById(R.id.search_progress_bar);
         mProgressText = findViewById(R.id.search_progress_text);
         mSearchText = findViewById(R.id.search_action_text);
         mSearchVoiceImage = findViewById(R.id.search_action_voice);
@@ -108,8 +107,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
     private void runSearch(final String query)
     {
         final List<PodcastItem> results = new ArrayList<>();
-        mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar.setIndeterminate(true);
+        //mProgressBar.setVisibility(View.VISIBLE);
         mProgressText.setVisibility(View.VISIBLE);
         mProgressText.setText(getString(R.string.searching));
         mSearchText.setVisibility(View.GONE);
@@ -158,7 +156,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                         if (results.size() == 0)
                         {
                             mProgressText.setText(getString(R.string.text_no_search_results));
-                            mProgressBar.setVisibility(View.GONE);
+                            //mProgressBar.setVisibility(View.GONE);
                             mNavDrawer.getController().peekDrawer();
                             return;
                         }
@@ -184,7 +182,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                         rv.setAdapter(new AddPodcastsAdapter(mActivity, displayList, headerColor));
 
                         findViewById(R.id.search_results).setVisibility(View.VISIBLE);
-                        mProgressBar.setVisibility(View.GONE);
+                        //mProgressBar.setVisibility(View.GONE);
                         mProgressText.setVisibility(View.GONE);
                         mNavDrawer.getController().peekDrawer();
                     }
