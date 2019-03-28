@@ -270,7 +270,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("pref_disable_bluetooth", true);
                         editor.apply();
-                        downloadEpisode(position, episode);
+                        initDownload(holder, position);
                         dialog.dismiss();
                     }
                 });
@@ -315,6 +315,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
         else
             downloadEpisode(position, episode);
+    }
+
+    private void handleNetwork(final int position, final PodcastItem episode)
+    {
+
     }
 
     private void downloadEpisode(final int position, final PodcastItem episode) {
