@@ -478,27 +478,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }).show();
             }
         }
-        else if (!CommonUtils.HighBandwidthNetwork(this))
-        {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        }
         else
         {
             new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,

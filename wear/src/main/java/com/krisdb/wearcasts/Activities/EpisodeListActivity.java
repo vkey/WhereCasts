@@ -146,28 +146,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         }).show();
                     }
                 }
-                else if (CommonUtils.HighBandwidthNetwork(mActivity) == false)
-                {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.alert_episode_network_no_high_bandwidth));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                                dialog.dismiss();
-                            }
-                        });
-
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-                    mSwipeRefreshLayout.setRefreshing(false);
-                } else {
+                 else {
                     mStatus.setVisibility(View.GONE);
                     mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     mSwipeRefreshLayout.setRefreshing(true);
@@ -306,7 +285,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
+    public boolean onMenuItemClick(final MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
         final List<PodcastItem> episodes = mAdapter.mEpisodes;
@@ -472,7 +451,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 final SharedPreferences.Editor editor = prefs.edit();
                                 editor.putBoolean("pref_disable_bluetooth", true);
                                 editor.apply();
-                                downloadEpisodes(itemId, episodes);
+                                onMenuItemClick(menuItem);
                                 dialog.dismiss();
                             }
                         });
