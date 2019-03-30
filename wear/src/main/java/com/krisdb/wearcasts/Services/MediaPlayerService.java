@@ -154,8 +154,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaHandler.removeCallbacksAndMessages(null);
 
         disableNoisyReceiver();
-        stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
-        Log.d(mPackage, "MediaPlayerService Media player service stopped");
+        stopForeground(true);
+        //Log.d(mPackage, "MediaPlayerService Media player service stopped");
     }
 
     private MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
@@ -271,7 +271,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initNoisyReceiver();
 
-        showNotification(false, false);
+        showNotification(false);
 
         //mMediaPlayer.reset();
         mMediaPlayer.start();
@@ -330,9 +330,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPaused);
             disableNoisyReceiver();
 
+            showNotification(true);
             stopForeground(prefs.getBoolean("pref_remove_notification", false));
-            if (!prefs.getBoolean("pref_remove_notification", false))
-                showNotification(true, false);
 
             if (mLocalFile == null)
                 SyncWithMobileDevice();
@@ -406,7 +405,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
 
-            showNotification(false, false);
+            showNotification(false);
 
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -585,6 +584,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
+            stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
         }
     }
 
@@ -604,7 +604,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     };
 
-    private void showNotification(final Boolean pause, final Boolean update) {
+    private void showNotification(final Boolean pause) {
 
          final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());
@@ -654,11 +654,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             builder.setChannelId(String.valueOf(mNotificationID));
         }
 
-        if (update) {
-            builder.setProgress(mMediaPlayer.getDuration(), getCurrentPosition(mMediaPlayer), false);
-            manager.notify(mNotificationID, builder.build());
-        }
-        else if (pause)
+        if (pause)
             manager.notify(mNotificationID, builder.build());
         else
             startForeground(mNotificationID, builder.build());
@@ -871,7 +867,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                             intentMediaCompleted.setAction("media_action");
                             intentMediaCompleted.putExtra("media_completed", true);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
-                            stopForeground(false);
                             //SystemClock.sleep(500);
                             playlistSkip(Enums.SkipDirection.NEXT, episodes);
                         }

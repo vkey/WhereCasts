@@ -125,11 +125,13 @@
     <string name="settings_podcasts_label_download_complete_sound">Reproducir sonido cuando la descarga finalice</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Deshabilitar el sonido de</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">Deshabilitar sonido a</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_start">Desactivar Bluetooth desde</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_end">Desactivar Bluetooth para</string>
     <string name="settings_podcasts_label_playback_speed">Velocidad de reproducción</string>
     <string name="settings_podcasts_label_playback_skip_back">Saltar atrás</string>
     <string name="settings_podcasts_label_playback_skip_forward">Saltar hacia adelante</string>
     <string name="settings_podcasts_label_playback_remove_notification">Eliminar notificación</string>
-    <string name="settings_podcasts_label_playback_remove_notification_summary">En pausa y salida de la aplicación.</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">En pausa</string>
     <string name="settings_podcasts_label_playback_playlists">Eliminar episodios de la lista de reproducción cuando haya terminado</string>
     <string name="settings_podcasts_label_hardware_button">Controle la reproducción con el botón de hardware</string>
     <string name="settings_podcasts_label_hardware_buttons">Controle la reproducción con botones de hardware</string>

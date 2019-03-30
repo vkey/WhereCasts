@@ -173,7 +173,10 @@ public class ImportService extends WearableListenerService implements DataClient
                                 NETWORK_CONNECTIVITY_TIMEOUT_MS);
                     }
                     else
+                    {
+                        Utilities.startDownload(ctx, episode);
                         CommonUtils.showToast(ctx, getString(R.string.alert_episode_download_start));
+                    }
                 }
 
                 if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {

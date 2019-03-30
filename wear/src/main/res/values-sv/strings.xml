@@ -125,11 +125,13 @@
     <string name="settings_podcasts_label_download_complete_sound">Spela ljud när nedladdningen är klar</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">Inaktivera ljud från</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">Inaktivera ljudet till</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_start">Inaktivera Bluetooth från</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_end">Inaktivera Bluetooth till</string>
     <string name="settings_podcasts_label_playback_speed">Uppspelningshastighet</string>
     <string name="settings_podcasts_label_playback_skip_back">Hoppa tillbaka</string>
     <string name="settings_podcasts_label_playback_skip_forward">Hoppa framåt</string>
     <string name="settings_podcasts_label_playback_remove_notification">Ta bort anmälan</string>
-    <string name="settings_podcasts_label_playback_remove_notification_summary">På paus och apputgång</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">På paus</string>
     <string name="settings_podcasts_label_playback_playlists">Ta bort episoder från spellistan när du är klar</string>
     <string name="settings_podcasts_label_hardware_button">Styr uppspelning med hårdvaruknapp</string>
     <string name="settings_podcasts_label_hardware_buttons">Styr uppspelning med hårdvaruknappar</string>

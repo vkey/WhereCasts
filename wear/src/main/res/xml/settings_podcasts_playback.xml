@@ -38,7 +38,6 @@
             android:defaultValue="false"
             />
 
-
         <SwitchPreference
             android:key="pref_hardware_override_episode"
             android:defaultValue="false"

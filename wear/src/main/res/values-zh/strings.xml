@@ -124,11 +124,13 @@
     <string name="settings_podcasts_label_download_complete_sound">下載完成時播放聲音</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">禁用聲音</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">禁用聲音</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_start">禁用藍牙</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_end">禁用藍牙</string>
     <string name="settings_podcasts_label_playback_speed">播放速度</string>
     <string name="settings_podcasts_label_playback_skip_back">跳回</string>
     <string name="settings_podcasts_label_playback_skip_forward">向前跳過</string>
     <string name="settings_podcasts_label_playback_remove_notification">刪除通知</string>
-    <string name="settings_podcasts_label_playback_remove_notification_summary">暫停和app退出</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">暫停</string>
     <string name="settings_podcasts_label_playback_playlists">完成後從播放列表中刪除劇集</string>
     <string name="settings_podcasts_label_hardware_button">用硬件按鈕控製播放</string>
     <string name="settings_podcasts_label_hardware_buttons">用硬件按鈕控製播放</string>

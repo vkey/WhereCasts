@@ -128,7 +128,7 @@
     <string name="settings_podcasts_label_playback_skip_back">Skip Back</string>
     <string name="settings_podcasts_label_playback_skip_forward">Skip Forward</string>
     <string name="settings_podcasts_label_playback_remove_notification">Remove notification</string>
-    <string name="settings_podcasts_label_playback_remove_notification_summary">On pause and app exit</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">On pause</string>
     <string name="settings_podcasts_label_playback_playlists">Remove episodes from playlist when finished</string>
     <string name="settings_podcasts_label_hardware_button">Control playback with hardware button</string>
     <string name="settings_podcasts_label_hardware_buttons">Control playback with hardware buttons</string>

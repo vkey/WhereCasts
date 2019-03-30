@@ -123,14 +123,15 @@
     <string name="settings_podcasts_label_download_complete_sound">डाउनलोड पूर्ण होने पर ध्वनि चलाएं</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_start">से ध्वनि अक्षम करें</string>
     <string name="settings_podcasts_label_download_complete_sound_disable_end">ध्वनि को अक्षम करें</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_start">से ब्लूटूथ अक्षम करें</string>
+    <string name="settings_podcasts_label_download_disable_bluetooth_end">ब्लूटूथ को अक्षम करें</string>
     <string name="settings_podcast_episode_limit_title">एपिसोड की संख्या प्रदर्शित करने के लिए</string>
     <string name="settings_podcast_episode_limit_all">सब</string>
-
     <string name="settings_podcasts_label_playback_speed">प्लेबैक स्पीड</string>
     <string name="settings_podcasts_label_playback_skip_back">वापस छोड़ें</string>
     <string name="settings_podcasts_label_playback_skip_forward">छोड़कर आगे बढ़ो</string>
     <string name="settings_podcasts_label_playback_remove_notification">अधिसूचना निकालें</string>
-    <string name="settings_podcasts_label_playback_remove_notification_summary">विराम और ऐप से बाहर निकलने पर</string>
+    <string name="settings_podcasts_label_playback_remove_notification_summary">ठहराव पर</string>
     <string name="settings_podcasts_label_playback_playlists">समाप्त होने पर प्लेलिस्ट से एपिसोड निकालें</string>
     <string name="settings_podcasts_label_hardware_button">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
