@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,8 +72,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);
 
-        final NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(102);
+        CommonUtils.cancelNotification(this, 102);
 
         //CommonUtils.showToast(this, CommonUtils.getDensityName(this));
 

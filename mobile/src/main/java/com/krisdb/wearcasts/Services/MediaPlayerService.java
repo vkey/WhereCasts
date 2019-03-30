@@ -194,7 +194,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onPause() {
             super.onPause();
             PauseAudio();
-            stopSelf();
         }
 
         @Override

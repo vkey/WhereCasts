@@ -155,7 +155,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         disableNoisyReceiver();
         stopForeground(true);
-        //Log.d(mPackage, "MediaPlayerService Media player service stopped");
+        Log.d(mPackage, "MediaPlayerService Media player service stopped");
     }
 
     private MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
@@ -605,6 +605,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     };
 
     private void showNotification(final Boolean pause) {
+        showNotification(pause, false);
+    }
+    private void showNotification(final Boolean pause, final boolean cancel) {
 
          final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());

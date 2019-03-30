@@ -2,6 +2,7 @@ package com.krisdb.wearcastslibrary;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -65,6 +66,11 @@ public class CommonUtils {
     public static void showToast(final Context ctx, final String message) {
 
         showToast(ctx, message, Toast.LENGTH_SHORT);
+    }
+
+    public static void cancelNotification(final Context ctx, final int id)
+    {
+        ((NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
     }
 
     public static Network getActiveNetwork(final Context ctx) {
