@@ -283,7 +283,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
     }
 
-
     @Override
     public boolean onMenuItemClick(final MenuItem menuItem) {
 

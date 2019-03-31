@@ -347,11 +347,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         int menuId = R.menu.menu_drawer_episode_list;
 
         if (mSelectedEpisodes.size() > 0) {
+            mWearableActionDrawer.getController().peekDrawer();
             if (mSelectedEpisodes.size() == 1)
                 menuId = R.menu.menu_drawer_episode_list_selected_single;
             else
                 menuId = R.menu.menu_drawer_episode_list_selected;
         }
+        else
+            mWearableActionDrawer.getController().closeDrawer();
 
         mActivityRef.get().getMenuInflater().inflate(menuId, menu);
 
