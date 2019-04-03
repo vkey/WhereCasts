@@ -292,10 +292,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             SyncWithMobileDevice();
     }
 
+    private void PauseAudio() {
+        PauseAudio(false);
+    }
+
     private void PauseAudio(final Boolean disableTelephony)
     {
         if (disableTelephony && mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
@@ -599,7 +604,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         public void onReceive(Context context, Intent intent) {
             //Log.d(mPackage, "MediaPlayerService Noisy receiver hit");
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-                PauseAudio(false);
+                PauseAudio();
             }
         }
     };
@@ -773,12 +778,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS: {
                 if (mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.stop();
+                    PauseAudio();
                 }
                 break;
             }
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT: {
-                mMediaPlayer.pause();
+                PauseAudio();
                 break;
             }
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: {
@@ -842,12 +847,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
-                PauseAudio(false);
+                PauseAudio();
             } else if(state == TelephonyManager.CALL_STATE_IDLE) {
                 //if (mMediaPlayer != null && mMediaPlayer.isPlaying() == false)
                 //PlayAudio();
             } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                PauseAudio(false);
+                PauseAudio();
             }
             super.onCallStateChanged(state, incomingNumber);
         }
