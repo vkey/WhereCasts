@@ -21,6 +21,9 @@
 
     <string name="alert_users_add_fetching_feed">Récupérer un flux RSS…</string>
 
+    <string name="share_subject">Check-out Wear Casts</string>
+    <string name="share_body">Wear Casts est un lecteur de podcast autonome pour WearOS.  Écoutez vos podcasts sur votre montre WearOS sans votre téléphone.\n\n%s</string>
+
     <string name="tip_1">Acceptez les autorisations sur votre appareil d\'usure avant d\'importer des podcasts.</string>
     <string name="tip_2">Astuce: utilisez la fonctionnalité Partage Android pour envoyer des URL RSS à cette application.</string>
 
@@ -45,6 +48,10 @@
     <string name="button_text_playlists_purchase">achat\nPlaylists</string>
     <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l\'application sur votre montre peut être nécessaire.</string>
 
+    <string name="menu_text_import">Importation</string>
+    <string name="menu_text_premium">Prime</string>
+    <string name="menu_text_share">Partager</string>
+    <string name="menu_text_tutorial">Didacticiel</string>
     <string name="menu_text_about">Sur</string>
     <string name="menu_text_directory">Découvrir</string>
 

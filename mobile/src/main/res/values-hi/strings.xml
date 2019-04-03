@@ -21,6 +21,9 @@
 
     <string name="alert_users_add_fetching_feed">RSS फ़ीड प्राप्त करना…</string>
 
+    <string name="share_subject">चेक आउट Wear Casts</string>
+    <string name="share_body">Wear Casts WearOS के लिए एक स्टैंडअलोन पॉडकास्ट प्लेयर है.  अपने फोन के बिना अपने वेयरओएस घड़ी पर अपने पॉडकास्ट को सुनें.\n\n%s</string>
+
     <string name="tip_1">पॉडकास्ट आयात करने से पहले अपने पहनने के उपकरण पर अनुमतियां स्वीकार करें.</string>
     <string name="tip_2">युक्ति: इस ऐप्लिकेशन में आरएसएस यूआरएल भेजने के लिए एंड्रॉइड की साझा कार्यक्षमता का प्रयोग करें.</string>
 
@@ -45,6 +48,10 @@
     <string name="button_text_playlists_purchase">खरीद फरोख्त\nप्लेलिस्ट</string>
     <string name="alert_playlists_purchased">प्लेलिस्ट सफलतापूर्वक बनाई गईं.\nअपनी घड़ी पर सेटिंग्स के तहत प्लेलिस्ट प्रबंधित करें। आपकी घड़ी पर ऐप को पुनरारंभ करना आवश्यक हो सकता है.</string>
 
+    <string name="menu_text_import">आयात</string>
+    <string name="menu_text_premium">प्रीमियम</string>
+    <string name="menu_text_share">शेयर</string>
+    <string name="menu_text_tutorial">ट्यूटोरियल</string>
     <string name="menu_text_about">के बारे में</string>
     <string name="menu_text_directory">डिस्कवर</string>
 

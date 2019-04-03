@@ -4,6 +4,7 @@
     <string name="podcast_json_url_default">https://s3.amazonaws.com/aws-website-wearcasts-evoy3/podcasts_en.json</string>
     <string name="bitcoin_addy">1EVPP5yNCU12ucs5W2pLSfDfdWbac7EvmU</string>
     <string name="privacy_url">https://sites.google.com/view/wear-casts/home/privacy</string>
+    <string name="tutorial_url">https://sites.google.com/view/wear-casts/home/tutorial</string>
     <string name="rss_validator_url">https://validator.w3.org/feed/</string>
     <string name="google_play_url">https://play.google.com/store/apps/details?id=com.krisdb.wearcasts</string>
 

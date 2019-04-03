@@ -15,11 +15,25 @@
         android:icon="@drawable/ic_action_premium"
         app:showAsAction="always"
         />
+
     <item android:id="@+id/menu_directory_import"
         android:title="@string/menu_text_import"
         android:icon="@drawable/ic_action_import"
         app:showAsAction="never"
         />
+
+    <item android:id="@+id/menu_share"
+        android:title="@string/menu_text_share"
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/menu_tutorial"
+        android:title="@string/menu_text_tutorial"
+        android:icon="@drawable/ic_action_tutorial"
+        app:showAsAction="never"
+        />
+
     <item android:id="@+id/menu_about"
         android:title="@string/menu_text_about"
         />

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -138,6 +139,18 @@ public class DirectoryActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_about)
             startActivity(new Intent(this, AboutActivity.class));
+
+        if (item.getItemId() == R.id.menu_tutorial)
+            startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.tutorial_url))));
+
+        if (item.getItemId() == R.id.menu_share) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_body, getString(R.string.google_play_url)));
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        }
 
         return super.onOptionsItemSelected(item);
     }

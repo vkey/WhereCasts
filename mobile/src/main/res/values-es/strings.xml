@@ -21,6 +21,9 @@
 
     <string name="alert_users_add_fetching_feed">Obteniendo RSS feed…</string>
 
+    <string name="share_subject">Baadhid Wear Casts</string>
+    <string name="share_body">Wear Casts waa ciyaaryahan furan oo loola jeedo WearOS.  Dhegeyso joornaaladaada WearOS watch adiga oo aan taleefankaaga.\n\n%s</string>
+
     <string name="tip_1">Acepte permisos en su dispositivo de desgaste antes de importar podcasts.</string>
     <string name="tip_2">Sugerencia: utilice la funcionalidad de Compartir de Android para enviar URL de RSS a esta aplicación.</string>
 
@@ -45,7 +48,10 @@
     <string name="button_text_playlists_purchase">Compra\nListas de reproducción</string>
     <string name="alert_playlists_purchased">Listas de reproducción creadas con éxito.\nAdministre las listas de reproducción en la configuración de su reloj. Es posible que se requiera reiniciar la aplicación en tu reloj.</string>
 
-
+    <string name="menu_text_import">Importar</string>
+    <string name="menu_text_premium">Prima</string>
+    <string name="menu_text_share">Compartir</string>
+    <string name="menu_text_tutorial">Tutorlal</string>
     <string name="menu_text_about">Acerca de</string>
     <string name="menu_text_directory">Descubrir</string>
 

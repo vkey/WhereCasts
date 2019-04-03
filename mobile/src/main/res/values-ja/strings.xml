@@ -21,6 +21,9 @@
 
     <string name="alert_users_add_fetching_feed">RSSフィードの取得…</string>
 
+    <string name="share_subject">チェックアウト Wear Casts</string>
+    <string name="share_body">Wear Casts WearOS用のスタンドアロンPodcastプレーヤーです.  あなたの携帯電話なしであなたのWearOSウォッチであなたのポッドキャストを聴く.\n\n%s</string>
+
     <string name="tip_1">ポッドキャストをインポートする前に、あなたのウェアデバイスの許可を受け入れる.</string>
     <string name="tip_2">ヒント：Androidの共有機能を使用してこのアプリにRSS URLを送信する.</string>
 
@@ -45,6 +48,10 @@
     <string name="button_text_playlists_purchase">購入\nプレイリスト</string>
     <string name="alert_playlists_purchased">再生リストが正常に作成されました.\n時計の設定でプレイリストを管理します。 時計でアプリを再起動する必要がある場合があります.</string>
 
+    <string name="menu_text_import">インポート</string>
+    <string name="menu_text_premium">プレミアム</string>
+    <string name="menu_text_share">シェア</string>
+    <string name="menu_text_tutorial">チュートリアル</string>
     <string name="menu_text_about">〜について</string>
     <string name="menu_text_directory">発見</string>
 
