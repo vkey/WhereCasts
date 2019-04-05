@@ -31,7 +31,6 @@
             android:defaultValue="true"
             />
 
-
         <SwitchPreference
             android:key="pref_updates_new_episodes_sound"
             android:title="@string/settings_podcasts_label_updates_sound"

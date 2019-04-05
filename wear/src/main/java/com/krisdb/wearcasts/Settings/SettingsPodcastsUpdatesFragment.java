@@ -80,9 +80,13 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             }
         });
 
+        final SwitchPreference cbUpdates = (SwitchPreference)findPreference("updatesEnabled");
+        findPreference("updateInterval").setEnabled(cbUpdates.isChecked());
+        findPreference("updateCharging").setEnabled(cbUpdates.isChecked());
         final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_updates_new_episodes_sound");
-        //findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
-        //findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
+        cbSound.setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
+        findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
+        findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
 
         if (cbSound.isChecked()) {
             findPreference("pref_updates_new_episodes_disable_start").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_start")).getEntry());
@@ -220,12 +224,20 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        final SwitchPreference cbSound = (SwitchPreference) findPreference("pref_updates_new_episodes_sound");
+        final SwitchPreference cbUpdates = (SwitchPreference) findPreference("updatesEnabled");
+
+        if (key.equals("updatesEnabled")) {
+            findPreference("updateInterval").setEnabled(cbUpdates.isChecked());
+            findPreference("updateCharging").setEnabled(cbUpdates.isChecked());
+            cbSound.setEnabled(cbUpdates.isChecked());
+            findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
+            findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
+        }
 
         if (key.equals("pref_updates_new_episodes_sound")) {
-            final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_updates_new_episodes_sound");
-
-            //findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbSound.isChecked());
-            //findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbSound.isChecked());
+            findPreference("pref_updates_new_episodes_disable_start").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
+            findPreference("pref_updates_new_episodes_disable_end").setEnabled(cbUpdates.isChecked() && cbSound.isChecked());
 
             if (!cbSound.isChecked()) {
                 findPreference("pref_updates_new_episodes_disable_start").setSummary("");
@@ -237,6 +249,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                 findPreference("pref_updates_new_episodes_disable_end").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_end")).getEntry());
             }
         }
+
         if (key.equals("pref_updates_new_episodes_disable_start"))
             findPreference("pref_updates_new_episodes_disable_start").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_start")).getEntry());
 
