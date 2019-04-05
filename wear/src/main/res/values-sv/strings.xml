@@ -138,6 +138,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Spela upp / Pausa (fungerar bara på spelskärmen)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Överst: Volym upp\nMellan: Spela / Pausa\nKnapp: Volym ner\n(fungerar bara på spelskärmen)</string>
     <string name="settings_podcasts_label_disable_bluetooth">Inaktivera Bluetooth</string>
+    <string name="settings_podcasts_label_disable_bluetooth_charging">Inaktivera Bluetooth medan du bara laddar upp</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Bara när du automatiskt laddar ner</string>
     <string name="settings_podcasts_label_high_bandwidth">Kontrollera nätverksnätverk med hög bandbredd</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Innan du hämtar eller streamar</string>

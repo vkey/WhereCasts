@@ -178,10 +178,13 @@ public class Utilities {
         if (!BluetoothEnabled()) {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
+            final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+            if (disableBluetooth && prefs.getBoolean("pref_disable_bluetooth_charging", false) && !CommonUtils.IsCharging(ctx))
+                return;
+
             final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
             final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
-
-            final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
 
             if (disableBluetooth && Objects.equals(disableBluetoothStart, "0") && Objects.equals(disableBluetoothEnd, "0") || DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss"))) {
                 BluetoothAdapter.getDefaultAdapter().enable();
@@ -194,11 +197,13 @@ public class Utilities {
 
     public static boolean disableBluetooth(final Context ctx, final boolean showToast) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
+
+        if (disableBluetooth && prefs.getBoolean("pref_disable_bluetooth_charging", false) && !CommonUtils.IsCharging(ctx))
+            return false;
 
         final String disableBluetoothStart = prefs.getString("pref_disable_bluetooth_start", "0");
         final String disableBluetoothEnd = prefs.getString("pref_disable_bluetooth_end", "0");
-
-        final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);
 
         if (disableBluetooth && Objects.equals(disableBluetoothStart, "0") && Objects.equals(disableBluetoothEnd, "0") || DateUtils.isTimeBetweenTwoTime(disableBluetoothStart, disableBluetoothEnd, DateUtils.FormatDate(new Date(), "HH:mm:ss"))) {
             BluetoothAdapter.getDefaultAdapter().disable();

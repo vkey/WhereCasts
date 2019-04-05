@@ -57,6 +57,12 @@
             android:defaultValue="false"
         />
 
+        <SwitchPreference
+            android:key="pref_disable_bluetooth_charging"
+            android:title="@string/settings_podcasts_label_disable_bluetooth_charging"
+            android:defaultValue="false"
+        />
+
         <ListPreference
             android:key="pref_disable_bluetooth_start"
             android:title="@string/settings_podcasts_label_download_disable_bluetooth_start"

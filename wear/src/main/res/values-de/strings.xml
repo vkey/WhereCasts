@@ -138,6 +138,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Wiedergabe / Pause (funktioniert nur auf dem Bildschirm)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Top: Lautstärke erhöhen\nMitte: Wiedergabe/Pause\nTaste: Lautstärke leiser\n(funktioniert nur auf dem Bildschirm)</string>
     <string name="settings_podcasts_label_disable_bluetooth">Deaktivieren Sie Bluetooth</string>
+    <string name="settings_podcasts_label_disable_bluetooth_charging">Deaktivieren Sie Bluetooth nur während des Ladevorgangs</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Nur beim automatischen Download</string>
     <string name="settings_podcasts_label_high_bandwidth">Überprüfen Sie das Netzwerk mit hoher Bandbreite</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Vor dem Herunterladen oder Streaming</string>

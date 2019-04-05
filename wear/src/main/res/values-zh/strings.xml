@@ -137,6 +137,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">播放/暫停（僅適用於播放屏幕）</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">上：增加音量\n中：播放/暫停\n按鈕：音量降低\n(僅適用於播放屏幕)</string>
     <string name="settings_podcasts_label_disable_bluetooth">禁用藍牙</string>
+    <string name="settings_podcasts_label_disable_bluetooth_charging">僅在充電時禁用藍牙</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">僅在自動下載時</string>
     <string name="settings_podcasts_label_high_bandwidth">檢查高帶寬網絡</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">在下載或流媒體之前</string>

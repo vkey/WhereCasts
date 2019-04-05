@@ -138,6 +138,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">再生/一時停止（再生画面でのみ機能する）</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">上：ボリュームアップ\n中：再生/一時停止\nボタン：音量を下げる\n(再生画面でのみ機能する)</string>
     <string name="settings_podcasts_label_disable_bluetooth">Bluetoothを無効にする</string>
+    <string name="settings_podcasts_label_disable_bluetooth_charging">充電中はBluetoothを無効にする</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">自動ダウンロード時のみ</string>
     <string name="settings_podcasts_label_high_bandwidth">高帯域幅のネットワークを確認する</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">ダウンロードやストリーミングの前に</string>

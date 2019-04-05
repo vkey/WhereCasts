@@ -139,6 +139,7 @@
     <string name="settings_podcasts_label_hardware_buttons_1_summary">Lecture / Pause (ne fonctionne que sur l\'écran de lecture)</string>
     <string name="settings_podcasts_label_hardware_buttons_3_summary">Haut: augmentation du volume\nMilieu: Lecture/Pause\nBouton: Volume bas\n(ne fonctionne que sur l\'écran de lecture)</string>
     <string name="settings_podcasts_label_disable_bluetooth">Désactiver Bluetooth</string>
+    <string name="settings_podcasts_label_disable_bluetooth_charging">Désactiver Bluetooth pendant la charge uniquement</string>
     <string name="settings_podcasts_label_disable_bluetooth_summary">Seulement en téléchargement automatique</string>
     <string name="settings_podcasts_label_high_bandwidth">Vérifier le réseau à haute bande passante</string>
     <string name="settings_podcasts_label_high_bandwidth_summary">Avant de télécharger ou de diffuser</string>
