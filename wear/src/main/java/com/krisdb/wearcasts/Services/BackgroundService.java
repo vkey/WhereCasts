@@ -57,7 +57,6 @@ public class BackgroundService extends JobService {
     public boolean onStartJob(final JobParameters params) {
         isWorking = true;
         mContext = new WeakReference<>(getApplicationContext());
-
         mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,6 +64,7 @@ public class BackgroundService extends JobService {
 
         try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch (Exception ignored) {}
+
 
         doWork(params);
 

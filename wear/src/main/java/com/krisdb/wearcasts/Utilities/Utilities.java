@@ -6,13 +6,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +28,7 @@ import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Services.BackgroundService;
+import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
@@ -42,9 +39,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.Constraints;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
@@ -289,27 +290,22 @@ public class Utilities {
     public static void StartJob(final Context ctx) {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final Constraints constraints = new Constraints.Builder()
+                .setRequiresCharging(prefs.getBoolean("updateCharging", true))
+                .build();
 
-        final ComponentName serviceComponent = new ComponentName(ctx, BackgroundService.class);
+        final long interval = Long.valueOf(prefs.getString("updateInterval", String.valueOf(ctx.getResources().getInteger(R.integer.default_update_interval))));
 
-        final JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setPeriodic(Long.valueOf(prefs.getString("updateInterval", String.valueOf(ctx.getResources().getInteger(R.integer.default_update_interval)))));
-        builder.setPersisted(true);
+        final PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(SyncWorker.class, interval, TimeUnit.MILLISECONDS)
+                .setConstraints(constraints)
+                .build();
 
-        builder.setRequiresCharging(prefs.getBoolean("updateCharging", true));
-
-        final JobScheduler jobScheduler = ctx.getSystemService(JobScheduler.class);
-
-        if (jobScheduler != null)
-            jobScheduler.schedule(builder.build());
+        WorkManager.getInstance().enqueue(workRequest);
     }
 
     public static void CancelJob(final Context ctx)
     {
-        final JobScheduler jobScheduler = ctx.getSystemService(JobScheduler.class);
-
-        if (jobScheduler != null)
-            jobScheduler.cancelAll();
+        WorkManager.getInstance().cancelAllWork();
     }
 
     public static String GetOrderClause(final int orderId) {
