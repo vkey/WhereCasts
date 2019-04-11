@@ -110,11 +110,6 @@
         </receiver>
 
         <service
-            android:name=".Services.BackgroundService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <service
             android:name=".Services.MediaPlayerService"
             android:exported="false">
             <intent-filter>
