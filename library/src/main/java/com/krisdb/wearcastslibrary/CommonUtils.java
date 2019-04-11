@@ -15,6 +15,7 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
@@ -236,28 +237,35 @@ public class CommonUtils {
         return null;
     }
 
-    public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap, final String message, final int toastLength)
-    {
-        dataMap.getDataMap().putLong("time", new Date().getTime());
-        final PutDataRequest request = dataMap.asPutDataRequest();
-        request.setUrgent();
+    public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap, final String message, final int toastLength) {
+        new AsyncTasks.WatchConnected(ctx,
+                new Interfaces.BooleanResponse() {
+                    @Override
+                    public void processFinish(final Boolean connected) {
+                        if (connected) {
+                            dataMap.getDataMap().putLong("time", new Date().getTime());
+                            final PutDataRequest request = dataMap.asPutDataRequest();
+                            request.setUrgent();
 
-        final Task<DataItem> task = Wearable.getDataClient(ctx).putDataItem(request);
+                            final Task<DataItem> task = Wearable.getDataClient(ctx).putDataItem(request);
 
-        task.addOnSuccessListener(new OnSuccessListener<DataItem>() {
-            @Override
-            public void onSuccess(DataItem dataItem) {
-                if (message != null)
-                    showToast(ctx, message, toastLength);
-            }
-        });
+                            task.addOnSuccessListener(new OnSuccessListener<DataItem>() {
+                                @Override
+                                public void onSuccess(DataItem dataItem) {
+                                    if (message != null)
+                                        showToast(ctx, message, toastLength);
+                                }
+                            });
 
-        task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                showToast(ctx, message, Toast.LENGTH_LONG);
-            }
-        });
+                            task.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    showToast(ctx, message, Toast.LENGTH_LONG);
+                                }
+                            });
+                        }
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
    public static String getDensityName(final Context context) {
