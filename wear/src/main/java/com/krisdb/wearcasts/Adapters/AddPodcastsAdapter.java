@@ -30,10 +30,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.widget.WearableRecyclerView;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
@@ -49,7 +52,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         private final TextView title, description;
         private final ImageView add, episodesExpand;
-        private final RelativeLayout layout;
+        private final ConstraintLayout layout;
         private final RecyclerView episodes;
         private final ProgressBar episodesProgress;
 
@@ -162,6 +165,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         final PodcastItem podcast = mPodcasts.get(position);
         final TextView title = viewHolder.title;
+        final ConstraintLayout layout = viewHolder.layout;
         final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
 
         viewHolder.episodesProgress.setVisibility(View.GONE);
@@ -175,40 +179,38 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         if (podcast.getIsTitle()) //title row
         {
             title.setTextSize(17);
-            final RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)title.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            title.setLayoutParams(layoutParams);
-            title.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
 
             viewHolder.add.setVisibility(View.GONE);
             viewHolder.description.setVisibility(View.GONE);
             viewHolder.episodesExpand.setVisibility(View.GONE);
+            title.setGravity(Gravity.CENTER_HORIZONTAL);
+            title.getLayoutParams().width = MATCH_PARENT;
 
             if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                 if (isRound)
-                    viewHolder.layout.setPadding(0, 10, 0, 10);
+                    layout.setPadding(0, 10, 0, 10);
                 else
-                    viewHolder.layout.setPadding(0, 2, 0, 2);
+                    layout.setPadding(0, 2, 0, 2);
 
                 params.setMargins(0, 0, 0, 0);
             }
             else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                 if (isRound) {
-                    viewHolder.layout.setPadding(0, 10, 0, 10);
+                    layout.setPadding(0, 10, 0, 10);
                     params.setMargins(0, 0, 0, 0);
                 }
                 else
                 {
-                    viewHolder.layout.setPadding(0, 4, 0, 4);
+                    layout.setPadding(0, 4, 0, 4);
                     params.setMargins(0, 0, 0, 0);
                 }
             }
             else {
-                viewHolder.layout.setPadding(0, 5, 0, 5);
+                layout.setPadding(0, 5, 0, 5);
                 params.setMargins(0, 0, 0, 0);
             }
 
-            viewHolder.layout.setBackgroundColor(mHeaderColor);
+            layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
         }
         else {
@@ -216,27 +218,27 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
             viewHolder.description.setVisibility(View.VISIBLE);
             viewHolder.episodesExpand.setVisibility(View.VISIBLE);
-            title.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
-            viewHolder.layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+            layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
 
             if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
-                viewHolder.layout.setPadding(0, 0, 0, 0);
+                layout.setPadding(0, 0, 0, 0);
                 if (isRound)
                     params.setMargins(30, 40, 20, 0);
                 else
                     params.setMargins(10, 30, 10, 0);
             } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                viewHolder.layout.setPadding(0, 0, 0, 0);
-                params.setMargins(50, 60, 30, 0);
+                layout.setPadding(0, 0, 0, 0);
+                params.setMargins(50, 30, 30, 0);
             } else {
-                viewHolder.layout.setPadding(0, 0, 0, 0);
-                params.setMargins(20, 60, 20, 0);
+                layout.setPadding(0, 0, 0, 0);
+                params.setMargins(20, 30, 20, 0);
             }
 
             viewHolder.add.setVisibility(View.VISIBLE);
-            title.setGravity(Gravity.NO_GRAVITY);
+            title.setGravity(Gravity.START);
+            title.getLayoutParams().width = 0;
         }
     }
 

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/add_podcast_row_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="5dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -11,11 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_podcast_add"
+        android:paddingEnd="5dp"
         android:background="?android:attr/selectableItemBackground"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="2dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <TextView
@@ -23,20 +25,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_alignParentTop="true"
         android:breakStrategy="simple"
-        android:layout_toEndOf="@+id/add_podcast_row_item_add" />
+        app:layout_constraintStart_toEndOf="@+id/add_podcast_row_item_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/add_podcast_row_item_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_below="@+id/add_podcast_row_item_title"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/add_podcast_row_item_add" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_podcast_row_item_title"
+        android:layout_marginTop="4dp"
+        />
 
     <ImageView
         android:id="@+id/add_podcast_row_item_expand"
@@ -44,10 +47,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_podcast_preview_row_item_expand"
         android:paddingTop="5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/add_podcast_row_item_description"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_podcast_row_item_description"
 
+        />
     <ProgressBar
         android:id="@+id/add_podcast_row_item_episodes_progress"
         android:layout_width="match_parent"
@@ -59,7 +63,9 @@
         android:indeterminate="true"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/add_podcast_row_item_expand"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_podcast_row_item_expand"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +76,7 @@
         android:visibility="gone"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/add_podcast_row_item_episodes_progress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_podcast_row_item_episodes_progress"
         />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
