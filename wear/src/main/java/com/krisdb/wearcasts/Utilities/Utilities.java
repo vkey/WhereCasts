@@ -28,6 +28,7 @@ import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Receivers.NotificationReceiver;
 import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -100,6 +101,8 @@ public class Utilities {
 
         final PendingIntent intent = PendingIntent.getActivity(ctx, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        final PendingIntent dismissIntent = PendingIntent.getBroadcast(ctx, 0,  new Intent(ctx, NotificationReceiver.class), 0);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             final String channelID = ctx.getPackageName().concat(".newepisodes");
@@ -114,6 +117,7 @@ public class Utilities {
                     .setContentIntent(intent)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(ctx.getString(R.string.app_name_wc))
+                    .setDeleteIntent(dismissIntent)
                     .setContentText(displayMessage).build();
 
             mNotificationManager.notify(102, notification);
@@ -122,6 +126,7 @@ public class Utilities {
                     new NotificationCompat.Builder(ctx)
                             .setSmallIcon(R.drawable.ic_notification)
                             .setContentTitle(ctx.getString(R.string.app_name_wc))
+                            .setDeleteIntent(dismissIntent)
                             .setContentText(displayMessage)
                             .setContentIntent(intent);
 
