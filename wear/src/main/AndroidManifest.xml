@@ -109,6 +109,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".Receivers.NotificationReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".Services.MediaPlayerService"
             android:exported="false">
