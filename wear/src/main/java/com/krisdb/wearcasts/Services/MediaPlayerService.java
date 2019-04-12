@@ -83,6 +83,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     public void onCreate() {
         super.onCreate();
         mPackage = getPackageName();
+
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         mMediaSessionCompat = new MediaSessionCompat(this, MediaPlayerService.class.getSimpleName());
         mContext = this;

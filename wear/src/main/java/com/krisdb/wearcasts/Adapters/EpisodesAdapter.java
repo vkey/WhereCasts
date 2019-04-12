@@ -117,7 +117,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             @Override
             public boolean onLongClick(View view) {
 
-                final PodcastItem podcast = GetPodcast(mContext, mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
+                final PodcastItem podcast = GetPodcast(viewGroup.getContext(), mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
                 final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
                 final Bundle bundle = new Bundle();
@@ -315,11 +315,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         }
         else
             downloadEpisode(position, episode);
-    }
-
-    private void handleNetwork(final int position, final PodcastItem episode)
-    {
-
     }
 
     private void downloadEpisode(final int position, final PodcastItem episode) {
@@ -550,7 +545,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             }
 
-            final int topMarginEpisodes = isRound ? 50 : 30;
+            final int topMarginEpisodes = 30;
 
             if (isHDPI) {
                 if (isRound)
