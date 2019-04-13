@@ -1,6 +1,31 @@
 <resources>
     <dimen name="episode_list_thumb_title_margin_bottom">0dp</dimen>
 
+    <!--episode activity-->
+    <dimen name="activity_podcast_episode_layout_margin_top">1dp</dimen>
+    <dimen name="activity_podcast_episode_layout_margin_start">20dp</dimen>
+    <dimen name="activity_podcast_episode_layout_margin_end">20dp</dimen>
+    <dimen name="activity_podcast_episode_layout_margin_bottom">40dp</dimen>
+
+    <!--episode context-->
+    <dimen name="episode_context_activity_layout_padding">30dp</dimen>
+
+    <!--directory recyclerview-->
+    <dimen name="fragment_add_podcast_list_recycler_padding_bottom">70dp</dimen>
+
+    <!--fragment podcast recyclverview-->
+    <dimen name="fragment_podcast_list_recycler_padding_start">0dp</dimen>
+    <dimen name="fragment_podcast_list_recycler_padding_end">0dp</dimen>
+
+    <!--podcast row item-->
+    <dimen name="podcast_row_item_layout_padding_top">5dp</dimen>
+    <dimen name="podcast_row_item_layout_padding_start">8dp</dimen>
+    <dimen name="podcast_row_item_layout_padding_end">5dp</dimen>
+    <dimen name="podcast_row_item_layout_padding_bottom">5dp</dimen>
+
+    <!--settings playlist-->
+    <dimen name="settings_playlists_padding">30dp</dimen>
+    \
     <dimen name="episode_list_title_margin_top">-10dp</dimen>
     <dimen name="episode_list_padding">10dp</dimen>
 

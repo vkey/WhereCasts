@@ -166,7 +166,6 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         final PodcastItem podcast = mPodcasts.get(position);
         final TextView title = viewHolder.title;
         final ConstraintLayout layout = viewHolder.layout;
-        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
 
         viewHolder.episodesProgress.setVisibility(View.GONE);
         viewHolder.episodes.setVisibility(View.GONE);
@@ -190,25 +189,16 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                 if (isRound)
                     layout.setPadding(0, 10, 0, 10);
                 else
-                    layout.setPadding(0, 2, 0, 2);
-
-                params.setMargins(0, 0, 0, 0);
+                    layout.setPadding(20, 2, 20, 2);
             }
             else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                if (isRound) {
+                if (isRound)
                     layout.setPadding(0, 10, 0, 10);
-                    params.setMargins(0, 0, 0, 0);
-                }
                 else
-                {
                     layout.setPadding(0, 4, 0, 4);
-                    params.setMargins(0, 0, 0, 0);
-                }
             }
-            else {
+            else
                 layout.setPadding(0, 5, 0, 5);
-                params.setMargins(0, 0, 0, 0);
-            }
 
             layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
@@ -223,18 +213,17 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
 
             if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
-                layout.setPadding(0, 0, 0, 0);
                 if (isRound)
-                    params.setMargins(30, 40, 20, 0);
+                    layout.setPadding(10, 0, 10, 0);
                 else
-                    params.setMargins(10, 30, 10, 0);
+                    layout.setPadding(20, 15, 20, 5);
             } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
-                layout.setPadding(0, 0, 0, 0);
-                params.setMargins(50, 30, 30, 0);
-            } else {
-                layout.setPadding(0, 0, 0, 0);
-                params.setMargins(20, 30, 20, 0);
-            }
+                if (isRound)
+                    layout.setPadding(60, 20, 60, 5);
+                else
+                    layout.setPadding(10, 0, 10, 0);
+            } else
+                layout.setPadding(10, 0, 10, 0);
 
             viewHolder.add.setVisibility(View.VISIBLE);
             title.setGravity(Gravity.START);

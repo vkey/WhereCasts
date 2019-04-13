@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="5dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -14,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_podcast_add"
+        android:paddingTop="@dimen/add_podcasts_add_image_padding_top"
         android:paddingEnd="5dp"
         android:background="?android:attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,7 @@
         android:breakStrategy="simple"
         app:layout_constraintStart_toEndOf="@+id/add_podcast_row_item_add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_podcast_row_item_add"
         />
 
     <TextView
@@ -51,8 +51,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_podcast_row_item_description"
-
         />
+
     <ProgressBar
         android:id="@+id/add_podcast_row_item_episodes_progress"
         android:layout_width="match_parent"

@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="5dp"
+    android:paddingStart="@dimen/podcast_row_item_layout_padding_start"
+    android:paddingTop="@dimen/podcast_row_item_layout_padding_top"
+    android:paddingEnd="@dimen/podcast_row_item_layout_padding_end"
+    android:paddingBottom="@dimen/podcast_row_item_layout_padding_bottom"
     android:foreground="?android:attr/selectableItemBackground"
     android:background="@color/wc_transparent"
     android:orientation="horizontal">

@@ -1,5 +1,5 @@
 <resources>
-    <string name="retrieving_podcasts">檢索播客目錄…</string>
+    <string name="retrieving_podcasts">檢索目錄…</string>
     <string name="retrieving_search_results">檢索結果…</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>

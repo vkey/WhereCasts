@@ -8,7 +8,7 @@
         android:id="@+id/podcasts_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="70dp"
+        android:paddingBottom="@dimen/fragment_add_podcast_list_recycler_padding_bottom"
         />
 
 </RelativeLayout>

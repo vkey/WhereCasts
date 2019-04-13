@@ -1,5 +1,5 @@
 <resources>
-    <string name="retrieving_podcasts">ポッドキャストディレクトリの取得…</string>
+    <string name="retrieving_podcasts">ディレクトリを取得しています…</string>
     <string name="retrieving_search_results">検索結果…</string>
     <string name="today">今日</string>
     <string name="yesterday">昨日</string>

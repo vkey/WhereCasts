@@ -32,6 +32,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:layout_centerVertical="true"
+            android:indeterminate="true"
             style="@android:style/Widget.Material.ProgressBar.Horizontal"
             android:layout_below="@+id/search_progress_text"
             />

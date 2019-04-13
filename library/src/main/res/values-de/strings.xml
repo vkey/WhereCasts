@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="retrieving_podcasts">Podcasts-Verzeichnis abrufen…</string>
+    <string name="retrieving_podcasts">Verzeichnis abrufen…</string>
     <string name="retrieving_search_results">Ergebnisse abrufen…</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>

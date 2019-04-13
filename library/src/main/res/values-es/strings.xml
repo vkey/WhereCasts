@@ -1,5 +1,5 @@
 <resources>
-    <string name="retrieving_podcasts">Recuperando el directorio de podcasts…</string>
+    <string name="retrieving_podcasts">Recuperando directorio…</string>
     <string name="retrieving_search_results">Recuperando resultados…</string>
     <string name="today">Hoy</string>
     <string name="yesterday">Ayer</string>

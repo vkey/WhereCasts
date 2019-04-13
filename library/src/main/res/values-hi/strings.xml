@@ -1,5 +1,5 @@
 <resources>
-    <string name="retrieving_podcasts">पॉडकास्ट निर्देशिका पुनर्प्राप्त करना…</string>
+    <string name="retrieving_podcasts">पुनर्प्राप्त करने की निर्देशिका…</string>
     <string name="retrieving_search_results">परिणामों को पुनः प्राप्त करना…</string>
     <string name="today">आज</string>
     <string name="yesterday">बिता कल</string>

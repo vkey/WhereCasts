@@ -1,5 +1,5 @@
 <resources>
-    <string name="retrieving_podcasts">Hämtar podcasts katalog…</string>
+    <string name="retrieving_podcasts">Hämtar katalog…</string>
     <string name="retrieving_search_results">Hämtar resultat…</string>
     <string name="today">I dag</string>
     <string name="yesterday">I går</string>
