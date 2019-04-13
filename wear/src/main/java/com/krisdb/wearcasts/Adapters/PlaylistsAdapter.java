@@ -483,7 +483,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     paramsLayout.setMargins(0, 0, 0, 10);
             } else if (isXHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 0, 0, 10);
+                    paramsLayout.setMargins(0, 0, 0, 20);
                 else
                     paramsLayout.setMargins(0, 0, 0, 20);
             } else
@@ -506,19 +506,21 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             } else
                 episodeProgress.setVisibility(View.GONE);
 
-            final int topMarginPlaylists = 20;
-
             thumb.setVisibility(episode.getIsLocal() ? View.GONE : View.VISIBLE);
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(35, topMarginPlaylists, 35, 0);
+                    paramsLayout.setMargins(35, 0, 35, 20);
                 else
-                    paramsLayout.setMargins(15, topMarginPlaylists, 15, 0);
-            } else if (isXHDPI)
-                paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
+                    paramsLayout.setMargins(15, 0, 15, 20);
+            } else if (isXHDPI) {
+                if (isRound)
+                    paramsLayout.setMargins(45, 0, 45, 20);
+                else
+                    paramsLayout.setMargins(45, 0, 45, 20);
+            }
             else
-                paramsLayout.setMargins(45, topMarginPlaylists, 45, 0);
+                paramsLayout.setMargins(45, 20, 45, 0);
 
             if (episode.getDisplayThumbnail() != null)
                 thumb.setImageDrawable(episode.getDisplayThumbnail());

@@ -488,14 +488,13 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 5, 0, 0);
+                    paramsLayout.setMargins(0, 5, 0, 10);
                 else
-                    paramsLayout.setMargins(0, 10, 0, 0);
+                    paramsLayout.setMargins(0, 10, 0, 10);
             } else if (isXHDPI)
-                paramsLayout.setMargins(0, 5, 0, 0);
+                paramsLayout.setMargins(0, 5, 0, 20);
             else
-                paramsLayout.setMargins(0, 10, 0, 0);
-
+                paramsLayout.setMargins(0, 10, 0, 10);
         }
         else //EPISODE
         {
@@ -545,19 +544,17 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             }
 
-            final int topMarginEpisodes = 30;
-
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(30, topMarginEpisodes, 40, 0);
+                    paramsLayout.setMargins(30, 0, 40, 30);
                 else
-                    paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
+                    paramsLayout.setMargins(15, 0, 15, 30);
 
             }
             else if (isXHDPI)
-                paramsLayout.setMargins(30, topMarginEpisodes, 30, 0);
+                paramsLayout.setMargins(30, 0, 30, 30);
             else
-                paramsLayout.setMargins(15, topMarginEpisodes, 15, 0);
+                paramsLayout.setMargins(15, 0, 15, 30);
         }
     }
 
