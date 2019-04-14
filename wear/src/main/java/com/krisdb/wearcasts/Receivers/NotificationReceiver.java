@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.krisdb.wearcastslibrary.CommonUtils;
-
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {

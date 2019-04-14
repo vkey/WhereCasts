@@ -2,19 +2,13 @@ package com.krisdb.wearcasts.Adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.krisdb.wearcasts.AsyncTasks;
@@ -36,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.widget.WearableRecyclerView;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 

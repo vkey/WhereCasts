@@ -3,8 +3,6 @@ package com.krisdb.wearcasts.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -19,27 +17,20 @@ import android.widget.TextView;
 
 import com.krisdb.wearcasts.Adapters.AddPodcastsAdapter;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
-import com.krisdb.wearcasts.Databases.DBDirectoryPodcasts;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
-import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
-
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class SearchDirectoryActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int SPEECH_REQUEST_CODE = 1;
