@@ -488,7 +488,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 5, 0, 10);
+                    paramsLayout.setMargins(0, 5, 0, 20);
                 else
                     paramsLayout.setMargins(0, 10, 0, 10);
             } else if (isXHDPI)
@@ -519,10 +519,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             date.setText(episode.getDisplayDate());
 
             if (!episode.getFinished()) {
-                final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                final SpannableString spannable = new SpannableString(episode.getTitle());
-                spannable.setSpan(boldSpan, 0, episode.getTitle().length(), 0);
-                title.setText(spannable);
+                title.setText(CommonUtils.boldText(episode.getTitle()));
             } else {
                 final SpannableString titleText = new SpannableString(episode.getTitle());
                 titleText.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -469,16 +469,14 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             episodeProgress.setVisibility(View.GONE);
             thumb.setVisibility(View.GONE);
 
-            final SpannableString titleText = new SpannableString(episode.getChannel().getTitle());
-            titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            title.setText(titleText);
+            title.setText(CommonUtils.boldText(episode.getChannel().getTitle()));
 
             title.setTextSize(16);
             title.setGravity(Gravity.CENTER_HORIZONTAL);
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(0, 0, 0, 10);
+                    paramsLayout.setMargins(0, 0, 0, 20);
                 else
                     paramsLayout.setMargins(0, 0, 0, 10);
             } else if (isXHDPI) {
@@ -510,12 +508,12 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(35, 0, 35, 20);
+                    paramsLayout.setMargins(35, 0, 35, 25);
                 else
                     paramsLayout.setMargins(15, 0, 15, 20);
             } else if (isXHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(45, 0, 45, 20);
+                    paramsLayout.setMargins(30, 0, 30, 20);
                 else
                     paramsLayout.setMargins(45, 0, 45, 20);
             }

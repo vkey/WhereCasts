@@ -107,7 +107,6 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
 
     private void runSearch(final String query)
     {
-        final List<PodcastItem> results = new ArrayList<>();
         mProgressBar.setVisibility(View.VISIBLE);
         mProgressText.setVisibility(View.VISIBLE);
         mProgressText.setText(getString(R.string.searching));
@@ -115,46 +114,12 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
         mSearchVoiceImage.setVisibility(View.GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final String db_query = "%".concat(query.toLowerCase()).concat("%");
-
-        final DBDirectoryPodcasts dbPodcasts = new DBDirectoryPodcasts(this);
-        final SQLiteDatabase sdbPodcasts = dbPodcasts.select();
-        final Cursor cursor = sdbPodcasts.rawQuery("SELECT [title],[url],[site_url],[description],[thumbnail_url],[thumbnail_name] FROM [tbl_directory_podcasts] WHERE [title] LIKE ? OR [description] LIKE ?", new String[]{db_query, db_query});
-
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-
-                final PodcastItem podcast = new PodcastItem();
-                final ChannelItem channel = new ChannelItem();
-                channel.setTitle(cursor.getString(0));
-                channel.setRSSUrl(cursor.getString(1));
-                channel.setSiteUrl(cursor.getString(2));
-                channel.setDescription(cursor.getString(3));
-
-                if (cursor.getString(4) != null) {
-                    channel.setThumbnailUrl(cursor.getString(4));
-                    channel.setThumbnailName(cursor.getString(5));
-                }
-                podcast.setChannel(channel);
-                podcast.setIsREST(false);
-                podcast.setDisplayThumbnail(GetRoundedLogo(mActivity, podcast.getChannel()));
-                results.add(podcast);
-
-                cursor.moveToNext();
-            }
-        }
-
-        cursor.close();
-        dbPodcasts.close();
-
         new AsyncTasks.GetPodcastsDirectory(this, query,
                 new Interfaces.PodcastsResponse() {
                     @Override
-                    public void processFinish(List<PodcastItem> podcasts) {
+                    public void processFinish(final List<PodcastItem> podcasts) {
 
-                        results.addAll(podcasts);
-
-                        if (results.size() == 0)
+                        if (podcasts.size() == 0)
                         {
                             mProgressText.setText(getString(R.string.text_no_search_results));
                             mProgressBar.setVisibility(View.GONE);
@@ -162,32 +127,26 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                             return;
                         }
 
-                        final Set set = new TreeSet(new Comparator() {
-
-                            @Override
-                            public int compare(Object o1, Object o2) {
-
-                                final PodcastItem p1 = (PodcastItem) o1;
-                                final PodcastItem p2 = (PodcastItem) o2;
-
-                                return (p1.getChannel().getTitle().compareToIgnoreCase(p2.getChannel().getTitle()));
-                            }
-                        });
-                        set.addAll(results);
-
-                        final ArrayList displayList = new ArrayList(set);
                         final int headerColor = Utilities.getHeaderColor(mActivity);
 
                         final WearableRecyclerView rv = findViewById(R.id.search_results);
                         rv.setLayoutManager(new LinearLayoutManager(mActivity));
-                        rv.setAdapter(new AddPodcastsAdapter(mActivity, displayList, headerColor));
+                        rv.setAdapter(new AddPodcastsAdapter(mActivity, podcasts, headerColor));
 
                         findViewById(R.id.search_results).setVisibility(View.VISIBLE);
                         mProgressBar.setVisibility(View.GONE);
                         mProgressText.setVisibility(View.GONE);
                         mNavDrawer.getController().peekDrawer();
+                        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override

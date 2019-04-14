@@ -30,7 +30,6 @@ public class AddPodcastListFragment extends Fragment {
         final Bundle bundle = new Bundle();
         bundle.putSerializable("podcasts", (Serializable)podcasts);
 
-
         plf.setArguments(bundle);
 
         return plf;

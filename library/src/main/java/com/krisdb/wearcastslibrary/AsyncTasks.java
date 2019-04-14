@@ -171,13 +171,7 @@ public class AsyncTasks {
 
                 final int podcastsLength = podcastsArray.length();
 
-                if (mProgressBar != null)
-                    mProgressBar.get().setMax(podcastsLength);
-
                 for (int p = 0; p < podcastsLength; p++) {
-
-                    if (mProgressBar != null)
-                        mProgressBar.get().setProgress(p);
 
                     final JSONObject categoryObj = podcastsArray.getJSONObject(p);
 
@@ -334,6 +328,13 @@ public class AsyncTasks {
                     final JSONArray podcastsArray = new JSONObject(json.toString()).getJSONArray("results");
                     final int podcastsLength = podcastsArray.length();
 
+                    final PodcastItem titleItem = new PodcastItem();
+                    final ChannelItem channelTitle = new ChannelItem();
+                    channelTitle.setTitle(mQuery);
+                    titleItem.setIsTitle(true);
+                    titleItem.setChannel(channelTitle);
+                    mPodcasts.add(titleItem);
+
                     for (int p = 0; p < podcastsLength; p++) {
 
                         final JSONObject podcastObj = podcastsArray.getJSONObject(p);
@@ -389,21 +390,6 @@ public class AsyncTasks {
 
                             podcast.setChannel(channel);
                             podcast.setIsREST(true);
-
-                        /*
-                        final List<PodcastItem> episodes = FeedParser.parse(podcast);
-
-                        if (episodes == null || episodes.size() == 0) continue;
-
-                        final Date firstEpisode = DateUtils.ConvertDate(episodes.get(0).getPubDate(), "yyyy-MM-dd HH:mm:ss");
-
-                        final Calendar cal = Calendar.getInstance();
-                        cal.add(Calendar.DATE, mContext.get().getResources().getInteger(R.integer.search_results_day_limit));
-
-                        final Date lastYearDate = cal.getTime();
-
-                        if (firstEpisode == null || firstEpisode.before(lastYearDate)) continue;
-                        */
 
                             if (channel.getTitle().equals("N/A") == false)
                                 mPodcasts.add(podcast);

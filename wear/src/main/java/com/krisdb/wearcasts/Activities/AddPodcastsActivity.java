@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -107,6 +108,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
     private void SetDirectory() {
         mProgressBar.setVisibility(View.VISIBLE);
         mProgressBarText.setVisibility(View.VISIBLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         new AsyncTasks.GetDirectory(this, mForceRefresh, false, mProgressBar,
                 new Interfaces.DirectoryResponse() {
@@ -124,6 +126,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                             mViewPager.setVisibility(View.VISIBLE);
                             mProgressBar.setVisibility(View.GONE);
                             mProgressBarText.setVisibility(View.GONE);
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                         else
                         {
@@ -177,6 +180,13 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private class AddPodcastsPagerAdapter extends FragmentPagerAdapter {

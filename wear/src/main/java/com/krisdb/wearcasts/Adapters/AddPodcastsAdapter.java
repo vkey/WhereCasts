@@ -166,14 +166,13 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         final PodcastItem podcast = mPodcasts.get(position);
         final TextView title = viewHolder.title;
         final ConstraintLayout layout = viewHolder.layout;
+        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
 
         viewHolder.episodesProgress.setVisibility(View.GONE);
         viewHolder.episodes.setVisibility(View.GONE);
         viewHolder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_preview_row_item_expand));
 
-        final SpannableString titleText = new SpannableString(podcast.getChannel().getTitle());
-        titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        title.setText(titleText);
+        title.setText(CommonUtils.boldText(podcast.getChannel().getTitle()));
 
         if (podcast.getIsTitle()) //title row
         {
@@ -187,18 +186,16 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
             if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                 if (isRound)
-                    layout.setPadding(0, 10, 0, 10);
+                    paramsLayout.setMargins(0, 0, 0, 20);
                 else
-                    layout.setPadding(20, 2, 20, 2);
-            }
-            else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
+                    paramsLayout.setMargins(0, 0, 0, 10);
+            } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                 if (isRound)
-                    layout.setPadding(0, 10, 0, 10);
+                    paramsLayout.setMargins(0, 0, 0, 20);
                 else
-                    layout.setPadding(0, 4, 0, 4);
-            }
-            else
-                layout.setPadding(0, 5, 0, 5);
+                    paramsLayout.setMargins(0, 0, 0, 20);
+            } else
+                paramsLayout.setMargins(0, 0, 0, 20);
 
             layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
@@ -214,16 +211,17 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
             if (Objects.equals(mDensityName, mContext.getString(R.string.hdpi))) {
                 if (isRound)
-                    layout.setPadding(10, 0, 10, 0);
+                    paramsLayout.setMargins(40, 0, 40, 20);
                 else
-                    layout.setPadding(20, 15, 20, 5);
+                    paramsLayout.setMargins(15, 0, 15, 20);
             } else if (Objects.equals(mDensityName, mContext.getString(R.string.xhdpi))) {
                 if (isRound)
-                    layout.setPadding(60, 20, 60, 5);
+                    paramsLayout.setMargins(30, 0, 30, 20);
                 else
-                    layout.setPadding(10, 0, 10, 0);
-            } else
-                layout.setPadding(10, 0, 10, 0);
+                    paramsLayout.setMargins(45, 0, 45, 20);
+            }
+            else
+                paramsLayout.setMargins(45, 20, 45, 0);
 
             viewHolder.add.setVisibility(View.VISIBLE);
             title.setGravity(Gravity.START);

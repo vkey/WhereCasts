@@ -5,6 +5,7 @@
     android:id="@+id/add_podcast_row_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="4dp"
     android:layout_gravity="center"
     android:orientation="horizontal">
 

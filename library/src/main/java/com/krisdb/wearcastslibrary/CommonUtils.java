@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -22,6 +23,9 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Patterns;
@@ -321,6 +325,13 @@ public class CommonUtils {
     {
         if (str == null) return "";
         return android.text.Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString();
+    }
+
+    public static SpannableString boldText(final String text)
+    {
+        final SpannableString titleText = new SpannableString(text);
+        titleText.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return titleText;
     }
 
     public static String stripHTML(String str)

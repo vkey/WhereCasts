@@ -116,7 +116,7 @@ public class PlaylistsListFragment extends Fragment {
         mProgressPlaylistText.setText(titleText);
         mProgressPlaylistText.setTextSize(16);
 
-        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
+        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)mProgressPlaylistLayout.getLayoutParams();
 
         if (Objects.equals(densityName, getString(R.string.hdpi))) {
             if (isRound) {
@@ -134,8 +134,8 @@ public class PlaylistsListFragment extends Fragment {
             paramsLayout.setMargins(0, 0, 0, 0);
         }
 
-            mProgressPlaylistLayout.setVisibility(View.VISIBLE);
-            mStatus.setVisibility(View.GONE);
+        mProgressPlaylistLayout.setVisibility(View.VISIBLE);
+        mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
         new AsyncTasks.DisplayPlaylistEpisodes(mActivity, mPlaylistId,
