@@ -513,7 +513,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     paramsLayout.setMargins(15, 0, 15, 20);
             } else if (isXHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(30, 0, 30, 20);
+                    paramsLayout.setMargins(30, 0, 30, 25);
                 else
                     paramsLayout.setMargins(45, 0, 45, 20);
             }

@@ -119,7 +119,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                     @Override
                     public void processFinish(final List<PodcastItem> podcasts) {
 
-                        if (podcasts.size() == 0)
+                        if (podcasts.size() == 1)
                         {
                             mProgressText.setText(getString(R.string.text_no_search_results));
                             mProgressBar.setVisibility(View.GONE);

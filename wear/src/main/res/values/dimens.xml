@@ -25,7 +25,13 @@
 
     <!--settings playlist-->
     <dimen name="settings_playlists_padding">30dp</dimen>
-    \
+
+    <!--search directory progress-->
+    <dimen name="search_directory_progress_padding">20dp</dimen>
+
+    <!--directory  progress-->
+    <dimen name="activity_add_progress_padding">15dp</dimen>
+
     <dimen name="episode_list_title_margin_top">-10dp</dimen>
     <dimen name="episode_list_padding">10dp</dimen>
 
