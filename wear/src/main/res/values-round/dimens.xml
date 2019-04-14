@@ -11,10 +11,6 @@
     <!--directory recyclerview-->
     <dimen name="fragment_add_podcast_list_recycler_padding_bottom">70dp</dimen>
 
-    <!--fragment podcast recyclverview-->
-    <dimen name="fragment_podcast_list_recycler_padding_start">0dp</dimen>
-    <dimen name="fragment_podcast_list_recycler_padding_end">0dp</dimen>
-
     <!--podcast row item-->
     <dimen name="podcast_row_item_layout_padding_top">5dp</dimen>
     <dimen name="podcast_row_item_layout_padding_end">5dp</dimen>

@@ -244,6 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:breakStrategy="simple"
                 android:layout_below="@+id/podcast_episode_error"
                 android:textSize="14sp"
                 android:layout_marginBottom="20dp"

@@ -10,8 +10,6 @@
         android:id="@+id/podcast_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/fragment_podcast_list_recycler_padding_start"
-        android:layout_marginEnd="@dimen/fragment_podcast_list_recycler_padding_end"
         />
 
     <ImageView
