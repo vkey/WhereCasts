@@ -154,7 +154,8 @@ public class PlaylistsUtilities {
                     if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));
 
-                    episode.setTitle(CommonUtils.truncateWords(episode.getTitle(), truncateWords));
+                    episode.setTitle(episode.getTitle());
+                    //episode.setTitle(CommonUtils.truncateWords(episode.getTitle(), truncateWords));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 

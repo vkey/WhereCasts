@@ -27,7 +27,6 @@
 
     <TextView
         android:id="@+id/episode_row_item_title"
-        android:foreground="?android:attr/selectableItemBackground"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:breakStrategy="simple"
@@ -35,7 +34,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/episode_row_item_download"
-        />
+        android:foreground="?android:attr/selectableItemBackground"
+       />
 
     <ImageView
         android:id="@+id/episode_row_item_download"

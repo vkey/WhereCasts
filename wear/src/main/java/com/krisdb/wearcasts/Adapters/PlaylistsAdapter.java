@@ -489,10 +489,13 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
             layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
+            title.setLines(1);
         }
         else //EPISODE
         {
             download.setVisibility(View.VISIBLE);
+
+            title.setLines(2);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
@@ -518,7 +521,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     paramsLayout.setMargins(45, 0, 45, 20);
             }
             else
-                paramsLayout.setMargins(45, 20, 45, 0);
+                paramsLayout.setMargins(45, 0, 45, 0);
 
             if (episode.getDisplayThumbnail() != null)
                 thumb.setImageDrawable(episode.getDisplayThumbnail());
