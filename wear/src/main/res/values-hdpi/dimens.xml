@@ -1,5 +1,4 @@
 <resources>
-    <dimen name="add_podcasts_add_image_padding_top">1dp</dimen>
-    <dimen name="podcast_row_item_layout_padding_start">5dp</dimen>
-
+    <dimen name="add_podcasts_add_image_padding_top">0dp</dimen>
+    <dimen name="podcast_row_item_layout_margin_start">5dp</dimen>
 </resources>

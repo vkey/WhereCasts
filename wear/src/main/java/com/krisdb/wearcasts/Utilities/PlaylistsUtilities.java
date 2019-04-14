@@ -134,7 +134,8 @@ public class PlaylistsUtilities {
 
             String orderString = Utilities.GetOrderClause(order);
 
-            final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
+            //final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
+            final int truncateLength = ctx.getResources().getInteger(R.integer.episode_truncate_length);
 
              if (playlistId == resources.getInteger(R.integer.playlist_downloads)) //downloads can also be in progress, so need separate query for downloads
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0 ORDER BY ".concat(orderString)), null);
@@ -154,8 +155,7 @@ public class PlaylistsUtilities {
                     if (playlistId == resources.getInteger(R.integer.playlist_playerfm))//third party
                         episode.setPlaylistId(cursor.getInt(12));
 
-                    episode.setTitle(episode.getTitle());
-                    //episode.setTitle(CommonUtils.truncateWords(episode.getTitle(), truncateWords));
+                    episode.setTitle(CommonUtils.truncateLength(episode.getTitle(), truncateLength));
 
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 

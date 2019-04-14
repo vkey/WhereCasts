@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import androidx.core.content.ContextCompat;
 import androidx.wear.widget.WearableRecyclerView;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
@@ -489,13 +491,10 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
             layout.setBackgroundColor(mHeaderColor);
             title.setBackgroundColor(mHeaderColor);
-            title.setLines(1);
         }
         else //EPISODE
         {
             download.setVisibility(View.VISIBLE);
-
-            title.setLines(2);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
@@ -511,7 +510,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(35, 0, 35, 25);
+                    paramsLayout.setMargins(35, 0, 35, 20);
                 else
                     paramsLayout.setMargins(15, 0, 15, 20);
             } else if (isXHDPI) {

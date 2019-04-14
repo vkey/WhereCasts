@@ -96,6 +96,14 @@ public class CommonUtils {
         else
             return s.substring(0, m.end()).concat("...");
     }
+
+    public static String truncateLength(final String s, final int n) {
+        if (s.length() > n)
+            return s.substring(0, n).concat("...");
+
+        return s;
+    }
+
     public static Boolean HighBandwidthNetwork(final Context ctx)
     {
         if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true)) return true;

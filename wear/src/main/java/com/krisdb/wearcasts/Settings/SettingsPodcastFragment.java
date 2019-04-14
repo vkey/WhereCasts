@@ -108,7 +108,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                     return true;
                 }
 
-                if (value.length() > 100) {
+                if (value.length() > 60) {
                     CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
                     return true;
                 }

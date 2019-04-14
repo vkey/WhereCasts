@@ -59,6 +59,12 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                                 CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
                                 return true;
                             }
+
+                            if (text.length() > 20) {
+                                CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
+                                return true;
+                            }
+
                             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
 
                             db.updatePlaylist(text, playlist.getID());

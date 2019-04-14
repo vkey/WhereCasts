@@ -101,7 +101,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private ProgressBar mProgressBar, mProgressCircleDownloading, mProgressCircleLoading;
     private SeekBar mSeekBar;
     private RelativeLayout mInfoLayout, mControlsLayout;
-    private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed;
+    private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed, mEpisodeTitle;
     private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage;
 
     private PodcastItem mEpisode;
@@ -167,6 +167,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         mScrollView = findViewById(R.id.podcast_episode_scrollview);
+        mScrollView = findViewById(R.id.podcast_episode_scrollview);
+        mEpisodeTitle = findViewById(R.id.podcast_episode_title);
         mProgressBar = findViewById(R.id.podcast_episode_progress_bar);
         mProgressCircleDownloading = findViewById(R.id.podcast_episode_progress_circle);
         mProgressCircleLoading = findViewById(R.id.podcast_episode_progress_loading);
@@ -403,13 +405,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             textColor = colors.second;
 
             mScrollView.setBackgroundColor(colors.first);
-            ((TextView) findViewById(R.id.podcast_episode_title)).setTextColor(textColor);
+            mEpisodeTitle.setTextColor(textColor);
             ((android.widget.TextClock)findViewById(R.id.podcast_episode_clock)).setTextColor(textColor);
         }
         //else if (mThemeID == Enums.ThemeOptions.LIGHT.getThemeId())
             //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play_dark));
 
-        ((TextView) findViewById(R.id.podcast_episode_title)).setText(mEpisode.getTitle());
+        mEpisodeTitle.setText(mEpisode.getTitle());
 
         if (mEpisode.getDescription() != null) {
             ((TextView) findViewById(R.id.podcast_episode_description)).setText(GetDisplayDate(mActivity, mEpisode.getPubDate()).concat(" - ").concat(CommonUtils.CleanDescription(mEpisode.getDescription())));
@@ -1179,7 +1181,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
 
-        ((TextView)findViewById(R.id.podcast_episode_title)).setTextColor(ContextCompat.getColor(this, R.color.wc_text));
+        mEpisodeTitle.setTextColor(ContextCompat.getColor(this, R.color.wc_text));
 
         findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
         //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
@@ -1194,7 +1196,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
             findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
             findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
-            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_amoled));
+            mEpisodeTitle.setBackgroundColor(getColor(R.color.wc_background_amoled));
         }
         //mLogo.setVisibility(View.INVISIBLE);
         mSkipForward.setVisibility(View.INVISIBLE);
@@ -1223,7 +1225,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
             findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
             findViewById(R.id.podcast_episode_info_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
-            findViewById(R.id.podcast_episode_title).setBackgroundColor(getColor(R.color.wc_background_dark));
+            mEpisodeTitle.setBackgroundColor(getColor(R.color.wc_background_dark));
         }
 
         mSkipForward.setVisibility(View.VISIBLE);

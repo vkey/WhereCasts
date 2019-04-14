@@ -351,7 +351,7 @@
     <string name="alert_files_deleted">%d files deleted</string>
 
     <string name="validation_podcast_rename_title">Enter a title</string>
-    <string name="validation_podcast_rename_length">Title length too large</string>
+    <string name="validation_podcast_rename_length">Title length too long</string>
 
     <string name="plurals_single_new_episode">1 new episode</string>
     <string name="plurals_multiple_new_episodes">%d new episodes</string>

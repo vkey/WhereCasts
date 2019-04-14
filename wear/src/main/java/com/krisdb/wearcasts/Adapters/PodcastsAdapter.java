@@ -113,8 +113,7 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
         viewHolder.thumbnail.setImageDrawable(podcast.getDisplayThumbnail());
 
-        if (podcast.getChannel().getTitle() != null)
-            viewHolder.title.setText(podcast.getChannel().getTitle());
+        viewHolder.title.setText(podcast.getChannel().getTitle());
 
         if (podcast.getNewCount() > 0) {
             final SpannableString count = new SpannableString(String.valueOf(podcast.getNewCount()));
