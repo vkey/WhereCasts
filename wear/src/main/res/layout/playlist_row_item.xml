@@ -19,6 +19,7 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:padding="3dp"
         />
 
@@ -27,6 +28,7 @@
         android:layout_width="46dp"
         android:layout_height="46dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/wc_transparent"
         android:progressDrawable="@drawable/circular_progress_playlist"
