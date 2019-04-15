@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -296,6 +297,7 @@ public class Utilities {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .setRequiresCharging(prefs.getBoolean("updateCharging", true))
                 .build();
 
