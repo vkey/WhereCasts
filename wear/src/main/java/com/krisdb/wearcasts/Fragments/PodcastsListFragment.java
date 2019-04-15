@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.ScrollingLayoutPodcasts;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -64,8 +63,8 @@ public class PodcastsListFragment extends Fragment {
         mLogo = listView.findViewById(R.id.podcast_list_empty_logo);
 
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
-        //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
-        mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
+        mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
+        //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
 
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();

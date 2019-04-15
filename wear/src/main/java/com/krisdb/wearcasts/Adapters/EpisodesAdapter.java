@@ -543,10 +543,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
             if (isHDPI) {
                 if (isRound)
-                    paramsLayout.setMargins(30, 0, 40, 30);
+                    paramsLayout.setMargins(40, 0, 40, 30);
                 else
                     paramsLayout.setMargins(15, 0, 15, 30);
-
             }
             else if (isXHDPI)
                 paramsLayout.setMargins(30, 0, 30, 30);

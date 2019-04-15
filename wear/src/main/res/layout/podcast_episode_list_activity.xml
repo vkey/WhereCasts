@@ -43,6 +43,7 @@
                 android:paddingBottom="50dp"
                 />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <ImageView
             android:id="@+id/episode_list_progress_text_thumbnail"
             android:maxWidth="90dp"
