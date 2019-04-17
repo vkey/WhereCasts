@@ -291,6 +291,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mLocalFile == null)
             SyncWithMobileDevice();
+
     }
 
     private void PauseAudio() {
@@ -342,6 +343,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (mLocalFile == null)
                 SyncWithMobileDevice();
 
+            Utilities.enableBluetooth(mContext);
+
             mMediaHandler.removeCallbacksAndMessages(null);
         }
     }
@@ -388,7 +391,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     mMediaPlayer.setDataSource(uri.toString());
                 }
 
-                if (!mEpisode.getIsDownloaded()) {
+                if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
                     mMediaPlayer.prepareAsync();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -591,6 +594,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
             stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
+            Utilities.enableBluetooth(mContext);
         }
     }
 
