@@ -535,7 +535,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             } else {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
-
                 duration.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 date.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
