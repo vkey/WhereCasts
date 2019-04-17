@@ -343,7 +343,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (mLocalFile == null)
                 SyncWithMobileDevice();
 
-            Utilities.enableBluetooth(mContext);
+            if (mLocalFile == null && !mEpisode.getIsDownloaded())
+                Utilities.enableBluetooth(mContext);
 
             mMediaHandler.removeCallbacksAndMessages(null);
         }
@@ -594,7 +595,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
             stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
-            Utilities.enableBluetooth(mContext);
+
+            if (mLocalFile == null && !mEpisode.getIsDownloaded())
+                Utilities.enableBluetooth(mContext);
         }
     }
 
