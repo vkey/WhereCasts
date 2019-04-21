@@ -348,6 +348,9 @@
     <string name="alert_file_deleted">1 archivo borrado</string>
     <string name="alert_files_deleted">%d archivos eliminados</string>
 
+    <string name="alert_no_rss_url">Este feed no tiene una URL RSS válida.\nPor favor, póngase en contacto con el proveedor de alimentación.</string>
+    <string name="no_rss_title">No titulo disponible</string>
+
     <string name="validation_podcast_rename_title">Ingresa un título</string>
     <string name="validation_podcast_rename_length">Longitud del título demasiado grande</string>
 

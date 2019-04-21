@@ -15,6 +15,7 @@ import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -117,16 +118,24 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
     private void addPodcast(final ViewHolder holder)
     {
+        final ChannelItem channel = mPodcasts.get(holder.getAdapterPosition()).getChannel();
+
+        if (channel.getRSSUrl() == null)
+        {
+            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_no_rss_url));
+            return;
+        }
+
         final ContentValues cv = new ContentValues();
-        cv.put("title", mPodcasts.get(holder.getAdapterPosition()).getChannel().getTitle());
-        cv.put("url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getRSSUrl().toString());
-        cv.put("site_url", mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl() != null ? mPodcasts.get(holder.getAdapterPosition()).getChannel().getSiteUrl().toString() : null);
+        cv.put("title", channel.getTitle() != null ? channel.getTitle() : mContext.getString(R.string.no_rss_title));
+        cv.put("url", channel.getRSSUrl().toString());
+        cv.put("site_url", channel.getSiteUrl() != null ? channel.getSiteUrl().toString() : null);
         cv.put("dateAdded", DateUtils.GetDate());
 
-        final URL thumbUrl = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailUrl();
+        final URL thumbUrl = channel.getThumbnailUrl();
 
         if (thumbUrl != null) {
-            final String thumbName = mPodcasts.get(holder.getAdapterPosition()).getChannel().getThumbnailName();
+            final String thumbName = channel.getThumbnailName();
 
             cv.put("thumbnail_url", thumbUrl.toString());
             cv.put("thumbnail_name", thumbName);

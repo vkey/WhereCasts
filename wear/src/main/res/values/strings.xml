@@ -350,6 +350,9 @@
     <string name="alert_file_deleted">1 file deleted</string>
     <string name="alert_files_deleted">%d files deleted</string>
 
+    <string name="alert_no_rss_url">This feed does not have a valid RSS Url.\nPlease contact the feed provider.</string>
+    <string name="no_rss_title">No title available</string>
+
     <string name="validation_podcast_rename_title">Enter a title</string>
     <string name="validation_podcast_rename_length">Title length too long</string>
 

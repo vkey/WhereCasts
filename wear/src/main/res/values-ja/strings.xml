@@ -348,6 +348,9 @@
     <string name="alert_file_deleted">1 ファイルを削除しました</string>
     <string name="alert_files_deleted">%d ファイルが削除された</string>
 
+    <string name="alert_no_rss_url">このフィードには有効なRSS URLがありません.\nフィードプロバイダーに連絡してください.</string>
+    <string name="no_rss_title">タイトルなし</string>
+
     <string name="validation_podcast_rename_title">タイトルを入力</string>
     <string name="validation_podcast_rename_length">タイトルの長さが大きすぎます</string>
 

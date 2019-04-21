@@ -347,6 +347,9 @@
     <string name="alert_file_deleted">1 文件已刪除</string>
     <string name="alert_files_deleted">%d 文件已刪除</string>
 
+    <string name="alert_no_rss_url">此Feed沒有有效的RSS Url.\n請聯繫飼料供應商.</string>
+    <string name="no_rss_title">沒有標題可用</string>
+
     <string name="validation_podcast_rename_title">輸入一個標題</string>
     <string name="validation_podcast_rename_length">標題長度太大</string>
 

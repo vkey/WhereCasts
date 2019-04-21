@@ -125,6 +125,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
     private static boolean mDownload;
+    private AlertDialog mPlaylistDialog = null;
 
     @Override
     public Resources.Theme getTheme() {
@@ -1287,7 +1288,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 setMenu();
                 break;
             case R.id.menu_drawer_episode_add_playlist:
+
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeActivity.this);
+                builder.setView(playlistAddView);
 
                 final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
                 final Spinner spinner = playlistAddView.findViewById(R.id.episode_add_playlist_list);
@@ -1309,7 +1313,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                        final PlaylistItem playlist = (PlaylistItem) parent.getSelectedItem();
+                        final PlaylistItem playlist = (PlaylistItem)parent.getSelectedItem();
 
                         if (playlist.getID() != getResources().getInteger(R.integer.default_playlist_select)) {
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -1326,7 +1330,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             db.close();
 
                             showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
-                            finish();
+                            mPlaylistDialog.dismiss();
                         }
                     }
 
@@ -1334,9 +1338,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 });
 
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeActivity.this);
-                    builder.setView(playlistAddView);
-                    builder.create().show();
+                    mPlaylistDialog = builder.show();
                 }
                 break;
         }

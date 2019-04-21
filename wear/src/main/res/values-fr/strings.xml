@@ -349,6 +349,9 @@
     <string name="alert_file_deleted">1 fichier supprimé</string>
     <string name="alert_files_deleted">%d fichiers supprimés</string>
 
+    <string name="alert_no_rss_url">Ce flux n\'a pas d\'URL RSS valide.\nVeuillez contacter le fournisseur de flux.</string>
+    <string name="no_rss_title">Aucun titre disponible</string>
+
     <string name="validation_podcast_rename_title">Entrez un titre</string>
     <string name="validation_podcast_rename_length">La longueur du titre est trop grande</string>
 
