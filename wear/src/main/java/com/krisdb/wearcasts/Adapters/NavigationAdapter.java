@@ -3,11 +3,11 @@ package com.krisdb.wearcasts.Adapters;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
+
 import com.krisdb.wearcasts.Models.NavItem;
 
 import java.util.List;
-
-import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter  {
     private final Activity mActivity;

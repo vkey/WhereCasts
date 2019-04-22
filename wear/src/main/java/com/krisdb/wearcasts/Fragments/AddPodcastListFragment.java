@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
+
 import com.krisdb.wearcasts.Adapters.AddPodcastsAdapter;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -13,11 +18,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.Serializable;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.wear.widget.WearableRecyclerView;
 
 public class AddPodcastListFragment extends Fragment {
 

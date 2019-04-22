@@ -13,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
+
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
@@ -20,8 +22,6 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 public class SearchEpisodesActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int SPEECH_REQUEST_CODE = 1;

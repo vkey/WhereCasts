@@ -2,12 +2,12 @@ package com.krisdb.wearcasts.Utilities;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
 
 public class EpisodesDiffCallback extends DiffUtil.Callback {
 

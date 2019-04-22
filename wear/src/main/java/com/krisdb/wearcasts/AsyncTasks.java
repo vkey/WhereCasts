@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -547,6 +549,23 @@ public class AsyncTasks {
                         }
                     }
 
+                }
+            }
+
+            //remove error downloads
+            File directoryPath;
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+                directoryPath = Environment.getExternalStorageDirectory();
+            else
+                directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+
+            final File directory = new File(directoryPath, ctx.getString(com.krisdb.wearcastslibrary.R.string.directory_episodes));
+
+            if (directory.listFiles() != null) {
+                for (final File file : directory.listFiles()) {
+                    if (file.getName().contains("-"))
+                        file.delete();
                 }
             }
             return null;

@@ -14,16 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.wear.widget.WearableRecyclerView;
+
 import com.krisdb.wearcasts.Activities.EpisodeListActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.wear.widget.WearableRecyclerView;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;

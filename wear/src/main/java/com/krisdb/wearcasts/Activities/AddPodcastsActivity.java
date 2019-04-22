@@ -11,6 +11,12 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
+
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Fragments.AddPodcastListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
@@ -23,12 +29,6 @@ import com.krisdb.wearcastslibrary.PodcastCategory;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 public class AddPodcastsActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private ViewPager mViewPager;

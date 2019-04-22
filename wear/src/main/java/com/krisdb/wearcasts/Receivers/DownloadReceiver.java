@@ -12,6 +12,8 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -23,8 +25,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
 import java.util.Objects;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;

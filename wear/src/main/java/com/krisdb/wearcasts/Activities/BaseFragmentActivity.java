@@ -2,9 +2,9 @@ package com.krisdb.wearcasts.Activities;
 
 import android.content.res.Resources;
 
-import com.krisdb.wearcasts.Utilities.Utilities;
-
 import androidx.fragment.app.FragmentActivity;
+
+import com.krisdb.wearcasts.Utilities.Utilities;
 
 public abstract class BaseFragmentActivity extends FragmentActivity {
 
