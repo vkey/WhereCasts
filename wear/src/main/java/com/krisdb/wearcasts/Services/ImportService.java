@@ -340,7 +340,8 @@ public class ImportService extends WearableListenerService implements DataClient
                         service.unregisterNetworkCallback();
                         mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
                         CommonUtils.showToast(mContext.get(), mContext.get().getString(R.string.alert_no_network));
-                        Utilities.enableBluetooth(mContext.get());
+                        if (!Utilities.BluetoothEnabled())
+                            Utilities.enableBluetooth(mContext.get());
                         break;
                 }
             }
