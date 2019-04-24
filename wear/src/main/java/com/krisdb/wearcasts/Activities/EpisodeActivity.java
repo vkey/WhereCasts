@@ -431,8 +431,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
             if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId()) {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                int position = GetEpisodeValue(mActivity, mEpisode, "position");
-                int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
+                final int position = GetEpisodeValue(mActivity, mEpisode, "position");
+                final int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
                 mSeekBar.setMax(duration);
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
@@ -1066,6 +1066,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
                 mSkipBack.setVisibility(View.INVISIBLE);
                 mSkipForward.setVisibility(View.INVISIBLE);
+                mDownloadImage.setVisibility(View.VISIBLE);
             }
             else if (extras.getBoolean("media_played"))
             {
@@ -1076,6 +1077,11 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mSkipBack.setVisibility(View.VISIBLE);
                 mSkipForward.setVisibility(View.VISIBLE);
                 mInfoLayout.setVisibility(View.VISIBLE);
+                mDownloadImage.setVisibility(View.GONE);
+                final int position = GetEpisodeValue(mActivity, mEpisode, "position");
+                final int duration = GetEpisodeValue(mActivity, mEpisode, "duration");
+                mSeekBar.setMax(duration);
+                mSeekBar.setProgress(position);
             }
             else if (extras.getBoolean("media_error"))
             {
