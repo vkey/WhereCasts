@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +61,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesFiltered;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
@@ -271,6 +273,24 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
                 mQuery = data.getData().toString();
                 RefreshContent();
+            }
+            else if (requestCode == 102)
+            {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+                final int episodeId = prefs.getInt("no_network_episodeid", 0);
+
+                showToast(mActivity, getString(R.string.alert_episode_download_start));
+                final PodcastItem episode = EpisodeUtilities.GetEpisode(mActivity, episodeId);
+                Log.d(mActivity.getPackageName(), "Episode Download: " + episodeId);
+
+                Utilities.startDownload(mActivity, EpisodeUtilities.GetEpisode(mActivity, episodeId));
+
+                mAdapter.refreshList(GetEpisodes(mActivity, mPodcastId));
+
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("no_network_episodeid", 0);
+                editor.apply();
             }
         }
     }

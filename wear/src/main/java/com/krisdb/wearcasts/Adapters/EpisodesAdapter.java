@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -61,6 +63,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     public List<Integer> mSelectedPositions;
     private Activity mContext;
     private int mTextColor;
+    private static int mNoNetworkEpisodeID;
     private String mDensityName;
     private boolean isRound, isXHDPI, isHDPI;
     private static WeakReference<Activity> mActivityRef;
@@ -78,6 +81,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         private final TextView title, date, duration;
         private final ImageView thumbnailTitle, download;
         private final ConstraintLayout layout;
+        private ProgressBar progressDownload;
 
         ViewHolder(final View view) {
             super(view);
@@ -87,6 +91,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             thumbnailTitle = view.findViewById(R.id.episode_row_item_title_thumbnail);
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
+            progressDownload = view.findViewById(R.id.episode_row_item_download_progress);
         }
     }
 
@@ -184,7 +189,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         final PodcastItem episode = GetEpisode(mContext, episodeId);
 
-        final int downloadId = Utilities.getDownloadId(mContext, episodeId);
+        final int downloadId = episode.getDownloadId();
         final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (downloadId > 0) {
@@ -203,6 +208,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         SaveEpisodeValue(mContext, episode, "downloadid", 0);
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                         mEpisodes.get(position).setIsDownloaded(false);
+                        mEpisodes.get(position).setDownloadId(0);
                         notifyItemChanged(position);
                     }
                 });
@@ -247,7 +253,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("no_network_episodeid", mEpisodes.get(holder.getAdapterPosition()).getEpisodeId());
+                        editor.apply();
+
+                        mContext.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
                         dialog.dismiss();
                     }
                 });
@@ -291,7 +301,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             unregisterNetworkCallback();
 
             CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
-
+            mNoNetworkEpisodeID = mEpisodes.get(holder.getAdapterPosition()).getEpisodeId();
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(final Network network) {
@@ -319,8 +329,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void downloadEpisode(final int position, final PodcastItem episode) {
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
-        Utilities.startDownload(mContext, episode);
+        final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setIsDownloaded(true);
+        mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
     }
 
@@ -379,7 +390,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mActivityRef.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                                    final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+                                    editor.putInt("no_network_episodeid", mNoNetworkEpisodeID);
+                                    editor.apply();
+
+                                    ctx.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
                                     dialog.dismiss();
                                 }
                             });
@@ -460,12 +475,28 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ImageView thumbTitle = viewHolder.thumbnailTitle;
         final ImageView download = viewHolder.download;
         final ConstraintLayout layout = viewHolder.layout;
+        final ProgressBar progressDownload = viewHolder.progressDownload;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) viewHolder.layout.getLayoutParams();
 
-        if (episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
+        if (episode.getDownloadId() > 0) {
+            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
+            progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
+            progressDownload.setProgress(Utilities.getDownloadProgress(mContext, episode.getDownloadId()));
+            progressDownload.setVisibility(View.VISIBLE);
+        }
+        else if (episode.getIsDownloaded()) {
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
-        else
+            progressDownload.setVisibility(View.GONE);
+        }
+        else {
             download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
+            progressDownload.setVisibility(View.GONE);
+        }
+
+        //download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
+        //progressDownload.setMax(100);
+        //progressDownload.setProgress(95);
+        //progressDownload.setVisibility(View.VISIBLE);
 
         title.setTextColor(mTextColor);
 

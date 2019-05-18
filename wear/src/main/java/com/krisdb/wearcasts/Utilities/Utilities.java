@@ -293,6 +293,42 @@ public class Utilities {
             return ctx.getColor(R.color.wc_transparent);
     }
 
+    public static int getDownloadTotal(final Context ctx, final int downloadId)
+    {
+        int output = 0;
+        final DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(downloadId);
+
+        final DownloadManager manager = (DownloadManager)ctx.getSystemService(DOWNLOAD_SERVICE);;
+
+        final Cursor cursor = manager.query(query);
+
+        if (cursor.moveToFirst())
+                output = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+        return output;
+    }
+
+    public static int getDownloadProgress(final Context ctx, final int downloadId)
+    {
+        int output = 0;
+        final DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(downloadId);
+
+        final DownloadManager manager = (DownloadManager)ctx.getSystemService(DOWNLOAD_SERVICE);;
+
+        final Cursor cursor = manager.query(query);
+
+        if (cursor.moveToFirst()) {
+            final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
+            if (status == DownloadManager.STATUS_RUNNING)
+                output = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+        }
+
+        return output;
+    }
+
     public static void StartJob(final Context ctx) {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -305,14 +341,15 @@ public class Utilities {
 
         final PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(SyncWorker.class, interval, TimeUnit.MILLISECONDS)
                 .setConstraints(constraints)
+                .setInitialDelay(interval,TimeUnit.MILLISECONDS)
                 .build();
 
-        WorkManager.getInstance().enqueue(workRequest);
+        WorkManager.getInstance(ctx).enqueue(workRequest);
     }
 
     public static void CancelJob(final Context ctx)
     {
-        WorkManager.getInstance().cancelAllWork();
+        WorkManager.getInstance(ctx).cancelAllWork();
     }
 
     public static String GetOrderClause(final int orderId) {
