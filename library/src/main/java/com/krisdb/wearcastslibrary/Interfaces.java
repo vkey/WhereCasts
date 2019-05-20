@@ -13,6 +13,11 @@ public class Interfaces {
         void processFinish(List<PodcastItem> podcasts);
     }
 
+    public interface RefreshEpisodes
+    {
+        void refresh(List<PodcastItem> episodes, boolean cancel);
+    }
+
     public interface AsyncResponse {
         void processFinish();
     }

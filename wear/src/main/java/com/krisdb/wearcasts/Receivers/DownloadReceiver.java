@@ -32,7 +32,7 @@ import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class DownloadReceiver extends BroadcastReceiver {
+public class DownloadReceiver extends BroadcastReceiver  {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {

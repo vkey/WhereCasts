@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
@@ -67,9 +68,10 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener{
+public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.RefreshEpisodes {
 
     private WearableActionDrawerView mWearableActionDrawer;
     private Activity mActivity;
@@ -91,6 +93,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
+    private Handler mHandler = new Handler();
+    private List<PodcastItem> mEpisodes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -223,7 +227,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {
-
+                        mEpisodes = episodes;
                         mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
                         mEpisodeList.setAdapter(mAdapter);
 
@@ -247,11 +251,49 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         }
 
                         mProgressThumb.setVisibility(View.GONE);
-
                         mEpisodeList.setVisibility(View.VISIBLE);
+
+                        mHandler.postDelayed(downloadsProgress, 1000);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    private Runnable downloadsProgress = new Runnable() {
+        @Override
+        public void run() {
+
+            if (isCurrentDownload(mActivity))
+            {
+                ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
+                int position = 0;
+                boolean hasDownloads = false;
+                for(final PodcastItem episode : mEpisodes)
+                {
+                    if (episode.getDownloadId() > 0)
+                    {
+                        mAdapter.refreshItem(position);
+                        hasDownloads = true;
+                    }
+                    position++;
+                }
+                if (hasDownloads)
+                    mHandler.postDelayed(this, 1000);
+                else
+                    mHandler.removeCallbacksAndMessages(this);
+            }
+            else {
+                mHandler.removeCallbacksAndMessages(this);
+
+                new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
+                        new Interfaces.PodcastsResponse() {
+                            @Override
+                            public void processFinish(final List<PodcastItem> episodes) {
+                                mAdapter.refreshList(episodes);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -617,6 +659,22 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             resetMenu();
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //mHandler.removeCallbacksAndMessages(downloadsProgress);
+    }
+
+    @Override
+    public void refresh(final List<PodcastItem> episodes, final boolean cancel) {
+        if (cancel)
+            mHandler.removeCallbacksAndMessages(downloadsProgress);
+        else {
+            mEpisodes = episodes;
+            mHandler.postDelayed(downloadsProgress, 1000);
         }
     }
 

@@ -39,6 +39,7 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -81,7 +82,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         private final TextView title, date, duration;
         private final ImageView thumbnailTitle, download;
         private final ConstraintLayout layout;
-        private ProgressBar progressDownload;
+        private ProgressBar progressDownload, progressDownloadLoading;
 
         ViewHolder(final View view) {
             super(view);
@@ -92,6 +93,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             download = view.findViewById(R.id.episode_row_item_download);
             layout = view.findViewById(R.id.episode_row_item_layout);
             progressDownload = view.findViewById(R.id.episode_row_item_download_progress);
+            progressDownloadLoading = view.findViewById(R.id.episode_row_item_download_progress_loading);
         }
     }
 
@@ -185,9 +187,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void initDownload(final ViewHolder holder, final int position)
     {
-        int episodeId = mEpisodes.get(position).getEpisodeId();
-
-        final PodcastItem episode = GetEpisode(mContext, episodeId);
+        final PodcastItem episode = mEpisodes.get(position);
 
         final int downloadId = episode.getDownloadId();
         final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -209,6 +209,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                         mEpisodes.get(position).setIsDownloaded(false);
                         mEpisodes.get(position).setDownloadId(0);
+                        ((Interfaces.RefreshEpisodes)mContext).refresh(mEpisodes, true);
                         notifyItemChanged(position);
                     }
                 });
@@ -330,9 +331,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     private void downloadEpisode(final int position, final PodcastItem episode) {
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         final long downloadID = Utilities.startDownload(mContext, episode);
-        mEpisodes.get(position).setIsDownloaded(true);
         mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
+        ((Interfaces.RefreshEpisodes)mContext).refresh(mEpisodes, false);
     }
 
     private void showContext(final int position) {
@@ -476,27 +477,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         final ImageView download = viewHolder.download;
         final ConstraintLayout layout = viewHolder.layout;
         final ProgressBar progressDownload = viewHolder.progressDownload;
+        final ProgressBar progressDownloadLoading = viewHolder.progressDownloadLoading;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) viewHolder.layout.getLayoutParams();
-
-        if (episode.getDownloadId() > 0) {
-            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
-            progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
-            progressDownload.setProgress(Utilities.getDownloadProgress(mContext, episode.getDownloadId()));
-            progressDownload.setVisibility(View.VISIBLE);
-        }
-        else if (episode.getIsDownloaded()) {
-            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
-            progressDownload.setVisibility(View.GONE);
-        }
-        else {
-            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
-            progressDownload.setVisibility(View.GONE);
-        }
-
-        //download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
-        //progressDownload.setMax(100);
-        //progressDownload.setProgress(95);
-        //progressDownload.setVisibility(View.VISIBLE);
 
         title.setTextColor(mTextColor);
 
@@ -533,6 +515,28 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             date.setVisibility(View.VISIBLE);
             download.setVisibility(View.VISIBLE);
             thumbTitle.setVisibility(View.GONE);
+
+            progressDownloadLoading.setVisibility(View.GONE);
+            progressDownload.setVisibility(View.GONE);
+
+            android.util.Log.d(mContext.getPackageName(), "Episode DownloadID: " + episode.getDownloadId());
+
+            if (episode.getDownloadId() > 0) {
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
+
+                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
+                if (downloadBytes > 0) {
+                    progressDownload.setVisibility(View.VISIBLE);
+                    progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
+                    progressDownload.setProgress(downloadBytes);
+                }
+                else
+                    progressDownloadLoading.setVisibility(View.VISIBLE);
+            }
+            else if (episode.getIsDownloaded())
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
+            else
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
 
             if (episode.getDuration() > 0) {
                 duration.setText(episode.getDisplayDuration());

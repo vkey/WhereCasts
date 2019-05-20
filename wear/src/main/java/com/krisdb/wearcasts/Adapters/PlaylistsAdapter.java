@@ -26,13 +26,16 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -55,6 +58,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
     private Resources mResources;
     private boolean isRound, isXHDPI, isHDPI;
     private static WeakReference<Activity> mActivityRef;
+    private static WeakReference<PlaylistsListFragment> mFragmentContext;
 
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
@@ -67,7 +71,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         private final TextView title;
         private final ImageView thumbnail,download;
         private final ConstraintLayout layout;
-        private final ProgressBar progressEpisode;
+        private ProgressBar progressEpisode, progressDownload, progressDownloadLoading;
 
         ViewHolder(final View view) {
             super(view);
@@ -76,10 +80,12 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             download = view.findViewById(R.id.playlist_row_item_download);
             layout = view.findViewById(R.id.playlist_row_item_layout);
             progressEpisode = view.findViewById(R.id.playlist_row_item_progress);
+            progressDownload = view.findViewById(R.id.playlist_row_item_progress_downloading);
+            progressDownloadLoading = view.findViewById(R.id.playlist_row_item_progress_loading);
         }
     }
 
-    public PlaylistsAdapter(final Activity context, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor) {
+    public PlaylistsAdapter(final Activity context, final PlaylistsListFragment fragment, final List<PodcastItem> episodes, final int playlistId, final int textColor, final int headerColor) {
         mEpisodes = episodes;
         mContext = context;
         mTextColor = textColor;
@@ -90,6 +96,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         isRound = mResources.getConfiguration().isScreenRound();
         mHeaderColor = headerColor;
         mActivityRef = new WeakReference<>(mContext);
+        mFragmentContext = new WeakReference<>(fragment);
         final String density = CommonUtils.getDensityName(mContext);
         isXHDPI = Objects.equals(density, mContext.getString(R.string.xhdpi));
         isHDPI = Objects.equals(density, mContext.getString(R.string.hdpi));
@@ -168,11 +175,9 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             return;
         }
 
-        int episodeId = mEpisodes.get(position).getEpisodeId();
+        final PodcastItem episode = mEpisodes.get(position);
 
-        final PodcastItem episode = GetEpisode(mContext, episodeId, mPlaylistId);
-
-        final int downloadId = Utilities.getDownloadId(mContext, episodeId);
+        final int downloadId = episode.getDownloadId();
         final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (downloadId > 0) {
@@ -191,6 +196,8 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         SaveEpisodeValue(mContext, episode, "downloadid", 0);
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                         mEpisodes.get(position).setIsDownloaded(false);
+                        mEpisodes.get(position).setDownloadId(0);
+                        ((Interfaces.RefreshEpisodes)mFragmentContext.get()).refresh(mEpisodes, true);
                         notifyItemChanged(position);
                     }
                 });
@@ -343,10 +350,10 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     private void downloadEpisode(final int position, final PodcastItem episode) {
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
-
-        Utilities.startDownload(mContext, episode);
-        mEpisodes.get(position).setIsDownloaded(true);
+        final long downloadID = Utilities.startDownload(mContext, episode);
+        mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
+        ((Interfaces.RefreshEpisodes)mFragmentContext.get()).refresh(mEpisodes, false);
     }
 
     private void showContext(final int position)
@@ -440,6 +447,11 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         refreshList(GetEpisodes(mContext, mPlaylistId));
     }
 
+    public void refreshItem(final int position)
+    {
+        notifyItemChanged(position);
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
@@ -449,12 +461,9 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final ImageView download = viewHolder.download;
         final ConstraintLayout layout = viewHolder.layout;
         final ProgressBar episodeProgress = viewHolder.progressEpisode;
+        final ProgressBar progressDownload = viewHolder.progressDownload;
+        final ProgressBar progressDownloadLoading = viewHolder.progressDownloadLoading;
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams)viewHolder.layout.getLayoutParams();
-
-        if ((mPlaylistId == mPlaylistLocal) || episode.getIsDownloaded() || Utilities.getDownloadId(mContext, episode.getEpisodeId()) > 0)
-            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
-        else
-            download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
 
         title.setTextColor(mTextColor);
 
@@ -488,6 +497,27 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         }
         else //EPISODE
         {
+            progressDownloadLoading.setVisibility(View.GONE);
+            progressDownload.setVisibility(View.GONE);
+
+            if (episode.getDownloadId() > 0) {
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
+
+                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
+
+                if (downloadBytes > 0) {
+                    progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
+                    progressDownload.setProgress(downloadBytes);
+                    progressDownload.setVisibility(View.VISIBLE);
+                }
+                else
+                    progressDownloadLoading.setVisibility(View.VISIBLE);
+            }
+            else if (episode.getIsDownloaded())
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
+            else
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
+
             download.setVisibility(View.VISIBLE);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));

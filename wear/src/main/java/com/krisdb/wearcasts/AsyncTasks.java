@@ -317,7 +317,7 @@ public class AsyncTasks {
     public static class SyncArt extends AsyncTask<Void, String, Void>
     {
         private Interfaces.AsyncResponse mResponse;
-        private Preference mPreference = null;
+        private Preference mPreference;
 
         public SyncArt(final Context context, final Preference preference, final Interfaces.AsyncResponse response)
         {

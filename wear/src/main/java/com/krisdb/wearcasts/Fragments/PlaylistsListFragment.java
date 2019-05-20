@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
@@ -32,8 +34,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
-public class PlaylistsListFragment extends Fragment {
+public class PlaylistsListFragment extends Fragment implements Interfaces.RefreshEpisodes {
 
     private WearableRecyclerView mPlaylistList;
     private int mPlaylistId, mTextColor, mHeaderColor;
@@ -41,6 +44,8 @@ public class PlaylistsListFragment extends Fragment {
     private TextView mStatus, mProgressPlaylistText;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
+    private Handler mHandler = new Handler();
+    private List<PodcastItem> mEpisodes;
 
 
     public static PlaylistsListFragment newInstance(final int playlistId) {
@@ -138,23 +143,61 @@ public class PlaylistsListFragment extends Fragment {
         mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        new AsyncTasks.DisplayPlaylistEpisodes(mActivity, mPlaylistId,
+        new AsyncTasks.DisplayPlaylistEpisodes(getContext(), mPlaylistId,
                 new Interfaces.PodcastsResponse() {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {
                         if (!isAdded()) return;
-
-                        mAdapter = new PlaylistsAdapter(mActivity, episodes, mPlaylistId, mTextColor, mHeaderColor);
+                        mEpisodes = episodes;
+                        mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
                         mPlaylistList.setAdapter(mAdapter);
 
                         mStatus.setVisibility(TextView.GONE);
-
                         mProgressPlaylistLayout.setVisibility(View.GONE);
-
                         mPlaylistList.setVisibility(View.VISIBLE);
+
+                        mHandler.postDelayed(downloadsProgress, 1000);
+
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    private Runnable downloadsProgress = new Runnable() {
+        @Override
+        public void run() {
+
+            if (isCurrentDownload(mActivity))
+            {
+                ((SimpleItemAnimator)mPlaylistList.getItemAnimator()).setSupportsChangeAnimations(false);
+                int position = 0;
+                boolean hasDownloads = false;
+                for(final PodcastItem episode : mEpisodes)
+                {
+                    if (episode.getDownloadId() > 0)
+                    {
+                        mAdapter.refreshItem(position);
+                        hasDownloads = true;
+                    }
+                    position++;
+                }
+                if (hasDownloads)
+                    mHandler.postDelayed(this, 1000);
+                else
+                    mHandler.removeCallbacksAndMessages(this);
+            }
+            else {
+                mHandler.removeCallbacksAndMessages(this);
+
+                new AsyncTasks.DisplayPlaylistEpisodes(mActivity, mPlaylistId,
+                        new Interfaces.PodcastsResponse() {
+                            @Override
+                            public void processFinish(final List<PodcastItem> episodes) {
+                                mAdapter.refreshList(episodes);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -162,5 +205,21 @@ public class PlaylistsListFragment extends Fragment {
 
         if (mAdapter != null)
             mAdapter.refreshList();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacksAndMessages(downloadsProgress);
+    }
+
+    @Override
+    public void refresh(final List<PodcastItem> episodes, final boolean cancel) {
+        if (cancel)
+            mHandler.removeCallbacksAndMessages(downloadsProgress);
+        else {
+            mEpisodes = episodes;
+            mHandler.postDelayed(downloadsProgress, 1000);
+        }
     }
 }
