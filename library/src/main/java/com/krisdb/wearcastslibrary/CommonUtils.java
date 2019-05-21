@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -176,6 +177,42 @@ public class CommonUtils {
         final DownloadManager m = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
 
         return m != null && m.query(q).moveToFirst();
+    }
+
+    public static boolean isCurrentDownload(final Context ctx, final int downloadId) {
+        final DownloadManager.Query q = new DownloadManager.Query();
+        q.setFilterById(downloadId);
+
+        final DownloadManager m = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
+
+        final Cursor cursor = m.query(q);
+
+        if (cursor.moveToFirst()) {
+            final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
+            if (status == DownloadManager.STATUS_RUNNING || status == DownloadManager.STATUS_PENDING)
+                return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isFinishedDownload(final Context ctx, final int downloadId) {
+        final DownloadManager.Query q = new DownloadManager.Query();
+        q.setFilterById(downloadId);
+
+        final DownloadManager m = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
+
+        final Cursor cursor = m.query(q);
+
+        if (cursor.moveToFirst()) {
+            final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
+            if (status == DownloadManager.STATUS_SUCCESSFUL)
+                return true;
+        }
+
+        return false;
     }
 
     public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap)

@@ -13,9 +13,9 @@ public class Interfaces {
         void processFinish(List<PodcastItem> podcasts);
     }
 
-    public interface RefreshEpisodes
+    public interface EpisodeDownloadOLD
     {
-        void refresh(List<PodcastItem> episodes, boolean cancel);
+        void refresh(List<PodcastItem> episodes, int position, int downloadId, boolean cancel);
     }
 
     public interface AsyncResponse {

@@ -16,6 +16,7 @@ import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
@@ -47,6 +49,8 @@ import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
+import static com.krisdb.wearcastslibrary.CommonUtils.isFinishedDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
@@ -65,6 +69,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
+    private Handler mHandler = new Handler();
 
     static class ViewHolder extends WearableRecyclerView.ViewHolder {
 
@@ -102,6 +107,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         isHDPI = Objects.equals(density, mContext.getString(R.string.hdpi));
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     @Override
@@ -178,7 +184,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final PodcastItem episode = mEpisodes.get(position);
 
         final int downloadId = episode.getDownloadId();
-        final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (downloadId > 0) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -197,7 +203,8 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                         mEpisodes.get(position).setIsDownloaded(false);
                         mEpisodes.get(position).setDownloadId(0);
-                        ((Interfaces.RefreshEpisodes)mFragmentContext.get()).refresh(mEpisodes, true);
+                        //((Interfaces.EpisodeDownload)mActivityRef.get()).refresh(mEpisodes, position, 0, true);
+                        //mFragmentContext.get().refresh(mEpisodes, position, 0, true);
                         notifyItemChanged(position);
                     }
                 });
@@ -238,6 +245,28 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 alert.show();
             }
         }
+        else if (CommonUtils.getActiveNetwork(mContext) == null)
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
         else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
@@ -268,7 +297,6 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled())
         {
             unregisterNetworkCallback();
-
             Utilities.disableBluetooth(mContext);
 
             CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
@@ -320,7 +348,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                             alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mActivityRef.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                                    mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
                                     dialog.dismiss();
                                 }
                             });
@@ -348,12 +376,12 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         }
     }
 
-    private void downloadEpisode(final int position, final PodcastItem episode) {
+    public void downloadEpisode(final int position, final PodcastItem episode) {
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
-        ((Interfaces.RefreshEpisodes)mFragmentContext.get()).refresh(mEpisodes, false);
+        mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     private void showContext(final int position)
@@ -452,6 +480,33 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         notifyItemChanged(position);
     }
 
+    private Runnable downloadsProgress = new Runnable() {
+        @Override
+        public void run() {
+
+            int position = 0;
+            boolean hasDownloads = false;
+            for (final PodcastItem episode : mEpisodes) {
+                if (episode.getDownloadId() > 0 && isCurrentDownload(mContext, episode.getDownloadId())) {
+                    notifyItemChanged(position);
+                    hasDownloads = true;
+                }
+                else if(isFinishedDownload(mContext, episode.getDownloadId()))
+                {
+                    mEpisodes.get(position).setDownloadId(0);
+                    mEpisodes.get(position).setIsDownloaded(true);
+                    notifyItemChanged(position);
+                }
+                position++;
+            }
+
+            if (hasDownloads)
+                mHandler.postDelayed(downloadsProgress, 1000);
+            else
+                mHandler.removeCallbacksAndMessages(this);
+        }
+    };
+
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
@@ -500,6 +555,9 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             progressDownloadLoading.setVisibility(View.GONE);
             progressDownload.setVisibility(View.GONE);
 
+            Log.d(mContext.getPackageName(), "Download playlistid: " + mPlaylistId);
+            Log.d(mContext.getPackageName(), "Download downloadid: " + episode.getDownloadId());
+
             if (episode.getDownloadId() > 0) {
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
 
@@ -511,7 +569,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     progressDownload.setVisibility(View.VISIBLE);
                 }
                 else
-                    progressDownloadLoading.setVisibility(View.VISIBLE);
+                   progressDownloadLoading.setVisibility(View.VISIBLE);
             }
             else if (episode.getIsDownloaded())
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));

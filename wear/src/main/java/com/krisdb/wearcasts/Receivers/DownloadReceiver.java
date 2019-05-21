@@ -132,6 +132,8 @@ public class DownloadReceiver extends BroadcastReceiver  {
                             public void processFinish() {}
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            //managerDownload.remove(downloadId);
         }
     }
 

@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 
@@ -23,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
@@ -52,6 +54,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
 public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
     private static int mNumberOfPages;
@@ -139,6 +142,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mNavDrawer.get().addOnItemSelectedListener(this);
         }
     }
+
 
     public static class Init extends AsyncTask<Void, Void, Void> {
         private static WeakReference<MainActivity> mActivity;
@@ -307,7 +311,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
 
             final ViewPager vp = ctx.findViewById(R.id.main_pager);
-
             vp.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
             vp.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
             vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -397,7 +400,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
             return mNumberOfPages;
         }
-    }
+   }
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String permissions[], @NonNull final int[] grantResults) {

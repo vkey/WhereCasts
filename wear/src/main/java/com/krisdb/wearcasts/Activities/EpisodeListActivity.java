@@ -71,16 +71,17 @@ import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener, Interfaces.RefreshEpisodes {
+public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener {
 
     private WearableActionDrawerView mWearableActionDrawer;
     private Activity mActivity;
     private int mPodcastId;
     private String mQuery;
     private static int SEARCH_RESULTS_CODE = 131;
+    private static int DOWNLOAD_RESULTS_CODE = 132;
     private static WeakReference<EpisodeListActivity> mActivityRef;
     private WearableRecyclerView mEpisodeList;
-    private int mTextColor;
+    private int mTextColor, mItemID;
     private TextView mStatus, mProgressPlaylistText;
     private ImageView mProgressThumb;
     private LinearLayout mProgressPlaylistLayout;
@@ -93,7 +94,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
-    private Handler mHandler = new Handler();
     private List<PodcastItem> mEpisodes;
 
     @Override
@@ -121,7 +121,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout = findViewById(R.id.episode_list_swipe_layout);
         mEpisodeList.setEdgeItemsCenteringEnabled(false);
         mEpisodeList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
-
+        ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -252,48 +252,9 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
                         mProgressThumb.setVisibility(View.GONE);
                         mEpisodeList.setVisibility(View.VISIBLE);
-
-                        mHandler.postDelayed(downloadsProgress, 1000);
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
-    private Runnable downloadsProgress = new Runnable() {
-        @Override
-        public void run() {
-
-            if (isCurrentDownload(mActivity))
-            {
-                ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
-                int position = 0;
-                boolean hasDownloads = false;
-                for(final PodcastItem episode : mEpisodes)
-                {
-                    if (episode.getDownloadId() > 0)
-                    {
-                        mAdapter.refreshItem(position);
-                        hasDownloads = true;
-                    }
-                    position++;
-                }
-                if (hasDownloads)
-                    mHandler.postDelayed(this, 1000);
-                else
-                    mHandler.removeCallbacksAndMessages(this);
-            }
-            else {
-                mHandler.removeCallbacksAndMessages(this);
-
-                new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
-                        new Interfaces.PodcastsResponse() {
-                            @Override
-                            public void processFinish(final List<PodcastItem> episodes) {
-                                mAdapter.refreshList(episodes);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -320,20 +281,18 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                final int episodeId = prefs.getInt("no_network_episodeid", 0);
+                final int position = prefs.getInt("no_network_position", 0);
 
-                showToast(mActivity, getString(R.string.alert_episode_download_start));
-                final PodcastItem episode = EpisodeUtilities.GetEpisode(mActivity, episodeId);
-                Log.d(mActivity.getPackageName(), "Episode Download: " + episodeId);
+                if (position > 0) {
+                    mAdapter.downloadEpisode(position, mEpisodes.get(position));
 
-                Utilities.startDownload(mActivity, EpisodeUtilities.GetEpisode(mActivity, episodeId));
-
-                mAdapter.refreshList(GetEpisodes(mActivity, mPodcastId));
-
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("no_network_episodeid", 0);
-                editor.apply();
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("no_network_position", 0);
+                    editor.apply();
+                }
             }
+            else if (requestCode == DOWNLOAD_RESULTS_CODE)
+                downloadEpisodes(mItemID);
         }
     }
 
@@ -481,6 +440,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 break;
             case R.id.menu_drawer_episode_list_download:
             case R.id.menu_drawer_episode_list_selected_downloaad:
+                mItemID = itemId;
                 if (CommonUtils.getActiveNetwork(mActivity) == null)
                 {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -489,7 +449,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), DOWNLOAD_RESULTS_CODE);
                                 dialog.dismiss();
                             }
                         });
@@ -519,7 +479,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                downloadEpisodes(itemId, episodes);
+                                downloadEpisodes(itemId);
                                 dialog.dismiss();
                             }
                         }).show();
@@ -539,7 +499,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         @Override
                         public void onAvailable(final Network network) {
                             mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                            downloadEpisodes(itemId, episodes);
+                            downloadEpisodes(itemId);
                         }
                     };
 
@@ -550,7 +510,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             NETWORK_CONNECTIVITY_TIMEOUT_MS);
                 }
                 else
-                    downloadEpisodes(itemId, episodes);
+                    downloadEpisodes(itemId);
                 break;
             case R.id.menu_drawer_episode_list_search: //Search
                 startActivityForResult(new Intent(this, SearchEpisodesActivity.class), SEARCH_RESULTS_CODE);
@@ -628,14 +588,18 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         return true;
     }
 
-    private void downloadEpisodes(final int itemId, final List<PodcastItem> episodes)
-    {
+    private void downloadEpisodes(final int itemId) {
         if (itemId == R.id.menu_drawer_episode_list_selected_downloaad) {
-            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
+
+            mAdapter.downloadSelectedEpisodes();
+
+
+/*            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
                     new Interfaces.AsyncResponse() {
                         @Override
                         public void processFinish() {
                             for (final Integer position : mAdapter.mSelectedPositions) {
+                                mAdapter.downloadEpisode(position, );
                                 episodes.get(position).setIsDownloaded(true);
                                 episodes.get(position).setIsSelected(false);
                                 mAdapter.notifyItemChanged(position);
@@ -644,10 +608,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             mAdapter.mSelectedEpisodes = new ArrayList<>();
                             resetMenu();
                         }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-        else
-        {
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
+        } else {
+            mAdapter.downloadAllEpisodes();
+/*
             new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
                     new Interfaces.AsyncResponse() {
                         @Override
@@ -658,24 +622,15 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             mAdapter.notifyDataSetChanged();
                             resetMenu();
                         }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
         }
+        resetMenu();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         //mHandler.removeCallbacksAndMessages(downloadsProgress);
-    }
-
-    @Override
-    public void refresh(final List<PodcastItem> episodes, final boolean cancel) {
-        if (cancel)
-            mHandler.removeCallbacksAndMessages(downloadsProgress);
-        else {
-            mEpisodes = episodes;
-            mHandler.postDelayed(downloadsProgress, 1000);
-        }
     }
 
     private static class TimeOutHandler extends Handler {
@@ -698,7 +653,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mActivityRef.get().startActivity(new Intent(Constants.WifiIntent));
+                                    mActivityRef.get().startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), DOWNLOAD_RESULTS_CODE);
                                     dialog.dismiss();
                                 }
                             });
