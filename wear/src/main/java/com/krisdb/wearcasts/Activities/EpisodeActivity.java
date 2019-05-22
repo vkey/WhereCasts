@@ -384,7 +384,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mEpisodeTitle.setText(CommonUtils.boldText(mEpisode.getTitle()));
 
         if (mEpisode.getDescription() != null) {
-            String description = GetDisplayDate(mActivity, mEpisode.getPubDate()).concat(" - ").concat(CommonUtils.CleanDescription(mEpisode.getDescription()));
+            SpannableString description = CommonUtils.boldText(GetDisplayDate(mActivity, mEpisode.getPubDate()).concat(" - ").concat(CommonUtils.CleanDescription(mEpisode.getDescription())));
             ((TextView) findViewById(R.id.podcast_episode_description)).setText(description);
         }
 
