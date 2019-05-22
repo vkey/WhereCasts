@@ -28,14 +28,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.krisdb.wearcasts.Activities.DirectoryActivity;
-import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.PodcastItem;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -43,6 +35,14 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
+
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Activities.DirectoryActivity;
+import com.krisdb.wearcasts.R;
+import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.PodcastItem;
+
+import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 

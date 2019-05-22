@@ -27,7 +27,6 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.wear.widget.WearableRecyclerView;
 
@@ -37,7 +36,6 @@ import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -46,7 +44,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
@@ -107,7 +104,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         isHDPI = Objects.equals(density, mContext.getString(R.string.hdpi));
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mHandler.postDelayed(downloadsProgress, 1000);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     @Override
@@ -381,7 +378,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
-        mHandler.postDelayed(downloadsProgress, 1000);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     private void showContext(final int position)
@@ -561,7 +558,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             if (episode.getDownloadId() > 0) {
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
 
-                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
+/*                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
 
                 if (downloadBytes > 0) {
                     progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
@@ -569,7 +566,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     progressDownload.setVisibility(View.VISIBLE);
                 }
                 else
-                   progressDownloadLoading.setVisibility(View.VISIBLE);
+                   progressDownloadLoading.setVisibility(View.VISIBLE);*/
             }
             else if (episode.getIsDownloaded())
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));

@@ -16,6 +16,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
 import com.krisdb.wearcasts.Fragments.PodcastListFragment;
@@ -26,12 +32,6 @@ import com.krisdb.wearcastslibrary.PodcastCategory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 public class DirectoryActivity extends AppCompatActivity {
     private ViewPager mViewPager;

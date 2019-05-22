@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -24,9 +27,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
 

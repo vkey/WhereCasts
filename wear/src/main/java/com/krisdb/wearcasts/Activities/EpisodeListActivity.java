@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +50,6 @@ import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Constants;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -62,13 +60,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesFiltered;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
-import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener {

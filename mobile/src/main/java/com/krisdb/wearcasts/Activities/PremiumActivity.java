@@ -28,6 +28,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -43,9 +46,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PremiumActivity extends AppCompatActivity {
 

@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -36,7 +35,6 @@ import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.input.WearableButtons;
 import android.text.SpannableString;
 import android.util.Log;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,7 +64,6 @@ import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
-import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -91,7 +88,6 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetBackgroundLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
@@ -949,7 +945,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mEpisodeID = extras.getInt("episodeid");
 
                 SetContent();
-                mActivity.findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
 
                 } catch( RemoteException e ) {
                 Log.e(mActivity.getPackageName(), e.toString());
@@ -1159,6 +1155,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mEpisodeTitle.setTextColor(ContextCompat.getColor(this, R.color.wc_text));
 
         findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
+
         //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
 
         mScrollView.setBackgroundColor(getColor(R.color.wc_background_amoled));

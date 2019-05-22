@@ -39,7 +39,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -50,7 +49,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
@@ -115,7 +113,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         mSelectedPositions = new ArrayList<>();
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mHandler.postDelayed(downloadsProgress, 1000);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     @Override
@@ -336,7 +334,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setDownloadId((int)downloadID);
-        mHandler.postDelayed(downloadsProgress, 1000);
+        notifyItemChanged(position);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     public void downloadAllEpisodes() {
@@ -347,9 +346,10 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         {
             final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(i));
             mEpisodes.get(i).setDownloadId((int)downloadID);
+            notifyItemInserted(i);
        }
 
-        mHandler.postDelayed(downloadsProgress, 1000);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     public void downloadSelectedEpisodes() {
@@ -359,10 +359,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(position));
             mEpisodes.get(position).setDownloadId((int)downloadID);
             mEpisodes.get(position).setIsSelected(false);
+            notifyItemChanged(position);
         }
         mSelectedPositions = new ArrayList<>();
         mSelectedEpisodes = new ArrayList<>();
-        mHandler.postDelayed(downloadsProgress, 1000);
+        //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     private Runnable downloadsProgress = new Runnable() {
@@ -578,14 +579,14 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (episode.getDownloadId() > 0) {
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
 
-                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
+ /*               final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
                 if (downloadBytes > 0) {
                     progressDownload.setVisibility(View.VISIBLE);
                     progressDownload.setMax(Utilities.getDownloadTotal(mContext, episode.getDownloadId()));
                     progressDownload.setProgress(downloadBytes);
                 }
                 else
-                    progressDownloadLoading.setVisibility(View.VISIBLE);
+                    progressDownloadLoading.setVisibility(View.VISIBLE);*/
             }
             else if (episode.getIsDownloaded())
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));

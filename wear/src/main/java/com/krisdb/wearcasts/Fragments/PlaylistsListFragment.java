@@ -1,21 +1,16 @@
 package com.krisdb.wearcasts.Fragments;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,9 +32,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.List;
 import java.util.Objects;
 
-import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
-import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
 public class PlaylistsListFragment extends Fragment {
 
@@ -49,7 +42,6 @@ public class PlaylistsListFragment extends Fragment {
     private TextView mStatus, mProgressPlaylistText;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
-    private List<PodcastItem> mEpisodes;
 
     public static PlaylistsListFragment newInstance(final int playlistId) {
 
@@ -152,7 +144,6 @@ public class PlaylistsListFragment extends Fragment {
                     @Override
                     public void processFinish(final List<PodcastItem> episodes) {
                         if (!isAdded()) return;
-                        mEpisodes = episodes;
                         mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
                         mPlaylistList.setAdapter(mAdapter);
 

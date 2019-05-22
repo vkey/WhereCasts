@@ -25,6 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.krisdb.wearcasts.OPMLParser;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
@@ -42,10 +46,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;

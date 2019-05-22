@@ -12,6 +12,9 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Activities.PhoneMainActivity;
@@ -22,9 +25,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
 import java.util.List;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 public class Utilities {
 

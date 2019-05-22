@@ -63,6 +63,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
         addPreferencesFromResource(R.xml.settings_podcast);
 
+
         mActivity = getActivity();
         mActivityRef = new WeakReference<>(mActivity);
 

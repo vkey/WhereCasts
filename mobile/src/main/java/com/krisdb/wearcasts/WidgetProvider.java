@@ -10,9 +10,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.RemoteViews;
 
-import com.krisdb.wearcasts.Activities.PhoneMainActivity;
-
 import androidx.media.session.MediaButtonReceiver;
+
+import com.krisdb.wearcasts.Activities.PhoneMainActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 

@@ -26,15 +26,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Services.MediaPlayerService;
-import com.krisdb.wearcasts.Utilities;
-import com.krisdb.wearcastslibrary.DateUtils;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Services.MediaPlayerService;
+import com.krisdb.wearcasts.Utilities;
+import com.krisdb.wearcastslibrary.DateUtils;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
