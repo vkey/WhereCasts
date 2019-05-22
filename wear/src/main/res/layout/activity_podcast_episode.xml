@@ -32,26 +32,14 @@
                 android:visibility="gone"
                 />
 
-            <ImageView
-                android:id="@+id/podcast_episode_title_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:layout_marginBottom="8dp"
-                android:maxWidth="40dp"
-                android:layout_below="@+id/podcast_episode_clock"
-                />
-
             <TextView
                 android:id="@+id/podcast_episode_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:layout_below="@+id/podcast_episode_title_image"
                 android:lineSpacingExtra="1dp"
+                android:layout_below="@+id/podcast_episode_clock"
                 android:lines="2"
                  />
 

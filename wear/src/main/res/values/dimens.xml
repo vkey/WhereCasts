@@ -2,7 +2,7 @@
     <dimen name="episode_list_thumb_title_margin_bottom">0dp</dimen>
 
     <!--episode activity-->
-    <dimen name="activity_podcast_episode_layout_margin_top">1dp</dimen>
+    <dimen name="activity_podcast_episode_layout_margin_top">20dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_start">20dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_end">20dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_bottom">40dp</dimen>

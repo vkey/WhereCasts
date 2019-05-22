@@ -34,6 +34,7 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.input.WearableButtons;
+import android.text.SpannableString;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -88,6 +89,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markPlayed;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markUnplayed;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetBackgroundLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
@@ -102,7 +104,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private SeekBar mSeekBar;
     private RelativeLayout mInfoLayout, mControlsLayout;
     private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed, mEpisodeTitle;
-    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mLogo, mDownloadImage;
+    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mDownloadImage;
 
     private PodcastItem mEpisode;
     private MediaBrowserCompat mMediaBrowserCompat;
@@ -127,14 +129,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private static boolean mDownload;
     private AlertDialog mPlaylistDialog = null;
 
-    @Override
+/*    @Override
     public Resources.Theme getTheme() {
         final Resources.Theme theme = super.getTheme();
 
         theme.applyStyle(Utilities.getTheme(this), true);
 
         return theme;
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +170,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         mScrollView = findViewById(R.id.podcast_episode_scrollview);
-        mScrollView = findViewById(R.id.podcast_episode_scrollview);
         mEpisodeTitle = findViewById(R.id.podcast_episode_title);
         mProgressBar = findViewById(R.id.podcast_episode_progress_bar);
         mProgressCircleDownloading = findViewById(R.id.podcast_episode_progress_circle);
@@ -190,7 +191,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mWearableActionDrawer = findViewById(R.id.drawer_action_episode);
         mSkipBack = findViewById(R.id.tv_skip_back);
         mSkipForward = findViewById(R.id.tv_skip_forward);
-        mLogo = findViewById(R.id.podcast_episode_title_image);
 
         mWearableActionDrawer.setOnMenuItemClickListener(this);
 
@@ -210,21 +210,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             paramsLoading.setMargins(0, 0, 1, 0);
             paramsDownloading.setMargins(0, 0, -38, 0);
         }
-
-        mLogo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putInt("podcastId", mEpisode.getPodcastId());
-                intent.putExtras(bundle);
-
-                if (mEpisode.getPodcastId() > 0)
-                    startActivity(intent);
-
-                return false;
-            }
-        });
 
         final int skipBack = Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
         final int skipForward = Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
@@ -394,30 +379,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         setMenu();
 
-        mLogo.setImageDrawable(GetRoundedLogo(mActivity, mEpisode.getChannel()));
+        mScrollView.setBackground(GetBackgroundLogo(mActivity, mEpisode.getChannel()));
 
-        mThemeID = Utilities.getThemeOptionId(this);
-
-        int textColor = ContextCompat.getColor(this, R.color.wc_text);
-
-        if (mThemeID == Enums.ThemeOptions.DYNAMIC.getThemeId() && mEpisode.getChannel() != null && mEpisode.getChannel().getThumbnailName() != null) {
-
-            final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, mEpisode);
-            textColor = colors.second;
-
-            mScrollView.setBackgroundColor(colors.first);
-            mEpisodeTitle.setTextColor(textColor);
-            ((android.widget.TextClock)findViewById(R.id.podcast_episode_clock)).setTextColor(textColor);
-        }
-        //else if (mThemeID == Enums.ThemeOptions.LIGHT.getThemeId())
-            //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play_dark));
-
-        mEpisodeTitle.setText(mEpisode.getTitle());
+        mEpisodeTitle.setText(CommonUtils.boldText(mEpisode.getTitle()));
 
         if (mEpisode.getDescription() != null) {
-            ((TextView) findViewById(R.id.podcast_episode_description)).setText(GetDisplayDate(mActivity, mEpisode.getPubDate()).concat(" - ").concat(CommonUtils.CleanDescription(mEpisode.getDescription())));
-            if (mThemeID == Enums.ThemeOptions.DYNAMIC.getThemeId())
-                ((TextView) findViewById(R.id.podcast_episode_description)).setTextColor(textColor);
+            String description = GetDisplayDate(mActivity, mEpisode.getPubDate()).concat(" - ").concat(CommonUtils.CleanDescription(mEpisode.getDescription()));
+            ((TextView) findViewById(R.id.podcast_episode_description)).setText(description);
         }
 
         if (MediaControllerCompat.getMediaController(mActivity).getPlaybackState() != null &&
@@ -1211,7 +1179,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBackImage.setVisibility(View.INVISIBLE);
         mSkipBack.setVisibility(View.INVISIBLE);
         mDownloadImage.setVisibility(View.INVISIBLE);
-        mPlayPauseImage.setVisibility(View.INVISIBLE);
         mVolumeUp.setVisibility(View.INVISIBLE);
         mInfoLayout.setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
@@ -1240,14 +1207,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBackImage.setVisibility(View.VISIBLE);
         mSkipBack.setVisibility(View.VISIBLE);
         mDownloadImage.setVisibility(View.VISIBLE);
-        mPlayPauseImage.setVisibility(View.VISIBLE);
         mInfoLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
 
         if (mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId())
             findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
 
-        mEpisodeID = -1;
         SetContent();
     }
 

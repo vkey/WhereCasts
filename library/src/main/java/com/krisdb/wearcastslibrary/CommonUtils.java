@@ -11,9 +11,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -23,6 +28,10 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -420,6 +429,32 @@ public class CommonUtils {
 
         return p;
     }
+    public static Drawable GetBackgroundLogo(final Context ctx, final ChannelItem channelItem) {
+        return GetBackgroundLogo(ctx, channelItem, R.drawable.ic_logo_placeholder);
+    }
+
+    public static Drawable GetBackgroundLogo(final Context ctx, final ChannelItem channelItem, final int defaultResource) {
+        Bitmap bitmap;
+
+        if (channelItem != null && channelItem.getThumbnailUrl() != null)
+            bitmap = BitmapFactory.decodeFile(GetThumbnailDirectory(ctx) + channelItem.getThumbnailName());
+        else
+            bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
+
+        if (bitmap == null)
+            bitmap = BitmapFactory.decodeResource(ctx.getResources(), defaultResource);
+
+        bitmap = blur(ctx, bitmap);
+
+        final Canvas canvas = new Canvas(bitmap);
+
+        final Paint p = new Paint(Color.RED);
+        p.setColorFilter(new LightingColorFilter(0x5f606060, 0x00000000));
+
+        canvas.drawBitmap(bitmap, new Matrix(), p);
+
+        return new BitmapDrawable(ctx.getResources(), bitmap);
+    }
 
     public static RoundedBitmapDrawable GetRoundedLogo(final Context ctx, final ChannelItem channelItem) {
         return GetRoundedLogo(ctx, channelItem, R.drawable.ic_logo_placeholder);
@@ -448,6 +483,7 @@ public class CommonUtils {
             borderWidth = 5;
         }
 
+
         final int bitmapWidthImage = bitmap.getWidth();
         final int bitmapHeightImage = bitmap.getHeight();
 
@@ -456,24 +492,46 @@ public class CommonUtils {
         final int newBitmapSquareWidthImage = bitmapSquareWidthImage+borderWidthHalfImage;
 
         final Bitmap roundedImageBitmap = Bitmap.createBitmap(newBitmapSquareWidthImage,newBitmapSquareWidthImage,Bitmap.Config.ARGB_8888);
-        final Canvas mcanvas = new Canvas(roundedImageBitmap);
-        //mcanvas.drawColor(Color.RED);
+        final Canvas canvas = new Canvas(roundedImageBitmap);
+
         final int i = borderWidthHalfImage + bitmapSquareWidthImage - bitmapWidthImage;
         final int j = borderWidthHalfImage + bitmapSquareWidthImage - bitmapHeightImage;
 
-        mcanvas.drawBitmap(bitmap, i, j, null);
+        canvas.drawBitmap(bitmap, i, j, null);
 
         final Paint borderImagePaint = new Paint();
         borderImagePaint.setStyle(Paint.Style.STROKE);
-        borderImagePaint.setStrokeWidth(borderWidthHalfImage*borderWidth);
+        borderImagePaint.setStrokeWidth(borderWidthHalfImage * borderWidth);
         borderImagePaint.setColor(ContextCompat.getColor(ctx, R.color.wc_logo_border));
-        mcanvas.drawCircle(mcanvas.getWidth() >> 1, mcanvas.getWidth() >> 1, newBitmapSquareWidthImage >> 1, borderImagePaint);
+        canvas.drawCircle(canvas.getWidth() >> 1, canvas.getWidth() >> 1, newBitmapSquareWidthImage >> 1, borderImagePaint);
 
         final RoundedBitmapDrawable roundedImageBitmapDrawable = RoundedBitmapDrawableFactory.create(ctx.getResources(),roundedImageBitmap);
         roundedImageBitmapDrawable.setCornerRadius(bitmapRadiusImage);
         roundedImageBitmapDrawable.setAntiAlias(true);
 
         return roundedImageBitmapDrawable;
+    }
+
+    public static Bitmap blur(Context context, Bitmap image) {
+        final float BITMAP_SCALE = 0.9f;
+        final float BLUR_RADIUS = 7.5f;
+
+        int width = Math.round(image.getWidth() * BITMAP_SCALE);
+        int height = Math.round(image.getHeight() * BITMAP_SCALE);
+
+        Bitmap inputBitmap = Bitmap.createScaledBitmap(image, width, height, false);
+        Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
+
+        RenderScript rs = RenderScript.create(context);
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+        Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
+        theIntrinsic.setRadius(BLUR_RADIUS);
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+
+        return outputBitmap;
     }
 
     public static Bitmap resizedBitmap(Bitmap bm, int newWidth, int newHeight) {
