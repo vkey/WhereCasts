@@ -298,10 +298,16 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
     private void resetMenu()
     {
-        final Menu menu = mWearableActionDrawer.getMenu();
-        menu.clear();
-        getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menu);
-        mSwipeRefreshLayout.setEnabled(true);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                final Menu menu = mWearableActionDrawer.getMenu();
+                menu.clear();
+                getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menu);
+                mSwipeRefreshLayout.setEnabled(true);
+            }
+        });
     }
 
     @Override
