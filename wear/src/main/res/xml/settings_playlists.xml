@@ -4,7 +4,15 @@
 
     <PreferenceCategory android:key="playlist_settings" android:title="@string/settings_podcasts_settings_title_playlist">
 
-        <Preference  android:key="pref_playlists_empty" />
+        <Preference android:key="pref_playlists_empty" />
+
+        <SwitchPreference
+            android:key="pref_playlists_show_progress_first"
+            android:title="@string/settings_podcasts_label_playlists_progress_first"
+            android:summary="@string/settings_podcasts_label_playlists_progress_first_summary"
+            android:defaultValue="false"
+            android:order="11"
+            />
 
         <ListPreference
             android:key="pref_display_playlist_sort_order"
@@ -13,14 +21,14 @@
             android:entryValues="@array/sort_order_playlist_values"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:defaultValue="5"
-            android:order="11"
+            android:order="12"
             />
 
         <SwitchPreference
             android:key="pref_hide_empty_playlists"
             android:title="@string/settings_podcasts_label_playlists_hide_empty"
             android:defaultValue="false"
-            android:order="12"
+            android:order="13"
             />
 
         <SwitchPreference
@@ -29,7 +37,7 @@
             android:layout_height="wrap_content"
             android:title="@string/settings_podcasts_label_playback_playlists"
             android:defaultValue="false"
-            android:order="13"
+            android:order="14"
             />
 
     </PreferenceCategory>

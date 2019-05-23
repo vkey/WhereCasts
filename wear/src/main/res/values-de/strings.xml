@@ -105,6 +105,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">In Episodenliste und Wiedergabelisten</string>
     <string name="settings_podcasts_label_disable_ambient">Umgebungsmodus deaktivieren</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Der Umgebungsmodus ist nur auf dem Wiedergabebildschirm</string>
+    <string name="settings_podcasts_label_playlists_progress_first">Zeigen Sie zuerst Folgen mit Fortschritt an</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">Der weiteste Fortschritt wird zuerst angezeigt</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Leere Playlists ausblenden</string>
     <string name="settings_podcasts_label_display_paging_indicator">Ausblendanzeige ausblenden</string>
     <string name="settings_podcasts_label_playlist_sort">Reihenfolge der Episoden</string>

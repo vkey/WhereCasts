@@ -105,6 +105,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">I avsnittslistor och spellistor</string>
     <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>
+    <string name="settings_podcasts_label_playlists_progress_first">Visa episoder med framsteg först</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">Första framsteg som visas först</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Dölj tomma spellistor</string>
     <string name="settings_podcasts_label_display_paging_indicator">Dölj personsökningsindikatorn</string>
     <string name="settings_podcasts_label_playlist_sort">Spellista Sortera ordning</string>

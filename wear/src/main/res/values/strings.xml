@@ -102,6 +102,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">In playlists and episode listing</string>
     <string name="settings_podcasts_label_disable_ambient">Disable ambient mode</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Ambient mode is on play screen only</string>
+    <string name="settings_podcasts_label_playlists_progress_first">Show episodes with progress first</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">Furthest progress shown first</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Hide empty playlists</string>
     <string name="settings_podcasts_label_display_paging_indicator">Hide paging indicator</string>
     <string name="settings_podcasts_label_playlist_sort">Playlist sort order</string>

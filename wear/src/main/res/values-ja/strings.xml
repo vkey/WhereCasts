@@ -103,6 +103,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">エピソードリストとプレイリスト</string>
     <string name="settings_podcasts_label_disable_ambient">アンビエントモードを無効にする</string>
     <string name="settings_podcasts_label_disable_ambient_summary">アンビエントモードはプレイ画面のみ</string>
+    <string name="settings_podcasts_label_playlists_progress_first">進行状況を最初に表示する</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">最初に表示された最も大きな進歩</string>
     <string name="settings_podcasts_label_playlists_hide_empty">空のプレイリストを隠す</string>
     <string name="settings_podcasts_label_display_paging_indicator">ページングインジケータを隠す</string>
     <string name="settings_podcasts_label_playlist_sort">プレイリストの並び順</string>

@@ -105,6 +105,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">En la lista de episodios y listas de reproducción.</string>
     <string name="settings_podcasts_label_disable_ambient">Desactiva el modo ambiente</string>
     <string name="settings_podcasts_label_disable_ambient_summary">El modo ambiente solo está en la pantalla de juego</string>
+    <string name="settings_podcasts_label_playlists_progress_first">Mostrar episodios con progreso primero</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">El progreso más lejano se muestra primero</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Ocultar listas de reproducción vacías</string>
     <string name="settings_podcasts_label_display_paging_indicator">Ocultar indicador de paginación</string>
     <string name="settings_podcasts_label_playlist_sort">Lista de orden de la lista de reproducción</string>

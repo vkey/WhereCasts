@@ -353,40 +353,37 @@ public class Utilities {
     }
 
     public static String GetOrderClause(final int orderId) {
-        return  GetOrderClause(orderId, null);
+        return  GetOrderClause(orderId, "tbl_podcast_episodes");
     }
 
-    public static String GetOrderClause(final int orderId, final String db)
+    public static String GetOrderClause(final int orderId, final String tablename)
     {
-        String orderString;
+        String orderString = "";
 
         if (orderId == Enums.SortOrder.NAMEASC.getSorderOrderCode())
-            orderString = "title ASC";
+            orderString = orderString.concat(tablename).concat(".title ASC");
         else if (orderId == Enums.SortOrder.NAMEDESC.getSorderOrderCode())
-            orderString = "title DESC";
+            orderString = orderString.concat(tablename).concat(".title DESC");
         else if (orderId == Enums.SortOrder.DATEASC.getSorderOrderCode())
-            orderString = "pubDate ASC";
+            orderString = orderString.concat(tablename).concat(".pubDate ASC");
         else if (orderId == Enums.SortOrder.DATEDESC.getSorderOrderCode())
-            orderString = "pubDate DESC";
+            orderString = orderString.concat(tablename).concat(".pubDate DESC");
         else if (orderId == Enums.SortOrder.DATEDOWNLOADED_DESC.getSorderOrderCode())
-            orderString = "dateDownload DESC";
+            orderString = orderString.concat(tablename).concat(".dateDownload DESC");
         else if (orderId == Enums.SortOrder.DATEDOWNLOADED_ASC.getSorderOrderCode())
-            orderString = "dateDownload ASC";
+            orderString = orderString.concat(tablename).concat(".dateDownload ASC");
         else if (orderId == Enums.SortOrder.DATEADDED_ASC.getSorderOrderCode())
-            orderString = "dateAdded ASC";
+            orderString = orderString.concat(tablename).concat(".dateAdded ASC");
         else if (orderId == Enums.SortOrder.DATEADDED_DESC.getSorderOrderCode())
-            orderString = "dateAdded DESC";
+            orderString = orderString.concat(tablename).concat(".dateAdded DESC");
         else if (orderId == Enums.SortOrder.PROGRESS.getSorderOrderCode())
-            orderString = "position DESC";
+            orderString = orderString.concat(tablename).concat(".position DESC");
         else if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode())
-            orderString = "title ASC";
+            orderString = orderString.concat(tablename).concat(".title ASC");
         else
-            orderString = "title ASC";
+            orderString = orderString.concat(tablename).concat(".title ASC");
 
-        if (db != null)
-            orderString = db.concat(".").concat(orderString);
-
-        return orderString;
+         return orderString;
     }
 
     public static String GetLocalPositionKey(final String name)

@@ -106,6 +106,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">Dans la liste des épisodes et des playlists</string>
     <string name="settings_podcasts_label_disable_ambient">Désactiver le mode ambiant</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Le mode ambiant est uniquement sur l\'écran de lecture</string>
+    <string name="settings_podcasts_label_playlists_progress_first">Afficher les épisodes avec progrès en premier</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">Les progrès les plus éloignés sont les premiers</string>
     <string name="settings_podcasts_label_playlists_hide_empty">Masquer les playlists vides</string>
     <string name="settings_podcasts_label_display_paging_indicator">Masquer l\'indicateur de pagination</string>
     <string name="settings_podcasts_label_playlist_sort">Épisode Ordre de tri</string>

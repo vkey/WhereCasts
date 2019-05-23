@@ -86,6 +86,8 @@
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">在劇集列表和播放列表中</string>
     <string name="settings_podcasts_label_disable_ambient">禁用環境模式</string>
     <string name="settings_podcasts_label_disable_ambient_summary">環境模式僅在播放屏幕上</string>
+    <string name="settings_podcasts_label_playlists_progress_first">首先顯示具有進度的劇集</string>
+    <string name="settings_podcasts_label_playlists_progress_first_summary">首先顯示最大進展</string>
     <string name="settings_podcasts_label_playlists_hide_empty">隱藏空白播放列表</string>
     <string name="settings_podcasts_label_display_paging_indicator">隱藏分頁指示器</string>
     <string name="settings_podcasts_label_playlist_sort">播放列表排序順序</string>
