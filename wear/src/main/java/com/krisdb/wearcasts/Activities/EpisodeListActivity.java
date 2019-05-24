@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.wear.widget.WearableLinearLayoutManager;
@@ -152,7 +153,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     mStatus.setVisibility(View.GONE);
                     mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     mSwipeRefreshLayout.setRefreshing(true);
-                    new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
+                    new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, false,
                             new Interfaces.BackgroundSyncResponse() {
                                 @Override
                                 public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
@@ -227,7 +228,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
                         mEpisodeList.setAdapter(mAdapter);
 
-                        final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, episodes));
+                        final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
                         itemTouchhelper.attachToRecyclerView(mEpisodeList);
 
                         if (episodes != null && episodes.size() == 1) {

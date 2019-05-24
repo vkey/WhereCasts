@@ -29,11 +29,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.wear.widget.WearableRecyclerView;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
@@ -507,16 +510,19 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         //diffResult.dispatchUpdatesTo(this);
     }
 
-    public void refreshList(final int position)
-    {
-        notifyItemChanged(position);
-    }
-
     public void refreshItem(final List<PodcastItem> episodes, final int position)
     {
         mEpisodes = episodes;
         notifyItemChanged(position);
     }
+
+    public void refreshItem2(final List<PodcastItem> episodes, final int position)
+    {
+        mEpisodes = episodes;
+        notifyItemRemoved(position);
+        notifyItemInserted(position);
+    }
+
 
     public void refreshItem(final int position)
     {
@@ -524,8 +530,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         final PodcastItem episode = mEpisodes.get(position);
         final TextView title = viewHolder.title;
         final TextView date = viewHolder.date;
