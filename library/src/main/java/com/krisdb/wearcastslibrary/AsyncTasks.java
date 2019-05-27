@@ -8,6 +8,8 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.widget.ProgressBar;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -545,15 +547,15 @@ public class AsyncTasks {
 
     public static class HasUnlockedPremium extends AsyncTask<Void, Void, Void> {
 
-        private IInAppBillingService mService;
         private Interfaces.PremiumResponse mResponse;
         private Boolean mPurchased = false;
         private int mPlaylistCount = 0;
+        private BillingClient mBillingClient;
 
-        public HasUnlockedPremium(final Context context, final IInAppBillingService service, final Interfaces.PremiumResponse response)
+        public HasUnlockedPremium(final Context context, BillingClient billingClient, final Interfaces.PremiumResponse response)
         {
             mContext = new WeakReference<>(context);
-            mService =  service;
+            mBillingClient = billingClient;
             mResponse = response;
         }
 
@@ -563,42 +565,15 @@ public class AsyncTasks {
         @Override
         protected Void doInBackground(Void... params) {
 
-            try {
-                final Bundle ownedItems = mService.getPurchases(
-                        mContext.get().getResources().getInteger(R.integer.billing_apk_version),
-                        mContext.get().getPackageName(),
-                        "inapp",
-                        null
-                );
 
-                final ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
 
-                if (ownedSkus != null && ownedSkus.size() > 0)
-                {
-                    for(String sku: ownedSkus)
-                    {
-                        if (sku.equals(mContext.get().getString(R.string.inapp_premium_product_id)))
-                            mPurchased = true;
-
-                        if (sku.toLowerCase().contains(mContext.get().getString(R.string.inapp_playlist_prefix))) {
-                            final String[] skuArray = sku.split("_");
-                            mPlaylistCount = Integer.valueOf(skuArray[1]);
-                        }
-                    }
-
-                }
-                else
-                    mPurchased = false;
-
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
 
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
+
             mResponse.processFinish(mPurchased, mPlaylistCount);
         }
     }
