@@ -544,37 +544,4 @@ public class AsyncTasks {
             mResponse.processFinish(mResponseAsset);
         }
     }
-
-    public static class HasUnlockedPremium extends AsyncTask<Void, Void, Void> {
-
-        private Interfaces.PremiumResponse mResponse;
-        private Boolean mPurchased = false;
-        private int mPlaylistCount = 0;
-        private BillingClient mBillingClient;
-
-        public HasUnlockedPremium(final Context context, BillingClient billingClient, final Interfaces.PremiumResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mBillingClient = billingClient;
-            mResponse = response;
-        }
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            mResponse.processFinish(mPurchased, mPlaylistCount);
-        }
-    }
 }
