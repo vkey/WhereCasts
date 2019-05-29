@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">アドオンの再\n%d プレイリスト</string>
     <string name="button_text_playlists_purchase">購入\nプレイリスト</string>
     <string name="alert_playlists_purchased">再生リストが正常に作成されました.\n時計の設定でプレイリストを管理します。 時計でアプリを再起動する必要がある場合があります.</string>
+    <string name="alert_premium_purchased">時計のプレミアム設定はロック解除されています.</string>
 
     <string name="menu_text_import">インポート</string>
     <string name="menu_text_premium">プレミアム</string>
@@ -69,7 +70,7 @@
     <string name="alert_episode_added">時計でプレイリストをダウンロードするために送信されました.</string>
     <string name="alert_episode_import_first">このエピソードは時計に送信され、ダウンロードされます</string>
     <string name="alert_playlist_purchased">%d 作成した.</string>
-    <string name="text_file_uploaded">ファイルが正常に送信されました。 ファイルが表示されるまでに時間がかかることがあります.</string>
+    <string name="text_file_uploaded">正常に送信されました.\nメイン画面を左にスワイプ.</string>
     <string name="text_file_upload_start">送信ファイル…</string>
     <string name="alert_playlists_quantity_none">数量を選択</string>
     <string name="alert_playlists_purchase_disclaimer">プレイリストを購入すると、現在時計に入っているプレイリストがすべて削除されます.</string>

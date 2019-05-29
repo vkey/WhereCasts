@@ -555,7 +555,9 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             Log.d(mContext.getPackageName(), "Download playlistid: " + mPlaylistId);
             Log.d(mContext.getPackageName(), "Download downloadid: " + episode.getDownloadId());
 
-            if (episode.getDownloadId() > 0) {
+            if (episode.getIsLocal())
+                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
+            else if (episode.getDownloadId() > 0) {
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
 
 /*                final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());

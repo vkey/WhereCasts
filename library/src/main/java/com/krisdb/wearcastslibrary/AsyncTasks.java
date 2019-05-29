@@ -3,14 +3,9 @@ package com.krisdb.wearcastslibrary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.widget.ProgressBar;
 
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.Purchase;
-import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;

@@ -51,14 +51,12 @@
         android:id="@+id/premium_instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_marginBottom="40dp"
         android:visibility="gone"
-        android:text="@string/alert_playlists_purchased"
         android:textColor="@color/wc_general_green"
         android:layout_below="@+id/btn_playlist_buy"
         />
-
 
     <Button
         android:id="@+id/btn_upload_file"
@@ -72,6 +70,7 @@
         android:enabled="false"
         style="@style/Button"
         />
+
     <TextView
         android:id="@+id/upload_file_summary"
         android:layout_width="match_parent"

@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">Re añadir\n%d Listas de reproducción</string>
     <string name="button_text_playlists_purchase">Compra\nListas de reproducción</string>
     <string name="alert_playlists_purchased">Listas de reproducción creadas con éxito.\nAdministre las listas de reproducción en la configuración de su reloj. Es posible que se requiera reiniciar la aplicación en tu reloj.</string>
+    <string name="alert_premium_purchased">Los ajustes premium se han desbloqueado en tu reloj.</string>
 
     <string name="menu_text_import">Importar</string>
     <string name="menu_text_premium">Prima</string>
@@ -69,7 +70,7 @@
     <string name="alert_episode_added">Enviado para descargar la lista de reproducción de servicio.</string>
     <string name="alert_episode_import_first">Este episodio se enviará a tu reloj y se descargará</string>
     <string name="alert_playlist_purchased">%d creado.</string>
-    <string name="text_file_uploaded">Archivo enviado con éxito Puede haber un retraso antes de que el archivo se muestre en observación.</string>
+    <string name="text_file_uploaded">Enviado correctamente.\nDesliza a la izquierda en la pantalla principal.</string>
     <string name="text_file_upload_start">Archivo de envío…</string>
     <string name="alert_playlists_quantity_none">Seleccione una cantidad</string>
     <string name="alert_playlists_purchase_disclaimer">Comprar listas de reproducción eliminará cualquier lista de reproducción que esté actualmente en su reloj.</string>

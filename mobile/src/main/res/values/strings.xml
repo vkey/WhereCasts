@@ -49,6 +49,7 @@
     <string name="button_text_playlists_readd">Re-add\n%d Playlists</string>
     <string name="button_text_playlists_purchase">Purchase\nPlaylists</string>
     <string name="alert_playlists_purchased">Playlists created successfully.\nManage playlists under the settings on your watch. Restarting the app on your watch may be required.</string>
+    <string name="alert_premium_purchased">Premium settings have been unlocked on your watch.</string>
 
     <string name="menu_text_import">Import</string>
     <string name="menu_text_premium">Premium</string>
@@ -71,7 +72,7 @@
     <string name="alert_episode_added">Sent to download playlist on watch.</string>
     <string name="alert_episode_import_first">This episode will be sent to your watch and downloaded</string>
     <string name="alert_playlist_purchased">%d created.</string>
-    <string name="text_file_uploaded">Sent successfully.\nThere may be a delay before file(s) show up on watch.\nSwipe left on the main screen.</string>
+    <string name="text_file_uploaded">Sent successfully.\nSwipe left on the main screen.</string>
     <string name="text_file_upload_start">Sending file…</string>
     <string name="alert_playlists_quantity_none">Select a quantity</string>
     <string name="alert_playlists_purchase_disclaimer">Purchasing playlists will delete any playlists currently on your watch.</string>

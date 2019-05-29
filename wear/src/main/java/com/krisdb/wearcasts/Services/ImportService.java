@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -179,50 +180,51 @@ public class ImportService extends WearableListenerService implements DataClient
                     }
                 }
 
-                if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
+            }
 
-                    final File dirLocal = new File(GetLocalDirectory(mContext.get()));
+            if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
 
-                    if (dirLocal.exists() == false)
-                        dirLocal.mkdirs();
+                final File dirLocal = new File(GetLocalDirectory(mContext.get()));
 
-                    final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
-                    final String fileName = dataMapItem.getDataMap().getString("local_filename");
+                if (dirLocal.exists() == false)
+                    dirLocal.mkdirs();
 
-                    new com.krisdb.wearcastslibrary.AsyncTasks.ConvertFileToAsset(this, asset,
-                            new Interfaces.AssetResponse() {
-                                @Override
-                                public void processFinish(DataClient.GetFdForAssetResponse response) {
-                                    final InputStream inputStream = response.getInputStream();
+                final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
+                final String fileName = dataMapItem.getDataMap().getString("local_filename");
 
-                                    try {
-                                        int size = 1024;
-                                        final File f = new File(GetLocalDirectory(mContext.get()).concat(fileName));
-                                        final OutputStream outputStream = new FileOutputStream(f);
-                                        final byte buffer[] = new byte[size];
+                new com.krisdb.wearcastslibrary.AsyncTasks.ConvertFileToAsset(this, asset,
+                        new Interfaces.AssetResponse() {
+                            @Override
+                            public void processFinish(DataClient.GetFdForAssetResponse response) {
+                                final InputStream inputStream = response.getInputStream();
 
-                                        int bytes, totalSize = inputStream.available();
-                                        long total = 0;
-                                        SendToDevice("started", 0, totalSize);
+                                try {
+                                    int size = 1024;
+                                    final File f = new File(GetLocalDirectory(mContext.get()).concat(fileName));
+                                    final OutputStream outputStream = new FileOutputStream(f);
+                                    final byte buffer[] = new byte[size];
 
-                                        while ((bytes = inputStream.read(buffer)) > 0) {
-                                            //total += bytes;
-                                            //int progress = (int)(total * 100 / totalSize);
-                                            outputStream.write(buffer, 0, bytes);
-                                            //SendToDevice("processing", 0, 0);
-                                        }
+                                    int bytes, totalSize = inputStream.available();
+                                    long total = 0;
+                                    SendToDevice("started", 0, totalSize);
 
-                                        SendToDevice("finished", 0, 0);
-
-                                        outputStream.close();
-                                        inputStream.close();
-
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                                    while ((bytes = inputStream.read(buffer)) > 0) {
+                                        //total += bytes;
+                                        //int progress = (int)(total * 100 / totalSize);
+                                        outputStream.write(buffer, 0, bytes);
+                                        //SendToDevice("processing", 0, 0);
                                     }
+
+                                    SendToDevice("finished", 0, 0);
+
+                                    outputStream.close();
+                                    inputStream.close();
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/syncwear")) {
@@ -243,9 +245,14 @@ public class ImportService extends WearableListenerService implements DataClient
                 final SharedPreferences.Editor editor = prefs.edit();
 
                 for (final PodcastItem podcast : podcasts)
-                        editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
+                    editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
 
-                editor.apply();
+                final int swipeActionId = Integer.valueOf(Objects.requireNonNull(prefs.getString("pref_episodes_swipe_action", "0")));
+
+                if (swipeActionId > 0) {
+                    editor.putString("pref_episodes_swipe_action", "0");
+                    editor.apply();
+                }
 
                 db.deleteAllPlaylists();
 

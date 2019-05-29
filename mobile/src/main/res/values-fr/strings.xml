@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">Re-ajouter\n%d Playlists</string>
     <string name="button_text_playlists_purchase">achat\nPlaylists</string>
     <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l\'application sur votre montre peut être nécessaire.</string>
+    <string name="alert_premium_purchased">Les paramètres Premium ont été déverrouillés sur votre montre.</string>
 
     <string name="menu_text_import">Importation</string>
     <string name="menu_text_premium">Prime</string>
@@ -69,7 +70,7 @@
     <string name="alert_episode_added">Envoyé pour télécharger la playlist sur la montre.</string>
     <string name="alert_episode_import_first">Cet épisode sera envoyé à votre montre et téléchargé</string>
     <string name="alert_playlist_purchased">%d créé.</string>
-    <string name="text_file_uploaded">Fichier envoyé avec succès. Il peut y avoir un délai avant que les fichiers ne soient diffusés.</string>
+    <string name="text_file_uploaded">Bien envoyé.\nGlissez à gauche sur l\'écran principal.</string>
     <string name="text_file_upload_start">Envoi de fichier…</string>
     <string name="alert_playlists_quantity_none">Sélectionnez une quantité</string>
     <string name="alert_playlists_purchase_disclaimer">L\'achat de playlists supprimera toutes les playlists actuellement sur votre montre.</string>

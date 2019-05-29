@@ -31,6 +31,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
@@ -95,7 +96,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
         else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-            final int swipeActionId = Integer.valueOf(prefs.getString("pref_episodes_swipe_action", "0"));
+            final int swipeActionId = Integer.valueOf(Objects.requireNonNull(prefs.getString("pref_episodes_swipe_action", "0")));
 
             //Toggle play/unplayed
             if (swipeActionId == 0) {

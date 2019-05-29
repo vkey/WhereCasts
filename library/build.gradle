@@ -37,7 +37,6 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
 
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
-    implementation('com.android.billingclient:billing:1.0')
 
     testImplementation 'junit:junit:4.12'
 }

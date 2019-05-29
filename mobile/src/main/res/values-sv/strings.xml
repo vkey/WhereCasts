@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">Lägger till\n%d spellistor</string>
     <string name="button_text_playlists_purchase">Inköp\nspellistor</string>
     <string name="alert_playlists_purchased">Spellistor skapades framgångsrikt.\nHantera spellistor under inställningarna på din klocka. Om du vill starta om appen på klockan kan det krävas.</string>
+    <string name="alert_premium_purchased">Premiuminställningarna har låsts upp på din klocka.</string>
 
     <string name="menu_text_import">Importera</string>
     <string name="menu_text_premium">Premie</string>
@@ -69,7 +70,7 @@
     <string name="alert_episode_added">Skickat för att ladda ner spellistan på klockan.</string>
     <string name="alert_episode_import_first">Det här avsnittet skickas till din klocka och laddas ner</string>
     <string name="alert_playlist_purchased">%d skapad.</string>
-    <string name="text_file_uploaded">Filen skickades framgångsrikt. Det kan finnas en fördröjning innan filerna visas på klockan.</string>
+    <string name="text_file_uploaded">Skickades framgångsfullt.\nDra åt vänster på huvudskärmen.</string>
     <string name="text_file_upload_start">Skickar fil…</string>
     <string name="alert_playlists_quantity_none">Välj en mängd</string>
     <string name="alert_playlists_purchase_disclaimer">När du köper spellistor raderas alla spellistor som finns på din klocka.</string>

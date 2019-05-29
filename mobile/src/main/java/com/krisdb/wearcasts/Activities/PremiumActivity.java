@@ -9,13 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -43,16 +43,15 @@ import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
+import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED;
 import static com.android.billingclient.api.BillingClient.BillingResponseCode.OK;
@@ -64,7 +63,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
     private static final int UPLOAD_REQUEST_CODE = 43;
     private TextView tvUploadSummary, mPremiumInstructionsText;
     private static WeakReference<ProgressBar> mProgressFileUpload;
-    private Boolean mWatchConnected = false, mPremiumUnlocked = false;
+    private Boolean mPremiumUnlocked = false;
     private LocalBroadcastManager mBroadcastManger;
     private Button mPremiumButton, mPlaylistsReadd;
     private Spinner mPlaylistSkus;
@@ -83,7 +82,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
         mActivityRef = new WeakReference<>(this);
 
-        mProgressFileUpload = new WeakReference<>((ProgressBar)findViewById(R.id.upload_file_progress));
+        mProgressFileUpload = new WeakReference<>((ProgressBar) findViewById(R.id.upload_file_progress));
         mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
         mPremiumInstructionsText = findViewById(R.id.premium_instructions);
         mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
@@ -103,71 +102,91 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             }
         });
 
-        findViewById(R.id.btn_playlist_buy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mPlaylistSkus.getSelectedItemPosition() == 0)
-                    CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
-                else if (mPlaylistPurchasedCount > 0)
-                {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
-                        alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                showPlaylistPurchase();
-                            }
-                        });
-
-                        alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-                }
-                else
-                    showPlaylistPurchase();
-            }
-        });
-
-        mPremiumButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final List<String> skuList = new ArrayList<>();
-                skuList.add(getString(R.string.inapp_premium_product_id));
-
-                final SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder()
-                        .setSkusList(skuList)
-                        .setType(BillingClient.SkuType.INAPP);
-
-                mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+        new AsyncTasks.WatchConnected(mActivity,
+                new Interfaces.BooleanResponse() {
                     @Override
-                    public void onSkuDetailsResponse(final BillingResult billingResult, final List<SkuDetails> skuDetailsList) {
-
-                        for (final SkuDetails skuDetails : skuDetailsList) {
-                            if (getString(R.string.inapp_premium_product_id).equals(skuDetails.getSku())) {
-
-                                final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                        .setSkuDetails(skuDetails)
-                                        .build();
-
-                                final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
-
-                                if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
-                                    CommonUtils.showToast(mActivity, getString(R.string.alert_purchased));
-                                } else if (result.getResponseCode() != OK) {
-                                    CommonUtils.showToast(mActivity, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
+                    public void processFinish(Boolean connected) {
+                        if (!connected) {
+                            findViewById(R.id.btn_playlist_buy).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    CommonUtils.showToast(mActivity, getString(R.string.button_text_no_device));
                                 }
-                            }
+                            });
+
+                            mPremiumButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    CommonUtils.showToast(mActivity, getString(R.string.button_text_no_device));
+                                }
+                            });
+                        } else {
+
+                            findViewById(R.id.btn_playlist_buy).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (mPlaylistSkus.getSelectedItemPosition() == 0)
+                                        CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
+                                    else if (mPlaylistPurchasedCount > 0) {
+                                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                                            alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
+                                            alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    showPlaylistPurchase();
+                                                }
+                                            });
+
+                                            alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                        }
+                                    } else
+                                        showPlaylistPurchase();
+                                }
+                            });
+
+                            mPremiumButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                final List<String> skuList = new ArrayList<>();
+                                skuList.add(getString(R.string.inapp_premium_product_id));
+
+                                final SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder()
+                                        .setSkusList(skuList)
+                                        .setType(BillingClient.SkuType.INAPP);
+
+                                mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+                                    @Override
+                                    public void onSkuDetailsResponse(final BillingResult billingResult, final List<SkuDetails> skuDetailsList) {
+
+                                        for (final SkuDetails skuDetails : skuDetailsList) {
+                                            if (getString(R.string.inapp_premium_product_id).equals(skuDetails.getSku())) {
+
+                                                final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                        .setSkuDetails(skuDetails)
+                                                        .build();
+
+                                                final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
+
+                                                if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
+                                                    CommonUtils.showToast(mActivity, getString(R.string.alert_purchased));
+                                                } else if (result.getResponseCode() != OK) {
+                                                    CommonUtils.showToast(mActivity, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                }
+                            });
                         }
                     }
-                });
-            }
-        });
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mBillingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
@@ -181,14 +200,25 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
                         final List<Purchase> purchases = purchasesResult.getPurchasesList();
 
-                        for(final Purchase purchase : purchases)
-                        {
+                        final List<Integer> playlistsPurchased = new ArrayList<>(); //maybe more then one playlist purchased, so get the largest.
+
+                        for (final Purchase purchase : purchases) {
                             if (purchase.getSku().equals(getString(R.string.inapp_premium_product_id)))
                                 mPremiumUnlocked = true;
                             else if (purchase.getSku().contains("playlist")) {
-                                mPlaylistPurchasedCount = 10; //TODO: get count from string
+                                final String[] playlist = purchase.getSku().split("_");
+
+                                if (playlist.length > 0)
+                                    playlistsPurchased.add(Integer.valueOf(playlist[1]));
                             }
                         }
+
+                        if (playlistsPurchased.size() > 0) {
+                            Collections.sort(playlistsPurchased);
+                            mPlaylistPurchasedCount = playlistsPurchased.get(playlistsPurchased.size() - 1);
+                        }
+
+                        SetPremiumContent();
 
                         if (mPlaylistPurchasedCount > 0) {
                             mPlaylistsReadd.setVisibility(View.VISIBLE);
@@ -222,7 +252,8 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             }
 
             @Override
-            public void onBillingServiceDisconnected() { }
+            public void onBillingServiceDisconnected() {
+            }
         });
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -235,39 +266,41 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             editor.putInt("visits", visits);
             editor.apply();
         }
-   }
+    }
 
     @Override
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-        //CommonUtils.showToast(mActivity, "onPurchasesUpdated: " + billingResult.getResponseCode());
         if (billingResult.getResponseCode() == OK && purchases != null) {
             for (final Purchase purchase : purchases) {
-                if (purchase.getPurchaseState() == PURCHASED){
+                if (purchase.getPurchaseState() == PURCHASED) {
                     if (purchase.getSku().equals(getString(R.string.inapp_premium_product_id))) {
-                        if (!purchase.isAcknowledged()) {
-
-                            final AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                                    .setPurchaseToken(purchase.getPurchaseToken())
-                                    .build();
-
-                            mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
-                                @Override
-                                public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                                    if (billingResult.getResponseCode() == OK) {
-                                        mPremiumUnlocked = true;
-                                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, true);
-                                        SetPremiumContent();
-                                    }
-                                }
-                            });
-                        }
+                        mPremiumUnlocked = true;
+                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, true);
+                        SetPremiumContent();
+                        mPremiumInstructionsText.setVisibility(View.VISIBLE);
+                        mPremiumInstructionsText.setText(getString(R.string.alert_premium_purchased));
                     } else if (purchase.getSku().contains("playlist")) {
                         sendPlaylistsToWatch(mPlaylistSkus.getSelectedItemPosition());
+                    }
+
+                    if (!purchase.isAcknowledged()) {
+                        final AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.getPurchaseToken())
+                                .build();
+
+                        mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
+                            @Override
+                            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
+                                if (billingResult.getResponseCode() == OK) {
+                                }
+                            }
+                        });
                     }
                 }
             }
         }
     }
+
     private void showPlaylistPurchase() {
 
         final List<String> skuList = new ArrayList<>();
@@ -298,29 +331,26 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                 }
             }
         });
-
     }
 
     private void SetPremiumContent()
     {
-        //TODO: Revert
-        //boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
-        boolean isDebuggable = false;
+        boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
         mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
 
         if (isDebuggable || mPremiumUnlocked) {
-                findViewById(R.id.btn_upload_file).setEnabled(true);
-                tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
-                mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
-                mPremiumButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mProgressFileUpload.get().setVisibility(View.VISIBLE);
-                        CommonUtils.showToast(mActivity, mActivity.getString(R.string.button_text_resync_premium_waiting), Toast.LENGTH_LONG);
-                        Utilities.TogglePremiumOnWatch(mActivity, true, true);
-                    }
-                });
+            findViewById(R.id.btn_upload_file).setEnabled(true);
+            tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
+            mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
+            mPremiumButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mProgressFileUpload.get().setVisibility(View.VISIBLE);
+                    CommonUtils.showToast(mActivity, mActivity.getString(R.string.button_text_resync_premium_waiting), Toast.LENGTH_LONG);
+                    Utilities.TogglePremiumOnWatch(mActivity, true, true);
+                }
+            });
         }
         else {
             findViewById(R.id.btn_upload_file).setEnabled(false);
@@ -334,6 +364,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         dataMap.getDataMap().putInt("number", count);
         CommonUtils.DeviceSync(mActivity, dataMap);
         mPremiumInstructionsText.setVisibility(View.VISIBLE);
+        mPremiumInstructionsText.setText(getString(R.string.alert_playlists_purchased));
     }
 
     @Override

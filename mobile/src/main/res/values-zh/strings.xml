@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">重新添加\n%d 播放列表</string>
     <string name="button_text_playlists_purchase">採購\n播放列表</string>
     <string name="alert_playlists_purchased">播放列表已成功創建.\n在手錶設置下管理播放列表. 重新啟動手錶上的應用程序可能是必需的.</string>
+    <string name="alert_premium_purchased">高級設置已在您的手錶上解鎖.</string>
 
     <string name="menu_text_import">進口</string>
     <string name="menu_text_premium">額外費用</string>
@@ -69,7 +70,7 @@
     <string name="alert_episode_added">發送以下載手錶上的播放列表.</string>
     <string name="alert_episode_import_first">此劇集將發送到您的手錶並下載</string>
     <string name="alert_playlist_purchased">%d 創建.</string>
-    <string name="text_file_uploaded">文件發送成功。 在手錶上顯示文件之前可能會有延遲.</string>
+    <string name="text_file_uploaded">成功發送.\n在主屏幕上向左滑動即可.</string>
     <string name="text_file_upload_start">發送文件…</string>
     <string name="alert_playlists_quantity_none">選擇一個數量</string>
     <string name="alert_playlists_purchase_disclaimer">購買播放列表將刪除手錶上當前的任何播放列表.</string>
