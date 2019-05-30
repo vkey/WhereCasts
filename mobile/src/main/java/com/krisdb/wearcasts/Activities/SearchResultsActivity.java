@@ -29,10 +29,7 @@ import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private RecyclerView mResultsList;
@@ -121,7 +118,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         new AsyncTasks.GetPodcastsDirectory(this, mQuery,
                 new Interfaces.PodcastsResponse() {
                     @Override
-                    public void processFinish(List<PodcastItem> podcasts) {
+                    public void processFinish(final List<PodcastItem> podcasts) {
 
                         if (podcasts.size() > 0) {
                             mPodcasts.addAll(podcasts);
@@ -130,29 +127,21 @@ public class SearchResultsActivity extends AppCompatActivity {
                         else
                             findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
 
-                        final Set set = new TreeSet(new Comparator() {
-
-                            @Override
-                            public int compare(Object o1, Object o2) {
-
-                                final PodcastItem p1 = (PodcastItem) o1;
-                                final PodcastItem p2 = (PodcastItem) o2;
-
-                                return (p1.getChannel().getTitle().compareToIgnoreCase(p2.getChannel().getTitle()));
-                            }
-                        });
-                        set.addAll(mPodcasts);
-
-                        final ArrayList displayList = new ArrayList(set);
-
                         new AsyncTasks.WatchConnected(getApplicationContext(),
                                 new Interfaces.BooleanResponse() {
                                     @Override
                                     public void processFinish(final Boolean connected) {
                                         mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, displayList, connected));
+                                        if (podcasts.size() > 1) {
+                                            mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));
+                                            mProgressText.setVisibility(View.GONE);
+                                        }
+                                        else
+                                        {
+                                            mProgressText.setText(getString(R.string.text_no_search_results));
+                                            mProgressText.setVisibility(View.VISIBLE);
+                                        }
                                         mProgressBar.setVisibility(View.GONE);
-                                        mProgressText.setVisibility(View.GONE);
                                     }
                                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

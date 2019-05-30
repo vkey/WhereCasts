@@ -59,6 +59,7 @@
     <string name="menu_text_directory">Discover</string>
 
     <string name="page_title_search_results">Results</string>
+    <string name="text_no_search_results">No results found</string>
 
     <string name="text_third_party_greeting">\"%2$s\" has been sent to your watch and will be visible under the %1$s playlist.</string>
     <string name="text_third_party_auto_download">Auto-download podcast episode on watch (applies to next added)</string>

@@ -57,6 +57,7 @@
     <string name="menu_text_directory">発見</string>
 
     <string name="page_title_search_results">結果</string>
+    <string name="text_no_search_results">結果が見つかりません</string>
 
     <string name="text_third_party_greeting">\"%2$s\" あなたの時計に送信され、その下に表示されます %1$s プレイリスト</string>
     <string name="text_third_party_auto_download">ウォッチでポッドキャストのエピソードを自動ダウンロードする（次の追加時に適用されます）</string>

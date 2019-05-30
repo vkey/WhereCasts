@@ -63,6 +63,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
         holder.episodesExpand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommonUtils.showToast(mContext, mPodcasts.get(holder.getAdapterPosition()).getTitle());
                 if (holder.episodes.getVisibility() == View.GONE) {
                     holder.episodesProgress.setVisibility(View.VISIBLE);
                     new AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 50,
@@ -91,30 +92,27 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
 
         final PodcastItem podcast = mPodcasts.get(position);
 
-        if (podcast.getIsTitle()) return;
-        viewHolder.episodesProgress.setVisibility(View.GONE);
-        viewHolder.episodes.setVisibility(View.GONE);
-        viewHolder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_expand));
+        if (!podcast.getIsTitle()) {
+            viewHolder.episodesProgress.setVisibility(View.GONE);
+            viewHolder.episodes.setVisibility(View.GONE);
+            viewHolder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_expand));
 
-        viewHolder.title.setText(podcast.getChannel().getTitle());
-        viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+            viewHolder.title.setText(podcast.getChannel().getTitle());
+            viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
 
-        if (podcast.getChannel().getThumbnailUrl() != null) {
-            try {
-                Glide.with(mContext).load(podcast.getChannel().getThumbnailUrl().toString()).into(viewHolder.thumbnail);
-            }
-            catch (IllegalArgumentException ex)
-            {
+            if (podcast.getChannel().getThumbnailUrl() != null) {
+                try {
+                    Glide.with(mContext).load(podcast.getChannel().getThumbnailUrl().toString()).into(viewHolder.thumbnail);
+                } catch (IllegalArgumentException ex) {
+                    viewHolder.thumbnail.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_default));
+                }
+            } else
                 viewHolder.thumbnail.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_default));
-            }
-        }
-        else
-            viewHolder.thumbnail.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_thumb_default));
 
-        if (podcast.getIsSenttoWatch())
-            viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add_confirm));
-        else
-            viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add));
+            if (podcast.getIsSenttoWatch())
+                viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add_confirm));
+            else
+                viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add));
 
             viewHolder.add_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,11 +121,11 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
                         Utilities.SendToWatch(mContext, podcast);
                         mPodcasts.get(position).setIsSenttoWatch(true);
                         notifyItemChanged(position);
-                    }
-                    else
+                    } else
                         CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
                 }
             });
+        }
     }
 
     @Override

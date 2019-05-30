@@ -57,6 +57,7 @@
     <string name="menu_text_directory">發現</string>
 
     <string name="page_title_search_results">結果</string>
+    <string name="text_no_search_results">未找到結果</string>
 
     <string name="text_third_party_greeting">\"%2$s\" 已發送到您的手錶，將在下面顯示 %1$s 播放列表</string>
     <string name="text_third_party_auto_download">手錶上自動下載播客節目（適用於下次添加）</string>

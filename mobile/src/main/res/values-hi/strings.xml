@@ -57,6 +57,7 @@
     <string name="menu_text_directory">डिस्कवर</string>
 
     <string name="page_title_search_results">परिणाम</string>
+    <string name="text_no_search_results">कोई परिणाम नहीं मिला</string>
 
     <string name="text_third_party_greeting">\"%2$s\" आपकी घड़ी में भेजा गया है और इसके तहत दिखाई देगा %1$s प्लेलिस्ट</string>
     <string name="text_third_party_auto_download">घड़ी पर पॉडकास्ट एपिसोड स्वतः डाउनलोड करें (अगले जोड़े पर लागू होता है)</string>

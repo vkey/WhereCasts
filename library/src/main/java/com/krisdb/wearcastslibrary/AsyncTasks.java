@@ -262,7 +262,7 @@ public class AsyncTasks {
         private List<PodcastItem> mPodcasts;
         private String mQuery;
 
-        public GetPodcastsDirectory(final Context context, final String query, final Interfaces.PodcastsResponse response)
+        public  GetPodcastsDirectory(final Context context, final String query, final Interfaces.PodcastsResponse response)
         {
             mContext = new WeakReference<>(context);
             mResponse = response;
