@@ -63,7 +63,6 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
         holder.episodesExpand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.showToast(mContext, mPodcasts.get(holder.getAdapterPosition()).getTitle());
                 if (holder.episodes.getVisibility() == View.GONE) {
                     holder.episodesProgress.setVisibility(View.VISIBLE);
                     new AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 50,

@@ -47,20 +47,22 @@ public class SearchResultsActivity extends AppCompatActivity {
         mResultsList = findViewById(R.id.search_results_list);
         mProgressBar = findViewById(R.id.search_results_progress_bar);
         mProgressText = findViewById(R.id.search_results_progress_text);
-
+        mResultsList = findViewById(R.id.search_results_list);
         handleIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        mResultsList = (RecyclerView)findViewById(R.id.search_results_list);
-
+        super.onNewIntent(intent);
+        setIntent(intent);
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
+            mProgressText.setText(getString(R.string.retrieving_search_results));
+            mResultsList.setVisibility(View.INVISIBLE);
             SetSearchResults();
             setTitle(mQuery);
         }
@@ -135,6 +137,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                         if (podcasts.size() > 1) {
                                             mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));
                                             mProgressText.setVisibility(View.GONE);
+                                            mResultsList.setVisibility(View.VISIBLE);
                                         }
                                         else
                                         {

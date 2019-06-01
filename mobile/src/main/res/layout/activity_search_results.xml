@@ -16,7 +16,6 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:textSize="14sp"
-        android:text="@string/retrieving_search_results"
         />
 
     <ProgressBar

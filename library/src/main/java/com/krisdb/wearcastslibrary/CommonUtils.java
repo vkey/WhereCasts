@@ -259,7 +259,7 @@ public class CommonUtils {
                     return getRemoteStream(redirectUrl);
             }
 
-            if (conn.getResponseCode() == 200)
+            if (statusCode == 200)
                 return conn.getInputStream();
 
         }

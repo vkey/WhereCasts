@@ -22,6 +22,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
@@ -522,6 +523,12 @@ public class Utilities {
         editor.remove(Utilities.GetLocalDurationKey(title));
         editor.remove(Utilities.GetLocalPositionKey(title));
         editor.apply();
+    }
+
+    public static void downloadVibrate(final Context ctx)
+    {
+        final Vibrator v = (Vibrator)ctx.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(100);
     }
 
     public static void DeleteMediaFile(final Context ctx, final PodcastItem episode)
