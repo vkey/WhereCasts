@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -57,6 +58,7 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlayli
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class Utilities {
 
@@ -331,7 +333,6 @@ public class Utilities {
     }
 
     public static void StartJob(final Context ctx) {
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -398,8 +399,17 @@ public class Utilities {
     }
 
     public static long startDownload(final Context ctx, final PodcastItem episode) {
+        return startDownload(ctx, episode, true);
+    }
+
+    public static long startDownload(final Context ctx, final PodcastItem episode, final Boolean showToast) {
 
         if (episode.getMediaUrl() == null) return 0;
+
+        if (showToast)
+            showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
+
+        CommonUtils.writeToFile(ctx,"download started (" + episode.getTitle() + ")");
 
         final DownloadManager manager = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
 
