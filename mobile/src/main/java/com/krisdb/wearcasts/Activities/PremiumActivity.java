@@ -219,6 +219,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         }
 
                         SetPremiumContent();
+                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, false);
 
                         if (mPlaylistPurchasedCount > 0) {
                             mPlaylistsReadd.setVisibility(View.VISIBLE);
