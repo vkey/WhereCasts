@@ -65,8 +65,6 @@ public class Utilities {
     }
 
     public static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased, final Boolean showConfirm) {
-        SystemClock.sleep(1500);
-
         final PutDataMapRequest dataMap = PutDataMapRequest.create("/premium");
         dataMap.getDataMap().putBoolean("unlock", purchased);
         dataMap.getDataMap().putBoolean("confirm", showConfirm);

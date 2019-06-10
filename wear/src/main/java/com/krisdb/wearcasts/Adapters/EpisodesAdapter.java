@@ -332,7 +332,6 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     }
 
     public void downloadEpisode(final int position, final PodcastItem episode) {
-        showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);
@@ -345,7 +344,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         int count = mEpisodes.size()-1;
         for(int i = 1; i <= count; i++)
         {
-            final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(i));
+            final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(i), false);
             mEpisodes.get(i).setDownloadId((int)downloadID);
             notifyItemInserted(i);
        }
@@ -357,7 +356,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         for(final Integer position : mSelectedPositions)
         {
-            final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(position));
+            final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(position), false);
             mEpisodes.get(position).setDownloadId((int)downloadID);
             mEpisodes.get(position).setIsSelected(false);
             notifyItemChanged(position);

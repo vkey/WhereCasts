@@ -280,8 +280,6 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
     private void downloadEpisode(final int position) {
         final Context ctx = mActivityRef.get();
 
-        showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
-
         long downloadId = Utilities.startDownload(ctx, mEpisodes.get(position));
 
         mEpisodes.get(position).setDownloadId((int)downloadId);

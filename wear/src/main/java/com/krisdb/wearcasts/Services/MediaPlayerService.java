@@ -540,12 +540,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             SyncWithMobileDevice(true);
         }
         else if (episodes.size() > 2) {
-        {
+            {
                 int currentPosition = 0;
 
                 if (mLocalFile != null) {
                     for (final PodcastItem playlistItem : episodes) {
-                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile)) break;
+                        if (playlistItem.getTitle() != null && Objects.equals(playlistItem.getTitle(), mLocalFile))
+                            break;
                         currentPosition++;
                     }
                 } else {
@@ -554,6 +555,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                         currentPosition++;
                     }
                 }
+
+                Log.d(mContext.getPackageName(), "[mediaservice] current episode title: " + mEpisode.getTitle());
 
                 if (direction == Enums.SkipDirection.NEXT && currentPosition < episodes.size() - 1) //in middle
                     mEpisode = episodes.get(currentPosition + 1);
@@ -573,6 +576,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     uri = CommonUtils.GetLocalDirectory(mContext).concat(mEpisode.getTitle());
                 } else
                     uri = mEpisode.getMediaUrl().toString();
+
+                Log.d(mContext.getPackageName(), "[mediaservice] next episode title: " + mEpisode.getTitle());
 
                 StartStream(Uri.parse(uri));
 
@@ -624,6 +629,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
          final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());
+        bundle.putInt("playlistid", mPlaylistID);
 
         final Intent notificationIntent = new Intent(mContext, EpisodeActivity.class);
         notificationIntent.putExtras(bundle);

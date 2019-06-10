@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -73,6 +74,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static android.content.Context.MODE_APPEND;
 import static android.os.Environment.getExternalStorageDirectory;
 
 public class CommonUtils {
@@ -165,10 +167,18 @@ public class CommonUtils {
         return output;
     }
 
-    public static void writeToFile(String fileName, String data) {
+    public static Boolean inDebugMode(final Context ctx)
+    {
+        return ((0 != (ctx.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)));
+    }
+
+   public static void writeToFile(final Context ctx, String data) {
         try {
-            final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(Environment.getExternalStorageDirectory(), fileName)));
-            outputStreamWriter.write(data);
+            final FileOutputStream fOut = ctx.openFileOutput("log.txt", MODE_APPEND);
+
+            final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fOut);
+            //final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(Environment.getExternalStorageDirectory(), fileName)));
+            outputStreamWriter.append("\n").append(DateUtils.FormatDate(new Date(), "M/d/Y h:m:s a")).append(": (").append(data).append(")");
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());

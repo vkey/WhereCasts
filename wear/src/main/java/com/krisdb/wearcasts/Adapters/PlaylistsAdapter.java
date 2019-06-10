@@ -374,7 +374,6 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
     }
 
     public void downloadEpisode(final int position, final PodcastItem episode) {
-        showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         final long downloadID = Utilities.startDownload(mContext, episode);
         mEpisodes.get(position).setDownloadId((int)downloadID);
         notifyItemChanged(position);

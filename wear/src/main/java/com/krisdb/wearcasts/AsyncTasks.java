@@ -427,6 +427,7 @@ public class AsyncTasks {
 
         @Override
         protected Void doInBackground(Void... params) {
+
             mNewEpisodes = 0;
             mDownloadCount = 0;
             mDownloadEpisodes = new ArrayList<>();
@@ -449,6 +450,7 @@ public class AsyncTasks {
                         publishProgress(podcast.getChannel().getTitle());
 
                     processor.processEpisodes(podcast);
+
                     mNewEpisodes = processor.newEpisodesCount;
                     mDownloadCount = processor.downloadCount;
 

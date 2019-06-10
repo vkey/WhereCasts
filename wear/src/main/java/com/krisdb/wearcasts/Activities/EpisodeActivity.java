@@ -337,7 +337,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             if (intent.getExtras() != null)
             {
                 mEpisodeID = intent.getExtras().getInt("episodeid");
-                mPlaylistID = -1;
+                mPlaylistID = intent.getExtras().getInt("playlistid");
                 SetContent();
             }
 

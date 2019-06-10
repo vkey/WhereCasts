@@ -156,7 +156,6 @@ public class ImportService extends WearableListenerService implements DataClient
                             public void onAvailable(final Network network) {
                                 mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
                                 Utilities.startDownload(ctx, finalEpisode);
-                                CommonUtils.showToast(ctx, getString(R.string.alert_episode_download_start));
                             }
                         };
 
@@ -176,7 +175,6 @@ public class ImportService extends WearableListenerService implements DataClient
                     else
                     {
                         Utilities.startDownload(ctx, episode);
-                        CommonUtils.showToast(ctx, getString(R.string.alert_episode_download_start));
                     }
                 }
 

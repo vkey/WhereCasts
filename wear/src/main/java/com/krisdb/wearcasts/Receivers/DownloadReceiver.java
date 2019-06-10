@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -19,6 +20,7 @@ import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -59,6 +61,8 @@ public class DownloadReceiver extends BroadcastReceiver  {
                 final String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                    CommonUtils.writeToFile(context,"download successful (" + episode.getTitle() + ")");
+
                     final ContentValues cvSuccess = new ContentValues();
                     cvSuccess.put("download", 1);
                     cvSuccess.put("downloadid", 0);
@@ -88,6 +92,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                         editor.apply();
                     }
                 } else if (status == DownloadManager.STATUS_FAILED) {
+                    CommonUtils.writeToFile(context,"download failed (" + episode.getTitle() + ")");
                     clearFailedDownload(context, episode);
                     final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
 
@@ -110,11 +115,8 @@ public class DownloadReceiver extends BroadcastReceiver  {
             cursor.close();
 
             if (!isCurrentDownload(context)) {
-                //Log.d(context.getPackageName(), "[downloads] download complete");
-
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
-                    //Log.d(context.getPackageName(), "[downloads] sending network release broadcast");
-
+                    CommonUtils.writeToFile(context,"sending network release broadcast");
                     final Intent intentComplete = new Intent();
                     intentComplete.setAction("downloads_complete");
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);

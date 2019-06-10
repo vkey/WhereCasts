@@ -73,8 +73,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private Activity mActivity;
     private int mPodcastId;
     private String mQuery;
+    private static int NO_NETWORK_RESULTS_CODE = 130;
     private static int SEARCH_RESULTS_CODE = 131;
     private static int DOWNLOAD_RESULTS_CODE = 132;
+    private static int LOW_BANDWIDTH_RESULTS_CODE = 133;
     private static WeakReference<EpisodeListActivity> mActivityRef;
     private WearableRecyclerView mEpisodeList;
     private int mTextColor, mItemID;
@@ -90,7 +92,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
-    private List<PodcastItem> mEpisodes;
+    private List<PodcastItem> mEpisodes, mDownloadEpisodes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,50 +120,61 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mEpisodeList.setEdgeItemsCenteringEnabled(false);
         mEpisodeList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
         ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mQuery != null)
-                {
-                    mQuery = null;
-                    RefreshContent();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-                else if (CommonUtils.getActiveNetwork(mActivity) == null)
-                {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                                dialog.dismiss();
-                            }
-                        });
+            if (mQuery != null)
+            {
+                mQuery = null;
+                RefreshContent();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+            else if (CommonUtils.getActiveNetwork(mActivity) == null)
+            {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                    alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), NO_NETWORK_RESULTS_CODE);
+                            dialog.dismiss();
+                        }
+                    });
 
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
+            }
+             else {
+                mStatus.setVisibility(View.GONE);
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                mSwipeRefreshLayout.setRefreshing(true);
+                new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, false,
+                        new Interfaces.BackgroundSyncResponse() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-                }
-                 else {
-                    mStatus.setVisibility(View.GONE);
-                    mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, false,
-                            new Interfaces.BackgroundSyncResponse() {
-                                @Override
-                                public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                    RefreshContent();
-                                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                if (downloadEpisodes.size() > 0)
+                                    downloadEpisodes(downloadEpisodes);
+                                else
+                                {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            RefreshContent();
+                                        }
+                                    });
                                 }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
             }
         });
 
@@ -170,6 +183,62 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mTextColor = ContextCompat.getColor(mActivity, R.color.wc_white);
 
         RefreshContent();
+    }
+
+
+    private void downloadEpisodes(final List<PodcastItem> episodes) {
+        mDownloadEpisodes = episodes;
+        downloadEpisodes();
+    }
+
+    private void downloadEpisodes() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+        if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mActivity, true)) {
+
+            unregisterNetworkCallback();
+            CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
+
+            mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(final Network network) {
+                    mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
+
+                    showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+
+                    for (final PodcastItem episode : mDownloadEpisodes)
+                        Utilities.startDownload(mActivity, episode, false);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RefreshContent();
+                        }
+                    });
+                }
+
+            };
+
+            final NetworkRequest request = new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build();
+
+            mManager.requestNetwork(request, mNetworkCallback);
+
+            mTimeOutHandler.sendMessageDelayed(
+                    mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
+                    NETWORK_CONNECTIVITY_TIMEOUT_MS);
+        } else {
+            showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+
+            for (final PodcastItem episode : mDownloadEpisodes)
+                Utilities.startDownload(mActivity, episode, false);
+
+            RefreshContent();
+        }
     }
 
     public void RefreshContent() {
@@ -255,7 +324,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
+            if (requestCode == NO_NETWORK_RESULTS_CODE) {
                 mSwipeRefreshLayout.setRefreshing(true);
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
@@ -263,18 +332,23 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             @Override
                             public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
                                 mSwipeRefreshLayout.setRefreshing(false);
-                                RefreshContent();
+                                if (downloadEpisodes.size() > 0)
+                                    downloadEpisodes(downloadEpisodes);
+                                else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            RefreshContent();
+                                        }
+                                    });
+                                }
                                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-            else if (requestCode == SEARCH_RESULTS_CODE) {
-
+            } else if (requestCode == SEARCH_RESULTS_CODE) {
                 mQuery = data.getData().toString();
                 RefreshContent();
-            }
-            else if (requestCode == 102)
-            {
+            } else if (requestCode == 102) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
                 final int position = prefs.getInt("no_network_position", 0);
@@ -286,9 +360,22 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     editor.putInt("no_network_position", 0);
                     editor.apply();
                 }
-            }
-            else if (requestCode == DOWNLOAD_RESULTS_CODE)
+            } else if (requestCode == DOWNLOAD_RESULTS_CODE)
                 downloadEpisodes(mItemID);
+            else if (requestCode == LOW_BANDWIDTH_RESULTS_CODE) {
+
+                showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+
+                for (final PodcastItem episode : mDownloadEpisodes)
+                    Utilities.startDownload(mActivity, episode, false);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RefreshContent();
+                    }
+                });
+            }
         }
     }
 
@@ -655,7 +742,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mActivityRef.get().startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), DOWNLOAD_RESULTS_CODE);
+                                    activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), LOW_BANDWIDTH_RESULTS_CODE);
                                     dialog.dismiss();
                                 }
                             });
