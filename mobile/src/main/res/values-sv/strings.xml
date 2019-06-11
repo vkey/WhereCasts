@@ -48,6 +48,7 @@
     <string name="button_text_playlists_purchase">Inköp\nspellistor</string>
     <string name="alert_playlists_purchased">Spellistor skapades framgångsrikt.\nHantera spellistor under inställningarna på din klocka. Om du vill starta om appen på klockan kan det krävas.</string>
     <string name="alert_premium_purchased">Premiuminställningarna har låsts upp på din klocka.</string>
+    <string name="alert_premium_purchased_review"><u><b>Vänligen ta en sekund och lämna ett betyg eller omdöme genom att klicka här</b></u></string>
 
     <string name="menu_text_import">Importera</string>
     <string name="menu_text_premium">Premie</string>

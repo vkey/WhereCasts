@@ -49,7 +49,8 @@
     <string name="button_text_playlists_readd">Re-add\n%d Playlists</string>
     <string name="button_text_playlists_purchase">Purchase\nPlaylists</string>
     <string name="alert_playlists_purchased">Playlists created successfully.\nManage playlists under the settings on your watch. Restarting the app on your watch may be required.</string>
-    <string name="alert_premium_purchased">Premium settings have been unlocked on your watch.</string>
+    <string name="alert_premium_purchased">Premium settings have been unlocked on your watch</string>
+    <string name="alert_premium_purchased_review"><u><b>Please take a second a leave a rating or review by clicking here</b></u></string>
 
     <string name="menu_text_import">Import</string>
     <string name="menu_text_premium">Premium</string>

@@ -48,6 +48,7 @@
     <string name="button_text_playlists_purchase">Kauf\nWiedergabelisten</string>
     <string name="alert_playlists_purchased">Playlisten wurden erfolgreich erstellt.\nVerwalte Playlists unter den Einstellungen deiner Uhr. Möglicherweise ist ein Neustart der App auf Ihrer Uhr erforderlich.</string>
     <string name="alert_premium_purchased">Auf Ihrer Uhr wurden Premium-Einstellungen freigeschaltet.</string>
+    <string name="alert_premium_purchased_review"><u><b>Bitte hinterlassen Sie eine Bewertung oder Bewertung, indem Sie hier klicken</b></u></string>
 
     <string name="menu_text_import">Einführen</string>
     <string name="menu_text_premium">Prämie</string>

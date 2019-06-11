@@ -52,10 +52,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:visibility="gone"
         android:textColor="@color/wc_general_green"
         android:layout_below="@+id/btn_playlist_buy"
+        />
+
+    <TextView
+        android:id="@+id/premium_ratereview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="30dp"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/alert_premium_purchased_review"
+        android:layout_below="@+id/premium_instructions"
         />
 
     <Button
@@ -66,7 +79,7 @@
         android:layout_marginEnd="5dp"
         android:layout_centerHorizontal="true"
         android:text="@string/button_text_upload_file"
-        android:layout_below="@+id/premium_instructions"
+        android:layout_below="@+id/premium_ratereview"
         android:enabled="false"
         style="@style/Button"
         />

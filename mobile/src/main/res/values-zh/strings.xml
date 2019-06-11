@@ -48,6 +48,7 @@
     <string name="button_text_playlists_purchase">採購\n播放列表</string>
     <string name="alert_playlists_purchased">播放列表已成功創建.\n在手錶設置下管理播放列表. 重新啟動手錶上的應用程序可能是必需的.</string>
     <string name="alert_premium_purchased">高級設置已在您的手錶上解鎖.</string>
+    <string name="alert_premium_purchased_review"><u><b>請點擊此處，等一下評分或評論</b></u></string>
 
     <string name="menu_text_import">進口</string>
     <string name="menu_text_premium">額外費用</string>

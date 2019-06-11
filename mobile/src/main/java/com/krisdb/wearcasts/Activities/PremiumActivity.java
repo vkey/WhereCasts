@@ -61,7 +61,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
     private Activity mActivity;
     private static final int UPLOAD_REQUEST_CODE = 43;
-    private TextView tvUploadSummary, mPremiumInstructionsText;
+    private TextView tvUploadSummary, mPremiumInstructionsText, mPremiumInstructionsReview;
     private static WeakReference<ProgressBar> mProgressFileUpload;
     private Boolean mPremiumUnlocked = false;
     private LocalBroadcastManager mBroadcastManger;
@@ -85,11 +85,20 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         mProgressFileUpload = new WeakReference<>((ProgressBar) findViewById(R.id.upload_file_progress));
         mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
         mPremiumInstructionsText = findViewById(R.id.premium_instructions);
+        mPremiumInstructionsReview = findViewById(R.id.premium_ratereview);
         mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
         tvUploadSummary = findViewById(R.id.upload_file_summary);
         mPremiumButton = findViewById(R.id.btn_unlock_premium);
 
+        mPremiumInstructionsReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
         findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,6 +288,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, true);
                         SetPremiumContent();
                         mPremiumInstructionsText.setVisibility(View.VISIBLE);
+                        mPremiumInstructionsReview.setVisibility(View.VISIBLE);
                         mPremiumInstructionsText.setText(getString(R.string.alert_premium_purchased));
                     } else if (purchase.getSku().contains("playlist")) {
                         sendPlaylistsToWatch(mPlaylistSkus.getSelectedItemPosition());
@@ -365,6 +375,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         dataMap.getDataMap().putInt("number", count);
         CommonUtils.DeviceSync(mActivity, dataMap);
         mPremiumInstructionsText.setVisibility(View.VISIBLE);
+        mPremiumInstructionsReview.setVisibility(View.VISIBLE);
         mPremiumInstructionsText.setText(getString(R.string.alert_playlists_purchased));
     }
 
