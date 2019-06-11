@@ -291,7 +291,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mLocalFile == null)
             SyncWithMobileDevice();
-
     }
 
     private void PauseAudio() {
@@ -556,8 +555,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     }
                 }
 
-                Log.d(mContext.getPackageName(), "[mediaservice] current episode title: " + mEpisode.getTitle());
-
                 if (direction == Enums.SkipDirection.NEXT && currentPosition < episodes.size() - 1) //in middle
                     mEpisode = episodes.get(currentPosition + 1);
                 else if (direction == Enums.SkipDirection.NEXT && currentPosition == episodes.size() - 1) //at end
@@ -576,8 +573,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     uri = CommonUtils.GetLocalDirectory(mContext).concat(mEpisode.getTitle());
                 } else
                     uri = mEpisode.getMediaUrl().toString();
-
-                Log.d(mContext.getPackageName(), "[mediaservice] next episode title: " + mEpisode.getTitle());
 
                 StartStream(Uri.parse(uri));
 
@@ -879,6 +874,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
+        CommonUtils.showToast(mContext, "PodcastID: "+ mPodcastID);
 
         if (!mError) {
             new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile,

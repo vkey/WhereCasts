@@ -69,6 +69,8 @@ public class AsyncTasks {
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
 
+            CommonUtils.writeToFile(ctx, "FinishMedia PodcastID: " + mPodcastID);
+
             mEpisodes = mPodcastID > -1 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) : getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

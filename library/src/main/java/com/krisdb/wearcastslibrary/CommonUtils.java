@@ -48,6 +48,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.core.text.HtmlCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -387,7 +388,8 @@ public class CommonUtils {
     public static String CleanString(String str)
     {
         if (str == null) return "";
-        return android.text.Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString();
+
+        return String.valueOf(HtmlCompat.fromHtml(str, HtmlCompat.FROM_HTML_MODE_LEGACY));
     }
 
     public static SpannableString boldText(final String text)

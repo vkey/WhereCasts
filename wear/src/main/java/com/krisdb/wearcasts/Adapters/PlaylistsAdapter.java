@@ -456,6 +456,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         bundle.putInt("podcastid", -1);
         intent.putExtras(bundle);
 
+        //prevent clicking on thumbnail
         if (position > 0)
             mContext.startActivity(intent);
     }

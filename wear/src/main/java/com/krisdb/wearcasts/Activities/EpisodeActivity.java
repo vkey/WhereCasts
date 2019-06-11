@@ -28,6 +28,7 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -286,46 +287,11 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             editor.putBoolean("pref_hardware_override_episode", false);
             editor.apply();
         }
-    }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hardware_override_episode", false)) {
-            if (event.getRepeatCount() == 0) {
-                if (WearableButtons.getButtonCount(this) == 1)
-                        togglePlayback();
-                else {
-                    if (keyCode == KeyEvent.KEYCODE_STEM_2) {
-                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-
-                        if (audioManager != null)
-                            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
-                        else
-                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
-                        //final int position = mSeekBar.getProgress() + getResources().getInteger(R.integer.skip_seconds) * 1000;
-                        //if (position < mSeekBar.getMax())
-                        //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-                        return true;
-                    } else if (keyCode == KeyEvent.KEYCODE_STEM_1) {
-                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
-
-                        if (audioManager != null)
-                            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-                        else
-                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
-
-                        //final int position = mSeekBar.getProgress() - getResources().getInteger(R.integer.skip_seconds) * 1000;
-                        //if (position > 0)
-                            //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-                        return true;
-                    } else if (keyCode == KeyEvent.KEYCODE_STEM_3) {
-                        togglePlayback();
-                        return true;
-                    }
-                }
-            }
+        if (getIntent() != null) {
+            mEpisodeID = getIntent() .getExtras().getInt("episodeid");
+            mPlaylistID = getIntent() .getExtras().getInt("playlistid");
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -338,6 +304,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             {
                 mEpisodeID = intent.getExtras().getInt("episodeid");
                 mPlaylistID = intent.getExtras().getInt("playlistid");
+
                 SetContent();
             }
 
@@ -1344,4 +1311,44 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             //Log.d(mContext.getPackageName(), "Buffering Percent: " + percent);
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hardware_override_episode", false)) {
+            if (event.getRepeatCount() == 0) {
+                if (WearableButtons.getButtonCount(this) == 1)
+                    togglePlayback();
+                else {
+                    if (keyCode == KeyEvent.KEYCODE_STEM_2) {
+                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+                        if (audioManager != null)
+                            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                        else
+                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+                        //final int position = mSeekBar.getProgress() + getResources().getInteger(R.integer.skip_seconds) * 1000;
+                        //if (position < mSeekBar.getMax())
+                        //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
+                        return true;
+                    } else if (keyCode == KeyEvent.KEYCODE_STEM_1) {
+                        final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+                        if (audioManager != null)
+                            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                        else
+                            CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+
+                        //final int position = mSeekBar.getProgress() - getResources().getInteger(R.integer.skip_seconds) * 1000;
+                        //if (position > 0)
+                        //MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
+                        return true;
+                    } else if (keyCode == KeyEvent.KEYCODE_STEM_3) {
+                        togglePlayback();
+                        return true;
+                    }
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
