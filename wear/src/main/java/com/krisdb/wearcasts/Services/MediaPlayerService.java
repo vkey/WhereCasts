@@ -874,7 +874,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
-        CommonUtils.showToast(mContext, "PodcastID: "+ mPodcastID);
 
         if (!mError) {
             new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile,
