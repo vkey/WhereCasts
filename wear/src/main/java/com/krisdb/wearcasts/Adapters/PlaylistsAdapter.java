@@ -48,7 +48,6 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isFinishedDownload;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
 public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdapter.ViewHolder> {

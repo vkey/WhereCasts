@@ -22,7 +22,6 @@ import android.view.WindowManager;
 
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;

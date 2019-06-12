@@ -5,8 +5,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.krisdb.wearcasts.Activities.BasePreferenceActivity;
-import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 
 public class SettingsPodcastsPlaybackActivity extends BasePreferenceActivity {
     @Override

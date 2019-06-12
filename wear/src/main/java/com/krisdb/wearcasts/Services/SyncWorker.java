@@ -16,7 +16,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
