@@ -25,7 +25,6 @@ import androidx.work.WorkerParameters;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -59,7 +58,7 @@ public class SyncWorker extends Worker {
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)mContext.get().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        CommonUtils.writeToFile(mContext.get(),"job started");
+        //CommonUtils.writeToFile(mContext.get(),"job started");
 
         try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
         catch (Exception ignored) {}
@@ -119,8 +118,8 @@ public class SyncWorker extends Worker {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final SharedPreferences.Editor editor = prefs.edit();
 
-        CommonUtils.writeToFile(mContext.get(),"new episodes: " + newEpisodes);
-        CommonUtils.writeToFile(mContext.get(),"new downloads: " + downloadCount);
+        //CommonUtils.writeToFile(mContext.get(),"new episodes: " + newEpisodes);
+        //CommonUtils.writeToFile(mContext.get(),"new downloads: " + downloadCount);
 
         if (newEpisodes > 0) {
             //used to track failed download attempts and total notification over night
@@ -161,7 +160,7 @@ public class SyncWorker extends Worker {
                         @Override
                         public void onAvailable(final Network network) {
                             mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                            CommonUtils.writeToFile(mContext.get(),"network found");
+                            //CommonUtils.writeToFile(mContext.get(),"network found");
 
                             for (final PodcastItem episode : mDownloadEpisodes)
                                 Utilities.startDownload(mContext.get(), episode);
@@ -177,7 +176,7 @@ public class SyncWorker extends Worker {
 
                     mManager.requestNetwork(request, mNetworkCallback);
 
-                    CommonUtils.writeToFile(mContext.get(),"requesting network");
+                    //CommonUtils.writeToFile(mContext.get(),"requesting network");
 
                     mTimeOutHandler.sendMessageDelayed(
                             mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
@@ -194,7 +193,7 @@ public class SyncWorker extends Worker {
         editor.putString("last_podcast_sync_date", new Date().toString());
         editor.apply();
 
-        CommonUtils.writeToFile(mContext.get(),"job ended");
+        //CommonUtils.writeToFile(mContext.get(),"job ended");
 
         return Result.success();
     }
@@ -203,7 +202,7 @@ public class SyncWorker extends Worker {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             unregisterNetworkCallback();
-            CommonUtils.writeToFile(mContext.get(),"network release received");
+            //CommonUtils.writeToFile(mContext.get(),"network release received");
 
             try {
                 mBroadcastManger.unregisterReceiver(mDownloadsComplete);

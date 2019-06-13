@@ -418,7 +418,7 @@ public class Utilities {
         if (showToast)
             showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
 
-        CommonUtils.writeToFile(ctx,"download started (" + episode.getTitle() + ")");
+        //CommonUtils.writeToFile(ctx,"download started (" + episode.getTitle() + ")");
 
         final DownloadManager manager = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
 
