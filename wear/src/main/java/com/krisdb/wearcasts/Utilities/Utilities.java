@@ -295,6 +295,16 @@ public class Utilities {
             return ctx.getColor(R.color.wc_transparent);
     }
 
+    public static void vibrate(final Context ctx) {
+        vibrate(ctx, 40);
+    }
+
+    public static void vibrate(final Context ctx, final int milliseconds)
+    {
+        final Vibrator v = (Vibrator)ctx.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(milliseconds);
+    }
+
     public static int getDownloadTotal(final Context ctx, final int downloadId)
     {
         int output = 0;

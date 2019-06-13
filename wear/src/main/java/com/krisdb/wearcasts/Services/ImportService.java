@@ -177,7 +177,7 @@ public class ImportService extends WearableListenerService implements DataClient
                         Utilities.startDownload(ctx, episode);
                     }
                 }
-
+                Utilities.vibrate(this);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/uploadfile")) {
@@ -288,6 +288,7 @@ public class ImportService extends WearableListenerService implements DataClient
                             public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) { } }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 CacheUtils.deletePodcastsCache(this);
+                Utilities.vibrate(this);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/opmlimport")) {

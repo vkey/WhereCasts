@@ -20,6 +20,7 @@ import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.CacheUtils;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -159,6 +160,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         showToast(mContext, mContext.getString(R.string.alert_podcast_added));
+        Utilities.vibrate(mContext);
         CacheUtils.deletePodcastsCache(mContext);
     }
 
