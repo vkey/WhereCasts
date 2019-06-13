@@ -36,7 +36,7 @@ public class SettingsPodcastsPodcastsFragment extends PreferenceFragment impleme
 
         if (key.equals("pref_display_podcasts_sort_order")) {
             findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference) findPreference("pref_display_podcasts_sort_order")).getEntry());
-            CacheUtils.deletePodcastsCache(getActivity());
+            //CacheUtils.deletePodcastsCache(getActivity());
         }
 
     }

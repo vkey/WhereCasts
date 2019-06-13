@@ -287,7 +287,7 @@ public class ImportService extends WearableListenerService implements DataClient
                             @Override
                             public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) { } }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                CacheUtils.deletePodcastsCache(this);
+                //CacheUtils.deletePodcastsCache(this);
                 Utilities.vibrate(this);
             }
 
@@ -307,7 +307,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 final InputStream in = getFdForAssetResponse.getInputStream();
 
                 new DBPodcasts(getApplicationContext()).insert(OPMLParser.parse(this, in));
-                CacheUtils.deletePodcastsCache(this);
+                //CacheUtils.deletePodcastsCache(this);
             }
         }
 

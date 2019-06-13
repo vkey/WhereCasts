@@ -190,7 +190,7 @@ public class SyncWorker extends Worker {
             }
         }
 
-        CacheUtils.deletePodcastsCache(ctx);
+        //CacheUtils.deletePodcastsCache(ctx);
 
         editor.putString("last_podcast_sync_date", new Date().toString());
         editor.apply();

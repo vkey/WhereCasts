@@ -161,7 +161,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         showToast(mContext, mContext.getString(R.string.alert_podcast_added));
         Utilities.vibrate(mContext);
-        CacheUtils.deletePodcastsCache(mContext);
+        //CacheUtils.deletePodcastsCache(mContext);
     }
 
     @Override

@@ -309,7 +309,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                                 db.updateAll(cv, mPodcastId);
                                 db.close();
-                                CacheUtils.deletePodcastsCache(mActivity);
+                                //CacheUtils.deletePodcastsCache(mActivity);
                             }
 
                             mStatus.setVisibility(TextView.GONE);
