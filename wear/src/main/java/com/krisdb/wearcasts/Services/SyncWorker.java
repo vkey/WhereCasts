@@ -23,7 +23,6 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;

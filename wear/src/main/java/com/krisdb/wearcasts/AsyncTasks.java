@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Utilities.CacheUtils;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Processor;

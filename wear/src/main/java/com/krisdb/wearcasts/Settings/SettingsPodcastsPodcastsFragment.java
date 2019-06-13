@@ -8,7 +8,6 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.CacheUtils;
 
 public class SettingsPodcastsPodcastsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
