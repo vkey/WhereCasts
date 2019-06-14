@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">दोबारा जोड़ो\n%d प्लेलिस्ट</string>
     <string name="button_text_playlists_purchase">खरीद फरोख्त\nप्लेलिस्ट</string>
     <string name="alert_playlists_purchased">प्लेलिस्ट सफलतापूर्वक बनाई गईं.\nअपनी घड़ी पर सेटिंग्स के तहत प्लेलिस्ट प्रबंधित करें। आपकी घड़ी पर ऐप को पुनरारंभ करना आवश्यक हो सकता है.</string>
+    <string name="alert_purchased_rating">क्या आप समीक्षा या रेटिंग छोड़ने के लिए एक सेकंड लेना चाहेंगे?</string>
     <string name="alert_premium_purchased">आपकी घड़ी पर प्रीमियम सेटिंग्स अनलॉक की गई हैं.</string>
     <string name="alert_premium_purchased_review"><u><b>कृपया यहां क्लिक करके एक सेकंड की रेटिंग या समीक्षा छोड़ दें</b></u></string>
 

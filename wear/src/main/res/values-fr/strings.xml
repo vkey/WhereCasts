@@ -293,9 +293,6 @@
 
     <string name="nav_add_refresh">Rafraîchir</string>
 
-    <string name="confirm_yes">OUI</string>
-    <string name="confirm_no">NON</string>
-
     <string name="playlist_title_inprogress">En cours</string>
     <string name="playlist_title_downloads">Téléchargements</string>
     <string name="playlist_title_unplayed">Unplayed</string>

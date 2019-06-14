@@ -9,6 +9,8 @@
     <string name="privacy_policy">Política de privacidad</string>
     <string name="play">Jugar</string>
     <string name="pause">Pausa</string>
+    <string name="confirm_yes">SÍ</string>
+    <string name="confirm_no">NO</string>
     <string name="general_error">Ocurrió un error. Inténtalo de nuevo.</string>
     <string name="error_playback_timeout">Se ha agotado el tiempo de espera de podcast</string>
     <string name="error_playback_notavailable">Podcast no encontrado</string>

@@ -291,9 +291,6 @@
 
     <string name="nav_add_refresh">刷新</string>
 
-    <string name="confirm_yes">是</string>
-    <string name="confirm_no">沒有</string>
-
     <string name="playlist_title_inprogress">進行中</string>
     <string name="playlist_title_downloads">下載</string>
     <string name="playlist_title_unplayed">未播放</string>

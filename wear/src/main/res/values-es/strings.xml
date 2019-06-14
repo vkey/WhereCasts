@@ -292,9 +292,6 @@
 
     <string name="nav_add_refresh">Refrescar</string>
 
-    <string name="confirm_yes">SÍ</string>
-    <string name="confirm_no">NO</string>
-
     <string name="playlist_title_inprogress">En progreso</string>
     <string name="playlist_title_downloads">Descargas</string>
     <string name="playlist_title_unplayed">Sin jugar</string>

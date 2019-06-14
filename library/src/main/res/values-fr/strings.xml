@@ -9,6 +9,8 @@
     <string name="privacy_policy">Politique de confidentialité</string>
     <string name="play">Jouer</string>
     <string name="pause">Pause</string>
+    <string name="confirm_yes">OUI</string>
+    <string name="confirm_no">NON</string>
     <string name="general_error">Une erreur est survenue Veuillez réessayer.</string>
     <string name="error_playback_timeout">Podcast retrieval timed out</string>
     <string name="error_playback_notavailable">La récupération des podcasts a expiré</string>

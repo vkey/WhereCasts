@@ -6,6 +6,8 @@
     <string name="yesterday">Gestern</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+    <string name="confirm_yes">JA</string>
+    <string name="confirm_no">NEIN</string>
     <string name="alert_no_network">Kein Netzwerk verfügbar</string>
     <string name="privacy_policy">Datenschutz-Bestimmungen</string>
     <string name="play">abspielen</string>

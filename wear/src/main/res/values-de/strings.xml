@@ -292,9 +292,6 @@
     <string name="nav_main_settings">die Einstellungen</string>
     <string name="nav_main_update">Aktualisieren</string>
 
-    <string name="confirm_yes">JA</string>
-    <string name="confirm_no">NEIN</string>
-
     <string name="playlist_title_inprogress">In Bearbeitung</string>
     <string name="playlist_title_downloads">Downloads</string>
     <string name="playlist_title_unplayed">Ungespielt</string>

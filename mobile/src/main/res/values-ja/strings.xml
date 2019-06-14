@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">アドオンの再\n%d プレイリスト</string>
     <string name="button_text_playlists_purchase">購入\nプレイリスト</string>
     <string name="alert_playlists_purchased">再生リストが正常に作成されました.\n時計の設定でプレイリストを管理します。 時計でアプリを再起動する必要がある場合があります.</string>
+    <string name="alert_purchased_rating">レビューや評価を残すには少し時間がかかりますか?</string>
     <string name="alert_premium_purchased">時計のプレミアム設定はロック解除されています.</string>
     <string name="alert_premium_purchased_review"><u><b>ここをクリックして、評価またはレビューをしばらくしてください。</b></u></string>
 

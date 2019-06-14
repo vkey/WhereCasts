@@ -9,6 +9,8 @@
     <string name="privacy_policy">Integritetspolicy</string>
     <string name="play">Spela</string>
     <string name="pause">Paus</string>
+    <string name="confirm_yes">JA</string>
+    <string name="confirm_no">NEJ</string>
     <string name="general_error">Ett fel uppstod. Var god försök igen.</string>
     <string name="error_playback_timeout">Podcasts hämtning avgick</string>
     <string name="error_playback_notavailable">Podcast inte hittad</string>

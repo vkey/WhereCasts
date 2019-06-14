@@ -292,9 +292,6 @@
 
     <string name="nav_add_refresh">ताज़ा करना</string>
 
-    <string name="confirm_yes">हाँ</string>
-    <string name="confirm_no">नहीं</string>
-
     <string name="playlist_title_inprogress">चालू</string>
     <string name="playlist_title_downloads">डाउनलोड</string>
     <string name="playlist_title_unplayed">नहीं चलाए गए</string>

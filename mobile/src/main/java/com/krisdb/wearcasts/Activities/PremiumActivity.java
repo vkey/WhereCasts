@@ -61,7 +61,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
     private Activity mActivity;
     private static final int UPLOAD_REQUEST_CODE = 43;
-    private TextView tvUploadSummary, mPremiumInstructionsText, mPremiumInstructionsReview;
+    private TextView tvUploadSummary;
     private static WeakReference<ProgressBar> mProgressFileUpload;
     private Boolean mPremiumUnlocked = false;
     private LocalBroadcastManager mBroadcastManger;
@@ -84,21 +84,10 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
         mProgressFileUpload = new WeakReference<>((ProgressBar) findViewById(R.id.upload_file_progress));
         mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
-        mPremiumInstructionsText = findViewById(R.id.premium_instructions);
-        mPremiumInstructionsReview = findViewById(R.id.premium_ratereview);
         mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
         tvUploadSummary = findViewById(R.id.upload_file_summary);
         mPremiumButton = findViewById(R.id.btn_unlock_premium);
-
-        mPremiumInstructionsReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
 
         findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,12 +274,43 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                 if (purchase.getPurchaseState() == PURCHASED) {
                     if (purchase.getSku().equals(getString(R.string.inapp_premium_product_id))) {
                         mPremiumUnlocked = true;
-                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, true);
+                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumUnlocked, false);
                         SetPremiumContent();
-                        mPremiumInstructionsText.setVisibility(View.VISIBLE);
-                        mPremiumInstructionsReview.setVisibility(View.VISIBLE);
-                        mPremiumInstructionsText.setText(getString(R.string.alert_premium_purchased));
+                        final AlertDialog.Builder alert1 = new AlertDialog.Builder(PremiumActivity.this);
+                        alert1.setMessage(getString(R.string.alert_premium_purchased).concat("\n\n").concat(getString(R.string.alert_purchased_rating)));
+                        alert1.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        });
+                        alert1.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                     } else if (purchase.getSku().contains("playlist")) {
+                        final AlertDialog.Builder alert2 = new AlertDialog.Builder(PremiumActivity.this);
+                        alert2.setMessage(getString(R.string.alert_playlists_purchased).concat("\n\n").concat(getString(R.string.alert_purchased_rating)));
+                        alert2.setPositiveButton(getString(R.string.generic_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        });
+                        alert2.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                         sendPlaylistsToWatch(mPlaylistSkus.getSelectedItemPosition());
                     }
 
@@ -349,7 +369,6 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
         mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
-
         if (isDebuggable || mPremiumUnlocked) {
             findViewById(R.id.btn_upload_file).setEnabled(true);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
@@ -374,9 +393,6 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         final PutDataMapRequest dataMap = PutDataMapRequest.create("/addplaylists");
         dataMap.getDataMap().putInt("number", count);
         CommonUtils.DeviceSync(mActivity, dataMap);
-        mPremiumInstructionsText.setVisibility(View.VISIBLE);
-        mPremiumInstructionsReview.setVisibility(View.VISIBLE);
-        mPremiumInstructionsText.setText(getString(R.string.alert_playlists_purchased));
     }
 
     @Override

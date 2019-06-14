@@ -9,6 +9,8 @@
     <string name="privacy_policy">個人情報保護方針</string>
     <string name="play">遊びます</string>
     <string name="pause">一時停止</string>
+    <string name="confirm_yes">はい</string>
+    <string name="confirm_no">NO</string>
     <string name="general_error">エラーが発生しました。 もう一度お試しください.</string>
     <string name="error_playback_timeout">Podcastの取得がタイムアウトしました</string>
     <string name="error_playback_notavailable">Podcastが見つかりません</string>

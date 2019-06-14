@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">Re añadir\n%d Listas de reproducción</string>
     <string name="button_text_playlists_purchase">Compra\nListas de reproducción</string>
     <string name="alert_playlists_purchased">Listas de reproducción creadas con éxito.\nAdministre las listas de reproducción en la configuración de su reloj. Es posible que se requiera reiniciar la aplicación en tu reloj.</string>
+    <string name="alert_purchased_rating">¿Te gustaría tomarte un segundo para dejar un comentario o calificación??</string>
     <string name="alert_premium_purchased">Los ajustes premium se han desbloqueado en tu reloj.</string>
     <string name="alert_premium_purchased_review"><u><b>Por favor, tome un segundo para dejar una calificación o revisión haciendo clic aquí</b></u></string>
 

@@ -292,9 +292,6 @@
 
     <string name="nav_add_refresh">Uppdatera</string>
 
-    <string name="confirm_yes">JA</string>
-    <string name="confirm_no">NEJ</string>
-
     <string name="playlist_title_inprogress">Pågående</string>
     <string name="playlist_title_downloads">Nedladdningar</string>
     <string name="playlist_title_unplayed">ospelade</string>

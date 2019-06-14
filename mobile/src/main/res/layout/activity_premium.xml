@@ -41,34 +41,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_text_playlists_purchase"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:layout_below="@+id/btn_unlock_premium"
         android:layout_toEndOf="@+id/playlist_buy_qty"
         style="@style/Button"
-        />
-
-    <TextView
-        android:id="@+id/premium_instructions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone"
-        android:textColor="@color/wc_general_green"
-        android:layout_below="@+id/btn_playlist_buy"
-        />
-
-    <TextView
-        android:id="@+id/premium_ratereview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="30dp"
-        android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/alert_premium_purchased_review"
-        android:layout_below="@+id/premium_instructions"
         />
 
     <Button
@@ -79,7 +55,7 @@
         android:layout_marginEnd="5dp"
         android:layout_centerHorizontal="true"
         android:text="@string/button_text_upload_file"
-        android:layout_below="@+id/premium_ratereview"
+        android:layout_below="@+id/btn_playlist_buy"
         android:enabled="false"
         style="@style/Button"
         />

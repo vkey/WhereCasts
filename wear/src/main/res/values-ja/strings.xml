@@ -292,9 +292,6 @@
 
     <string name="nav_add_refresh">更新する</string>
 
-    <string name="confirm_yes">はい</string>
-    <string name="confirm_no">NO</string>
-
     <string name="playlist_title_inprogress">進行中</string>
     <string name="playlist_title_downloads">ダウンロード</string>
     <string name="playlist_title_unplayed">再生されていない</string>

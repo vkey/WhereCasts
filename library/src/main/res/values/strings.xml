@@ -15,7 +15,8 @@
     <string name="error_playback_notavailable">Podcast not found</string>
     <string name="error_playback_lowdisk">Low disk space</string>
     <string name="error_playback_other">There is an issue with the podcast. Contact the podcast provider</string>
-
+    <string name="confirm_yes">YES</string>
+    <string name="confirm_no">NO</string>
     <string name="confirm_directory_first_import">The initial loading of podcasts can take a minute or two.</string>
     <string name="last_updated">Last updated</string>
     <string name="syncing">Syncing…</string>

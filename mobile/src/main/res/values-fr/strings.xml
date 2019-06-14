@@ -47,6 +47,7 @@
     <string name="button_text_playlists_readd">Re-ajouter\n%d Playlists</string>
     <string name="button_text_playlists_purchase">achat\nPlaylists</string>
     <string name="alert_playlists_purchased">Listes de lecture créées avec succès.\nGérer les playlists dans les paramètres de votre montre Redémarrer l\'application sur votre montre peut être nécessaire.</string>
+    <string name="alert_purchased_rating">Voulez-vous prendre une seconde pour laisser un avis ou une évaluation??</string>
     <string name="alert_premium_purchased">Les paramètres Premium ont été déverrouillés sur votre montre.</string>
     <string name="alert_premium_purchased_review"><u><b>S\'il vous plaît prendre une seconde une laisser une note ou une critique en cliquant ici</b></u></string>
 
