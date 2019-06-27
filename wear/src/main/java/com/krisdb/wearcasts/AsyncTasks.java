@@ -68,6 +68,11 @@ public class AsyncTasks {
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
 
+            //CommonUtils.writeToFile(ctx, "Episode: " + mEpisode.getTitle());
+            //CommonUtils.writeToFile(ctx, "PodcastID: " + mPodcastID);
+            //CommonUtils.writeToFile(ctx, "PlaylistID: " + mPlaylistID);
+            //CommonUtils.writeToFile(ctx, "\n\n");
+
             mEpisodes = mPodcastID > 0 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) : getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

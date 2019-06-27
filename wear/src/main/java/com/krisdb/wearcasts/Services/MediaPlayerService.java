@@ -505,7 +505,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     intentMediaError.putExtra("error_code", what);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
                     mError = true;
-                    Log.e(mPackage, "MediaPlayerService Service error: " + String.valueOf(what) + " " + String.valueOf(extra));
 
                     if (mMediaPlayer != null) {
                         if (mMediaPlayer.isPlaying())
@@ -649,7 +648,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         } else {
             builder.setOngoing(true);
             builder.addAction(android.R.drawable.ic_media_pause, mContext.getString(R.string.pause), MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
-
         }
 
         builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mMediaSessionCompat.getSessionToken()).setShowActionsInCompactView(0));
