@@ -132,11 +132,12 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 openEpisode(holder.getAdapterPosition());
             }
         });
+
         holder.thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 showContext(holder.getAdapterPosition());
-                return false;
+                return true;
             }
         });
 

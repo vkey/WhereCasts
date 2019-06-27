@@ -97,7 +97,7 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
                 intent.putExtras(bundle);
 
                 mContext.startActivity(intent);
-                return false;
+                return true;
             }
         });
 

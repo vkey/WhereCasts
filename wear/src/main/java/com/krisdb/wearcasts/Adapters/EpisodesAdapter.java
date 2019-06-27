@@ -167,7 +167,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             @Override
             public boolean onLongClick(View view) {
                 showContext(holder.getAdapterPosition());
-                return false;
+                return true;
             }
         });
 
