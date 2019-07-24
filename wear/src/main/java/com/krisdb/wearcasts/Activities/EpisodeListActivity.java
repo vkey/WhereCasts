@@ -85,7 +85,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private RelativeLayout mEpisodeListLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EpisodesAdapter mAdapter;
-
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
@@ -346,7 +345,16 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else if (requestCode == SEARCH_RESULTS_CODE) {
                 mQuery = data.getData().toString();
-                RefreshContent();
+
+                final Intent intent = getIntent();
+                final Bundle bundle = new Bundle();
+                bundle.putString("query", mQuery);
+                bundle.putInt("podcastId", mPodcastId);
+                intent.putExtras(bundle);
+                finish();
+                startActivity(intent);
+
+                //RefreshContent();
             } else if (requestCode == 102) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 

@@ -38,7 +38,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
-public class EpisodesSwipeController extends ItemTouchHelper.Callback {
+public class EpisodesSwipeController2 extends ItemTouchHelper.Callback {
 
     private List<PodcastItem> mEpisodes;
     private static WeakReference<Activity> mActivityRef;
@@ -51,7 +51,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
     private static int mNoNetworkPosition;
     private String mQuery;
 
-    public EpisodesSwipeController(final Activity ctx, final EpisodesAdapter adapter, final String query, final List<PodcastItem> episodes)
+    public EpisodesSwipeController2(final Activity ctx, final EpisodesAdapter adapter, final String query, final List<PodcastItem> episodes)
     {
         mActivityRef = new WeakReference<>(ctx);
         mAdapter = adapter;
@@ -223,22 +223,16 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
         }
     }
 
-
-    private void onSwipe(final PodcastItem episode)
-    {
-
-    }
-
     private static class TimeOutHandler extends Handler {
-        private final WeakReference<EpisodesSwipeController> mActivityWeakReference;
+        private final WeakReference<EpisodesSwipeController2> mActivityWeakReference;
 
-        TimeOutHandler(final EpisodesSwipeController controller) {
+        TimeOutHandler(final EpisodesSwipeController2 controller) {
             mActivityWeakReference = new WeakReference<>(controller);
         }
 
         @Override
         public void handleMessage(final Message msg) {
-            final EpisodesSwipeController controller = mActivityWeakReference.get();
+            final EpisodesSwipeController2 controller = mActivityWeakReference.get();
 
             if (controller != null) {
                 switch (msg.what) {
