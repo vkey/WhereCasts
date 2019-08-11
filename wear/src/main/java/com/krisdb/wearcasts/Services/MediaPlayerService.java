@@ -274,7 +274,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         showNotification(false);
 
-        //mMediaPlayer.reset();
         mMediaPlayer.start();
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -378,8 +377,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         initMediaSessionMetadata();
         initNoisyReceiver();
 
-            //if (mMediaPlayer != null)
-            //mMediaPlayer.reset();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
             try {
@@ -573,6 +570,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 } else
                     uri = mEpisode.getMediaUrl().toString();
 
+                if (mMediaPlayer != null)
+                    mMediaPlayer.reset();
+
                 StartStream(Uri.parse(uri));
 
                 final Bundle extras = new Bundle();
@@ -745,7 +745,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name_wc), mediaButtonReceiver, null);
 
         mMediaSessionCompat.setCallback(mMediaSessionCallback);
-        mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+            mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
         final Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
