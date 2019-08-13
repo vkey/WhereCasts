@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -388,14 +389,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             }
 
             if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
-                mMediaPlayer.prepareAsync();
-
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
                     }
                 });
+                mMediaPlayer.prepareAsync();
             } else
                 mMediaPlayer.prepare();
 
@@ -410,18 +410,19 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
             mError = false;
 
-            int position;
+            if (mLocalFile != null || mEpisode.getIsDownloaded()) {
+                int position;
 
-            if (mLocalFile == null)
-                position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
-            else
-                position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
+                if (mLocalFile == null)
+                    position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+                else
+                    position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
 
-            if (position == 0)
-                position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
+                if (position == 0)
+                    position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
 
-            mMediaPlayer.seekTo(position);
-
+                mMediaPlayer.seekTo(position);
+            }
             showNotification(false);
 
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -433,7 +434,19 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer player) {
+                    if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
+                        int position;
 
+                        if (mLocalFile == null)
+                            position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+                        else
+                            position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
+
+                        if (position == 0)
+                            position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
+
+                        mMediaPlayer.seekTo(position);
+                    }
                 }
             });
 
