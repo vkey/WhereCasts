@@ -524,7 +524,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name_wc), mediaButtonReceiver, null);
 
         mMediaSessionCompat.setCallback(mMediaSessionCallback);
-        mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+            mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
         final Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
