@@ -379,62 +379,61 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
+        try {
             try {
-                try {
-                    mMediaPlayer.setDataSource(uri.toString());
-                }
-                catch (IllegalStateException ex) {
-                    mMediaPlayer.reset();
-                    mMediaPlayer.setDataSource(uri.toString());
-                }
+                mMediaPlayer.setDataSource(uri.toString());
+            } catch (IllegalStateException ex) {
+                mMediaPlayer.reset();
+                mMediaPlayer.setDataSource(uri.toString());
+            }
 
-                if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
-                    mMediaPlayer.prepareAsync();
+            if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
+                mMediaPlayer.prepareAsync();
 
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
-                        }
-                    });
-                }
-                else
-                    mMediaPlayer.prepare();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
+                    }
+                });
+            } else
+                mMediaPlayer.prepare();
 
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
-                float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
+            float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
+            float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
 
-                if (playbackSpeed2 != 0)
-                    playbackSpeed = playbackSpeed2;
+            if (playbackSpeed2 != 0)
+                playbackSpeed = playbackSpeed2;
 
             mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+            mError = false;
+
+            int position;
+
+            if (mLocalFile == null)
+                position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+            else
+                position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
+
+            if (position == 0)
+                position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
+
+            mMediaPlayer.seekTo(position);
 
             showNotification(false);
 
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
-                public void onCompletion(MediaPlayer mp) { }
+                public void onCompletion(MediaPlayer mp) {
+                }
             });
 
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer player) {
-                    int position;
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                    mError = false;
-
-                    if (mLocalFile == null)
-                        position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
-                    else
-                        position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
-
-                    if (position == 0)
-                        position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
-
-                    mMediaPlayer.seekTo(position);
                 }
             });
 
@@ -447,8 +446,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                     if (mLocalFile == null)
                         SaveEpisodeValue(mContext, mEpisode, "duration", mMediaPlayer.getDuration());
-                    else
-                    {
+                    else {
                         final SharedPreferences.Editor editor = prefs.edit();
                         editor.putLong(Utilities.GetLocalDurationKey(mLocalFile), mMediaPlayer.getDuration());
                         editor.apply();
@@ -471,13 +469,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                                                           @Override
                                                           public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                        //Intent intentMediaBuffering = new Intent();
-                      //intentMediaBuffering.setAction("media_buffering");
-                      //intentMediaBuffering.putExtra("percent", percent);
-                      //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
-                      //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
-                      }
-                  }
+                                                              //Intent intentMediaBuffering = new Intent();
+                                                              //intentMediaBuffering.setAction("media_buffering");
+                                                              //intentMediaBuffering.putExtra("percent", percent);
+                                                              //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
+                                                              //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
+                                                          }
+                                                      }
             );
 
             mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
@@ -509,7 +507,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                         try {
                             mMediaPlayer.reset();
-                        } catch (Exception ignored){}
+                        } catch (Exception ignored) {
+                        }
                     }
 
                     return true;
