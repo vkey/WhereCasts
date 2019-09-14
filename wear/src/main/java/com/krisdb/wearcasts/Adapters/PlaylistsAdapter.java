@@ -552,8 +552,8 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             progressDownloadLoading.setVisibility(View.GONE);
             progressDownload.setVisibility(View.GONE);
 
-            Log.d(mContext.getPackageName(), "Download playlistid: " + mPlaylistId);
-            Log.d(mContext.getPackageName(), "Download downloadid: " + episode.getDownloadId());
+            //Log.d(mContext.getPackageName(), "Download playlistid: " + mPlaylistId);
+            //Log.d(mContext.getPackageName(), "Download downloadid: " + episode.getDownloadId());
 
             if (episode.getIsLocal())
                 download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));

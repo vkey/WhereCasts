@@ -131,15 +131,20 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
+        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) == 0)
+            setMainMenu();
+    }
+
+    private void setMainMenu()
+    {
         mNavItems = Utilities.getNavItems(this);
-        mNavDrawer = new WeakReference<>((WearableNavigationDrawerView)findViewById(R.id.drawer_nav_main));
+        mNavDrawer = new WeakReference<>((WearableNavigationDrawerView) findViewById(R.id.drawer_nav_main));
 
         if (mNavDrawer.get() != null) {
             mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
             mNavDrawer.get().addOnItemSelectedListener(this);
         }
     }
-
 
     public static class Init extends AsyncTask<Void, Void, Void> {
         private static WeakReference<MainActivity> mActivity;
@@ -369,6 +374,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mRefresh = true;
             new Init(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+
+        if (Integer.valueOf(prefs.getString("pref_sleep_timer", "0")) > 0)
+            setMainMenu();
     }
 
     @Override
@@ -423,31 +431,24 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     @Override
     public void onItemSelected(final int position) {
         final int id = mNavItems.get(position).getID();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = prefs.edit();
+
         switch (id) {
             case 0:
                 startActivity(new Intent(this, AddPodcastsActivity.class));
                 break;
             case 1:
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setMessage(R.string.alert_main_menu_start_update);
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            handleNetwork();
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                }
+                editor.putBoolean("sleep_timer_running", true);
+                editor.apply();
+                setMainMenu();
                 break;
             case 2:
+                editor.putBoolean("sleep_timer_running", false);
+                editor.apply();
+                setMainMenu();
+                break;
+            case 3:
                 startActivity(new Intent(this, SettingsPodcastsActivity.class));
                 break;
         }

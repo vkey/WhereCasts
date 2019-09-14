@@ -30,6 +30,8 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
         if (!Utilities.hasPremium(mActivity))
         {
+            findPreference("pref_sleep_timer").setSummary(getString(R.string.premium_locked_playback_speed));
+            findPreference("pref_sleep_timer").setEnabled(false);
             findPreference("pref_playback_speed").setSummary(getString(R.string.premium_locked_playback_speed));
             findPreference("pref_playback_speed").setEnabled(false);
             findPreference("pref_playback_skip_forward").setSummary(getString(R.string.premium_locked_playback_speed));
@@ -63,6 +65,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             }
             findPreference("pref_playback_skip_forward").setSummary(((ListPreference)findPreference("pref_playback_skip_forward")).getEntry());
             findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
+            findPreference("pref_sleep_timer").setSummary(((ListPreference)findPreference("pref_sleep_timer")).getEntry());
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
         }
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
@@ -93,5 +96,8 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
         if (key.equals("pref_playback_skip_back"))
             findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
+
+        if (key.equals("pref_sleep_timer"))
+            findPreference("pref_sleep_timer").setSummary(((ListPreference)findPreference("pref_sleep_timer")).getEntry());
     }
 }

@@ -63,25 +63,41 @@ public class Utilities {
 
     public static List<NavItem> getNavItems(final Context ctx)
     {
-        List<NavItem> items = new ArrayList<>();
+        final List<NavItem> items = new ArrayList<>();
+
         final NavItem navItemDiscover = new NavItem();
         navItemDiscover.setID(0);
         navItemDiscover.setTitle(ctx.getString(R.string.nav_main_discover));
         navItemDiscover.setIcon("ic_action_add_podcast");
         items.add(navItemDiscover);
 
-        /*
-        final NavItem navItemUpdate = new NavItem();
-        navItemUpdate.setID(1);
-        navItemUpdate.setTitle(ctx.getString(R.string.nav_main_update));
-        navItemUpdate.setIcon("ic_action_menu_main_refresh");
-        items.add(navItemUpdate);
-        */
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        if (prefs.getBoolean("sleep_timer_running", false))
+        {
+            final NavItem navSleepTimerStop = new NavItem();
+            navSleepTimerStop.setID(2);
+            navSleepTimerStop.setTitle("Stop Sleep Timer");//TODO: Localize
+            navSleepTimerStop.setIcon("ic_action_menu_main_sleep_timer_stop");
+            items.add(navSleepTimerStop);
+        }
+        else {
+            final int timer = Integer.valueOf(prefs.getString("pref_sleep_timer", "0"));
+
+            if (timer > 0) {
+                final NavItem navSleepTimer = new NavItem();
+                navSleepTimer.setID(1);
+                navSleepTimer.setTitle("Start Sleep Timer");
+                navSleepTimer.setIcon("ic_action_menu_main_sleep_timer");
+                items.add(navSleepTimer);
+            }
+        }
 
         final NavItem navItemSettings = new NavItem();
-        navItemSettings.setID(2);
+        navItemSettings.setID(3);
         navItemSettings.setTitle(ctx.getString(R.string.nav_main_settings));
         navItemSettings.setIcon("ic_action_menu_main_settings");
+
         items.add(navItemSettings);
 
         return items;

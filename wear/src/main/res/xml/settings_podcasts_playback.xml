@@ -31,6 +31,15 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
+        <ListPreference
+            android:key="pref_sleep_timer"
+            android:title="Sleep Timer"
+            android:entries="@array/sleep_timer_text"
+            android:entryValues="@array/sleep_timer_values"
+            android:defaultValue="0"
+            android:icon="@drawable/ic_setting_dropdown_indicator"
+            />
+
         <SwitchPreference
             android:key="pref_remove_notification"
             android:title="@string/settings_podcasts_label_playback_remove_notification"

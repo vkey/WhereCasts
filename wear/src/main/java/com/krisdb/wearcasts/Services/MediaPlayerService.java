@@ -540,13 +540,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
-        if (mPodcastID > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false)
-        {
+        if (mPodcastID > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false) {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
-        }
-        else if (episodes.size() > 2) {
+        } else if (episodes.size() > 2) {
             {
                 int currentPosition = 0;
 
@@ -599,9 +597,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     intentMediaPlaylist.putExtra("local_file", mLocalFile);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlaylist);
             }
-        }
-        else
-        {
+        } else {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
