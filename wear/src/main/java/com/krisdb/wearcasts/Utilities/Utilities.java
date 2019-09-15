@@ -79,7 +79,7 @@ public class Utilities {
         {
             final NavItem navSleepTimerStop = new NavItem();
             navSleepTimerStop.setID(2);
-            navSleepTimerStop.setTitle("Stop Sleep Timer");//TODO: Localize
+            navSleepTimerStop.setTitle(ctx.getString(R.string.sleep_timer_menu_stop));
             navSleepTimerStop.setIcon("ic_action_menu_main_sleep_timer_stop");
             items.add(navSleepTimerStop);
         }
@@ -89,7 +89,7 @@ public class Utilities {
             if (timer > 0) {
                 final NavItem navSleepTimer = new NavItem();
                 navSleepTimer.setID(1);
-                navSleepTimer.setTitle("Start Sleep Timer");//TODO: Localize
+                navSleepTimer.setTitle(ctx.getString(R.string.sleep_timer_menu_start));
                 navSleepTimer.setIcon("ic_action_menu_main_sleep_timer");
                 items.add(navSleepTimer);
             }

@@ -274,6 +274,28 @@
     <string name="menu_episodes_add_playlist">Alle zur Wiedergabeliste hinzufügen</string>
     <string name="menu_episodes_download">Alles herunterladen</string>
 
+    <string name="sleep_timer_started">%s Minutenschlaf-Timer gestartet</string>
+    <string name="sleep_timer_stopped">Sleep-Timer gestoppt</string>
+    <string name="sleep_timer_first">Starten Sie den Sleep-Timer über das Hauptmenü</string>
+    <string name="sleep_timer_menu_start">Starten Sie den Sleep-Timer</string>
+    <string name="sleep_timer_menu_stop">Beenden Sie den Sleep-Timer</string>
+
+    <string name="sleep_timer_options_disabled">Disabled</string>
+    <string name="sleep_timer_options_1_minute">1 minute</string>
+    <string name="sleep_timer_options_5_minutes">5 minutes</string>
+    <string name="sleep_timer_options_10_minutes">10 minutes</string>
+    <string name="sleep_timer_options_15_minutes">15 minutes</string>
+    <string name="sleep_timer_options_20_minutes">20 minutes</string>
+    <string name="sleep_timer_options_30_minutes">30 minutes</string>
+    <string name="sleep_timer_options_45_minutes">45 minutes</string>
+    <string name="sleep_timer_options_60_minutes">60 minutes</string>
+    <string name="sleep_timer_options_90_minutes">90 minutes</string>
+    <string name="sleep_timer_options_120_minutes">120 minutes</string>
+
+    <string name="sleep_timer_pref_title">Sleep Timer</string>
+
+    <string name="playback_speed_option_normal">Normal</string>
+
     <string name="menu_episodes_mark_selected_played">Als ausgewählt markieren</string>
     <string name="menu_episodes_mark_selected_unplayed">Als ausgewählt markieren</string>
     <string name="menu_episodes_mark_selected_unplayed_single">Markiere alles als von hier gespielt</string>

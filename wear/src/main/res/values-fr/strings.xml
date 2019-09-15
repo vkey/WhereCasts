@@ -9,6 +9,28 @@
     <string name="notification_channel_newepisodes">Nouvelle notification d\'épisodes</string>
     <string name="notification_channel_import_service">Service d\'importation</string>
 
+    <string name="sleep_timer_started">%s minute de mise en veille démarrée</string>
+    <string name="sleep_timer_stopped">Arrêt programmé</string>
+    <string name="sleep_timer_first">Démarrer la minuterie d\'arrêt à partir du menu principal</string>
+    <string name="sleep_timer_menu_start">Démarrer la minuterie d\'arrêt</string>
+    <string name="sleep_timer_menu_stop">Arrêter la minuterie</string>
+
+    <string name="sleep_timer_options_disabled">désactivé</string>
+    <string name="sleep_timer_options_1_minute">1 minute</string>
+    <string name="sleep_timer_options_5_minutes">5 minutes</string>
+    <string name="sleep_timer_options_10_minutes">10 minutes</string>
+    <string name="sleep_timer_options_15_minutes">15 minutes</string>
+    <string name="sleep_timer_options_20_minutes">20 minutes</string>
+    <string name="sleep_timer_options_30_minutes">30 minutes</string>
+    <string name="sleep_timer_options_45_minutes">45 minutes</string>
+    <string name="sleep_timer_options_60_minutes">60 minutes</string>
+    <string name="sleep_timer_options_90_minutes">90 minutes</string>
+    <string name="sleep_timer_options_120_minutes">120 minutes</string>
+
+    <string name="sleep_timer_pref_title">Minuterie de sommeil</string>
+
+    <string name="playback_speed_option_normal">Ordinaire</string>
+
     <string name="rate_app_reminder">Voulez-vous évaluer cette application? (cliquer OUI ouvrira la page du magasin sur votre téléphone).</string>
 
     <string name="text_loading_episodes">Chargement…</string>

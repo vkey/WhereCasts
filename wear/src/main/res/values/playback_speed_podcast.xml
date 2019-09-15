@@ -7,7 +7,7 @@
         <item>0.7</item>
         <item>0.8</item>
         <item>0.9</item>
-        <item>Normal</item> <!--TODO: Localize-->
+        <item>@string/playback_speed_option_normal</item>
         <item>1.1</item>
         <item>1.2</item>
         <item>1.3</item>

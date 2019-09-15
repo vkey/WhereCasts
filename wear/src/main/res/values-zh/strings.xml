@@ -9,6 +9,28 @@
     <string name="notification_channel_newepisodes">新的情節通知</string>
     <string name="notification_channel_import_service">進口服務</string>
 
+    <string name="sleep_timer_started">%s 分鐘睡眠計時器啟動</string>
+    <string name="sleep_timer_stopped">睡眠定時器停止</string>
+    <string name="sleep_timer_first">從主菜單啟動睡眠定時器</string>
+    <string name="sleep_timer_menu_start">啟動睡眠定時器</string>
+    <string name="sleep_timer_menu_stop">停止睡眠定時器</string>
+
+    <string name="sleep_timer_options_disabled">殘</string>
+    <string name="sleep_timer_options_1_minute">1 分鐘</string>
+    <string name="sleep_timer_options_5_minutes">5 分鐘</string>
+    <string name="sleep_timer_options_10_minutes">10 分鐘</string>
+    <string name="sleep_timer_options_15_minutes">15 分鐘</string>
+    <string name="sleep_timer_options_20_minutes">20 分鐘</string>
+    <string name="sleep_timer_options_30_minutes">30 分鐘</string>
+    <string name="sleep_timer_options_45_minutes">45 分鐘</string>
+    <string name="sleep_timer_options_60_minutes">60 分鐘</string>
+    <string name="sleep_timer_options_90_minutes">90 分鐘</string>
+    <string name="sleep_timer_options_120_minutes">120 分鐘</string>
+
+    <string name="sleep_timer_pref_title">睡眠定時器</string>
+
+    <string name="playback_speed_option_normal">正常</string>
+
     <string name="rate_app_reminder">你想評價這個應用程序? （點擊YES會打開手機上的商店頁面）.</string>
 
     <string name="text_loading_episodes">載入中…</string>

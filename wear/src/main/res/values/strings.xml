@@ -9,6 +9,28 @@
     <string name="notification_channel_media_playing">Media Playing Notification</string>
     <string name="notification_channel_newepisodes">New Episodes Notification</string>
 
+    <string name="sleep_timer_started">%s minute sleep timer started</string>
+    <string name="sleep_timer_stopped">Sleep timer stopped</string>
+    <string name="sleep_timer_first">Start sleep timer from main menu</string>
+    <string name="sleep_timer_menu_start">Start Sleep Timer</string>
+    <string name="sleep_timer_menu_stop">Stop Sleep Timer</string>
+
+    <string name="sleep_timer_options_disabled">Disabled</string>
+    <string name="sleep_timer_options_1_minute">1 minute</string>
+    <string name="sleep_timer_options_5_minutes">5 minutes</string>
+    <string name="sleep_timer_options_10_minutes">10 minutes</string>
+    <string name="sleep_timer_options_15_minutes">15 minutes</string>
+    <string name="sleep_timer_options_20_minutes">20 minutes</string>
+    <string name="sleep_timer_options_30_minutes">30 minutes</string>
+    <string name="sleep_timer_options_45_minutes">45 minutes</string>
+    <string name="sleep_timer_options_60_minutes">60 minutes</string>
+    <string name="sleep_timer_options_90_minutes">90 minutes</string>
+    <string name="sleep_timer_options_120_minutes">120 minutes</string>
+
+    <string name="sleep_timer_pref_title">Sleep Timer</string>
+
+    <string name="playback_speed_option_normal">Normal</string>
+
     <string name="text_loading_episodes">Loading…</string>
     <string name="text_loading_episodes_playlist">Refreshing…</string>
     <string name="text_loading_podcasts">Loading your podcasts…</string>

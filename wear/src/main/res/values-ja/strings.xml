@@ -9,6 +9,28 @@
     <string name="notification_channel_newepisodes">新しいエピソードの通知</string>
     <string name="notification_channel_import_service">輸入サービス</string>
 
+    <string name="sleep_timer_started">%s 分スリープタイマーが開始しました</string>
+    <string name="sleep_timer_stopped">スリープタイマーが停止しました</string>
+    <string name="sleep_timer_first">メインメニューからスリープタイマーを開始する</string>
+    <string name="sleep_timer_menu_start">スリープタイマーを開始</string>
+    <string name="sleep_timer_menu_stop">スリープタイマーを停止</string>
+
+    <string name="sleep_timer_options_disabled">無効</string>
+    <string name="sleep_timer_options_1_minute">1 分</string>
+    <string name="sleep_timer_options_5_minutes">5 分</string>
+    <string name="sleep_timer_options_10_minutes">10 分</string>
+    <string name="sleep_timer_options_15_minutes">15 分</string>
+    <string name="sleep_timer_options_20_minutes">20 分</string>
+    <string name="sleep_timer_options_30_minutes">30 分</string>
+    <string name="sleep_timer_options_45_minutes">45 分</string>
+    <string name="sleep_timer_options_60_minutes">60 分</string>
+    <string name="sleep_timer_options_90_minutes">90 分</string>
+    <string name="sleep_timer_options_120_minutes">120 分</string>
+
+    <string name="sleep_timer_pref_title">目覚まし時計</string>
+
+    <string name="playback_speed_option_normal">普通</string>
+
     <string name="rate_app_reminder">このアプリを評価しますか? （YESをクリックすると、携帯電話のストアページが開きます）.</string>
 
     <string name="text_loading_episodes">読み込み中…</string>

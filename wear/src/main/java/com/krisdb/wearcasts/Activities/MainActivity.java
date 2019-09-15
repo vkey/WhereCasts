@@ -447,15 +447,14 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
                 setMainMenu();
                 Utilities.StartSleepTimerJob(ctx);
-                final String minutes = prefs.getString("pref_sleep_timer", "0");
-                CommonUtils.showToast(ctx, minutes + " minute sleep timer started"); //TODO: localize
+                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
                 editor.apply();
                 setMainMenu();
                 Utilities.CancelSleepTimerJob(ctx);
-                CommonUtils.showToast(ctx, "Sleep timer stopped");//TODO: localize
+                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
                 startActivity(new Intent(ctx, SettingsPodcastsActivity.class));

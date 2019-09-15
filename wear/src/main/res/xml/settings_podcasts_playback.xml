@@ -31,10 +31,9 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
-        <!--TODO: Localize-->
         <ListPreference
             android:key="pref_sleep_timer"
-            android:title="Sleep Timer"
+            android:title="@string/sleep_timer_pref_title"
             android:entries="@array/sleep_timer_text"
             android:entryValues="@array/sleep_timer_values"
             android:defaultValue="0"

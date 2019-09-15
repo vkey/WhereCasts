@@ -9,6 +9,28 @@
     <string name="notification_channel_newepisodes">Notificación de nuevos episodios</string>
     <string name="notification_channel_import_service">Servicio de importación</string>
 
+    <string name="sleep_timer_started">%s minuto de temporizador de sueño iniciado</string>
+    <string name="sleep_timer_stopped">Temporizador de reposo detenido</string>
+    <string name="sleep_timer_first">Iniciar temporizador de suspensión desde el menú principal</string>
+    <string name="sleep_timer_menu_start">Iniciar temporizador de sueño</string>
+    <string name="sleep_timer_menu_stop">Stop Sleep Timer</string>
+
+    <string name="sleep_timer_options_disabled">Discapacitado</string>
+    <string name="sleep_timer_options_1_minute">1 minuto</string>
+    <string name="sleep_timer_options_5_minutes">5 minutos</string>
+    <string name="sleep_timer_options_10_minutes">10 minutos</string>
+    <string name="sleep_timer_options_15_minutes">15 minutos</string>
+    <string name="sleep_timer_options_20_minutes">20 minutos</string>
+    <string name="sleep_timer_options_30_minutes">30 minutos</string>
+    <string name="sleep_timer_options_45_minutes">45 minutos</string>
+    <string name="sleep_timer_options_60_minutes">60 minutos</string>
+    <string name="sleep_timer_options_90_minutes">90 minutos</string>
+    <string name="sleep_timer_options_120_minutes">120 minutos</string>
+
+    <string name="sleep_timer_pref_title">Tiempo de dormir</string>
+
+    <string name="playback_speed_option_normal">Normal</string>
+
     <string name="rate_app_reminder">¿Le gustaría calificar esta aplicación? (hacer clic en SÍ abrirá la página de la tienda en su teléfono).</string>
 
     <string name="text_loading_episodes">Cargando…</string>

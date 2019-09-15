@@ -64,11 +64,10 @@ public class SleepTimer extends Worker {
         editor.putBoolean("sleep_timer_running", false);
         editor.apply();
 
-        final Intent intentMediaPlayed = new Intent();
-        intentMediaPlayed.setAction("sleep_timer");
-        LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentMediaPlayed);
+        final Intent intentSleepTimer = new Intent();
+        intentSleepTimer.setAction("sleep_timer");
+        LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentSleepTimer);
 
         return Result.success();
     }
-
 }

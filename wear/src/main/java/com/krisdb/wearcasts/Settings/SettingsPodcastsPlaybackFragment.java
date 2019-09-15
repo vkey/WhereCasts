@@ -102,7 +102,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
             if (sharedPreferences.getBoolean("sleep_timer_first_set", true))
             {
-                CommonUtils.showToast(mActivity, "Start sleep timer from main menu", Toast.LENGTH_LONG); //TODO: Localize
+                CommonUtils.showToast(mActivity, getString(R.string.sleep_timer_first), Toast.LENGTH_LONG);
                 final SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("sleep_timer_first_set", false);
                 editor.apply();

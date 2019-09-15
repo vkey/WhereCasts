@@ -9,6 +9,28 @@
     <string name="notification_channel_newepisodes">नया एपिसोड अधिसूचना</string>
     <string name="notification_channel_import_service">सेवा आयात करें</string>
 
+    <string name="sleep_timer_started">%s मिनट नींद टाइमर शुरू कर दिया</string>
+    <string name="sleep_timer_stopped">नींद की घड़ी रुक गई</string>
+    <string name="sleep_timer_first">मुख्य मेनू से स्लीप टाइमर शुरू करें</string>
+    <string name="sleep_timer_menu_start">स्लीप टाइमर शुरू करें</string>
+    <string name="sleep_timer_menu_stop">स्लीप टाइमर बंद करो</string>
+
+    <string name="sleep_timer_options_disabled">विकलांग</string>
+    <string name="sleep_timer_options_1_minute">1 मिनट</string>
+    <string name="sleep_timer_options_5_minutes">5 मिनट</string>
+    <string name="sleep_timer_options_10_minutes">10 मिनट</string>
+    <string name="sleep_timer_options_15_minutes">15 मिनट</string>
+    <string name="sleep_timer_options_20_minutes">20 मिनट</string>
+    <string name="sleep_timer_options_30_minutes">30 मिनट</string>
+    <string name="sleep_timer_options_45_minutes">45 मिनट</string>
+    <string name="sleep_timer_options_60_minutes">60 मिनट</string>
+    <string name="sleep_timer_options_90_minutes">90 मिनट</string>
+    <string name="sleep_timer_options_120_minutes">120 मिनट</string>
+
+    <string name="sleep_timer_pref_title">सोने का टाइमर</string>
+
+    <string name="playback_speed_option_normal">साधारण</string>
+
     <string name="rate_app_reminder">क्या आप इस ऐप को रेट करना चाहेंगे? (हां क्लिक करने पर आपके फोन पर स्टोर पेज खुल जाएगा).</string>
 
     <string name="text_loading_episodes">लोड हो रहा है…</string>
