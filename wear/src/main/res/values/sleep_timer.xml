@@ -14,7 +14,7 @@
         <item>120</item>
     </string-array>
 
-    <string-array name="sleep_timer_text">
+    <string-array name="sleep_timer_text"> <!--TODO: Localize-->
         <item>Disabled</item>
         <item>1 minute</item>
         <item>5 minutes</item>

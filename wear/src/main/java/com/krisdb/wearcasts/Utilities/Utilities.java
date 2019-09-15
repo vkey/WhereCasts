@@ -29,6 +29,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -37,6 +38,7 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Receivers.NotificationReceiver;
+import com.krisdb.wearcasts.Services.SleepTimer;
 import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -87,7 +89,7 @@ public class Utilities {
             if (timer > 0) {
                 final NavItem navSleepTimer = new NavItem();
                 navSleepTimer.setID(1);
-                navSleepTimer.setTitle("Start Sleep Timer");
+                navSleepTimer.setTitle("Start Sleep Timer");//TODO: Localize
                 navSleepTimer.setIcon("ic_action_menu_main_sleep_timer");
                 items.add(navSleepTimer);
             }
@@ -97,7 +99,6 @@ public class Utilities {
         navItemSettings.setID(3);
         navItemSettings.setTitle(ctx.getString(R.string.nav_main_settings));
         navItemSettings.setIcon("ic_action_menu_main_settings");
-
         items.add(navItemSettings);
 
         return items;
@@ -357,6 +358,23 @@ public class Utilities {
         return output;
     }
 
+    public static void StartSleepTimerJob(final Context ctx) {
+
+        final int minutes = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0"));
+
+        final OneTimeWorkRequest sleepTimerWorkRequest = new OneTimeWorkRequest.Builder(SleepTimer.class)
+                .setInitialDelay(minutes, TimeUnit.MINUTES)
+                .addTag("sleep_timer")
+                .build();
+
+        WorkManager.getInstance(ctx).enqueue(sleepTimerWorkRequest);
+    }
+
+    public static void CancelSleepTimerJob(final Context ctx)
+    {
+        WorkManager.getInstance(ctx).cancelAllWorkByTag("sleep_timer");
+    }
+
     public static void StartJob(final Context ctx) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final Constraints constraints = new Constraints.Builder()
@@ -368,6 +386,7 @@ public class Utilities {
 
         final PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(SyncWorker.class, interval, TimeUnit.MILLISECONDS)
                 .setConstraints(constraints)
+                .addTag("sync_podcasts")
                 .setInitialDelay(interval,TimeUnit.MILLISECONDS)
                 .build();
 
@@ -376,7 +395,7 @@ public class Utilities {
 
     public static void CancelJob(final Context ctx)
     {
-        WorkManager.getInstance(ctx).cancelAllWork();
+        WorkManager.getInstance(ctx).cancelAllWorkByTag("sync_podcasts");
     }
 
     public static String GetOrderClause(final int orderId) {

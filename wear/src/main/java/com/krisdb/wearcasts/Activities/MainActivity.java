@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
@@ -33,6 +35,7 @@ import com.krisdb.wearcasts.Fragments.PodcastsListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Services.SleepTimer;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -431,25 +434,31 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     @Override
     public void onItemSelected(final int position) {
         final int id = mNavItems.get(position).getID();
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final Context ctx = this;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final SharedPreferences.Editor editor = prefs.edit();
 
         switch (id) {
             case 0:
-                startActivity(new Intent(this, AddPodcastsActivity.class));
+                startActivity(new Intent(ctx, AddPodcastsActivity.class));
                 break;
             case 1:
                 editor.putBoolean("sleep_timer_running", true);
                 editor.apply();
                 setMainMenu();
+                Utilities.StartSleepTimerJob(ctx);
+                final String minutes = prefs.getString("pref_sleep_timer", "0");
+                CommonUtils.showToast(ctx, minutes + " minute sleep timer started"); //TODO: localize
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
                 editor.apply();
                 setMainMenu();
+                Utilities.CancelSleepTimerJob(ctx);
+                CommonUtils.showToast(ctx, "Sleep timer stopped");//TODO: localize
                 break;
             case 3:
-                startActivity(new Intent(this, SettingsPodcastsActivity.class));
+                startActivity(new Intent(ctx, SettingsPodcastsActivity.class));
                 break;
         }
     }

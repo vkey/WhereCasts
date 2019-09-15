@@ -8,6 +8,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.wearable.input.WearableButtons;
+import android.widget.Toast;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
@@ -86,7 +87,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
             final PutDataMapRequest dataMap = PutDataMapRequest.create("/syncplaybackspeed");
 
-            dataMap.getDataMap().putFloat("playback_speed", Float.parseFloat(((ListPreference)findPreference("pref_playback_speed")).getEntry().toString()));
+            dataMap.getDataMap().putFloat("playback_speed", Float.parseFloat(((ListPreference)findPreference("pref_playback_speed")).getValue()));
 
             CommonUtils.DeviceSync(mActivity, dataMap);
         }
@@ -97,7 +98,17 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
         if (key.equals("pref_playback_skip_back"))
             findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
 
-        if (key.equals("pref_sleep_timer"))
-            findPreference("pref_sleep_timer").setSummary(((ListPreference)findPreference("pref_sleep_timer")).getEntry());
+        if (key.equals("pref_sleep_timer")) {
+
+            if (sharedPreferences.getBoolean("sleep_timer_first_set", true))
+            {
+                CommonUtils.showToast(mActivity, "Start sleep timer from main menu", Toast.LENGTH_LONG); //TODO: Localize
+                final SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("sleep_timer_first_set", false);
+                editor.apply();
+            }
+
+            findPreference("pref_sleep_timer").setSummary(((ListPreference) findPreference("pref_sleep_timer")).getEntry());
+        }
     }
 }

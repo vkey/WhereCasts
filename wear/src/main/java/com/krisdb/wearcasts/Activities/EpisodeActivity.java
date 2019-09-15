@@ -151,9 +151,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mNavItems = Utilities.getNavItems(this);
 
-        mNavDrawer = findViewById(R.id.drawer_nav_episode);
-        mNavDrawer.setAdapter(new NavigationAdapter(this, mNavItems));
-        mNavDrawer.addOnItemSelectedListener(this);
+        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) == 0)
+            setMainMenu();
 
         mMediaBrowserCompat = new MediaBrowserCompat(
                 mContext,
@@ -328,6 +327,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         else {
            SetContent();
        }
+
+        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) > 0)
+            setMainMenu();
     }
 
     private void SetContent() {
@@ -1101,17 +1103,41 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     @Override
     public void onItemSelected(final int position) {
         final int id = mNavItems.get(position).getID();
+        final Context ctx = this;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final SharedPreferences.Editor editor = prefs.edit();
+
         switch (id) {
             case 0:
-                startActivity(new Intent(this, AddPodcastsActivity.class));
+                startActivity(new Intent(ctx, AddPodcastsActivity.class));
                 break;
             case 1:
-                startActivity(new Intent(this, EpisodeActivity.class));
+                editor.putBoolean("sleep_timer_running", true);
+                editor.apply();
+                setMainMenu();
+                Utilities.StartSleepTimerJob(ctx);
+                final String minutes = prefs.getString("pref_sleep_timer", "0");
+                CommonUtils.showToast(ctx, minutes + " minute sleep timer started"); //TODO: localize
                 break;
             case 2:
-                startActivity(new Intent(this, SettingsPodcastsActivity.class));
+                editor.putBoolean("sleep_timer_running", false);
+                editor.apply();
+                setMainMenu();
+                Utilities.CancelSleepTimerJob(ctx);
+                CommonUtils.showToast(ctx, "Sleep timer stopped");//TODO: localize
+                break;
+            case 3:
+                startActivity(new Intent(ctx, SettingsPodcastsActivity.class));
                 break;
         }
+    }
+
+    private void setMainMenu() {
+        mNavItems = Utilities.getNavItems(this);
+
+        mNavDrawer = findViewById(R.id.drawer_nav_episode);
+        mNavDrawer.setAdapter(new NavigationAdapter(this, mNavItems));
+        mNavDrawer.addOnItemSelectedListener(this);
     }
 
     @Override

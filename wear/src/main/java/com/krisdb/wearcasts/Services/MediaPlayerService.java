@@ -285,7 +285,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (playbackSpeed2 != 0)
             playbackSpeed = playbackSpeed2;
 
-        mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+        if (playbackSpeed != 1.0f)
+            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
 
         mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
@@ -407,7 +408,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (playbackSpeed2 != 0)
                 playbackSpeed = playbackSpeed2;
 
-            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+            if (playbackSpeed != 1.0f)
+                mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+
             mError = false;
 
             if (mLocalFile != null || mEpisode.getIsDownloaded()) {
@@ -751,7 +754,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
    private void initMediaSession() {
         final ComponentName mediaButtonReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
         mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), mContext.getString(R.string.app_name_wc), mediaButtonReceiver, null);
-
         mMediaSessionCompat.setCallback(mMediaSessionCallback);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
