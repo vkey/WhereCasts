@@ -63,22 +63,10 @@ public class SleepTimer extends Worker {
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("sleep_timer_running", false);
         editor.apply();
-        Log.d(ctx.getPackageName(), "Audio stopped 1");
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-
-                MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(ctx, MediaPlayerService.class.getSimpleName());
-                mediaSessionCompat.getController().getTransportControls().pause();
-            }
-        });
-
-
-        Log.d(ctx.getPackageName(), "Audio stopped 2");
-
-
-        //ctx.stopService(new Intent(ctx, MediaPlayerService.class));
+        final Intent intentMediaPlayed = new Intent();
+        intentMediaPlayed.setAction("sleep_timer");
+        LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentMediaPlayed);
 
         return Result.success();
     }

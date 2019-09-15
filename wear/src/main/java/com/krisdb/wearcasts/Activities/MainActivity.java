@@ -134,7 +134,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
-        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) == 0)
+        if (!Utilities.sleepTimerEnabled(this))
             setMainMenu();
     }
 
@@ -378,7 +378,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             new Init(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-        if (Integer.valueOf(prefs.getString("pref_sleep_timer", "0")) > 0)
+        if (Utilities.sleepTimerEnabled(this))
             setMainMenu();
     }
 

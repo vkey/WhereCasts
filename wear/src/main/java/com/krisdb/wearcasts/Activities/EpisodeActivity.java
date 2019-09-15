@@ -151,7 +151,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mNavItems = Utilities.getNavItems(this);
 
-        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) == 0)
+        if (!Utilities.sleepTimerEnabled(mContext))
             setMainMenu();
 
         mMediaBrowserCompat = new MediaBrowserCompat(
@@ -328,7 +328,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
            SetContent();
        }
 
-        if (Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_sleep_timer", "0")) > 0)
+        if (Utilities.sleepTimerEnabled(mContext))
             setMainMenu();
     }
 

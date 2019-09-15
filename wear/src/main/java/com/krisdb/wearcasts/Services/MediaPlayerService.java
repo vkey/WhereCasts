@@ -91,6 +91,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initMediaPlayer();
         initMediaSession();
+
+        if (Utilities.sleepTimerEnabled(mContext))
+            LocalBroadcastManager.getInstance(this).registerReceiver(mSleepTimer, new IntentFilter("sleep_timer"));
     }
 
     private void initMediaPlayer() {
@@ -151,13 +154,17 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             SyncWithMobileDevice();
         }
 
-        //clearMediaPlayer();
+        if (Utilities.sleepTimerEnabled(mContext)) {
+            try {
+                unregisterReceiver(mSleepTimer);
+            } catch (Exception ex) {
+            }
+        }
 
         mMediaHandler.removeCallbacksAndMessages(null);
 
         disableNoisyReceiver();
         stopForeground(true);
-        Log.d(mPackage, "MediaPlayerService Media player service stopped");
     }
 
     private MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
@@ -266,6 +273,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mMediaSessionCompat.setActive(true);
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
+
         final Intent intentMediaPlayed = new Intent();
         intentMediaPlayed.setAction("media_action");
         intentMediaPlayed.putExtra("media_played", true);
@@ -624,6 +632,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 PauseAudio();
             }
+        }
+    };
+
+    private BroadcastReceiver mSleepTimer = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mMediaPlayer != null && mMediaPlayer.isPlaying())
+                PauseAudio();
         }
     };
 

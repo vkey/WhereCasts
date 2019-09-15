@@ -358,6 +358,11 @@ public class Utilities {
         return output;
     }
 
+    public static boolean sleepTimerEnabled(final Context ctx)
+    {
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0")) > 0;
+    }
+
     public static void StartSleepTimerJob(final Context ctx) {
 
         final int minutes = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0"));
