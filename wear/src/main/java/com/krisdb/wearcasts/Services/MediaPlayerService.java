@@ -657,6 +657,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         String channelID = mPackage.concat(".playing");
 
+        final NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            final NotificationChannel channel = new NotificationChannel(channelID, getString(R.string.notification_channel_media_playing), NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, channelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(GetLogo(mContext, mEpisode))
@@ -678,23 +686,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mMediaSessionCompat.getSessionToken()).setShowActionsInCompactView(0));
-
-        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            final NotificationChannel channel = manager.getNotificationChannel(channelID);
-
-            if (channel == null)
-                manager.createNotificationChannel(new NotificationChannel(channelID, getString(R.string.notification_channel_media_playing), NotificationManager.IMPORTANCE_LOW));
-
-            builder.setChannelId(channelID);
-
-            final NotificationChannel notificationChannel = new NotificationChannel(String.valueOf(mNotificationID), mContext.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
-            manager.createNotificationChannel(notificationChannel);
-
-            builder.setChannelId(String.valueOf(mNotificationID));
-        }
 
         if (pause)
             manager.notify(mNotificationID, builder.build());

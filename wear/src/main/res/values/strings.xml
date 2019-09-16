@@ -6,8 +6,9 @@
     <string name="notification_updating_status">Updating…</string>
     <string name="notification_channel_media_service">Media Service</string>
     <string name="notification_channel_import_service">Import Service</string>
-    <string name="notification_channel_media_playing">Media Playing Notification</string>
-    <string name="notification_channel_newepisodes">New Episodes Notification</string>
+    <string name="notification_channel_media_playing">Podcast Playing</string>
+    <string name="notification_channel_newepisodes">New Episodes</string>
+    <string name="notification_channel_sleep_timer">Sleep Timer</string>
 
     <string name="sleep_timer_started">%s minute sleep timer started</string>
     <string name="sleep_timer_stopped">Sleep timer stopped</string>

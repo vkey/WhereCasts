@@ -5,9 +5,10 @@
     <string name="confirm_remove_local">削除?</string>
     <string name="notification_updating_status">更新中…</string>
     <string name="notification_channel_media_service">メディアサービス</string>
-    <string name="notification_channel_media_playing">メディア再生通知</string>
-    <string name="notification_channel_newepisodes">新しいエピソードの通知</string>
-    <string name="notification_channel_import_service">輸入サービス</string>
+    <string name="notification_channel_media_playing">ポッドキャスト再生</string>
+    <string name="notification_channel_newepisodes">新しいエピソード</string>
+    <string name="notification_channel_import_service">新しいエピソード</string>
+    <string name="notification_channel_sleep_timer">目覚まし時計</string>
 
     <string name="sleep_timer_started">%s 分スリープタイマーが開始しました</string>
     <string name="sleep_timer_stopped">スリープタイマーが停止しました</string>

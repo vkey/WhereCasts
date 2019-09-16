@@ -5,9 +5,10 @@
     <string name="confirm_remove_local">हटाना?</string>
     <string name="notification_updating_status">अद्यतन कर रहा है…</string>
     <string name="notification_channel_media_service">मीडिया सेवा</string>
-    <string name="notification_channel_media_playing">मीडिया बजाना अधिसूचना</string>
-    <string name="notification_channel_newepisodes">नया एपिसोड अधिसूचना</string>
-    <string name="notification_channel_import_service">सेवा आयात करें</string>
+    <string name="notification_channel_media_playing">पॉडकास्ट बजाना</string>
+    <string name="notification_channel_newepisodes">नए एपिसोड</string>
+    <string name="notification_channel_import_service">नए एपिसोड</string>
+    <string name="notification_channel_sleep_timer">सोने का टाइमर</string>
 
     <string name="sleep_timer_started">%s मिनट नींद टाइमर शुरू कर दिया</string>
     <string name="sleep_timer_stopped">नींद की घड़ी रुक गई</string>

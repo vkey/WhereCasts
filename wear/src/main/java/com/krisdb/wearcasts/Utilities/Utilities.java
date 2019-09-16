@@ -129,11 +129,9 @@ public class Utilities {
 
             final String channelID = ctx.getPackageName().concat(".newepisodes");
 
-            final NotificationManager mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            final NotificationChannel mChannel = new NotificationChannel(channelID, ctx.getString(R.string.notification_channel_newepisodes), NotificationManager.IMPORTANCE_DEFAULT);
-            mChannel.setDescription(displayMessage);
-            mNotificationManager.createNotificationChannel(mChannel);
+            final NotificationManager notificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationChannel channel = new NotificationChannel(channelID, ctx.getString(R.string.notification_channel_newepisodes), NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
 
             final Notification notification = new NotificationCompat.Builder(ctx, channelID)
                     .setContentIntent(intent)
@@ -142,7 +140,7 @@ public class Utilities {
                     .setDeleteIntent(dismissIntent)
                     .setContentText(displayMessage).build();
 
-            mNotificationManager.notify(102, notification);
+            notificationManager.notify(102, notification);
         } else {
             final NotificationCompat.Builder notificationBuilder =
                     new NotificationCompat.Builder(ctx)

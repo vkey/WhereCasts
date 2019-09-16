@@ -5,9 +5,10 @@
     <string name="confirm_remove_local">Radera?</string>
     <string name="notification_updating_status">uppdatering…</string>
     <string name="notification_channel_media_service">Mediatjänst</string>
-    <string name="notification_channel_media_playing">Media Playing Notification</string>
-    <string name="notification_channel_newepisodes">New Episodes Notification</string>
+    <string name="notification_channel_media_playing">Podcast-spelning</string>
+    <string name="notification_channel_newepisodes">Nya avsnitt</string>
     <string name="notification_channel_import_service">Importtjänst</string>
+    <string name="notification_channel_sleep_timer">Sleep Timer</string>
 
     <string name="sleep_timer_started">%s minuts sömn timer startade</string>
     <string name="sleep_timer_stopped">Vilketimer stannade</string>

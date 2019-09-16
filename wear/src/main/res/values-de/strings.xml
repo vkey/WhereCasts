@@ -6,8 +6,9 @@
     <string name="notification_updating_status">Aktualisierung…</string>
     <string name="notification_channel_media_service">Medienservice</string>
     <string name="notification_channel_import_service">Dienst importieren</string>
-    <string name="notification_channel_media_playing">Medienwiedergabe-Benachrichtigung</string>
-    <string name="notification_channel_newepisodes">Benachrichtigung bei neuen Episoden</string>
+    <string name="notification_channel_media_playing">Podcast-Wiedergabe</string>
+    <string name="notification_channel_newepisodes">Neue Folgen</string>
+    <string name="notification_channel_sleep_timer">Tiempo de dormir</string>
 
     <string name="text_loading_episodes">Wird geladen…</string>
     <string name="text_loading_episodes_playlist">Erfrischend…</string>

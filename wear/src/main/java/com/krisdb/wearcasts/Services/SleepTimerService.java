@@ -45,15 +45,15 @@ public class SleepTimerService extends IntentService {
 
             final String channelID = getPackageName().concat(".sleep.timer");
 
-            final NotificationChannel channel = new NotificationChannel(channelID, "Sleep Timer", NotificationManager.IMPORTANCE_DEFAULT);
             final NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            final NotificationChannel channel = new NotificationChannel(channelID, getString(R.string.notification_channel_sleep_timer), NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
 
             final Intent notificationIntent = new Intent(ctx, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
             final Notification notification = new NotificationCompat.Builder(ctx, channelID)
-                    .setContentTitle("Sleep Timer Running")
+                    .setContentTitle(getString(R.string.notification_channel_sleep_timer))
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentIntent(pendingIntent)
                     .build();
@@ -63,7 +63,9 @@ public class SleepTimerService extends IntentService {
 
         new CountDownTimer(timerMinutes * 60000, 1000) {
 
-            public void onTick(long millisUntilFinished) { }
+            public void onTick(long millisUntilFinished) {
+                //CommonUtils.showToast(ctx, "" + millisUntilFinished/1000);
+            }
 
             public void onFinish() {
                 final SharedPreferences.Editor editor = prefs.edit();

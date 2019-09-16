@@ -5,9 +5,10 @@
     <string name="confirm_remove_local">Effacer?</string>
     <string name="notification_updating_status">Mise à jour…</string>
     <string name="notification_channel_media_service">Service de médias</string>
-    <string name="notification_channel_media_playing">Notification de lecture de média</string>
-    <string name="notification_channel_newepisodes">Nouvelle notification d\'épisodes</string>
-    <string name="notification_channel_import_service">Service d\'importation</string>
+    <string name="notification_channel_media_playing">Lecture de podcast</string>
+    <string name="notification_channel_newepisodes">Nouveaux épisodes</string>
+    <string name="notification_channel_import_service">Nouveaux épisodes</string>
+    <string name="notification_channel_sleep_timer">Minuterie de sommeil</string>
 
     <string name="sleep_timer_started">%s minute de mise en veille démarrée</string>
     <string name="sleep_timer_stopped">Arrêt programmé</string>
