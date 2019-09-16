@@ -27,6 +27,7 @@ import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
@@ -38,7 +39,8 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Receivers.NotificationReceiver;
-import com.krisdb.wearcasts.Services.SleepTimer;
+import com.krisdb.wearcasts.Services.SleepTimerJob;
+import com.krisdb.wearcasts.Services.SleepTimerService;
 import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -365,19 +367,21 @@ public class Utilities {
 
     public static void StartSleepTimerJob(final Context ctx) {
 
-        final int minutes = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0"));
+        ContextCompat.startForegroundService(ctx, new Intent(ctx, SleepTimerService.class));
 
-        final OneTimeWorkRequest sleepTimerWorkRequest = new OneTimeWorkRequest.Builder(SleepTimer.class)
+/*        final int minutes = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0"));
+
+        final OneTimeWorkRequest sleepTimerWorkRequest = new OneTimeWorkRequest.Builder(SleepTimerJob.class)
                 .setInitialDelay(minutes, TimeUnit.MINUTES)
                 .addTag("sleep_timer")
                 .build();
 
-        WorkManager.getInstance(ctx).enqueue(sleepTimerWorkRequest);
+        WorkManager.getInstance(ctx).enqueue(sleepTimerWorkRequest);*/
     }
 
     public static void CancelSleepTimerJob(final Context ctx)
     {
-        WorkManager.getInstance(ctx).cancelAllWorkByTag("sleep_timer");
+        ctx.stopService(new Intent(ctx, SleepTimerService.class));
     }
 
     public static void StartJob(final Context ctx) {

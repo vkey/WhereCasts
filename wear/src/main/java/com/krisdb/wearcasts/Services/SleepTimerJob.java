@@ -44,11 +44,11 @@ import java.util.concurrent.TimeUnit;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
-public class SleepTimer extends Worker {
+public class SleepTimerJob extends Worker {
 
     private static WeakReference<Context> mContext;
 
-    public SleepTimer(@NonNull Context context, @NonNull WorkerParameters params) {
+    public SleepTimerJob(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
         mContext = new WeakReference<>(context);
     }

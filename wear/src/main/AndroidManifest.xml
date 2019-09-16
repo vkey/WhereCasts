@@ -127,6 +127,7 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
+        <service android:name=".Services.SleepTimerService" />
 
         <service android:name=".Services.ImportService">
             <intent-filter>
