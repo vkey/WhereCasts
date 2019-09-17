@@ -1,48 +1,16 @@
 package com.krisdb.wearcasts.Services;
 
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.media.session.MediaButtonReceiver;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.Processor;
-import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
-import com.krisdb.wearcastslibrary.PodcastItem;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
-import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 
 public class SleepTimerJob extends Worker {
 

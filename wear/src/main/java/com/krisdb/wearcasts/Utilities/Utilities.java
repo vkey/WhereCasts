@@ -30,7 +30,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -39,7 +38,6 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Receivers.NotificationReceiver;
-import com.krisdb.wearcasts.Services.SleepTimerJob;
 import com.krisdb.wearcasts.Services.SleepTimerService;
 import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
