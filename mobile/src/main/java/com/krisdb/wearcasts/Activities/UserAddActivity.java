@@ -118,7 +118,7 @@ public class UserAddActivity extends AppCompatActivity {
                                                 }
                                             });
 
-                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
                                         }
                                     }
                                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -255,7 +255,7 @@ public class UserAddActivity extends AppCompatActivity {
                                 findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
                                 mOPMLView.setText(R.string.general_error);
                                 mOPMLView.setVisibility(View.VISIBLE);
-                                mOPMLView.setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                                mOPMLView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
                                 mOPMLView.setTextSize(14);
                             }
                         }
@@ -268,7 +268,7 @@ public class UserAddActivity extends AppCompatActivity {
             else
             {
                 ((TextView)findViewById(R.id.user_add_third_party_message)).setText(getString(R.string.text_third_party_no_watch));
-                ((TextView)findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.red));
+                ((TextView)findViewById(R.id.user_add_third_party_message)).setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
                 findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
                 mThirdPartyAutoDownload.setVisibility(View.GONE);
             }
@@ -288,7 +288,7 @@ public class UserAddActivity extends AppCompatActivity {
 
         if (visits == 1) {
             mTipView.setText(getString(R.string.tip_1));
-            mTipView.setTextColor(mActivity.getColor(R.color.red));
+            mTipView.setTextColor(mActivity.getColor(R.color.wc_red));
         } else
             mTipView.setText(getString(R.string.tip_2));
 
@@ -317,6 +317,8 @@ public class UserAddActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+
         if (resultCode == RESULT_OK)
         {
             if (requestCode == OPML_REQUEST_CODE) {
@@ -366,7 +368,7 @@ public class UserAddActivity extends AppCompatActivity {
                                     public void run() {
                                         mProgressOPML.setVisibility(View.INVISIBLE);
                                         ((TextView) findViewById(R.id.import_opml_text)).setText(getString(R.string.error_opml_import));
-                                        ((TextView) findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.red));
+                                        ((TextView) findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.wc_red));
                                     }
                                 });
                             }

@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="20dp"
-        android:textColor="@color/red"
+        android:textColor="@color/wc_red"
         android:visibility="gone"
         />
 

@@ -42,6 +42,7 @@ public class AddPodcastListFragment extends Fragment {
         mActivity = getActivity();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         setRetainInstance(true);

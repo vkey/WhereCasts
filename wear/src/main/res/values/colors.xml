@@ -1,6 +1,5 @@
 <resources>
     <color name="wc_dark_red">#FFCC0000</color>
-    <color name="wc_red">#F44336</color>
     <color name="wc_white">#FFFFFF</color>
     <color name="wc_checkboxes">#ff4285f4</color>
     <color name="background">#ff101018</color>
