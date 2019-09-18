@@ -392,7 +392,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
     {
         boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
         //mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (isDebuggable || mPremiumUnlocked) {
+        if (mPremiumUnlocked) {
             findViewById(R.id.btn_upload_file).setEnabled(true);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
             mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
