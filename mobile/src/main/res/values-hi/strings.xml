@@ -9,6 +9,8 @@
 
     <string name="notification_channel_sync_service">सेवा सिंक करें</string>
 
+    <string name="premium_playlist">प्लेलिस्ट को अनलॉक करने के लिए प्रीमियम खरीदें</string>
+
     <string name="validation_invalid_url">मान्य यूआरएल दर्ज करें</string>
     <string name="validation_empty_url">एक आरएसएस यूआरएल दर्ज करें</string>
 
@@ -45,7 +47,7 @@
     <string name="button_text_resync_premium_waiting">प्रतिक्रिया के लिए इंतजार…</string>
 
     <string name="button_text_playlists_readd">दोबारा जोड़ो\n%d प्लेलिस्ट</string>
-    <string name="button_text_playlists_purchase">खरीद फरोख्त\nप्लेलिस्ट</string>
+    <string name="button_text_playlists_purchase">प्लेलिस्ट\nजोड़ें</string>
     <string name="alert_playlists_purchased">प्लेलिस्ट सफलतापूर्वक बनाई गईं.\nअपनी घड़ी पर सेटिंग्स के तहत प्लेलिस्ट प्रबंधित करें। आपकी घड़ी पर ऐप को पुनरारंभ करना आवश्यक हो सकता है.</string>
     <string name="alert_purchased_rating">क्या आप समीक्षा या रेटिंग छोड़ने के लिए एक सेकंड लेना चाहेंगे?</string>
     <string name="alert_premium_purchased">आपकी घड़ी पर प्रीमियम सेटिंग्स अनलॉक की गई हैं.</string>
@@ -76,7 +78,7 @@
     <string name="text_file_uploaded">सफलतापूर्वक भेज दिया.\nस्वाइप मुख्य स्क्रीन पर छोड़ दिया.</string>
     <string name="text_file_upload_start">फ़ाइल भेज रहा है…</string>
     <string name="alert_playlists_quantity_none">मात्रा का चयन करें</string>
-    <string name="alert_playlists_purchase_disclaimer">खरीद प्लेलिस्ट वर्तमान में आपकी घड़ी पर किसी भी प्लेलिस्ट को हटा देंगे.</string>
+    <string name="alert_playlists_purchase_disclaimer">प्लेलिस्ट जोड़ने से आपकी घड़ी में वर्तमान में मौजूद कोई भी प्लेलिस्ट हट जाएगी.</string>
     <string name="alert_playlists_readd_disclaimer">प्लेलिस्ट को दोबारा जोड़ने से आपकी घड़ी पर वर्तमान में कोई भी प्लेलिस्ट हटा दी जाएगी.</string>
     <string name="alert_purchased">आपने इसे पहले से ही खरीदा है.</string>
 

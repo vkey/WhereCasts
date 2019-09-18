@@ -9,6 +9,8 @@
 
     <string name="notification_channel_sync_service">同期サービス</string>
 
+    <string name="premium_playlist">プレミアムを購入してプレイリストのロックを解除する</string>
+
     <string name="validation_invalid_url">有効なURLを入力してください</string>
     <string name="validation_empty_url">RSS URLを入力</string>
 
@@ -45,7 +47,7 @@
     <string name="button_text_resync_premium_waiting">応答を待っている…</string>
 
     <string name="button_text_playlists_readd">アドオンの再\n%d プレイリスト</string>
-    <string name="button_text_playlists_purchase">購入\nプレイリスト</string>
+    <string name="button_text_playlists_purchase">プレイリストを追加</string>
     <string name="alert_playlists_purchased">再生リストが正常に作成されました.\n時計の設定でプレイリストを管理します。 時計でアプリを再起動する必要がある場合があります.</string>
     <string name="alert_purchased_rating">レビューや評価を残すには少し時間がかかりますか?</string>
     <string name="alert_premium_purchased">時計のプレミアム設定はロック解除されています.</string>
@@ -76,7 +78,7 @@
     <string name="text_file_uploaded">正常に送信されました.\nメイン画面を左にスワイプ.</string>
     <string name="text_file_upload_start">送信ファイル…</string>
     <string name="alert_playlists_quantity_none">数量を選択</string>
-    <string name="alert_playlists_purchase_disclaimer">プレイリストを購入すると、現在時計に入っているプレイリストがすべて削除されます.</string>
+    <string name="alert_playlists_purchase_disclaimer">プレイリストを追加すると、現在時計にあるプレイリストが削除されます.</string>
     <string name="alert_playlists_readd_disclaimer">プレイリストを再追加すると、現在あなたの時計にあるプレイリストが削除されます.</string>
     <string name="alert_purchased">あなたはすでにこれを購入しています.</string>
 

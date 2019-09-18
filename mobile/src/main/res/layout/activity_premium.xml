@@ -47,11 +47,21 @@
         style="@style/Button"
         />
 
+    <TextView
+        android:id="@+id/btn_playlist_premium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/playlist_buy_qty"
+        android:textSize="14sp"
+        android:text="@string/premium_playlist"
+        android:layout_marginTop="30dp"
+        />
+
     <Button
         android:id="@+id/btn_upload_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="5dp"
         android:layout_centerHorizontal="true"
         android:text="@string/button_text_upload_file"

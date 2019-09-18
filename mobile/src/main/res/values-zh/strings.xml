@@ -9,6 +9,8 @@
 
     <string name="notification_channel_sync_service">同步服務</string>
 
+    <string name="premium_playlist">購買高級版以解鎖播放列表</string>
+
     <string name="validation_invalid_url">輸入一個有效的網址</string>
     <string name="validation_empty_url">輸入一個RSS網址</string>
 
@@ -45,7 +47,7 @@
     <string name="button_text_resync_premium_waiting">等待回應…</string>
 
     <string name="button_text_playlists_readd">重新添加\n%d 播放列表</string>
-    <string name="button_text_playlists_purchase">採購\n播放列表</string>
+    <string name="button_text_playlists_purchase">添加播放列表</string>
     <string name="alert_playlists_purchased">播放列表已成功創建.\n在手錶設置下管理播放列表. 重新啟動手錶上的應用程序可能是必需的.</string>
     <string name="alert_purchased_rating">您想花點時間留下評論或評分嗎？?</string>
     <string name="alert_premium_purchased">高級設置已在您的手錶上解鎖.</string>
@@ -76,7 +78,7 @@
     <string name="text_file_uploaded">成功發送.\n在主屏幕上向左滑動即可.</string>
     <string name="text_file_upload_start">發送文件…</string>
     <string name="alert_playlists_quantity_none">選擇一個數量</string>
-    <string name="alert_playlists_purchase_disclaimer">購買播放列表將刪除手錶上當前的任何播放列表.</string>
+    <string name="alert_playlists_purchase_disclaimer">添加播放列表將刪除手錶上當前的所有播放列表.</string>
     <string name="alert_playlists_readd_disclaimer">重新添加播放列表將刪除手錶上當前的任何播放列表.</string>
     <string name="alert_purchased">你已經購買了這個.</string>
 
