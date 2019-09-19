@@ -128,7 +128,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     private void handleNetwork() {
         //final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-        if (CommonUtils.getActiveNetwork(mActivity) == null)
+        if (!CommonUtils.isNetworkAvailable(mActivity))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);

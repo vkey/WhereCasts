@@ -461,7 +461,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
     private void handleNetwork()
     {
-        if (CommonUtils.getActiveNetwork(this) == null)
+        if (!CommonUtils.isNetworkAvailable(this))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);

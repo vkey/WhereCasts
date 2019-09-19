@@ -123,7 +123,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
             }
             else if (swipeActionId == -1) //Download
             {
-                if (CommonUtils.getActiveNetwork(ctx) == null)
+                if (!CommonUtils.isNetworkAvailable(ctx))
                 {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);

@@ -128,7 +128,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 RefreshContent();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-            else if (CommonUtils.getActiveNetwork(mActivity) == null)
+            else if (!CommonUtils.isNetworkAvailable(mActivity))
             {
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
@@ -147,6 +147,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             dialog.dismiss();
                         }
                     }).show();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
              else {
@@ -321,6 +322,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == NO_NETWORK_RESULTS_CODE) {
                 mSwipeRefreshLayout.setRefreshing(true);
@@ -537,7 +539,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             case R.id.menu_drawer_episode_list_download:
             case R.id.menu_drawer_episode_list_selected_downloaad:
                 mItemID = itemId;
-                if (CommonUtils.getActiveNetwork(mActivity) == null)
+                if (!CommonUtils.isNetworkAvailable(mActivity))
                 {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);

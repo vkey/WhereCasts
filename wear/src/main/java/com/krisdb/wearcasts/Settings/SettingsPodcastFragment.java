@@ -295,7 +295,7 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         category.addPreference(cbAutoDownload);
         category.addPreference(lpDownloadsCount);
         category.addPreference(lpDownloadsSaved);
-        category.addPreference(cbDownloadNext);
+        //category.addPreference(cbDownloadNext);
         //category.addPreference(lpDownloadNextCount);
         category.addPreference(lpSortOrder);
         category.addPreference(lpPlaybackSpeed);

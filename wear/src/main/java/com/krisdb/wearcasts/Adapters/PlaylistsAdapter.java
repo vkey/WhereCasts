@@ -241,7 +241,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 alert.show();
             }
         }
-        else if (CommonUtils.getActiveNetwork(mContext) == null)
+        else if (!CommonUtils.isNetworkAvailable(mContext))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);

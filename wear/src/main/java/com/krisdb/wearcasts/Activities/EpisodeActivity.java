@@ -677,7 +677,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private void handleNetwork(final Boolean download) {
         mDownload = download;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (CommonUtils.getActiveNetwork(mActivity) == null)
+        if (!CommonUtils.isNetworkAvailable(mActivity))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
