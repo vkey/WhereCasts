@@ -425,9 +425,15 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     RefreshContent();
                 }
                 else {
+                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
                     for (final Integer position : mAdapter.mSelectedPositions) {
                         episodes.get(position).setFinished(true);
                         episodes.get(position).setIsSelected(false);
+
+                        if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                            Utilities.DeleteMediaFile(mActivity, episodes.get(position));
+                            episodes.get(position).setIsDownloaded(false);
+                        }
                         mAdapter.notifyItemChanged(position);
                     }
                     mAdapter.mSelectedPositions = new ArrayList<>();
@@ -458,11 +464,17 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     RefreshContent();
                 }
                 else {
+                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
+
                     for (final PodcastItem episodeAfter : episodesAfter) {
                         for (final PodcastItem episode : episodes) {
                             if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
                                 episode.setFinished(true);
                                 episode.setIsSelected(false);
+                                if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                                    Utilities.DeleteMediaFile(mActivity, episode);
+                                    episode.setIsDownloaded(false);
+                                }
                             }
                         }
                         mAdapter.notifyDataSetChanged();

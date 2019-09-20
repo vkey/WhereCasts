@@ -433,6 +433,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                 mMediaPlayer.seekTo(position);
             }
+
             showNotification(false);
 
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -537,6 +538,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     return true;
                 }
             });
+
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("last_episode_played", mEpisode.getEpisodeId());
+            editor.apply();
 
         } catch (Exception ex) {
             Log.e(mPackage, "MediaPlayerService Service error: " + ex.toString());

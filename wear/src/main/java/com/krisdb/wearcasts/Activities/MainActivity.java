@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -48,6 +49,7 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
@@ -62,16 +64,33 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private static WeakReference<MainActivity> mActivityRef;
+    private static ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        if (Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(getResources().getInteger(R.integer.default_home_screen)))) == getResources().getInteger(R.integer.home_screen_option_playing_Screen))
+        {
+
+            int lastEpisodePlayedID = prefs.getInt("last_episode_played", 0);
+
+            if (lastEpisodePlayedID > 0) {
+                Intent i = new Intent(this, EpisodeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("episodeid", lastEpisodePlayedID);
+                i.putExtras(bundle);
+
+                startActivity(i);
+            }
+        }
+
+        mViewPager = findViewById(R.id.main_pager);
         CommonUtils.cancelNotification(this, 102);
 
         //CommonUtils.showToast(this, CommonUtils.getDensityName(this));
@@ -168,6 +187,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(resources.getInteger(R.integer.default_home_screen))));
+
             final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
             final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
 
@@ -312,10 +332,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            final ViewPager vp = ctx.findViewById(R.id.main_pager);
-            vp.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
-            vp.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            mViewPager = ctx.findViewById(R.id.main_pager);
+            mViewPager.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
+            mViewPager.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrollStateChanged(int state) { }
 
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
@@ -328,7 +348,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }
             });
 
-            vp.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.VISIBLE);
 
             /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
@@ -382,6 +402,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     @Override
     public void onPause() {
         mBroadcastManger.unregisterReceiver(mFragmentsReceiver);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onPause();
     }
 
@@ -454,6 +475,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
+                handleNetwork();
+                break;
+            case 4:
                 startActivity(new Intent(ctx, SettingsPodcastsActivity.class));
                 break;
         }
@@ -484,14 +508,14 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         }
             else
         {
-            new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false,
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+            new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false, null,
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                            if (newEpisodeCount > 0) {
-                                mShowPodcastList = true;
-                                new Init(MainActivity.this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-                            }
+                            mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

@@ -46,9 +46,9 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         int limit;
 
         if (thirdPartyPlayerFM)
-            limit = size + 5;
+            limit = size + 6;
         else
-            limit = size + 4;
+            limit = size + 5;
 
         final CharSequence entryValues[] = new String[limit];
         final CharSequence entryText[] = new String[limit];
@@ -66,14 +66,18 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         entryValues[size + 1] = String.valueOf(resources.getInteger(R.integer.playlist_local));
         entryValues[size + 2] = String.valueOf(resources.getInteger(R.integer.playlist_inprogress));
         entryValues[size + 3] = String.valueOf(resources.getInteger(R.integer.playlist_downloads));
+        entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.home_screen_option_playing_Screen));
+
         if (thirdPartyPlayerFM) //third party: if third party playlist had episodes add it to drop down
-            entryValues[size + 4] = String.valueOf(resources.getInteger(R.integer.playlist_playerfm));
+            entryValues[size + 5] = String.valueOf(resources.getInteger(R.integer.playlist_playerfm));
 
         entryText[size + 1] = getString(R.string.settings_podcasts_home_screen_local);
         entryText[size + 2] = getString(R.string.settings_podcasts_home_screen_inprogress);
         entryText[size + 3] = getString(R.string.settings_podcasts_home_screen_downloads);
+        entryText[size + 4] = getString(R.string.settings_podcasts_home_screen_playing_screen);
+
         if (thirdPartyPlayerFM) //third party: if third party playlist had episodes add it to drop down
-            entryText[size + 4] = getString(R.string.third_party_title_playerfm);
+            entryText[size + 5] = getString(R.string.third_party_title_playerfm);
 
         final ListPreference lpHomeScreen = new ListPreference(mActivity);
         lpHomeScreen.setTitle(R.string.settings_podcasts_label_home_screen);
@@ -96,7 +100,7 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
         }
         else
         {
-            findPreference("pref_display_home_screen").setSummary(((ListPreference) findPreference("pref_display_home_screen")).getEntry());
+            lpHomeScreen.setSummary(((ListPreference) findPreference("pref_display_home_screen")).getEntry());
             findPreference("pref_theme").setSummary(((ListPreference) findPreference("pref_theme")).getEntry());
             findPreference("pref_header_color").setSummary(((ListPreference) findPreference("pref_header_color")).getEntry());
         }

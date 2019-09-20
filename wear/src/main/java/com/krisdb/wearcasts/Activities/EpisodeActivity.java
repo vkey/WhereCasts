@@ -1126,6 +1126,38 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
+                if (!CommonUtils.isNetworkAvailable(this))
+                {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                        alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                }
+                else
+                {
+                    new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(mActivityRef.get(), 0, false, null,
+                            new Interfaces.BackgroundSyncResponse() {
+                                @Override
+                                public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                                }
+                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+            case 4:
                 startActivity(new Intent(ctx, SettingsPodcastsActivity.class));
                 break;
         }

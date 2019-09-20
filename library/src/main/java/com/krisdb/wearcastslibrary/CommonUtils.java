@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -89,6 +90,14 @@ public class CommonUtils {
         ((NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
     }
 
+    public static Boolean isNetworkAvailable(final Context ctx) {
+        final ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final Network network = connectivityManager.getActiveNetwork();
+        final NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+
+        return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+    }
+
     public static Network getActiveNetwork(final Context ctx) {
         final ConnectivityManager cm = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -113,22 +122,6 @@ public class CommonUtils {
             return s.substring(0, n).concat("...");
 
         return s;
-    }
-
-    public static Boolean HighBandwidthNetwork(final Context ctx)
-    {
-        if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_high_bandwidth", true)) return true;
-
-        final Network activeNetwork = getActiveNetwork(ctx);
-
-        if (activeNetwork != null) {
-            final ConnectivityManager manager = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            final int bandwidth = manager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
-
-            return bandwidth > ctx.getResources().getInteger(R.integer.minimum_bandwidth_kbs);
-        }
-        return true;
     }
 
     public static void showToast(final Context ctx, final String message, final int length)

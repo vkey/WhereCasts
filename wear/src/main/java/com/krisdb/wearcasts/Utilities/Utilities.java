@@ -95,8 +95,14 @@ public class Utilities {
             }
         }
 
+        final NavItem navItemRefresh = new NavItem();
+        navItemRefresh.setID(3);
+        navItemRefresh.setTitle(ctx.getString(R.string.nav_add_refresh));
+        navItemRefresh.setIcon("ic_action_menu_main_refresh");
+        items.add(navItemRefresh);
+
         final NavItem navItemSettings = new NavItem();
-        navItemSettings.setID(3);
+        navItemSettings.setID(4);
         navItemSettings.setTitle(ctx.getString(R.string.nav_main_settings));
         navItemSettings.setIcon("ic_action_menu_main_settings");
         items.add(navItemSettings);

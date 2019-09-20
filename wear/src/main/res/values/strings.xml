@@ -188,6 +188,7 @@
     <string name="settings_podcasts_home_screen_inprogress">In Progress</string>
     <string name="settings_podcasts_home_screen_downloads">Downloads</string>
     <string name="settings_podcasts_home_screen_upnext">Up Next</string>
+    <string name="settings_podcasts_home_screen_playing_screen">Playing Screen</string>
 
     <string name="settings_podcasts_entries_title_themes">Themes</string>
     <string name="settings_podcasts_sort_order_themes_default">Default</string>

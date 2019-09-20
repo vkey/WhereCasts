@@ -7,7 +7,7 @@
     <integer name="directory_radio_resync_amount">20</integer>
 
     <integer name="playlist_playerfm">-7</integer>
-    <integer name="playlist_radio">-8</integer>
+    <integer name="home_screen_option_playing_Screen">-8</integer>
     <integer name="minimum_bandwidth_kbs">2000</integer>
 
 </resources>

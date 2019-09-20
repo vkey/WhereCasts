@@ -35,6 +35,7 @@ import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -381,6 +382,8 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     private void showContext(final int position)
     {
+        final SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+
         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
             if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress))
@@ -406,12 +409,13 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         final ContentValues cv = new ContentValues();
                         cv.put("position", 0);
                         cv.put("finished", 1);
-
                         db.update(cv, mEpisodes.get(position).getEpisodeId());
+
+                        if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                            Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+
                     } else if (mPlaylistId == mPlaylistDownloads)
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                    else if (mPlaylistId == mResources.getInteger(R.integer.playlist_radio))
-                        db.delete(mEpisodes.get(position).getEpisodeId());
                     else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                         db.delete(mEpisodes.get(position).getEpisodeId());
@@ -419,9 +423,11 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                     else if (mPlaylistId == mPlaylistLocal)
                         Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
-                    else
+                    else {
                         SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
-
+                        if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                            Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+                    }
                     refreshList();
 
                     db.close();
