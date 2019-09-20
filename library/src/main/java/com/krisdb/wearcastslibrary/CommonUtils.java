@@ -28,7 +28,6 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;

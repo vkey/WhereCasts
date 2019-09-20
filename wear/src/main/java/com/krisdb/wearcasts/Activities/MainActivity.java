@@ -49,7 +49,6 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
