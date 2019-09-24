@@ -34,5 +34,6 @@
     <string name="select">Wählen</string>
     <string name="never">noch nie</string>
     <string name="always">Immer</string>
+    <string name="seconds">Sekunden</string>
 
 </resources>

@@ -33,5 +33,6 @@
     <string name="select">चुनते हैं</string>
     <string name="never">कभी नहीँ</string>
     <string name="always">हमेशा</string>
+    <string name="seconds">सेकंड</string>
 
 </resources>

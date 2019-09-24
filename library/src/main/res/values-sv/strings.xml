@@ -33,5 +33,6 @@
     <string name="select">Välj</string>
     <string name="never">Aldrig</string>
     <string name="always">Alltid</string>
+    <string name="seconds">sekunder</string>
 
 </resources>

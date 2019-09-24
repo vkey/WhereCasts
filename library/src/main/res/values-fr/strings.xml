@@ -33,5 +33,6 @@
     <string name="select">Sélectionner</string>
     <string name="never">Jamais</string>
     <string name="always">Toujours</string>
+    <string name="seconds">Seconds</string>
 
 </resources>

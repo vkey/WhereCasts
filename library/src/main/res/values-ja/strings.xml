@@ -33,5 +33,6 @@
     <string name="select">選択</string>
     <string name="never">絶対に</string>
     <string name="always">常に</string>
+    <string name="seconds">秒</string>
 
 </resources>
