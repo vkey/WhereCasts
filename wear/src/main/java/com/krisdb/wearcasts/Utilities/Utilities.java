@@ -86,7 +86,7 @@ public class Utilities {
         else {
             final int timer = Integer.valueOf(prefs.getString("pref_sleep_timer", "0"));
 
-            if (timer > 0) {
+            if (timer > 0 && Utilities.hasPremium(ctx)) {
                 final NavItem navSleepTimer = new NavItem();
                 navSleepTimer.setID(1);
                 navSleepTimer.setTitle(ctx.getString(R.string.sleep_timer_menu_start));
@@ -181,6 +181,9 @@ public class Utilities {
         else if (option == Enums.ThemeOptions.AMOLED.getThemeId())
             output = R.style.AMOLED;
         else
+            output = R.style.Main;
+
+        if (!Utilities.hasPremium(ctx))
             output = R.style.Main;
 
         return output;

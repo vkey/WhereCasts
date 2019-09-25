@@ -73,6 +73,7 @@ import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.io.UTFDataFormatException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +123,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
-    private static boolean mDownload;
+    private static boolean mDownload, mHasPremium;
     private AlertDialog mPlaylistDialog = null;
 
 /*    @Override
@@ -146,7 +147,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mContext = getApplicationContext();
         mActivity = this;
-
+        mHasPremium = Utilities.hasPremium(this);
         mActivityRef = new WeakReference<>(this);
 
         mNavItems = Utilities.getNavItems(this);
@@ -206,8 +207,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             paramsDownloading.setMargins(0, 0, -38, 0);
         }
 
-        final int skipBack = Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
-        final int skipForward = Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip))));
+        final int skipBack = mHasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
+        final int skipForward = mHasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
 
         mSkipBack.setText(String.valueOf(skipBack));
         mSkipForward.setText(String.valueOf(skipForward));

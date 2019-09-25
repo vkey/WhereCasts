@@ -74,6 +74,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
     private Boolean mError = false;
+    private boolean mHasPremium;
 
     public MediaPlayerService() {
         super();
@@ -93,6 +94,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (Utilities.sleepTimerEnabled(mContext))
             LocalBroadcastManager.getInstance(this).registerReceiver(mSleepTimer, new IntentFilter("sleep_timer"));
+
+        mHasPremium = Utilities.hasPremium(this);
     }
 
     private void initMediaPlayer() {
@@ -108,7 +111,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
-
         /*
             MediaButtonReceiver.handleIntent(mMediaSessionCompat, intent);
 
@@ -284,16 +286,18 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mMediaPlayer.start();
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (mHasPremium) {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
-        float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
+            float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
+            float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
 
-        if (playbackSpeed2 != 0)
-            playbackSpeed = playbackSpeed2;
+            if (playbackSpeed2 != 0)
+                playbackSpeed = playbackSpeed2;
 
-        if (playbackSpeed != 1.0f)
-            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+            if (playbackSpeed != 1.0f)
+                mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+        }
 
         mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
@@ -407,18 +411,20 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             } else
                 mMediaPlayer.prepare();
 
+            mError = false;
+
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
-            float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
+            if (mHasPremium) {
+                float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
+                float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
 
-            if (playbackSpeed2 != 0)
-                playbackSpeed = playbackSpeed2;
+                if (playbackSpeed2 != 0)
+                    playbackSpeed = playbackSpeed2;
 
-            if (playbackSpeed != 1.0f)
-                mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
-
-            mError = false;
+                if (playbackSpeed != 1.0f)
+                    mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
+            }
 
             if (mLocalFile != null || mEpisode.getIsDownloaded()) {
                 int position;
@@ -428,7 +434,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 else
                     position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
 
-                if (position == 0)
+                if (mHasPremium && position == 0)
                     position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
 
                 mMediaPlayer.seekTo(position);
@@ -854,7 +860,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final int position = mMediaPlayer.getCurrentPosition();
 
-            final int specifiedTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_finish_end_time)))) * 1000;
+            final int specifiedTime = mHasPremium ? Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_finish_end_time)))) * 1000 : 0;
 
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 

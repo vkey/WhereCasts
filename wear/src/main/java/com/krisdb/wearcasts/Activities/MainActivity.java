@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
@@ -49,21 +55,23 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.android.billingclient.api.BillingClient.BillingResponseCode.OK;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
-public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
+public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener, PurchasesUpdatedListener {
     private static int mNumberOfPages;
     public static List<Integer> mPlayListIds;
     private static List<NavItem> mNavItems;
-    private static Boolean mRefresh = false, mShowPodcastList = false;
+    private static Boolean mRefresh = false, mShowPodcastList = false, mPremiumInappUnlocked = false, mPremiumSubUnlocked = false;
     private LocalBroadcastManager mBroadcastManger;
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private static WeakReference<MainActivity> mActivityRef;
     private static ViewPager mViewPager;
+    private BillingClient mBillingClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +155,51 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         mShowPodcastList = getIntent().getExtras() != null && getIntent().getExtras().getBoolean("new_episodes");
 
+        if (CommonUtils.isNetworkAvailable(this)) {
+            mBillingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build();
+            mBillingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(BillingResult billingResult) {
+                    if (billingResult.getResponseCode() == OK) {
+
+                        final Purchase.PurchasesResult purchasesResultInapp = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
+
+                        if (purchasesResultInapp.getResponseCode() == OK) {
+                            final List<Purchase> purchases = purchasesResultInapp.getPurchasesList();
+                            for (final Purchase purchase : purchases) {
+                                if (purchase.getSku().equals(getString(R.string.inapp_premium_product_id))) {
+                                    mPremiumInappUnlocked = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        final Purchase.PurchasesResult purchasesResultSubs = mBillingClient.queryPurchases(BillingClient.SkuType.SUBS);
+
+                        if (purchasesResultSubs.getResponseCode() == OK) {
+
+                            final List<Purchase> purchases = purchasesResultSubs.getPurchasesList();
+
+                            for (final Purchase purchase : purchases) {
+                                if (purchase.getSku().equals(getString(R.string.sub_premium_product_id))) {
+                                    mPremiumSubUnlocked = true;
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("premium", mPremiumInappUnlocked || mPremiumSubUnlocked);
+                    editor.apply();
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {}
+            });
+        }
+
         new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
         if (!Utilities.sleepTimerEnabled(this))
@@ -162,6 +215,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
             mNavDrawer.get().addOnItemSelectedListener(this);
         }
+    }
+
+    @Override
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+
     }
 
     public static class Init extends AsyncTask<Void, Void, Void> {
@@ -189,6 +247,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
             final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
+            final boolean hasPremium = Utilities.hasPremium(ctx);
 
             mPlayListIds = new ArrayList<>();
             mPlayListIds.add(-1);
@@ -197,19 +256,19 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             if (HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
 
-            final List<PlaylistItem> playlists = getPlaylists(ctx, hideEmpty);
+            if (hasPremium) {
 
-            if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean("pref_display_show_downloaded_episodes", false))
-            {
-                for (final PlaylistItem playlist : playlists)
-                    if (HasEpisodes(ctx, 0, playlist.getID()))
+                final List<PlaylistItem> playlists = getPlaylists(ctx, hideEmpty);
+
+                if (prefs.getBoolean("pref_display_show_downloaded_episodes", false)) {
+                    for (final PlaylistItem playlist : playlists)
+                        if (HasEpisodes(ctx, 0, playlist.getID()))
+                            mPlayListIds.add(playlist.getID());
+                } else {
+                    for (final PlaylistItem playlist : playlists)
                         mPlayListIds.add(playlist.getID());
+                }
             }
-            else {
-                for (final PlaylistItem playlist : playlists)
-                    mPlayListIds.add(playlist.getID());
-            }
-
             if (localFiles)
                 mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
 
@@ -221,12 +280,12 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
             mNumberOfPages = mPlayListIds.size();
 
-            for (int i = 0; i<mNumberOfPages; i++)
-            {
-                if (mPlayListIds.get(i) == homeScreenId)
-                {
-                    mHomeScreen = i;
-                    break;
+            if (hasPremium) {
+                for (int i = 0; i < mNumberOfPages; i++) {
+                    if (mPlayListIds.get(i) == homeScreenId) {
+                        mHomeScreen = i;
+                        break;
+                    }
                 }
             }
 
