@@ -8,6 +8,19 @@
     <string name="page_title_import">Import</string>
     <string name="page_title_about">About</string>
 
+    <string name="premium_trial">7 day trial</string>
+    <string name="premium_benefits_title">Premium Benefits</string>
+
+    <string name="premium_benefits_list">
+        <li>Custom playlists</li>\n
+        <li>Control playback speed</li>\n
+        <li>Set start/end times</li>\n
+        <li>Set skip forward/back seconds</li>\n
+        <li>Updated podcast search</li>\n
+        <li>Support ongoing development</li>\n
+        <li>More…</li>
+    </string>
+
     <string name="premium_playlist">Purchase premium to unlock playlists</string>
 
     <string name="notification_channel_sync_service">Sync Service</string>

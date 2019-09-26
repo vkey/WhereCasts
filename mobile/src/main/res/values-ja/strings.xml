@@ -7,6 +7,19 @@
     <string name="page_title_import">インポート</string>
     <string name="page_title_about">約</string>
 
+    <string name="premium_trial">7日間のトライアル</string>
+    <string name="premium_benefits_title">プレミアム特典</string>
+
+    <string name="premium_benefits_list">
+        <li>カスタムプレイリスト</li>\n
+        <li>再生速度を制御する</li>\n
+        <li>開始/終了時間を設定する</li>\n
+        <li>スキップ/フォワード秒を設定します</li>\n
+        <li>ポッドキャスト検索の更新</li>\n
+        <li>継続的な開発をサポート</li>\n
+        <li>もっと…</li>
+    </string>
+
     <string name="notification_channel_sync_service">同期サービス</string>
 
     <string name="premium_playlist">プレミアムを購入してプレイリストのロックを解除する</string>

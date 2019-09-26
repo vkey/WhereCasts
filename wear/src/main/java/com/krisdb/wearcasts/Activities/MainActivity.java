@@ -188,11 +188,11 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                             }
 
                         }
-                    }
 
-                    final SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("premium", mPremiumInappUnlocked || mPremiumSubUnlocked);
-                    editor.apply();
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("premium", mPremiumInappUnlocked || mPremiumSubUnlocked);
+                        editor.apply();
+                    }
                 }
 
                 @Override

@@ -7,6 +7,19 @@
     <string name="page_title_import">進口</string>
     <string name="page_title_about">關於</string>
 
+    <string name="premium_trial">7天試用</string>
+    <string name="premium_benefits_title">保費利益</string>
+
+    <string name="premium_benefits_list">
+        <li>自定義播放列表</li>\n
+        <li>控製播放速度</li>\n
+        <li>設置開始/結束時間</li>\n
+        <li>設置跳過前進/後退秒</li>\n
+        <li>更新了播客搜索</li>\n
+        <li>支持正在進行的開發</li>\n
+        <li>更多…</li>
+    </string>
+
     <string name="notification_channel_sync_service">同步服務</string>
 
     <string name="premium_playlist">購買高級版以解鎖播放列表</string>

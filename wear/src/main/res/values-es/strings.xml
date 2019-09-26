@@ -51,7 +51,7 @@
     <string name="empty_podcast_list2">Desliza hacia la izquierda para listas de reproducción automática\nObtén más listas de reproducción en la aplicación del teléfono</string>
     <string name="text_playlists_add_empty">No se encontraron listas de reproducción\n\nAgrega listas de reproducción personalizadas en la aplicación del teléfono \ n (en la pestaña Premium)</string>
     <string name="text_playlists_pref_empty_title">No se han encontrado listas de reproducción personalizadas</string>
-    <string name="text_playlists_pref_empty_summary">Compra bajo la pestaña Premium en la aplicación de teléfono</string>
+    <string name="text_playlists_pref_empty_summary">Agregar debajo de la página Premium en la aplicación del teléfono</string>
 
     <string name="confirm_mark_finished">Marcar como terminado?</string>
     <string name="confirm_delete_download">¿Eliminar descarga?</string>

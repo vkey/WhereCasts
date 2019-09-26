@@ -73,7 +73,6 @@ import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.io.UTFDataFormatException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;

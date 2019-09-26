@@ -7,6 +7,19 @@
     <string name="page_title_import">Importar</string>
     <string name="page_title_about">Acerca de</string>
 
+    <string name="premium_trial">7 días de prueba</string>
+    <string name="premium_benefits_title">Beneficios Premium</string>
+
+    <string name="premium_benefits_list">
+        <li>Listas de reproducción personalizadas</li>\n
+        <li>Control de velocidad de reproducción</li>\n
+        <li>Establecer horas de inicio / finalización</li>\n
+        <li>Establecer saltos hacia adelante / atrás segundos</li>\n
+        <li>Búsqueda de podcast actualizada</li>\n
+        <li>Apoyar el desarrollo continuo</li>\n
+        <li>Más…</li>
+    </string>
+
     <string name="notification_channel_sync_service">Servicio de Sincronización</string>
 
     <string name="premium_playlist">Compra premium para desbloquear listas de reproducción</string>

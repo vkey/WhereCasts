@@ -7,6 +7,19 @@
     <string name="page_title_import">Einführen</string>
     <string name="page_title_about">Über</string>
 
+    <string name="premium_trial">7-tägige Testversion</string>
+    <string name="premium_benefits_title">Premium-Vorteile</string>
+
+    <string name="premium_benefits_list">
+        <li>Benutzerdefinierte Wiedergabelisten</li>\n
+        <li>Steuern Sie die Wiedergabegeschwindigkeit</li>\n
+        <li>Start- / Endzeit einstellen</li>\n
+        <li>Sekunden vor / zurück springen einstellen</li>\n
+        <li>Podcast-Suche aktualisiert</li>\n
+        <li>Unterstützen Sie die Weiterentwicklung</li>\n
+        <li>Mehr…</li>
+    </string>
+
     <string name="premium_playlist">Erwerben Sie eine Prämie, um Wiedergabelisten freizuschalten</string>
 
     <string name="notification_channel_sync_service">Synchronisierungsdienst</string>

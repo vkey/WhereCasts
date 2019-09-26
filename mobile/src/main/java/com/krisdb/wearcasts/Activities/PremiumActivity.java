@@ -222,8 +222,6 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         }
                     }
 
-                    Utilities.TogglePremiumOnWatch(mActivity, mPremiumInappUnlocked, false);
-
                     final Purchase.PurchasesResult purchasesResultSubs = mBillingClient.queryPurchases(BillingClient.SkuType.SUBS);
 
                     if (purchasesResultSubs.getResponseCode() == OK) {
@@ -236,7 +234,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         }
 
                         SetPremiumContent();
-                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumSubUnlocked, false);
+                        Utilities.TogglePremiumOnWatch(mActivity, mPremiumInappUnlocked || mPremiumSubUnlocked, false);
 
                         if (mPlaylistPurchasedCount > 0) {
                             mPlaylistsReadd.setVisibility(View.VISIBLE);
@@ -251,6 +249,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 sendPlaylistsToWatch(mPlaylistPurchasedCount);
+                                                CommonUtils.showToast(mActivity, getString(R.string.success));
                                             }
                                         });
 
@@ -423,6 +422,9 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             mPlaylistSkus.setEnabled(true);
             mPlaylistsButButton.setEnabled(true);
             findViewById(R.id.btn_playlist_premium).setVisibility(View.INVISIBLE);
+            findViewById(R.id.premium_trial).setVisibility(View.INVISIBLE);
+            findViewById(R.id.premium_benefits_title).setVisibility(View.INVISIBLE);
+            findViewById(R.id.premium_benefits_list).setVisibility(View.INVISIBLE);
         }
         else {
             mPlaylistSkus.setEnabled(false);
@@ -430,6 +432,9 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             findViewById(R.id.btn_playlist_premium).setVisibility(View.VISIBLE);
             findViewById(R.id.btn_upload_file).setEnabled(false);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_locked));
+            findViewById(R.id.premium_trial).setVisibility(View.VISIBLE);
+            findViewById(R.id.premium_benefits_title).setVisibility(View.VISIBLE);
+            findViewById(R.id.premium_benefits_list).setVisibility(View.VISIBLE);
         }
     }
 

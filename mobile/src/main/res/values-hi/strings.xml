@@ -7,6 +7,19 @@
     <string name="page_title_import">आयात</string>
     <string name="page_title_about">के बारे में</string>
 
+    <string name="premium_trial">7 दिन का ट्रायल</string>
+    <string name="premium_benefits_title">प्रीमियम लाभ</string>
+
+    <string name="premium_benefits_list">
+        <li>कस्टम प्लेलिस्ट</li>\n
+        <li>प्लेबैक की गति को नियंत्रित करें</li>\n
+        <li>प्रारंभ / समाप्ति समय सेट करें</li>\n
+        <li>स्किप आगे / पीछे सेकंड सेट करें</li>\n
+        <li>पॉडकास्ट खोज अपडेट किया गया</li>\n
+        <li>चल रहे विकास का समर्थन करें</li>\n
+        <li>अधिक…</li>
+    </string>
+
     <string name="notification_channel_sync_service">सेवा सिंक करें</string>
 
     <string name="premium_playlist">प्लेलिस्ट को अनलॉक करने के लिए प्रीमियम खरीदें</string>

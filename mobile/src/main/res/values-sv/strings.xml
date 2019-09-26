@@ -7,6 +7,19 @@
     <string name="page_title_import">Importera</string>
     <string name="page_title_about">Handla om</string>
 
+    <string name="premium_trial">7 dagars rättegång</string>
+    <string name="premium_benefits_title">Premiumfördelar</string>
+
+    <string name="premium_benefits_list">
+        <li>Anpassade spellistor</li>\n
+        <li>Kontrollera uppspelningshastigheten</li>\n
+        <li>Ställ in start- / sluttider</li>\n
+        <li>Ställ hopp framåt / bakåt sekunder</li>\n
+        <li>Uppdaterad podcast-sökning</li>\n
+        <li>Stödja pågående utveckling</li>\n
+        <li>Mer…</li>
+    </string>
+
     <string name="notification_channel_sync_service">Synkroniseringstjänst</string>
 
     <string name="premium_playlist">Köp premium för att låsa upp spellistor</string>
