@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -61,6 +62,16 @@ public class Processor {
                 if (latestEpisodeDate != null && (latestEpisodeDate.equals(episodeDate) || latestEpisodeDate.after(episodeDate)) || newEpisode.getMediaUrl() == null || episodeExists(mContext, newEpisode.getMediaUrl().toString()))
                     continue;
 
+                CommonUtils.writeToFile(mContext, newEpisode.getTitle());
+
+                if (newEpisode.getMediaUrl() != null)
+                    CommonUtils.writeToFile(mContext, newEpisode.getMediaUrl().toString());
+
+                if (newEpisode.getEpisodeUrl() != null)
+                    CommonUtils.writeToFile(mContext, newEpisode.getEpisodeUrl().toString());
+
+                CommonUtils.writeToFile(mContext, "Exists: " + episodeExists(mContext, newEpisode.getMediaUrl().toString()));
+
                 final ContentValues cv = new ContentValues();
                 cv.put("pid", newEpisode.getPodcastId());
                 cv.put("title", newEpisode.getTitle() != null ? newEpisode.getTitle() : "");
@@ -79,6 +90,7 @@ public class Processor {
 
                 final long episodeId = db.insert(cv);
                 newEpisode.setEpisodeId((int) episodeId);
+                CommonUtils.writeToFile(mContext, "EpisodeID: " + episodeId);
 
                 if (assignPlaylist)
                     db.addEpisodeToPlaylist(autoAssignPlaylistId, (int) episodeId);
@@ -89,11 +101,16 @@ public class Processor {
                     downloadCount++;
                 }
 
+
+                CommonUtils.writeToFile(mContext, "\n\n");
+
                 newEpisodesCount++;
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
+                CommonUtils.writeToFile(mContext, ex.getMessage());
+
             }
         }
         db.close();

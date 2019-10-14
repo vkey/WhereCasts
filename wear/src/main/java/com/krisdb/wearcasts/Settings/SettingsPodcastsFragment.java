@@ -173,14 +173,17 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mActivity, true)) {
 
             unregisterNetworkCallback();
-            CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
+
+            if (isAdded())
+                CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(final Network network) {
                     mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
 
-                    showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                    if (isAdded())
+                        showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
                     for (final PodcastItem episode : episodes)
                         Utilities.startDownload(mActivity, episode, false);
@@ -200,7 +203,8 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         } else {
-            showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+            if (isAdded())
+                showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
             for (final PodcastItem episode : episodes)
                 Utilities.startDownload(mActivity, episode, false);

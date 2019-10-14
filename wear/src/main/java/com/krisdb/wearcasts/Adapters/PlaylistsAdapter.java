@@ -419,10 +419,15 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
                         db.delete(mEpisodes.get(position).getEpisodeId());
+                        final ContentValues cv = new ContentValues();
+                        cv.put("position", 0);
+                        cv.put("finished", 1);
+                        db.update(cv, mEpisodes.get(position).getEpisodeId());
                     } else if (mPlaylistId > -1)
                         db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
-                    else if (mPlaylistId == mPlaylistLocal)
+                    else if (mPlaylistId == mPlaylistLocal) {
                         Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
+                    }
                     else {
                         SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
                         if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())

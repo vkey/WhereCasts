@@ -615,7 +615,9 @@ public class Utilities {
             final ContentValues cv = new ContentValues();
             cv.put("download", 0);
             cv.put("downloadid", 0);
+            cv.put("position", 0);
             db.update(cv, episode.getEpisodeId());
+            db.close();
             //SaveEpisodeValue(ctx, episode, "download", 0);
         }
 
