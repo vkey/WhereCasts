@@ -439,6 +439,7 @@ public class AsyncTasks {
 
             final Processor processor = new Processor(ctx);
             processor.downloadEpisodes = new ArrayList<>();
+
             if (mPodcastId > 0)
             {
                 final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
@@ -448,6 +449,7 @@ public class AsyncTasks {
             }
             else {
                 final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
                 for (final PodcastItem podcast : podcasts) {
                     if (mPreference != null)
@@ -457,8 +459,6 @@ public class AsyncTasks {
 
                     mNewEpisodes = processor.newEpisodesCount;
                     mDownloadCount = processor.downloadCount;
-
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
                     final int downloadsToDeleteNumber = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
 
@@ -489,6 +489,7 @@ public class AsyncTasks {
                         }
 
                     }
+                    SystemClock.sleep(500);
                 }
             }
 
@@ -568,11 +569,29 @@ public class AsyncTasks {
 
             final File directory = new File(directoryPath, ctx.getString(com.krisdb.wearcastslibrary.R.string.directory_episodes));
 
-            if (directory.listFiles() != null) {
-                for (final File file : directory.listFiles()) {
-                    if (file.getName().contains("-"))
-                        file.delete();
+            try {
+                final List<PodcastItem> episodesDownloaded = GetEpisodesWithDownloads(ctx);
+
+                if (directory.listFiles() != null) {
+                    for (final File file : directory.listFiles()) {
+                        if (file.getName().contains("-"))
+                            file.delete();
+                        else if (episodesDownloaded.size() > 0) {
+                            boolean exists = false;
+                            for (final PodcastItem episodeDownloaded : episodesDownloaded) {
+                                if (episodeDownloaded.getEpisodeId() == Integer.valueOf(file.getName().substring(0, file.getName().indexOf(".")))) {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+
+                            if (!exists)
+                                file.delete();
+                        }
+                    }
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             return null;
         }
