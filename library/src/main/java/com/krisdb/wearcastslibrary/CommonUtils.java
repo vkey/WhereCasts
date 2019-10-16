@@ -170,7 +170,11 @@ public class CommonUtils {
 
             final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fOut);
             //final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(Environment.getExternalStorageDirectory(), fileName)));
-            outputStreamWriter.append("\n").append(DateUtils.FormatDate(new Date(), "M/d/Y h:m:s a")).append(": (").append(data).append(")");
+            outputStreamWriter.append("\n");
+
+            if (!data.contains("\n"))
+                outputStreamWriter.append(DateUtils.FormatDate(new Date(), "M/d/Y h:m:s a")).append(": ").append(data);
+
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
@@ -379,8 +383,8 @@ public class CommonUtils {
     public static String CleanString(String str)
     {
         if (str == null) return "";
-
-        return String.valueOf(HtmlCompat.fromHtml(str, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        str = str.replaceAll("[ ':.–!&|{}_-]","");
+        return str;
     }
 
     public static SpannableString boldText(final String text)
@@ -394,8 +398,10 @@ public class CommonUtils {
     {
         if (str == null) return "";
         //str = str.replace(" ","");
-        str = str.replaceAll("[ ':.–!&|{}_-]","");
-        return str;
+        return HtmlCompat.fromHtml(str, HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
+
+        //str = str.replaceAll("[ ':.–!&|{}_-]","");
+        //turn str;
     }
 
     public static String CleanDescription(String str)
@@ -583,7 +589,7 @@ public class CommonUtils {
     }
 
     public static String GetThumbnailName(final ChannelItem channel) {
-        return CleanString(stripHTML(channel.getTitle())).concat(".png");
+        return CleanString(channel.getTitle()).concat(".png");
     }
 
    public static boolean isValidUrl(final String url) {
