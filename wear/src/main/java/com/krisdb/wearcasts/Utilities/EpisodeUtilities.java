@@ -394,6 +394,10 @@ public class EpisodeUtilities {
         return podcast;
     }
 
+    public static List<PodcastItem> GetEpisodesWithDownloads(final Context ctx) {
+        return GetEpisodesWithDownloads(ctx, -1, -1);
+    }
+
     public static List<PodcastItem> GetEpisodesWithDownloads(final Context ctx, final int podcastId) {
         return GetEpisodesWithDownloads(ctx, podcastId, -1);
     }
@@ -405,7 +409,9 @@ public class EpisodeUtilities {
         final SQLiteDatabase sdb = db.select();
         Cursor cursor;
 
-        if (count == -1)
+        if (podcastId == -1)
+            cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 ORDER BY [pubDate] DESC"), null);
+        else if (count == -1)
             cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [pid] = ? ORDER BY [pubDate] DESC"), new String[]{String.valueOf(podcastId)});
         else
             cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [pid] = ? ORDER BY [pubDate] DESC LIMIT -1 OFFSET ".concat(String.valueOf(count))), new String[]{String.valueOf(podcastId)});
