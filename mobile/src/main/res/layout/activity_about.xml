@@ -46,6 +46,17 @@
         />
 
     <TextView
+        android:id="@+id/about_reddit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:paddingTop="30dp"
+        android:autoLink="web"
+        android:text="www.reddit.com/r/wearcasts/"
+        />
+
+    <TextView
         android:id="@+id/about_privacy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
