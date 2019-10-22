@@ -69,7 +69,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
     private final MediaHandler mMediaHandler = new MediaHandler(this);
-    private int mPlaylistID, mPodcastID;
+    private int mPlaylistID, mPodcastID, mPositionNotProgressingCheck;
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
@@ -864,7 +864,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
-            if (position >= finishTime) {
+            if (position >= finishTime || (mPositionNotProgressingCheck > 0 && mPositionNotProgressingCheck == position)) {
                 mMediaHandler.removeCallbacksAndMessages(null);
                 completeMedia();
             }
@@ -876,6 +876,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 //initMediaSessionMetadata();
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
+
+            mPositionNotProgressingCheck = position;
         }
     };
 
