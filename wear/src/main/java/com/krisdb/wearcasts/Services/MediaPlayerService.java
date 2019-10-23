@@ -69,7 +69,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
     private final MediaHandler mMediaHandler = new MediaHandler(this);
-    private int mPlaylistID, mPodcastID, mPositionNotProgressingCheck;
+    private int mPlaylistID, mPodcastID, mPlaybackCount = 0, mPlaybackPosition = 0;
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
@@ -187,6 +187,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+
             if (position < mMediaPlayer.getDuration())
                 mMediaPlayer.seekTo(position);
         }
@@ -205,6 +206,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             super.onFastForward();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final int position = getCurrentPosition(mMediaPlayer) + (Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) * 1000);
+
             mMediaPlayer.seekTo(position);
         }
 
@@ -268,6 +270,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             db.update(cv, mEpisode.getEpisodeId());
             db.close();
         }
+
+        mPlaybackPosition = 0;
+        mPlaybackCount = 0;
 
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
@@ -333,6 +338,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), getCurrentPosition(mMediaPlayer));
                 editor.apply();
             }
+
+            mPlaybackPosition = 0;
+            mPlaybackCount = 0;
 
             mMediaPlayer.pause();
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
@@ -482,6 +490,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                         editor.apply();
                     }
 
+                    mPlaybackPosition = 0;
+                    mPlaybackCount = 0;
+
+                    mMediaHandler.removeCallbacksAndMessages(null);
                     mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
                     final Intent intentMediaCompleted = new Intent();
@@ -864,8 +876,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
-            if (position >= finishTime || (mPositionNotProgressingCheck > 0 && mPositionNotProgressingCheck == position)) {
+            if (position >= finishTime || (mPlaybackCount%7 == 0 && mPlaybackPosition > 0 && mPlaybackPosition == position)) {
+
                 mMediaHandler.removeCallbacksAndMessages(null);
+                mPlaybackPosition = 0;
+                mPlaybackCount = 0;
                 completeMedia();
             }
             else {
@@ -874,10 +889,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 intentMediaPosition.putExtra("position", position);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
                 //initMediaSessionMetadata();
+                mPlaybackCount++;
+                mPlaybackPosition = position;
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
-
-            mPositionNotProgressingCheck = position;
         }
     };
 
