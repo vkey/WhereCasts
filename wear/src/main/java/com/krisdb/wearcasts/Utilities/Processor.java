@@ -12,6 +12,7 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class Processor {
         final int autoAssignPlaylistId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
         final boolean assignPlaylist = autoAssignPlaylistId != autoAssignDefaultPlaylistId;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+        downloadEpisodes = new ArrayList<>();
 
         for (final PodcastItem newEpisode : newEpisodes)
         {
@@ -84,6 +86,7 @@ public class Processor {
 
                 if (newEpisode.getEpisodeUrl() != null)
                     cv.put("url", newEpisode.getEpisodeUrl().toString());
+
                 cv.put("dateAdded", DateUtils.GetDate());
                 cv.put("pubDate", newEpisode.getPubDate());
                 cv.put("duration", newEpisode.getDuration());
@@ -100,7 +103,6 @@ public class Processor {
                     SaveEpisodeValue(mContext, newEpisode, "download", 1); //so auto-download before doesn't re-download this episode
                     downloadCount++;
                 }
-
 
                 CommonUtils.writeToFile(mContext, "\n\n");
 

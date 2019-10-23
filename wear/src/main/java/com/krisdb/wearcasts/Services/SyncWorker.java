@@ -71,17 +71,19 @@ public class SyncWorker extends Worker {
         final Context ctx = mContext.get();
 
         final List<PodcastItem> podcasts = GetPodcasts(ctx);
-
-        final Processor processor = new Processor(ctx);
-        processor.downloadEpisodes = new ArrayList<>();
-
+        mDownloadEpisodes = new ArrayList<>();
         int newEpisodes = 0, downloadCount = 0;
 
         for (final PodcastItem podcast : podcasts) {
 
+            final Processor processor = new Processor(ctx);
             processor.processEpisodes(podcast);
+
             newEpisodes = processor.newEpisodesCount;
             downloadCount = processor.downloadCount;
+
+            if (processor.downloadEpisodes != null && processor.downloadEpisodes.size() > 0)
+                mDownloadEpisodes.addAll(processor.downloadEpisodes);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
@@ -145,9 +147,7 @@ public class SyncWorker extends Worker {
                 mPlayer.start();
             }
 
-            if (processor.downloadEpisodes.size() > 0) {
-
-                mDownloadEpisodes =  processor.downloadEpisodes;
+            if (mDownloadEpisodes.size() > 0) {
 
                 editor.putBoolean("from_job", true);
                 editor.apply();

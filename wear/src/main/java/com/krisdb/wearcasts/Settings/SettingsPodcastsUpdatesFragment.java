@@ -242,9 +242,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             if (!cbSound.isChecked()) {
                 findPreference("pref_updates_new_episodes_disable_start").setSummary("");
                 findPreference("pref_updates_new_episodes_disable_end").setSummary("");
-            }
-            else
-            {
+            } else {
                 findPreference("pref_updates_new_episodes_disable_start").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_start")).getEntry());
                 findPreference("pref_updates_new_episodes_disable_end").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_end")).getEntry());
             }
@@ -257,10 +255,9 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             findPreference("pref_updates_new_episodes_disable_end").setSummary(((ListPreference) findPreference("pref_updates_new_episodes_disable_end")).getEntry());
 
         if (key.equals("updatesEnabled") || key.equals("updateInterval") || key.equals("updateCharging")) {
-            if (((SwitchPreference)findPreference("updatesEnabled")).isChecked())
+            Utilities.CancelJob(mActivity.getApplicationContext());
+            if (((SwitchPreference) findPreference("updatesEnabled")).isChecked())
                 Utilities.StartJob(mActivity.getApplicationContext());
-            else
-                Utilities.CancelJob(mActivity.getApplicationContext());
         }
 
         if (key.equals("pref_download_sound_disable_start"))
