@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
 public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcastsAdapter.ViewHolder> {
@@ -158,7 +157,8 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        showToast(mContext, mContext.getString(R.string.alert_podcast_added));
+        Utilities.ShowConfirmationActivity(mContext);
+        //showToast(mContext, mContext.getString(R.string.alert_podcast_added));
         Utilities.vibrate(mContext);
         //CacheUtils.deletePodcastsCache(mContext);
     }

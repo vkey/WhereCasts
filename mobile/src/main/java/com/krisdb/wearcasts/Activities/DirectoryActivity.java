@@ -16,13 +16,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
 import com.krisdb.wearcasts.Fragments.PodcastListFragment;
 import com.krisdb.wearcasts.R;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DirectoryActivity extends AppCompatActivity {
-    private ViewPager mViewPager;
+    private ViewPager2 mViewPager;
     private static int mNumberOfPages = 0;
     private ProgressBar mProgressBar;
 
@@ -46,8 +48,6 @@ public class DirectoryActivity extends AppCompatActivity {
 
         mViewPager = findViewById(R.id.main_pager);
         mProgressBar = findViewById(R.id.main_progress_bar);
-
-        ((TabLayout) findViewById(R.id.podcasts_tabs)).setupWithViewPager(mViewPager);
 
         findViewById(R.id.main_progress_text).setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
@@ -66,11 +66,11 @@ public class DirectoryActivity extends AppCompatActivity {
     private void SetDirectory(final List<PodcastCategory> categories)
     {
         mNumberOfPages = categories.size();
-        final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        final MainPagerAdapter adapter = new MainPagerAdapter(this);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (prefs.getInt("id", 0) > 0) {
+       if (prefs.getInt("id", 0) > 0) {
             adapter.addFrag(PlayerFragment.newInstance(), getString(R.string.tab_play));
             mNumberOfPages = mNumberOfPages + 1;
         }
@@ -79,41 +79,42 @@ public class DirectoryActivity extends AppCompatActivity {
             adapter.addFrag(PodcastListFragment.newInstance(category.getPodcasts()), category.getName());
 
         mViewPager.setAdapter(adapter);
+
+        new TabLayoutMediator((TabLayout)findViewById(R.id.podcasts_tabs), mViewPager,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        if (prefs.getInt("id", 0) > 0)
+                            tab.setText(position == 0 ? getString(R.string.tab_play) : categories.get(position-1).getName());
+                        else
+                            tab.setText(categories.get(position).getName());
+                    }
+                }).attach();
     }
 
-    private class MainPagerAdapter extends FragmentPagerAdapter {
+    private class MainPagerAdapter extends FragmentStateAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        MainPagerAdapter(FragmentManager fm) {
-            super(fm);
+        MainPagerAdapter(FragmentActivity fa) {
+            super(fa);
         }
 
-        @Override
-        public Fragment getItem(int index) {
-            return mFragmentList.get(index);
-        }
-
-        void addFrag(Fragment fragment, String title) {
+         void addFrag(Fragment fragment, String title) {
             mFragmentList.add(fragment);
-
             mFragmentTitleList.add(title);
         }
 
+        @NonNull
         @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+        public Fragment createFragment(int position) {
+            return mFragmentList.get(position);
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mNumberOfPages;
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override

@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 
+import androidx.wear.activity.ConfirmationActivity;
+
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Databases.DatabaseHelper;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -41,7 +42,8 @@ public class EpisodeUtilities {
         db.update(cv, episode.getEpisodeId());
         db.close();
 
-        CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_played));
+        Utilities.ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, ctx.getString(R.string.alert_marked_played), true);
+        //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_played));
     }
 
     public static void markUnplayed(final Context ctx, final PodcastItem episode)
@@ -53,7 +55,8 @@ public class EpisodeUtilities {
         db.update(cv, episode.getEpisodeId());
         db.close();
 
-        CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_unplayed));
+        Utilities.ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, ctx.getString(R.string.alert_marked_unplayed), true);
+        //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_unplayed));
     }
 
     public static void SaveEpisodeValue(final Context ctx, final PodcastItem episode, final String field, long value) {

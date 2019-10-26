@@ -74,6 +74,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="androidx.wear.activity.ConfirmationActivity" />
+
         <activity android:name=".Activities.EpisodeListActivity" android:launchMode="singleTask" />
         <activity android:name=".Activities.EpisodeActivity" android:launchMode="singleTask" />
         <activity android:name=".Activities.SearchDirectoryActivity" />

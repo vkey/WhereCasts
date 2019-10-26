@@ -21,7 +21,14 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="invisible">
-
+            <!--
+            <com.krisdb.wearcasts.Views.CurvedClockView
+                android:id="@+id/podcast_episode_clock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                />
+             -->
             <android.widget.TextClock
                 android:id="@+id/podcast_episode_clock"
                 android:layout_width="wrap_content"
@@ -32,7 +39,6 @@
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
                 />
-
             <TextView
                 android:id="@+id/podcast_episode_title"
                 android:layout_width="match_parent"

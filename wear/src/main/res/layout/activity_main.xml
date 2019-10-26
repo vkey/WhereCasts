@@ -32,6 +32,14 @@
         android:visibility="gone"
         />
 
+    <!--
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/main_pager"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        />
+-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/main_pager_dots"
         android:layout_gravity="bottom"

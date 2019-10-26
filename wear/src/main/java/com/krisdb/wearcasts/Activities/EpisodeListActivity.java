@@ -91,6 +91,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private TimeOutHandler mTimeOutHandler;
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
     private List<PodcastItem> mEpisodes, mDownloadEpisodes;
+    private AlertDialog mPlaylistDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -627,6 +628,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 break;
             case R.id.menu_drawer_episode_list_add_playlist: //Add all to playlist
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episodes_add_playlist, null);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeListActivity.this);
+                builder.setView(playlistAddView);
 
                 final List<PlaylistItem> playlistItems = getPlaylists(mActivity);
                 final Spinner spinner = playlistAddView.findViewById(R.id.episodes_add_playlist_list);
@@ -668,7 +671,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                                 editor.apply();
                             }
 
-                            showToast(mActivity, mActivity.getString(R.string.alert_episodes_playlist_added, episodes.size(), playlist.getName()));
+                            Utilities.ShowConfirmationActivity(mActivity, mActivity.getString(R.string.alert_episodes_playlist_added, episodes.size(), playlist.getName()));
+                            mPlaylistDialog.dismiss();
+
+                            //showToast(mActivity, mActivity.getString(R.string.alert_episodes_playlist_added, episodes.size(), playlist.getName()));
                         }
                     }
 
@@ -676,9 +682,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 });
 
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeListActivity.this);
-                    builder.setView(playlistAddView);
-                    builder.create().show();
+                    mPlaylistDialog = builder.show();
                 }
                 break;
             case R.id.menu_drawer_episode_list_selected_add_playlist: //Add selected to playlist

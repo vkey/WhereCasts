@@ -22,10 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.android.billingclient.api.BillingClient;
@@ -70,6 +72,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private static WeakReference<MainActivity> mActivityRef;
+    //private static ViewPager2 mViewPager2;
     private static ViewPager mViewPager;
     private BillingClient mBillingClient;
 
@@ -97,6 +100,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
         }
 
+        //mViewPager2 = findViewById(R.id.main_pager);
         mViewPager = findViewById(R.id.main_pager);
         CommonUtils.cancelNotification(this, 102);
 
@@ -341,8 +345,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     mNavDrawer.get().getController().peekDrawer();
             }
 
-            if (visits > 40 && !prefs.getBoolean("rate_app_reminded", false))
-            {
+            if (visits > 40 && !prefs.getBoolean("rate_app_reminded", false)) {
                 new AsyncTasks.WatchConnected(ctx,
                         new Interfaces.BooleanResponse() {
                             @Override
@@ -354,6 +357,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
+
+                                            Utilities.ShowOpenOnPhoneActivity(ctx);
+
                                             final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
                                             CommonUtils.DeviceSync(ctx, dataMap);
                                             dialog.dismiss();
@@ -367,13 +373,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                                             dialog.dismiss();
                                         }
                                     }).show();
+
+                                    final SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putBoolean("rate_app_reminded", true);
+                                    editor.apply();
                                 }
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("rate_app_reminded", true);
-                editor.apply();
             }
 
             if (visits > 20 && prefs.getBoolean("updatesEnabled", true) && prefs.getBoolean("updatesRefactor", true)) {
@@ -390,7 +396,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            mViewPager = ctx.findViewById(R.id.main_pager);
             mViewPager.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
             mViewPager.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -401,12 +406,24 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 public void onPageSelected(int position) {
                     if (mNavDrawer != null && mNavDrawer.get() != null)
                         mNavDrawer.get().getController().closeDrawer();
-                    //if (prefs.getBoolean("pref_paging_indicator", false) == false)
-                    //ctx.findViewById(R.id.main_pager_dots).setVisibility(View.VISIBLE);
                 }
             });
-
             mViewPager.setVisibility(View.VISIBLE);
+
+
+            /*
+            mViewPager2 = ctx.findViewById(R.id.main_pager);
+            mViewPager2.setAdapter(new FragmentPagerAdapter2(ctx));
+            mViewPager2.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback()
+            {
+                public void onPageScrollStateChanged(int state) {
+                    if (mNavDrawer != null && mNavDrawer.get() != null)
+                        mNavDrawer.get().getController().closeDrawer();
+                }
+            });
+            mViewPager2.setVisibility(View.VISIBLE);
+            */
 
             /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
@@ -428,6 +445,52 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
         }
     }
+
+    private static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        FragmentPagerAdapter(final FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(final int index) {
+            return (index == 0) ? PodcastsListFragment.newInstance() : PlaylistsListFragment.newInstance(mPlayListIds.get(index));
+        }
+
+        @Override
+        public int getCount() {
+            if (mRefresh)
+            {
+                mRefresh = false;
+                notifyDataSetChanged();
+            }
+            return mNumberOfPages;
+        }
+    }
+
+    private static class FragmentPagerAdapter2 extends FragmentStateAdapter {
+
+        FragmentPagerAdapter2(final FragmentActivity fa) {
+            super(fa);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return (position == 0) ? PodcastsListFragment.newInstance() : PlaylistsListFragment.newInstance(mPlayListIds.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mRefresh)
+            {
+                mRefresh = false;
+                notifyDataSetChanged();
+            }
+            return mNumberOfPages;
+        }
+    }
+
 
     private BroadcastReceiver mFragmentsReceiver = new BroadcastReceiver() {
         @Override
@@ -463,28 +526,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onPause();
     }
-
-    private static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
-
-        FragmentPagerAdapter(final FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(final int index) {
-            return (index == 0) ? PodcastsListFragment.newInstance() : PlaylistsListFragment.newInstance(mPlayListIds.get(index));
-        }
-
-        @Override
-        public int getCount() {
-            if (mRefresh)
-            {
-                mRefresh = false;
-                notifyDataSetChanged();
-            }
-            return mNumberOfPages;
-        }
-   }
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String permissions[], @NonNull final int[] grantResults) {
@@ -523,14 +564,16 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
                 setMainMenu();
                 Utilities.StartSleepTimerJob(ctx);
-                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
                 editor.apply();
                 setMainMenu();
                 Utilities.CancelSleepTimerJob(ctx);
-                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_stopped));
+                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
                 handleNetwork();
@@ -572,6 +615,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                     new Interfaces.BackgroundSyncResponse() {
                         @Override
                         public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
+                            //mViewPager2.setAdapter(new FragmentPagerAdapter2(mActivityRef.get()));
                             mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }

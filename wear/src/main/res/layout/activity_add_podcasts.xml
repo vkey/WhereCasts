@@ -44,6 +44,14 @@
             android:layout_width="match_parent"
             android:visibility="gone"
             />
+        <!--
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/podcasts_add_pager"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            /
+            -->
     </RelativeLayout>
 
     <androidx.wear.widget.drawer.WearableNavigationDrawerView

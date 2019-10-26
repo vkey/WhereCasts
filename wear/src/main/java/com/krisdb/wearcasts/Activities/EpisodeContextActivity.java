@@ -12,12 +12,12 @@ import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.Utilities;
 
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodeContextActivity extends BaseFragmentActivity {
 
@@ -62,7 +62,8 @@ public class EpisodeContextActivity extends BaseFragmentActivity {
                     db.addEpisodesToPlaylist(playlist.getID(), episodeIds);
                     db.close();
 
-                    showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+                    Utilities.ShowConfirmationActivity(mActivity,  mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+                    //showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
                     finish();
                 }
             }

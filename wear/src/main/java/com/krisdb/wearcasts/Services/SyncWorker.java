@@ -79,8 +79,8 @@ public class SyncWorker extends Worker {
             final Processor processor = new Processor(ctx);
             processor.processEpisodes(podcast);
 
-            newEpisodes = processor.newEpisodesCount;
-            downloadCount = processor.downloadCount;
+            newEpisodes = newEpisodes + processor.newEpisodesCount;
+            downloadCount = downloadCount + processor.downloadCount;
 
             if (processor.downloadEpisodes != null && processor.downloadEpisodes.size() > 0)
                 mDownloadEpisodes.addAll(processor.downloadEpisodes);

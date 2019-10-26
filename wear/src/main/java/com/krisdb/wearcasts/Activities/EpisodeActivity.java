@@ -88,7 +88,6 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetBackgroundLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener, WearableNavigationDrawerView.OnItemSelectedListener {
@@ -307,7 +306,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             }
 
         } catch (Exception ex) {
-            CommonUtils.showToast(this, getString(R.string.general_error));
+            Utilities.ShowFailureActivity(this, getString(R.string.general_error));
+            //CommonUtils.showToast(this, getString(R.string.general_error));
             ex.printStackTrace();
         }
     }
@@ -1032,7 +1032,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
                 message = message.concat("\n(error code: ".concat(String.valueOf(errorCode).concat(")")));
 
-                showToast(mActivity, message);
+                Utilities.ShowFailureActivity(mActivity, message);
+
+                //showToast(mActivity, message);
 
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
@@ -1116,14 +1118,16 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 editor.apply();
                 setMainMenu();
                 Utilities.StartSleepTimerJob(ctx);
-                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
                 editor.apply();
                 setMainMenu();
                 Utilities.CancelSleepTimerJob(ctx);
-                CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_stopped));
+                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
                 if (!CommonUtils.isNetworkAvailable(this))
@@ -1320,7 +1324,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             db.addEpisodeToPlaylist(playlist.getID(), mEpisode.getEpisodeId());
                             db.close();
 
-                            showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+                            Utilities.ShowConfirmationActivity(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
+
+                            //showToast(mActivity, mActivity.getString(R.string.alert_episode_playlist_added, playlist.getName()));
                             mPlaylistDialog.dismiss();
                         }
                     }

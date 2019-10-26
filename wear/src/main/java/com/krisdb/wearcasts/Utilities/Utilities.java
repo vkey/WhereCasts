@@ -22,12 +22,14 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.wear.activity.ConfirmationActivity;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
@@ -53,6 +55,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlaylist;
@@ -123,7 +126,7 @@ public class Utilities {
         final Bundle bundle = new Bundle();
         bundle.putBoolean("new_episodes", true);
         notificationIntent.putExtras(bundle);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         final PendingIntent intent = PendingIntent.getActivity(ctx, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -368,6 +371,36 @@ public class Utilities {
     public static boolean sleepTimerEnabled(final Context ctx)
     {
         return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0")) > 0;
+    }
+
+    public static void ShowFailureActivity(final Context ctx, final String message) {
+        ShowConfirmationActivity(ctx, ConfirmationActivity.FAILURE_ANIMATION, message, false);
+    }
+
+    public static void ShowOpenOnPhoneActivity(final Context ctx) {
+        ShowConfirmationActivity(ctx, ConfirmationActivity.OPEN_ON_PHONE_ANIMATION, null, false);
+    }
+
+    public static void ShowConfirmationActivity(final Context ctx) {
+        ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, null, false);
+    }
+
+    public static void ShowConfirmationActivity(final Context ctx, final String message) {
+        ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, message, false);
+    }
+
+    public static void ShowConfirmationActivity(final Context ctx, int animation, final String message, final boolean newTask)
+    {
+        final Intent intentConfirmation = new Intent(ctx, ConfirmationActivity.class);
+
+        if (newTask)
+            intentConfirmation.setFlags(FLAG_ACTIVITY_NEW_TASK);
+
+        intentConfirmation.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, animation);
+        if (message != null)
+            intentConfirmation.putExtra(ConfirmationActivity.EXTRA_MESSAGE, message);
+
+        ctx.startActivity(intentConfirmation);
     }
 
     public static void StartSleepTimerJob(final Context ctx) {

@@ -11,10 +11,13 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddPodcastsActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener {
+    //private ViewPager2 mViewPager;
     private ViewPager mViewPager;
     private static int mNumberOfPages;
     private Context mContext;
@@ -83,6 +87,15 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
             }
         });
 
+        /*
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback()
+        {
+            public void onPageScrollStateChanged(int state) {
+                mNavDrawer.getController().closeDrawer();
+            }
+        });
+         */
+
         if (!CommonUtils.isNetworkAvailable(mContext) && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
             alert.setMessage(getString(R.string.alert_episode_network_notfound));
@@ -117,12 +130,15 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
 
                         if (categories.size() > 0) {
                             mNumberOfPages = categories.size();
+
+                            //final AddPodcastsPagerAdapter2 adapter = new AddPodcastsPagerAdapter2(mActivityRef.get());
                             final AddPodcastsPagerAdapter adapter = new AddPodcastsPagerAdapter(getSupportFragmentManager());
 
                             for (final PodcastCategory category : categories)
                                 adapter.addFrag(AddPodcastListFragment.newInstance(category.getPodcasts()), category.getName());
 
                             mViewPager.setAdapter(adapter);
+
                             mViewPager.setVisibility(View.VISIBLE);
                             mProgressBar.setVisibility(View.GONE);
                             mProgressBarText.setVisibility(View.GONE);
@@ -139,6 +155,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == WIFI_RESULT_CODE)
                 SetDirectory();
@@ -214,6 +231,31 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
 
         @Override
         public int getCount() {
+            return mNumberOfPages;
+        }
+    }
+
+    private class AddPodcastsPagerAdapter2 extends FragmentStateAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        AddPodcastsPagerAdapter2(FragmentActivity fa) {
+            super(fa);
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
             return mNumberOfPages;
         }
     }
