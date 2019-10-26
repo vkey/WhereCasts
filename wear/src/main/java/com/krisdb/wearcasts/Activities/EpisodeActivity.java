@@ -1267,7 +1267,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
                 break;
             case R.id.menu_drawer_episode_open_wifi:
-                startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.menu_drawer_episode_open_bluetooth:
                 startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
