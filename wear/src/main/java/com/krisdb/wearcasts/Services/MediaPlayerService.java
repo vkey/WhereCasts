@@ -877,7 +877,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
             if (position >= finishTime || (mPlaybackCount%10 == 0 && mPlaybackPosition > 0 && mPlaybackPosition == position)) {
-
                 mMediaHandler.removeCallbacksAndMessages(null);
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;

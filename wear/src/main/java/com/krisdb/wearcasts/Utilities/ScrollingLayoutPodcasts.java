@@ -7,15 +7,24 @@ import androidx.wear.widget.WearableLinearLayoutManager;
 
 public class ScrollingLayoutPodcasts extends WearableLinearLayoutManager.LayoutCallback {
 
+    private static final float MAX_ICON_PROGRESS = 0.65f;
+
+    private float progressToCenter;
+
     @Override
     public void onLayoutFinished(View child, RecyclerView parent) {
 
-        float centerOffset = ((float) child.getHeight() / 2.0f) / (float) parent.getHeight();
+        // Figure out % progress from top to bottom
+        float centerOffset = ((float) child.getHeight() / 14.0f) / (float) parent.getHeight();
         float yRelativeToCenterOffset = (child.getY() / parent.getHeight()) + centerOffset;
 
-        float progresstoCenter = (float) Math.sin(yRelativeToCenterOffset * Math.PI);
+        // Normalize for center
+        progressToCenter = Math.abs(0.55f - yRelativeToCenterOffset);
+        // Adjust to the maximum scale
+        progressToCenter = Math.min(progressToCenter, MAX_ICON_PROGRESS);
 
-        child.setScaleX(progresstoCenter);
-        child.setScaleY(progresstoCenter);
+        child.setScaleX(1 - progressToCenter);
+        child.setScaleY(1 - progressToCenter);
     }
+
 }
