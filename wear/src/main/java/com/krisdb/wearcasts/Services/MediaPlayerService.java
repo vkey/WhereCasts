@@ -927,8 +927,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                             intentMediaCompleted.setAction("media_action");
                             intentMediaCompleted.putExtra("media_completed", true);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
-                            //SystemClock.sleep(500);
-                            playlistSkip(Enums.SkipDirection.NEXT, episodes);
+                            if (episodes != null && episodes.size() > 0)
+                                playlistSkip(Enums.SkipDirection.NEXT, episodes);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
