@@ -53,7 +53,7 @@
         android:textSize="14sp"
         android:paddingTop="30dp"
         android:autoLink="web"
-        android:text="www.reddit.com/r/wearcasts/"
+        android:text="www.reddit.com/r/wearcasts"
         />
 
     <TextView
