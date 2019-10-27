@@ -102,7 +102,11 @@ public class CommonUtils {
     }
 
     public static void showSnackbar(final View view, final String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        showSnackbar(view, message, Snackbar.LENGTH_LONG);
+    }
+
+    public static void showSnackbar(final View view, final String message, final int length) {
+        Snackbar.make(view, message, length).show();
     }
 
     public static void cancelNotification(final Context ctx, final int id)
