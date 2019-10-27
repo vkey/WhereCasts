@@ -25,11 +25,11 @@
 				 "thumbnail": "https://content.production.cdn.art19.com/images/58/a1/cf/f4/58a1cff4-2127-476f-a386-eb043b863a7a/577d912b5d1f36c085da75e9b1590c392669d508757552874e76c4d4d1fe8d0143ed8b003d90b5a6e8eb5ef72763a9f889c5ca7818e8d5dc4740ffab7e19d414.jpeg"
 				},
 				{
-				 "name": "The Habitat",
-				 "description": "The true story of six volunteers picked to live on a fake planet.",
-				 "rssurl": "http://feeds.gimletmedia.com/thehabitat",
-				 "siteurl": "https://www.gimletmedia.com/the-habitat",
-				 "thumbnail": "http://static.megaphone.fm/podcasts/806b466c-ef0c-11e6-b531-afa5d3e8b9e3/image/uploads_2F1522339695064-fiy1a2pf3tb-64aa58ac9b5bcdcf9e3145121e2a85eb_2FTheHabitat-final-cover.png"
+				 "name": "The Next Big Idea",
+				 "description": "THE NEXT BIG IDEA brings you the most groundbreaking ideas that have the power to change the way you live, work, and think.",
+				 "rssurl": "https://rss.art19.com/the-next-big-idea",
+				 "siteurl": "https://wondery.com/shows/the-next-big-idea/",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/60/46/f3/69/6046f369-1ada-475d-b16d-ab12b683043b/45a7a65f71d537d7a72fb15bbb2b1b8e63cbb42208af85fc561f05e19139125fec16859594112748078f84b27c12a9dd66531929e96ac25a7bae1048cce37b5b.jpeg"
 				},
 				{
 				 "name": "Stuff You Should Know",
@@ -39,6 +39,13 @@
 				 "thumbnail": "http://static.megaphone.fm/podcasts/1e705dd4-2de6-11e8-b55d-9ba6ddb3f75e/image/uploads_2F1521732699052-l46bxmk0qkc-071bfd4afd80223fcb2b944c07c0f97e_2Fsysk-audio-1600.jpg"
 				 },
 				{
+				 "name": "Dennis Miller Option",
+				 "description": "Join Emmy Award-winning comedian Dennis Miller, his A-list friends, and his \"Guy Friday\" Christian Bladt each week for their uncensored take on current events, politics, pop culture, and anything else on their minds.",
+				 "rssurl": "https://feeds.megaphone.fm/WWO6802077998",
+				 "siteurl": "http://westwoodonepodcasts.com/pods/the-dennis-miller-option/",
+				 "thumbnail": "https://megaphone-prod.s3.amazonaws.com/podcasts/10efff48-cf25-11e9-93e7-43e08c8dd926/image/image.jpg"
+				 },
+				 {
 				 "name": "Radiolab",
 				 "description": "Radiolab is a show about curiosity. Where sound illuminates ideas, and the boundaries blur between science, philosophy, and human experience.",
 				 "rssurl": "http://feeds.wnyc.org/radiolab?format=xml",
@@ -60,11 +67,11 @@
 				 "thumbnail": "https://files.stownpodcast.org/img/s-town-itunes.jpg"				 
 				},
 				{
-				 "name": "Serial",
-				 "description": "Serial is a podcast from the creators of This American Life, hosted by Sarah Koenig. Serial unfolds one story - a true story - over the course of a whole season.",
-				 "rssurl": "http://feeds.serialpodcast.org/serialpodcast",
-				 "siteurl": "https://serialpodcast.org/",
-				 "thumbnail": "https://serialpodcast.org/sites/all/modules/custom/serial/img/serial-itunes-logo.png"				 
+				 "name": "Man in the Window",
+				 "description": "Paige St. John, a Pulitzer Prize winning investigative reporter has uncovered never before revealed details about the man who would eventually become one of California's most deadly serial killers.",
+				 "rssurl": "https://rss.art19.com/man-in-the-window",
+				 "siteurl": "https://wondery.com/shows/man-in-the-window/",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/36/7d/69/27/367d6927-ff27-4a36-8140-c1a1af61886f/20646864b49d4c9b5e14a615ae7430ce3b71bbeca8039d12ecb0f95b6116d99197c864cd6071451713b7df9b66abae6cb788a63162846f88331aa6a5b194f844.jpeg"				 
 				},
 				{
 				 "name": "Dan Carlin's Hardcore History",
@@ -102,11 +109,11 @@
 				 "thumbnail": "https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=1400"				 
 				},
 				{
-				 "name": "Crimetown",
-				 "description": "A network of high-quality, narrative podcasts. It’s irresistible audio in your pocket.",
-				 "rssurl": "http://feeds.gimletmedia.com/crimetownshow?format=xml",
-				 "siteurl": "https://gimletmedia.com/crimetown/",
-				 "thumbnail": "http://static.megaphone.fm/podcasts/faf93c7c-4dcc-11e6-ba15-9b8a8c61d0b5/image/uploads_2F1517245711404-8olcslkt306-2e354ce8711fcc2e1d3f7e9fd4eb802c_2F20171116_Crimetown-ShowCover.png"				 
+				 "name": "The Shrink Next Door",
+				 "description": "The Shrink Next Door is a story about power, control and turning to the wrong person for help for three decades.",
+				 "rssurl": "https://rss.art19.com/the-shrink-next-door",
+				 "siteurl": "https://wondery.com/shows/shrink-next-door/",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/18/19/68/54/18196854-5031-4bd6-bfb2-ae53cac71d9c/5d5f93df14c1ceaa4f6a811d37619fdb256e8dbd077e51b44f64c2f692f0c53ca154679d5597c2cbf090f67e76b848b4df8226af663f4bb42a1ca881b0db9653.jpeg"
 				}			
 			]
 		},
@@ -210,19 +217,26 @@
 				 "thumbnail": "http://files.tested.com/static/adam_podcast_itunes_logo.jpg"				 
 				},
 				{
-				 "name": "Android Snacks",
-				 "description": "The TL;DR of last weeks Android developer news",
-				 "rssurl": "https://rss.simplecast.com/podcasts/3213/rss",
-				 "siteurl": "http://androidsnacks.com/",
-				 "thumbnail": "https://media.simplecast.com/podcast/image/3213/1521704645-artwork.jpg"				 
+				 "name": "Science Rules! with Bill Nye",
+				 "description": "Bill Nye is on a mission to change the world— one phone call at a time. He’ll tackle your curliest questions on just about anything in the universe.",
+				 "rssurl": "https://rss.art19.com/science-rules-with-bill-nye",
+				 "siteurl": "https://www.stitcher.com/podcast/stitcher/science-rules-with-bill-nye",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/eb/bc/3b/d6/ebbc3bd6-3bf5-491a-8962-2aed7fe5a684/5ee5564adf3b635d8c079a6b08a33e8e807ef4e5b26a45c3eee1691ee85d28062da380cfc6b02840935292138bdee7281d98734578fae5d3fa92425de5c5590a.jpeg"				 
 				},
 				{
 				 "name": "Android Central",
 				 "description": "The premiere source for weekly news, reviews, interviews, opinions and an all-around good time, brought to you by the fine folks here at Android Central.",
 				 "rssurl": "http://feeds.feedburner.com/AndroidCentralPodcast",
 				 "siteurl": "https://www.androidcentral.com/podcast",
-				 "thumbnail": "http://www.mobilenations.com/broadcasting/podcast_android_central_1400.jpg"				 
+				 "thumbnail": "http://static.libsyn.com/p/assets/a/a/e/4/aae42001c117c2d2/androidcentral446.jpg"
 				},
+				{
+				 "name": "The Engadget Podcast",
+				 "description": "A weekly news show where your favorite Engadget editors tear themselves away from their crippling technology addiction, to discuss our collective crippling technology addiction.",
+				 "rssurl": "http://feeds.soundcloud.com/users/soundcloud:users:245220958/sounds.rss",
+				 "siteurl": "https://www.engadget.com/2019/08/01/engadget-podcasts/",
+				 "thumbnail": "http://i1.sndcdn.com/avatars-000251455250-oty9cf-original.jpg"				 
+				},		
 				{
 				 "name": "Accidental Tech Podcast",
 				 "description": "Three nerds discussing tech, Apple, programming, and loosely related matters.",
@@ -231,7 +245,7 @@
 				 "thumbnail": "http://static1.squarespace.com/static/513abd71e4b0fe58c655c105/t/52c45a37e4b0a77a5034aa84/1388599866232/1500w/Artwork.jpg"				 
 				},
 				{
-				 "name": "MacCast ",
+				 "name": "MacCast",
 				 "description": "A podcast for Mac geeks by Mac geeks",
 				 "rssurl": "http://feeds.feedburner.com/maccast?format=xml",
 				 "siteurl": "http://www.maccast.com/",
@@ -242,7 +256,7 @@
 				 "description": "The editors of PC Perspective discuss the latest in-house product reviews and news from around the world that pertains to technology and PC hardware.",
 				 "rssurl": "https://www.pcper.com/rss/podcasts.rss",
 				 "siteurl": "https://www.pcper.com/podcast",
-				 "thumbnail": "http://www.pcper.com/images/podcast-logo-600x600.png"				 
+				 "thumbnail": "https://pcper.com/wp-content/uploads/2019/05/podcast-logo-3000x3000.jpg"				 
 				},
 				{
 				 "name": "The Tech Guy",
@@ -305,26 +319,19 @@
 				 "siteurl": "http://www.ign.com/",
 				 "thumbnail": "http://static.libsyn.com/p/assets/6/7/a/c/67acaa03a568e776/podcast_ign_game_2010.jpg"
 				 },
-				{
-				 "name": "Into the Nexus",
-				 "description": "A Heroes of the Storm podcast",
-				 "rssurl": "http://feeds.feedburner.com/itncast?format=xml",
-				 "siteurl": "http://amove.tv/itn/",
-				 "thumbnail": "http://thestarcast.com/shows/itn/art/itn-itunes2.jpg"
-				 },
-				{
-				 "name": "The Patch",
+			{
+				 "name": "Rooster Teeth Podcast",
 				 "description": "Listen to the Rooster Teeth crew talk about all aspects of the gaming industry as both fans and as people who have worked in the game industry for over ten years.",
-				 "rssurl": "http://theknow.roosterteeth.com/show/the-patch/feed/mp3",
-				 "siteurl": "http://theknow.roosterteeth.com/show/the-patch",
-				 "thumbnail": "https://s3.amazonaws.com/rtv3.image.cdn.roosterteeth.com/store/007ccd73-a7e6-4ff1-bac2-8ad76c3c0e43.jpg/original/ThePatchSquare.jpg"
+				 "rssurl": "http://rtpodcast.libsyn.com/rss",
+				 "siteurl": "https://roosterteeth.com/series?order=desc",
+				 "thumbnail": "http://static.libsyn.com/p/assets/a/1/2/5/a125cd98651cd15f/RT-Logo_FullMark_V_Black1400.png"
 				 },
 				{
 				 "name": "Game Informer",
 				 "description": "Game Informer's staff break down the week's biggest releases",
 				 "rssurl": "http://feedpress.me/gameinformershow",
 				 "siteurl": "http://www.gameinformer.com/gishow",
-				 "thumbnail": "view-source:http://static.feedpress.it/logo/gameinformershow-5939770d917ae.jpg"
+				 "thumbnail": "http://static.feedpress.it/logo/gameinformershow-5939770d917ae.jpg"
 				 },
 				{
 				 "name": "Game Scoop",
@@ -339,7 +346,7 @@
 				 "rssurl": "http://feeds.feedburner.com/NintendoNowBlogspotPodcast",
 				 "siteurl": "https://www.gonintendo.com/podcast",
 				 "thumbnail": "http://gonintendo.com/images/podcast/gonintendo.png"
-				 }
+				 }	 
 			]
 		},
 		{
@@ -412,7 +419,7 @@
 				 "rssurl": "http://feeds.feedburner.com/KevinPollaksChatShow-Audio",
 				 "siteurl": "http://www.earwolf.com/show/kevin-pollaks-chat-show/",
 				 "thumbnail": "https://content.production.cdn.art19.com/images/f5/4e/2d/91/f54e2d91-29a7-4b1c-a45d-f7d0e05ab6b3/055cfa62d72411cda59cfa7b6b90b9ab97d63d5fbb2a060b5c817597f02929adef57f40613e002b1a7fc68b2e3cb044782df1c33593045813bd10f2dd7174812.jpeg"
-				 },
+				 },	 
 				{
 				 "name": "Real Time with Bill Maher",
 				 "description": "Download and watch full episodes of Real Time with Bill Maher including his New Rules and Overtime segments with his guest panelists.",
@@ -435,25 +442,25 @@
 				 "thumbnail": "https://content.production.cdn.art19.com/images/0d/a9/d9/3b/0da9d93b-25fe-4041-8169-e71e6cb987bd/77c21237a54fd0bccb1fd7a0816f9289441111f13f6644713f46db8442a41a3a585209d8725b67bd7da4da8fd1c5d2b50e6c206d9d80cc4c6e04e9cf187c2802.jpeg"
 				 },
 				{
-				 "name": "Dope Queens",
-				 "description": "Join the 2 Dope Queens, along with their favorite comedians, for stories about sex, romance, race, hair journeys, living in New York, and Billy Joel.",
-				 "rssurl": "http://feeds.wnyc.org/2DopeQueens?format=xml",
-				 "siteurl": "http://www.wnyc.org/shows/dopequeens",
-				 "thumbnail": "https://media2.wnyc.org/i/1400/1400/l/80/1/2DopeQueens_WNYCStudios_1400.png"
+				 "name": "Gilbert Gottfried's Amazing Colossal Podcast",
+				 "description": "Comedian and actor Gilbert Gottfried talks with the show business legends, icons and behind-the-scenes talents who shaped his childhood and influenced his comedy.",
+				 "rssurl": "https://rss.art19.com/gilbert-gottfried",
+				 "siteurl": "https://www.earwolf.com/show/gilbert-gottfried/",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/31/29/12/7b/3129127b-005b-4661-bf9d-5754058ff6db/27b772fa79fe597ecb3de9214e7c3dddcd6016eb6ed8d10651a30b3f7b60d7fb5d72ed05bf20c60d379c1117e7384cea2fcb5c03c89ad2fb85a8b6f65546de9b.jpeg"
 				 },
 				{
-				 "name": "Monday Morning Podcast",
-				 "description": "Bill Burr rants about relationship advice, sports and the Illuminati.",
-				 "rssurl": "http://billburr.com/feed/",
-				 "siteurl": "http://billburr.com/podcast-2/",
-				 "thumbnail": ""
+				 "name": "Life is Short",
+				 "description": "Justin Long gets personal with all kinds of people, from actors to musicians to deep thinkers who fascinate him.",
+				 "rssurl": "https://rss.art19.com/life-is-short-with-justin-long",
+				 "siteurl": "https://wondery.com/shows/justin-long/",
+				 "thumbnail": "https://content.production.cdn.art19.com/images/1f/8d/42/6a/1f8d426a-c286-4cc8-bfc6-a27ed8dd37d7/875764208041c9d8ea6dbbcadb1d28832a328e3a8286e1fb5b6a34844a482381bbea47b1cbf5e445cd564bf51894e4ad76ce688bbe91cfdb2ef41e6d50688912.jpeg"
 				 },
 				{
 				 "name": "Anna Faris Is Unqualified!",
 				 "description": "Not-so-great relationship advice from completely unqualified Hollywood types.",
-				 "rssurl": "http://www.unqualified.com/feed/",
+				 "rssurl": "https://feeds.simplecast.com/xBU5Ko4x",
 				 "siteurl": "http://www.unqualified.com/",
-				 "thumbnail": "http://www.unqualified.com/wp-content/uploads/2017/11/cropped-Unqualified-Site-Icon-2-32x32.jpg"
+				 "thumbnail": "https://cdn.simplecast.com/images/fe507b38-c2ae-42db-9f0d-15e6c50ad91f/c3403269-18e1-4396-827e-6186369fbfb3/unqualified-lichtenstein-apple-podcast.jpg?aid=rss_feed"
 				 }
 			]
 		},
