@@ -111,7 +111,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
                     }
                 }
                 else
-                    CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
+                    CommonUtils.showSnackbar(holder.sendEpisode, mContext.getString(R.string.button_text_no_device));
             }
         });
 

@@ -3,7 +3,7 @@
     <integer name="billing_apk_version">3</integer>
     <integer name="podcast_art_download_width">300</integer>
     <integer name="search_results_day_limit">-120</integer>
-    <integer name="directory_resync_amount">20</integer>
+    <integer name="directory_resync_amount">50</integer>
     <integer name="directory_radio_resync_amount">20</integer>
 
     <integer name="playlist_playerfm">-7</integer>

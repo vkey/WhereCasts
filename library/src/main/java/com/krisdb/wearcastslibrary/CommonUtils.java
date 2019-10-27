@@ -58,6 +58,7 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -80,8 +81,28 @@ import static android.os.Environment.getExternalStorageDirectory;
 public class CommonUtils {
 
     public static void showToast(final Context ctx, final String message) {
-
         showToast(ctx, message, Toast.LENGTH_SHORT);
+    }
+
+    public static void showToast(final Context ctx, final String message, final int length)
+    {
+        if (ctx instanceof Activity && ((Activity)ctx).isFinishing()) return;
+
+        try {
+            final Toast toast = Toast.makeText(ctx, message, length);
+            final View view = toast.getView();
+            final TextView text = view.findViewById(android.R.id.message);
+
+            text.setBackgroundColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_bg", "color", ctx.getPackageName())));
+            text.setTextColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_text", "color", ctx.getPackageName())));
+            toast.show();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public static void showSnackbar(final View view, final String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
     public static void cancelNotification(final Context ctx, final int id)
@@ -123,22 +144,6 @@ public class CommonUtils {
         return s;
     }
 
-    public static void showToast(final Context ctx, final String message, final int length)
-    {
-        if (ctx instanceof Activity && ((Activity)ctx).isFinishing()) return;
-
-        try {
-            final Toast toast = Toast.makeText(ctx, message, length);
-            final View view = toast.getView();
-            final TextView text = view.findViewById(android.R.id.message);
-
-            text.setBackgroundColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_bg", "color", ctx.getPackageName())));
-            text.setTextColor(ctx.getColor(ctx.getResources().getIdentifier("wc_toast_text", "color", ctx.getPackageName())));
-            toast.show();
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
 
     public static String getRedirectUrl(final String url) {
         String output = null;

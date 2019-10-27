@@ -109,14 +109,14 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                             mPlaylistsButButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    CommonUtils.showToast(mActivity, getString(R.string.button_text_no_device));
+                                    CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.button_text_no_device));
                                 }
                             });
 
                             mPremiumButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    CommonUtils.showToast(mActivity, getString(R.string.button_text_no_device));
+                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.button_text_no_device));
                                 }
                             });
                         } else {
@@ -180,9 +180,9 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                                                 final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
 
                                                 if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
-                                                    CommonUtils.showToast(mActivity, getString(R.string.alert_purchased));
+                                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
                                                 } else if (result.getResponseCode() != OK) {
-                                                    CommonUtils.showToast(mActivity, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
+                                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
                                                 }
                                             }
                                         }
@@ -249,7 +249,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 sendPlaylistsToWatch(mPlaylistPurchasedCount);
-                                                CommonUtils.showToast(mActivity, getString(R.string.success));
+                                                CommonUtils.showSnackbar(mPlaylistsReadd, getString(R.string.success));
                                             }
                                         });
 
@@ -392,9 +392,9 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
 
                         if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
-                            CommonUtils.showToast(mActivity, getString(R.string.alert_purchased));
+                            CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
                         } else if (result.getResponseCode() != OK) {
-                            CommonUtils.showToast(mActivity, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
+                            CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
                         }
                     }
                 }

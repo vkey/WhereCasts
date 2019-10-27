@@ -121,7 +121,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
                         mPodcasts.get(position).setIsSenttoWatch(true);
                         notifyItemChanged(position);
                     } else
-                        CommonUtils.showToast(mContext, mContext.getString(R.string.button_text_no_device));
+                        CommonUtils.showSnackbar(viewHolder.add_image, mContext.getString(R.string.button_text_no_device));
                 }
             });
         }
