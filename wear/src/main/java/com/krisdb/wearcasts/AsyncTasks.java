@@ -73,9 +73,18 @@ public class AsyncTasks {
             //CommonUtils.writeToFile(ctx, "PlaylistID: " + mPlaylistID);
             //CommonUtils.writeToFile(ctx, "\n\n");
 
-            mEpisodes = mPodcastID > 0 ? EpisodeUtilities.GetEpisodes(ctx, mEpisode.getPodcastId()) : getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
-
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            mPlaylistID = prefs.getInt("next_episode_playlistid", -99);
+            mPodcastID = prefs.getInt("next_episode_podcastid", -1);
+
+            if (mPlaylistID == -99)
+                return null;
+            else if (mPlaylistID != -1)
+                mEpisodes = getPlaylistItems(mContext.get(), mPlaylistID, mLocalFile == null);
+            else if (mPodcastID > 0)
+                mEpisodes = EpisodeUtilities.GetEpisodes(ctx, mPodcastID);
+            else
+                return null;
 
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
                 final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);

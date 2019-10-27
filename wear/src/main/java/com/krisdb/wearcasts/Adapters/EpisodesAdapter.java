@@ -482,6 +482,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void openEpisode(final int position)
     {
+        final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+        editor.putInt("next_episode_playlistid", -1);
+        editor.putInt("next_episode_podcastid", mEpisodes.get(position).getPodcastId());
+        editor.apply();
+
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
