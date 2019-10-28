@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -210,7 +211,33 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         lpPlaylist.setOrder(count++);
         lpPlaylist.setSummary(lpPlaylist.getEntry());
 
-        final EditTextPreference etSkipStartTime = new EditTextPreference(mActivity);
+        final Preference pfSkipStartTime = new Preference(mActivity);
+        pfSkipStartTime.setTitle(R.string.settings_podcasts_label_skip_start_time);
+        pfSkipStartTime.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
+        pfSkipStartTime.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putString("key", "pref_" + mPodcastId + "_skip_start_time");
+                intent.putExtras(bundle);
+
+                startActivityForResult(intent, 1);
+                return false;
+            }
+        });
+        pfSkipStartTime.setOrder(count++);
+/*
+        final ListPreference lpSkipStartTime = new ListPreference(mActivity);
+        lpSkipStartTime.setTitle(R.string.settings_podcasts_label_skip_start_time);
+        lpSkipStartTime.setKey("pref_" + mPodcastId + "_skip_start_time");
+        lpSkipStartTime.setEntryValues(R.array.skip_start_time_values);
+        lpSkipStartTime.setEntries(R.array.skip_start_time_text);
+        lpSkipStartTime.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
+        lpSkipStartTime.setDefaultValue(String.valueOf(resources.getInteger(R.integer.default_skip_start_time)));
+        lpSkipStartTime.setOrder(count++);
+
+      final EditTextPreference etSkipStartTime = new EditTextPreference(mActivity);
         etSkipStartTime.setKey("pref_" + mPodcastId + "_skip_start_time");
         etSkipStartTime.setText(etSkipStartTime.getText());
         etSkipStartTime.setTitle(R.string.settings_podcasts_label_skip_start_time);
@@ -233,12 +260,13 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 return false;
             }
         });
+     */
 
         final EditTextPreference etSkipStopTime = new EditTextPreference(mActivity);
         etSkipStopTime.setKey("pref_" + mPodcastId + "_finish_end_time");
-        etSkipStopTime.setText(etSkipStartTime.getText());
+        etSkipStopTime.setText(etSkipStopTime.getText());
         etSkipStopTime.setTitle(R.string.settings_podcasts_label_finish_end_time);
-        etSkipStopTime.setSummary(etSkipStartTime.getText());
+        etSkipStopTime.setSummary(etSkipStopTime.getText());
         etSkipStopTime.setDefaultValue(String.valueOf(resources.getInteger(R.integer.default_skip_start_time)));
         etSkipStopTime.setIcon(ContextCompat.getDrawable(mActivity, R.drawable.ic_setting_dropdown_indicator));
         etSkipStopTime.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -284,8 +312,12 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
         if (!hasPremium)
         {
-            etSkipStartTime.setSummary(getString(R.string.premium_locked_playback_speed));
-            etSkipStartTime.setEnabled(false);
+            //etSkipStartTime.setSummary(getString(R.string.premium_locked_playback_speed));
+            //etSkipStartTime.setEnabled(false);
+            //lpSkipStartTime.setSummary(getString(R.string.premium_locked_playback_speed));
+            //lpSkipStartTime.setEnabled(false);
+            pfSkipStartTime.setSummary(getString(R.string.premium_locked_playback_speed));
+            pfSkipStartTime.setEnabled(false);
             etSkipStopTime.setSummary(getString(R.string.premium_locked_playback_speed));
             etSkipStopTime.setEnabled(false);
             cbDownloadNext.setSummary(getString(R.string.premium_locked_playback_speed));
@@ -350,18 +382,20 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         category.addPreference(lpSortOrder);
         category.addPreference(lpPlaybackSpeed);
         category.addPreference(lpPlaylist);
-        category.addPreference(etSkipStartTime);
+        //category.addPreference(etSkipStartTime);
+        //category.addPreference(lpSkipStartTime);
+        category.addPreference(pfSkipStartTime);
         category.addPreference(etSkipStopTime);
         category.addPreference(cbHidePlayed);
 
         findPreference("pref_" + mPodcastId + "_auto_assign_playlist").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_auto_assign_playlist")).getEntry());
 
         if (hasPremium) {
-            final int skipTime = Integer.valueOf(((EditTextPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getText());
+            //final int skipTime = Integer.valueOf(((ListPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getValue());
             final int endTime = Integer.valueOf(((EditTextPreference) findPreference("pref_" + mPodcastId + "_finish_end_time")).getText());
 
-            if (skipTime > 0)
-                findPreference("pref_" + mPodcastId + "_skip_start_time").setSummary(((EditTextPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getText().concat(" ").concat(getString(R.string.seconds).toLowerCase()));
+            //if (skipTime > 0)
+            // findPreference("pref_" + mPodcastId + "_skip_start_time").setSummary(((ListPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getEntry());
 
             if (endTime > 0)
                 findPreference("pref_" + mPodcastId + "_finish_end_time").setSummary(((EditTextPreference) findPreference("pref_" + mPodcastId + "_finish_end_time")).getText().concat(" ").concat(getString(R.string.seconds).toLowerCase()));
@@ -411,6 +445,24 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         final Boolean hasPremium = Utilities.hasPremium(mActivity);
         if (hasPremium)
         {
+            final int skipTime = Integer.valueOf(((ListPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getValue());
+
+            if (key.equals("pref_" + mPodcastId + "_skip_start_time")) {
+                findPreference("pref_" + mPodcastId + "_skip_start_time").setSummary(skipTime > 0 ? ((ListPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getEntry() : "");
+                if (skipTime == 999)
+                {
+                    findPreference("pref_" + mPodcastId + "_skip_start_time").setSummary(((ListPreference)findPreference("pref_" + mPodcastId + "_skip_start_time")).getEntry());
+
+                    final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("key", "pref_" + mPodcastId + "_skip_start_time");
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 1);
+                }
+            }
+
+
+
 /*            final int skipTime = Integer.valueOf(((ListPreference) findPreference("pref_" + mPodcastId + "_skip_start_time")).getValue());
             final int endTime = Integer.valueOf(((ListPreference) findPreference("pref_" + mPodcastId + "_finish_end_time")).getValue());
 

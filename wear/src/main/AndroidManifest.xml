@@ -82,6 +82,7 @@
         <activity android:name=".Activities.SearchEpisodesActivity" />
         <activity android:name=".Activities.AddPodcastsActivity" />
         <activity android:name=".Activities.EpisodeContextActivity" />
+        <activity android:name=".Settings.SettingsContextActivity" />
         <activity android:name=".Settings.SettingsPodcastsActivity" />
 
         <activity android:name=".Settings.SettingsPodcastActivity" />
