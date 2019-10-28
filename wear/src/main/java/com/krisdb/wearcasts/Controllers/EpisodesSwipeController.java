@@ -36,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodesSwipeController extends ItemTouchHelper.Callback {
 
@@ -82,7 +81,8 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
         if (episode.getIsTitle())
         {
             if (episode.getChannel().getThumbnailUrl() != null) {
-                CommonUtils.showToast(ctx, ctx.getString(R.string.alert_refreshing_thumb));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.alert_refreshing_thumb));
+                //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_refreshing_thumb));
                 new AsyncTasks.SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true,
                         new Interfaces.AsyncResponse() {
                             @Override
@@ -216,7 +216,9 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 db.addEpisodeToPlaylist(swipeActionId, episode.getEpisodeId());
                 db.close();
 
-                showToast(ctx, ctx.getString(R.string.alert_episode_playlist_added, PlaylistsUtilities.getPlaylistName(ctx, swipeActionId)));
+                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.alert_episode_playlist_added, PlaylistsUtilities.getPlaylistName(ctx, swipeActionId)));
+
+                //showToast(ctx, ctx.getString(R.string.alert_episode_playlist_added, PlaylistsUtilities.getPlaylistName(ctx, swipeActionId)));
 
                 mAdapter.refreshItem2(mEpisodes, position);
             }

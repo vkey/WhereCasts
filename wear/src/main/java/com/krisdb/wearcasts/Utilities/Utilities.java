@@ -61,7 +61,6 @@ import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlayli
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class Utilities {
 
@@ -497,7 +496,7 @@ public class Utilities {
         if (episode.getMediaUrl() == null) return 0;
 
         if (showToast)
-            showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
+            CommonUtils.showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
 
         //CommonUtils.writeToFile(ctx,"download started (" + episode.getTitle() + ")");
 

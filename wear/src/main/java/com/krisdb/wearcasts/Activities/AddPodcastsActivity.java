@@ -18,12 +18,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Fragments.AddPodcastListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -127,7 +129,6 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 new Interfaces.DirectoryResponse() {
                     @Override
                     public void processFinish(final List<PodcastCategory> categories) {
-
                         if (categories.size() > 0) {
                             mNumberOfPages = categories.size();
 
@@ -146,7 +147,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                         }
                         else
                         {
-                            CommonUtils.showToast(mContext, getString(R.string.general_error));
+                            Utilities.ShowConfirmationActivity(mContext, ConfirmationActivity.FAILURE_ANIMATION, getString(R.string.general_error), true);
                             finish();
                         }
                     }

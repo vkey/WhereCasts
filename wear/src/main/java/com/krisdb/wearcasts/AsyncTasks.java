@@ -192,38 +192,8 @@ public class AsyncTasks {
 
         @Override
         protected void onPostExecute(Void result) {
-            CommonUtils.showToast(mContext.get(), mContext.get().getString(mDisable ? R.string.alert_disable_bluetooth_disabled_end : R.string.alert_disable_bluetooth_enabled));
-            mResponse.processFinish();
-        }
-    }
-
-    public static class DownloadMultipleEpisodes extends AsyncTask<Void, Void, Void> {
-        private Interfaces.AsyncResponse mResponse;
-        private List<PodcastItem> mEpisodes;
-
-        public DownloadMultipleEpisodes(final Context context, final List<PodcastItem> episodes, final Interfaces.AsyncResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mEpisodes = episodes;
-            mResponse = response;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            CommonUtils.showToast(mContext.get(), mContext.get().getString(mEpisodes.size() == 1 ? R.string.alert_download_episode_selected : R.string.alert_download_episodes_selected, mEpisodes.size()));
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            for (final PodcastItem episode : mEpisodes) {
-                Utilities.startDownload(mContext.get(), episode);
-                SystemClock.sleep(500);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
+            Utilities.ShowConfirmationActivity(mContext.get(), mContext.get().getString(mDisable ? R.string.alert_disable_bluetooth_disabled_end : R.string.alert_disable_bluetooth_enabled));
+            //CommonUtils.showToast(mContext.get(), mContext.get().getString(mDisable ? R.string.alert_disable_bluetooth_disabled_end : R.string.alert_disable_bluetooth_enabled));
             mResponse.processFinish();
         }
     }

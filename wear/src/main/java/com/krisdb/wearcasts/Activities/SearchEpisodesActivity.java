@@ -18,7 +18,7 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcasts.Utilities.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,8 @@ public class SearchEpisodesActivity extends BaseFragmentActivity implements Wear
                     final String text = mSearchText.getText().toString();
 
                     if (text.length() == 0) {
-                        CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
+                        Utilities.ShowFailureActivity(mActivity, getString(R.string.alert_search_empty));
+                        //CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
                         return true;
                     }
                     runSearch(text);

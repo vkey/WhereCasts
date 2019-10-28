@@ -16,7 +16,6 @@ import android.preference.SwitchPreference;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -93,7 +92,8 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
                             else
                                 message = getString(R.string.alert_files_deleted, count);
 
-                            CommonUtils.showToast(getActivity(), message);
+                            Utilities.ShowConfirmationActivity(getActivity(), message);
+                            //CommonUtils.showToast(getActivity(), message);
 
                             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -120,7 +120,8 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
         findPreference("pref_cancel_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Utilities.cancelAllDownloads(getActivity());
-                CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
+                Utilities.ShowConfirmationActivity(getActivity(), getString(R.string.alert_downloads_all_cancelled));
+                //CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
                 return false;
             }
         });

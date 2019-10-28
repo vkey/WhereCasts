@@ -55,7 +55,6 @@ import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isFinishedDownload;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 
 public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
@@ -339,21 +338,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
     }
 
     public void downloadAllEpisodes() {
-        showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
+        CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
 
         int count = mEpisodes.size()-1;
         for(int i = 1; i <= count; i++)
         {
             final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(i), false);
             mEpisodes.get(i).setDownloadId((int)downloadID);
-            notifyItemInserted(i);
        }
-
+        notifyDataSetChanged();
         //mHandler.postDelayed(downloadsProgress, 1000);
     }
 
     public void downloadSelectedEpisodes() {
-        showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
+        CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_download_start));
         for(final Integer position : mSelectedPositions)
         {
             final long downloadID = Utilities.startDownload(mContext, mEpisodes.get(position), false);

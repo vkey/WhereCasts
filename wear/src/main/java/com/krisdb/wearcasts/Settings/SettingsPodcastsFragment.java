@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class SettingsPodcastsFragment extends PreferenceFragment {
 
@@ -183,7 +182,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                     mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
 
                     if (isAdded())
-                        showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                        CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
                     for (final PodcastItem episode : episodes)
                         Utilities.startDownload(mActivity, episode, false);
@@ -204,7 +203,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         } else {
             if (isAdded())
-                showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
             for (final PodcastItem episode : episodes)
                 Utilities.startDownload(mActivity, episode, false);
@@ -281,7 +280,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             else if (requestCode == LOW_BANDWIDTH_RESULTS_CODE) {
-                showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
                 for (final PodcastItem episode : mDownloadEpisodes)
                     Utilities.startDownload(mActivity, episode, false);

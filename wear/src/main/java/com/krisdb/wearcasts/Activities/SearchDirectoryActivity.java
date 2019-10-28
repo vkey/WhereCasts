@@ -25,7 +25,6 @@ import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.AsyncTasks;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -82,7 +81,8 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
                     final String text = mSearchText.getText().toString();
 
                     if (text.length() == 0) {
-                        CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
+                        Utilities.ShowFailureActivity(mActivity, getString(R.string.alert_search_empty));
+                        //CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
                         return true;
                     }
                     runSearch(text);

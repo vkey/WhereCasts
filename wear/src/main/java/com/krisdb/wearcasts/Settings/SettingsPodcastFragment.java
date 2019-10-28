@@ -104,12 +104,14 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
                 final String value = (String) newValue;
 
                 if (value == null || value.length() == 0) {
-                    CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_title));
+                    Utilities.ShowFailureActivity(mActivity, getString(R.string.validation_podcast_rename_title));
+                    //CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_title));
                     return true;
                 }
 
                 if (value.length() > 60) {
-                    CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
+                    Utilities.ShowFailureActivity(mActivity, getString(R.string.validation_podcast_rename_length));
+                    //CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
                     return true;
                 }
 

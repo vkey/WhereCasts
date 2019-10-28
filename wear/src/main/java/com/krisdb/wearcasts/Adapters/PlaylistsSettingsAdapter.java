@@ -23,7 +23,6 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -72,7 +71,8 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
                     final String text = holder.name.getText().toString();
 
                     if (text.length() == 0) {
-                        CommonUtils.showToast(mContext, mContext.getString(R.string.validation_podcast_rename_title));
+                        Utilities.ShowFailureActivity(mContext, mContext.getString(R.string.validation_podcast_rename_title));
+                        //CommonUtils.showToast(mContext, mContext.getString(R.string.validation_podcast_rename_title));
                         return true;
                     }
 

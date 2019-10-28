@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcasts.Utilities.Utilities;
 
 import java.util.List;
 import java.util.Objects;
@@ -56,12 +56,14 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
                             final String text = v.getText().toString();
 
                             if (text.length() == 0) {
-                                CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+                                Utilities.ShowFailureActivity(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
+                                //CommonUtils.showToast(mActivity, mActivity.getString(R.string.validation_podcast_rename_title));
                                 return true;
                             }
 
                             if (text.length() > 20) {
-                                CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
+                                Utilities.ShowFailureActivity(mActivity, getString(R.string.validation_podcast_rename_length));
+                                //CommonUtils.showToast(mActivity, getString(R.string.validation_podcast_rename_length));
                                 return true;
                             }
 

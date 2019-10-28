@@ -64,7 +64,6 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener {
 
@@ -204,7 +203,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 public void onAvailable(final Network network) {
                     mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
 
-                    showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                    CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
                     for (final PodcastItem episode : mDownloadEpisodes)
                         Utilities.startDownload(mActivity, episode, false);
@@ -232,7 +231,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),
                     NETWORK_CONNECTIVITY_TIMEOUT_MS);
         } else {
-            showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+            CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
             for (final PodcastItem episode : mDownloadEpisodes)
                 Utilities.startDownload(mActivity, episode, false);
@@ -374,7 +373,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 downloadEpisodes(mItemID);
             else if (requestCode == LOW_BANDWIDTH_RESULTS_CODE) {
 
-                showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
+                CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));
 
                 for (final PodcastItem episode : mDownloadEpisodes)
                     Utilities.startDownload(mActivity, episode, false);

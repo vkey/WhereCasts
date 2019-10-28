@@ -63,7 +63,8 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                             else
                                 message = getString(R.string.alert_files_deleted, count);
 
-                            CommonUtils.showToast(getActivity(), message);
+                            Utilities.ShowConfirmationActivity(getActivity(), message);
+                            //CommonUtils.showToast(getActivity(), message);
 
                             setDeleteThumbnailsTitle();
                         }
