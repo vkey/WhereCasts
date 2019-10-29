@@ -57,6 +57,7 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -872,7 +873,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     else {
                         Utilities.DeleteMediaFile(mActivity, mEpisode);
 
-                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download));
+                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
                         mDownloadImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1252,7 +1253,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         final int itemId = menuItem.getItemId();
 
         switch (itemId) {
-/*            case R.id.menu_drawer_episode_bluetooth_disable:
+            case R.id.menu_drawer_episode_bluetooth_disable:
                 new AsyncTasks.ToggleBluetooth(mActivity, true,
                         new Interfaces.AsyncResponse() {
                             @Override
@@ -1272,7 +1273,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 break;
-            case R.id.menu_drawer_episode_open_wifi:
+  /*          case R.id.menu_drawer_episode_open_wifi:
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.menu_drawer_episode_open_bluetooth:
@@ -1284,6 +1285,16 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 setMenu();
                 break;
             case R.id.menu_drawer_episode_markplayed:
+                if (mEpisode.getIsDownloaded())
+                {
+                    mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                    mDownloadImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            handleNetwork(true);
+                        }
+                    });
+                }
                 markPlayed(mContext, mEpisode);
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
                 setMenu();
@@ -1372,14 +1383,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         menu.clear();
         getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
 
- /*       if (adapter != null)
+       if (adapter != null)
             menu.removeItem(adapter.isEnabled() ? R.id.menu_drawer_episode_bluetooth_enable : R.id.menu_drawer_episode_bluetooth_disable);
         else
         {
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
-            menu.removeItem(R.id.menu_drawer_episode_open_bluetooth);
-        }*/
+            //menu.removeItem(R.id.menu_drawer_episode_open_bluetooth);
+        }
 
         menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
     }

@@ -15,6 +15,7 @@ import com.krisdb.wearcasts.Databases.DatabaseHelper;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.DateUtils;
+import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -41,6 +42,9 @@ public class EpisodeUtilities {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         db.update(cv, episode.getEpisodeId());
         db.close();
+
+        if (Integer.valueOf(androidx.preference.PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+            Utilities.DeleteMediaFile(ctx, episode);
 
         Utilities.ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, ctx.getString(R.string.alert_marked_played), true);
         //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_played));

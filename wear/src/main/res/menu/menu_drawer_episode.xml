@@ -32,7 +32,6 @@
         android:icon="@drawable/ic_action_skip_finish_time"
         />
 
-    <!--
     <item android:id="@+id/menu_drawer_episode_bluetooth_enable"
         android:title="@string/menu_episode_bluetooth_enable"
         android:icon="@drawable/ic_menu_episode_bluetooth_enable"
@@ -42,7 +41,7 @@
         android:title="@string/menu_episode_bluetooth_disable"
         android:icon="@drawable/ic_menu_episode_bluetooth_disable"
         />
-
+    <!--
     <item android:id="@+id/menu_drawer_episode_open_bluetooth"
         android:title="@string/menu_episode_wifi_bluietooth"
         android:icon="@drawable/ic_menu_episode_bluetooth_settings"

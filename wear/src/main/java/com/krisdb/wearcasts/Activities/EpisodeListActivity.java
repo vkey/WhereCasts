@@ -445,9 +445,16 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkUnplayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 0);
                 dbMarkUnplayed.close();
+
+                final boolean autoDelete = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
+
                 for (final Integer position : mAdapter.mSelectedPositions) {
                     episodes.get(position).setFinished(false);
                     episodes.get(position).setIsSelected(false);
+                    if (autoDelete) {
+                        Utilities.DeleteMediaFile(mActivity, episodes.get(position));
+                        episodes.get(position).setIsDownloaded(false);
+                    }
                     mAdapter.notifyItemChanged(position);
                 }
                 mAdapter.mSelectedPositions = new ArrayList<>();
@@ -495,11 +502,18 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             db.updateAll(cv, mPodcastId);
                             db.close();
 
+                            final boolean autoDelete = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
+
                             if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
                                 RefreshContent();
                             else {
-                                for (final PodcastItem episode : episodes)
+                                for (final PodcastItem episode : episodes) {
                                     episode.setFinished(true);
+                                    if (autoDelete) {
+                                        Utilities.DeleteMediaFile(mActivity, episode);
+                                        episode.setIsDownloaded(false);
+                                    }
+                                }
 
                                 mAdapter.notifyDataSetChanged();
                             }

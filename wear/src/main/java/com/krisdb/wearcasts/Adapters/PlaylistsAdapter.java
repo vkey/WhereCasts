@@ -382,7 +382,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     private void showContext(final int position)
     {
-        final SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
