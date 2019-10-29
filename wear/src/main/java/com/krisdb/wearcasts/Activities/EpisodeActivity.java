@@ -192,12 +192,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (prefs.getBoolean("pref_display_show_clock_playing_screen", true))
         {
             findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
-            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 30 : 10, 0 ,0);
+            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 20 : 10, 0 ,0);
         }
         else
         {
             findViewById(R.id.podcast_episode_clock).setVisibility(View.GONE);
-            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 35 : 10, 0 ,0);
+            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 40 : 10, 0 ,0);
         }
 
         final ViewGroup.MarginLayoutParams paramsLoading = (ViewGroup.MarginLayoutParams)mProgressCircleLoading.getLayoutParams();

@@ -192,6 +192,7 @@
     <string name="settings_podcasts_home_screen_inprogress">En cours</string>
     <string name="settings_podcasts_home_screen_downloads">Téléchargements</string>
     <string name="settings_podcasts_home_screen_upnext">Suivant</string>
+    <string name="settings_podcasts_home_screen_playing_screen">Écran de jeu</string>
 
     <string name="settings_podcasts_entries_title_themes">Thèmes</string>
     <string name="settings_podcasts_sort_order_themes_default">Défaut</string>
@@ -226,28 +227,6 @@
     <string name="settings_podcasts_label_skip_start_time_60_seconds">60 secondes</string>
 
     <string name="settings_podcasts_label_finish_end_time">Terminer le podcast avec</string>
-    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
-    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 secondes restantes</string>
-    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 secondes restantes</string>
-    <string name="setting_podcasts_label_finish_end_time_1_minute">1 Minute left</string>
-    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 Minutes restant</string>
-    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 Minutes restant</string>
 
     <string name="setting_podcasts_playback_skip_10_seconds">10 secondes</string>
     <string name="setting_podcasts_playback_skip_20_seconds">20 secondes</string>
