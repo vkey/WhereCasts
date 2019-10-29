@@ -240,8 +240,8 @@
     <string name="menu_main_title_download_delete">ダウンロードを削除する</string>
     <string name="menu_main_title_download_cancel">ダウンロードをキャンセルする</string>
     <string name="menu_main_title_playlist_add">プレイリストに追加する</string>
-    <string name="menu_drawer_episode_skip_start_time">ここからこのポッドキャストを開始します</string>
-    <string name="menu_drawer_episode_skip_finish_time">ここからこのポッドキャストを停止します</string>
+    <string name="menu_drawer_episode_skip_start_time">ここからすべてのエピソードを開始します</string>
+    <string name="menu_drawer_episode_skip_finish_time">ここですべてのエピソードを停止します</string>
 
     <string name="menu_episode_wifi_open">WiFi設定を開く</string>
     <string name="menu_episode_wifi_bluietooth">Bluetooth設定を開く</string>

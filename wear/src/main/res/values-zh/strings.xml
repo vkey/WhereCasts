@@ -239,8 +239,8 @@
     <string name="menu_main_title_download_delete">刪除下載</string>
     <string name="menu_main_title_download_cancel">取消下載</string>
     <string name="menu_main_title_playlist_add">添加到播放列表</string>
-    <string name="menu_drawer_episode_skip_start_time">從這裡開始播客</string>
-    <string name="menu_drawer_episode_skip_finish_time">從此處停止此播客</string>
+    <string name="menu_drawer_episode_skip_start_time">從這裡開始所有劇集</string>
+    <string name="menu_drawer_episode_skip_finish_time">在這裡停止所有劇集</string>
 
     <string name="menu_episode_wifi_open">打開WiFi設置</string>
     <string name="menu_episode_wifi_bluietooth">打開藍牙設置</string>

@@ -240,8 +240,8 @@
     <string name="menu_main_title_download_delete">Ta bort hämtning</string>
     <string name="menu_main_title_download_cancel">Avbryt Ladda ner</string>
     <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
-    <string name="menu_drawer_episode_skip_start_time">Starta denna podcast härifrån</string>
-    <string name="menu_drawer_episode_skip_finish_time">Stoppa den här podcasten härifrån</string>
+    <string name="menu_drawer_episode_skip_start_time">Börja alla avsnitt härifrån</string>
+    <string name="menu_drawer_episode_skip_finish_time">Stoppa alla avsnitt här</string>
 
     <string name="menu_episode_wifi_open">Öppna WiFi-inställningarna</string>
     <string name="menu_episode_wifi_bluietooth">Öppna Bluetooth-inställningar</string>

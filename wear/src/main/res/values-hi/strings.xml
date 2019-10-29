@@ -240,8 +240,8 @@
     <string name="menu_main_title_download_delete">डाउनलोड हटाएं</string>
     <string name="menu_main_title_download_cancel">डाउनलोड रद्द करें</string>
     <string name="menu_main_title_playlist_add">प्लेलिस्ट में जोड़ें</string>
-    <string name="menu_drawer_episode_skip_start_time">इस पॉडकास्ट को यहां से शुरू करें</string>
-    <string name="menu_drawer_episode_skip_finish_time">इस पॉडकास्ट को यहां से रोकें</string>
+    <string name="menu_drawer_episode_skip_start_time">सभी एपिसोड यहाँ से शुरू करेंं</string>
+    <string name="menu_drawer_episode_skip_finish_time">सभी एपिसोड को यहाँ रोकें</string>
 
     <string name="menu_episode_wifi_open">वाईफाई सेटिंग्स खोलें</string>
     <string name="menu_episode_wifi_bluietooth">ब्लूटूथ सेटिंग्स खोलें</string>

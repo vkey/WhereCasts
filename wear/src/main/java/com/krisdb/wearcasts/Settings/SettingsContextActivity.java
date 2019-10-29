@@ -1,38 +1,17 @@
 package com.krisdb.wearcasts.Settings;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.krisdb.wearcasts.Activities.BaseFragmentActivity;
-import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
-import com.krisdb.wearcasts.AsyncTasks;
-import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
-import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
-
-import java.util.List;
-
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 
 public class SettingsContextActivity extends BaseFragmentActivity {
     private String mKey;

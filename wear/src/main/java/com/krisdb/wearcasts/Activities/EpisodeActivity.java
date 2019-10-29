@@ -27,8 +27,6 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -59,7 +57,6 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
-import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
