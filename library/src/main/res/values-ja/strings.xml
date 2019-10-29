@@ -34,5 +34,6 @@
     <string name="never">絶対に</string>
     <string name="always">常に</string>
     <string name="seconds">秒</string>
-
+    <string name="saved">保存しました</string>
+    <string name="other">その他</string>
 </resources>

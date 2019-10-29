@@ -1,42 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:padding="@dimen/episode_context_activity_layout_padding">
-
-    <RadioGroup
-        android:id="@+id/settings_context_group_skip_start"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical">
-        <RadioButton
-            android:id="@+id/settings_context_skip_start_10"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:padding="@dimen/settings_context_activity_layout_padding">
+
+        <RadioGroup
+            android:id="@+id/settings_context_group_skip_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <RadioButton
+                android:id="@+id/settings_context_skip_start_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_podcasts_label_skip_start_time_0_seconds"
+                android:onClick="onRadioButtonClicked"
+                />
+            <RadioButton
+                android:id="@+id/settings_context_skip_start_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_podcasts_label_skip_start_time_10_seconds"
+                android:onClick="onRadioButtonClicked"
+                />
+            <RadioButton
+                android:id="@+id/settings_context_skip_start_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_podcasts_label_skip_start_time_15_seconds"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/settings_context_skip_start_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_podcasts_label_skip_start_time_30_seconds"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/settings_context_skip_start_60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_podcasts_label_skip_start_time_60_seconds"
+                android:onClick="onRadioButtonClicked"
+                />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/settings_context_skip_start_time_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings_podcasts_label_skip_start_time_10_seconds"
-            android:onClick="onRadioButtonClicked"
-            />
-
-        <RadioButton
-            android:id="@+id/settings_context_skip_start_30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_podcasts_label_skip_start_time_30_seconds"
-            android:onClick="onRadioButtonClicked"
-            />
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/settings_context_skip_start_time"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:gravity="center"
-        android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/settings_context_skip_start_time"
+            app:layout_constraintTop_toTopOf="@id/settings_context_skip_start_time"
+            app:layout_constraintBottom_toBottomOf="@id/settings_context_skip_start_time"
         />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/settings_context_skip_start_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/settings_context_group_skip_start"
+            />
+
+        <Button
+            android:id="@+id/settings_context_button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/settings_context_skip_start_time"
+            android:text="@string/ok"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -35,5 +35,6 @@
     <string name="never">noch nie</string>
     <string name="always">Immer</string>
     <string name="seconds">Sekunden</string>
-
+    <string name="saved">Gerettet</string>
+    <string name="other">Andere</string>
 </resources>

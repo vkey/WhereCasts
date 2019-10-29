@@ -35,10 +35,10 @@
                 android:layout_height="wrap_content"
                 android:format24Hour="HH:mm a"
                 android:format12Hour="h:mm a"
-                android:textSize="16sp"
-                android:layout_marginBottom="10dp"
+                android:textSize="14sp"
                 android:visibility="gone"
                 />
+
             <TextView
                 android:id="@+id/podcast_episode_title"
                 android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:textSize="16sp"
                 android:lineSpacingExtra="1dp"
                 android:lines="2"
-                 />
+                />
 
             <RelativeLayout
                 android:id="@+id/podcast_episode_buttons_layout"

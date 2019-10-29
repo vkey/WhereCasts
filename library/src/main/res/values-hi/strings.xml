@@ -34,5 +34,6 @@
     <string name="never">कभी नहीँ</string>
     <string name="always">हमेशा</string>
     <string name="seconds">सेकंड</string>
-
+    <string name="saved">बचाया</string>
+    <string name="other">अन्य</string>
 </resources>

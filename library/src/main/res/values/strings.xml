@@ -35,4 +35,6 @@
     <string name="never">Never</string>
     <string name="always">Always</string>
     <string name="seconds">Seconds</string>
+    <string name="saved">Saved</string>
+    <string name="other">Other</string>
 </resources>

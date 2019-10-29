@@ -13,14 +13,14 @@
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
-        <EditTextPreference
+        <Preference
             android:key="pref_playback_skip_back"
             android:title="@string/settings_podcasts_label_playback_skip_back"
             android:defaultValue="30"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             />
 
-        <EditTextPreference
+        <Preference
             android:key="pref_playback_skip_forward"
             android:title="@string/settings_podcasts_label_playback_skip_forward"
             android:defaultValue="30"

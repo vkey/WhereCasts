@@ -125,6 +125,7 @@
     <string name="settings_podcasts_label_continuous_play">次のエピソードを自動的に再生</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">エピソードリストとプレイリスト</string>
     <string name="settings_podcasts_label_disable_ambient">アンビエントモードを無効にする</string>
+    <string name="settings_podcasts_label_display_show_clock_playing_screen">再生画面に時計を表示する</string>
     <string name="settings_podcasts_label_disable_ambient_summary">アンビエントモードはプレイ画面のみ</string>
     <string name="settings_podcasts_label_playlists_progress_first">進行状況を最初に表示する</string>
     <string name="settings_podcasts_label_playlists_progress_first_summary">最初に表示された最も大きな進歩</string>
@@ -219,29 +220,9 @@
     <string name="settings_podcasts_label_skip_start_time">ポッドキャストを開始する</string>
     <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
     <string name="settings_podcasts_label_skip_start_time_10_seconds">10 秒</string>
-    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 秒</string>
+    <string name="settings_podcasts_label_skip_start_time_15_seconds">15 秒</string>
     <string name="settings_podcasts_label_skip_start_time_30_seconds">30 秒</string>
-    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 秒</string>
-    <string name="settings_podcasts_label_skip_start_time_1_minute">1 分</string>
-    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 分</string>
-    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 分</string>
-    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 分</string>
-    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 分</string>
-    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 分</string>
-    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 分</string>
-    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 分</string>
-    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 分</string>
-    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 分</string>
-    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 分</string>
+    <string name="settings_podcasts_label_skip_start_time_60_seconds">60 秒</string>
 
     <string name="settings_podcasts_label_finish_end_time">エンドポッドキャスト</string>
     <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
@@ -280,6 +261,8 @@
     <string name="menu_main_title_download_delete">ダウンロードを削除する</string>
     <string name="menu_main_title_download_cancel">ダウンロードをキャンセルする</string>
     <string name="menu_main_title_playlist_add">プレイリストに追加する</string>
+    <string name="menu_drawer_episode_skip_start_time">ここからこのポッドキャストを開始します</string>
+    <string name="menu_drawer_episode_skip_finish_time">ここからこのポッドキャストを停止します</string>
 
     <string name="menu_episode_wifi_open">WiFi設定を開く</string>
     <string name="menu_episode_wifi_bluietooth">Bluetooth設定を開く</string>

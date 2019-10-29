@@ -2,23 +2,31 @@ package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.wearable.input.WearableButtons;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class SettingsPodcastsPlaybackFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -70,55 +78,52 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
                 category.removePreference(findPreference("pref_hardware_override_episode"));
             }
 
-            final EditTextPreference etSkipBack = (EditTextPreference)findPreference("pref_playback_skip_back");
-            etSkipBack.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-            etSkipBack.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            final Preference pfSkipBack = findPreference("pref_playback_skip_back");
+            pfSkipBack.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE){
-                        etSkipBack.setText(v.getText().toString());
-                        etSkipBack.setSummary(!etSkipBack.getText().equals("0") ? v.getText().toString().concat(" ").concat(getString(R.string.seconds).toLowerCase()) : "");
-                        etSkipBack.onClick(etSkipBack.getDialog(), Dialog.BUTTON_POSITIVE);
-                        etSkipBack.getDialog().dismiss();
-                        return true;
-                    }
+                public boolean onPreferenceClick(Preference preference) {
+                    final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("key", "pref_playback_skip_back");
+                    bundle.putString("default", "30");
+                    intent.putExtras(bundle);
+
+                    startActivityForResult(intent, 1);
                     return false;
                 }
             });
 
-            final EditTextPreference etSkipForward = (EditTextPreference)findPreference("pref_playback_skip_forward");
-            etSkipForward.getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-            etSkipForward.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            final Preference pfSkipForward = findPreference("pref_playback_skip_forward");
+            pfSkipForward.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE){
-                        etSkipForward.setText(v.getText().toString());
-                        etSkipForward.setSummary(!etSkipForward.getText().equals("0") ? v.getText().toString().concat(" ").concat(getString(R.string.seconds).toLowerCase()) : "");
-                        etSkipForward.onClick(etSkipForward.getDialog(), Dialog.BUTTON_POSITIVE);
-                        etSkipForward.getDialog().dismiss();
-                        return true;
-                    }
+                public boolean onPreferenceClick(Preference preference) {
+                    final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("key", "pref_playback_skip_forward");
+                    bundle.putString("default", "30");
+                    intent.putExtras(bundle);
+
+                    startActivityForResult(intent, 1);
                     return false;
                 }
             });
 
-            etSkipBack.setText(etSkipBack.getText());
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-            if (!etSkipBack.getText().equals("0"))
-                etSkipBack.setSummary(etSkipBack.getText().concat(" ").concat(getString(R.string.seconds).toLowerCase()));
+            final int skipBack = Integer.valueOf(prefs.getString("pref_playback_skip_back", "30"));
 
-            etSkipForward.setText(etSkipForward.getText());
+            if (skipBack > 0)
+                pfSkipBack.setSummary(String.valueOf(skipBack).concat(" ").concat(getString(R.string.seconds).toLowerCase()));
 
-            if (!etSkipForward.getText().equals("0"))
-                etSkipForward.setSummary(etSkipForward.getText().concat(" ").concat(getString(R.string.seconds).toLowerCase()));
+            final int skipForward = Integer.valueOf(prefs.getString("pref_playback_skip_forward", "30"));
 
-            //findPreference("pref_playback_skip_forward").setSummary(((ListPreference)findPreference("pref_playback_skip_forward")).getEntry());
-            //findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
+            if (skipForward > 0)
+                pfSkipForward.setSummary(String.valueOf(skipForward).concat(" ").concat(getString(R.string.seconds).toLowerCase()));
+
             findPreference("pref_sleep_timer").setSummary(((ListPreference)findPreference("pref_sleep_timer")).getEntry());
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
         }
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -126,6 +131,22 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
     public void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
+            if (requestCode == 1)
+            {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+                final int skipBack = Integer.valueOf(prefs.getString("pref_playback_skip_back", "30"));
+                findPreference("pref_playback_skip_back").setSummary(skipBack > 0 ? String.valueOf(skipBack).concat(" ").concat(getString(R.string.seconds).toLowerCase()) : "");
+
+                final int skipForward = Integer.valueOf(prefs.getString("pref_playback_skip_forward", "30"));
+                findPreference("pref_playback_skip_forward").setSummary(skipForward > 0 ? String.valueOf(skipForward).concat(" ").concat(getString(R.string.seconds).toLowerCase()) : "");
+            }
+        }
     }
 
     @Override
@@ -141,12 +162,6 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
             CommonUtils.DeviceSync(mActivity, dataMap);
         }
-
-        //if (key.equals("pref_playback_skip_forward"))
-        //findPreference("pref_playback_skip_forward").setSummary(((ListPreference)findPreference("pref_playback_skip_forward")).getEntry());
-
-        //if (key.equals("pref_playback_skip_back"))
-            //findPreference("pref_playback_skip_back").setSummary(((ListPreference)findPreference("pref_playback_skip_back")).getEntry());
 
         if (key.equals("pref_sleep_timer")) {
 

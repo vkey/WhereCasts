@@ -40,6 +40,12 @@
             android:defaultValue="false" />
         />
 
+        <SwitchPreference
+            android:key="pref_display_show_clock_playing_screen"
+            android:title="@string/settings_podcasts_label_display_show_clock_playing_screen"
+            android:defaultValue="true" />
+        />
+
         <!--
         <SwitchPreference
             android:key="pref_paging_indicator"

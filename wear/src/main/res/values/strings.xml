@@ -124,6 +124,7 @@
     <string name="settings_podcasts_label_continuous_play">Play next episode automatically</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">In playlists and episode listing</string>
     <string name="settings_podcasts_label_disable_ambient">Disable ambient mode</string>
+    <string name="settings_podcasts_label_display_show_clock_playing_screen">Show clock on playing screen</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Ambient mode is on play screen only</string>
     <string name="settings_podcasts_label_playlists_progress_first">Show episodes with progress first</string>
     <string name="settings_podcasts_label_playlists_progress_first_summary">Furthest progress shown first</string>
@@ -222,36 +223,11 @@
     <string name="settings_podcasts_label_skip_start_time">Start podcast at</string>
     <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
     <string name="settings_podcasts_label_skip_start_time_10_seconds">10 seconds</string>
+    <string name="settings_podcasts_label_skip_start_time_15_seconds">15 seconds</string>
     <string name="settings_podcasts_label_skip_start_time_30_seconds">30 seconds</string>
-    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minute</string>
-    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 minutes</string>
-    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 minutes</string>
-    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 minutes</string>
-    <string name="settings_podcasts_label_skip_start_time_other">Other…</string>
+    <string name="settings_podcasts_label_skip_start_time_60_seconds">60 seconds</string>
 
     <string name="settings_podcasts_label_finish_end_time">End podcast with</string>
-    <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
-    <string name="setting_podcasts_label_finish_end_time_30_seconds">30 seconds left</string>
-    <string name="setting_podcasts_label_finish_end_time_45_seconds">45 seconds left</string>
-    <string name="setting_podcasts_label_finish_end_time_1_minute">1 minute left</string>
-    <string name="setting_podcasts_label_finish_end_time_15_minute">1.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_2_minutes">2 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_25_minutes">2.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_3_minutes">3 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_35_minutes">3.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_4_minutes">4 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_45_minutes">4.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_5_minutes">5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_55_minutes">5.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_6_minutes">6 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_65_minutes">6.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_7_minutes">7 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_75_minutes">7.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_8_minutes">8 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_85_minutes">8.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_9_minutes">9 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_95_minutes">9.5 minutes left</string>
-    <string name="setting_podcasts_label_finish_end_time_10_minutes">10 minutes left</string>
 
     <string name="setting_podcasts_playback_skip_10_seconds">10 seconds</string>
     <string name="setting_podcasts_playback_skip_20_seconds">20 seconds</string>
@@ -267,6 +243,8 @@
     <string name="menu_main_title_download_cancel">Cancel Download</string>
 
     <string name="menu_main_title_playlist_add">Add to Playlist</string>
+    <string name="menu_drawer_episode_skip_start_time">Start this podcast from here</string>
+    <string name="menu_drawer_episode_skip_finish_time">Stop this podcast from here</string>
 
     <string name="menu_episode_wifi_open">Open WiFi settings</string>
     <string name="menu_episode_wifi_bluietooth">Open Bluetooth settings</string>

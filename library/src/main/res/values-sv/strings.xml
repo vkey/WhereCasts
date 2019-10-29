@@ -34,5 +34,6 @@
     <string name="never">Aldrig</string>
     <string name="always">Alltid</string>
     <string name="seconds">sekunder</string>
-
+    <string name="saved">sparad</string>
+    <string name="other">Övrig</string>
 </resources>

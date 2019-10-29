@@ -1,12 +1,15 @@
 <resources>
     <!--episode activity-->
-    <dimen name="activity_podcast_episode_layout_margin_top">30dp</dimen>
+    <dimen name="activity_podcast_episode_layout_margin_top">10dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_start">30dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_end">30dp</dimen>
     <dimen name="activity_podcast_episode_layout_margin_bottom">40dp</dimen>
 
     <!--episode context-->
     <dimen name="episode_context_activity_layout_padding">30dp</dimen>
+
+    <!--settings context-->
+    <dimen name="settings_context_activity_layout_padding">30dp</dimen>
 
     <!--directory recyclerview-->
     <dimen name="fragment_add_podcast_list_recycler_padding_bottom">70dp</dimen>

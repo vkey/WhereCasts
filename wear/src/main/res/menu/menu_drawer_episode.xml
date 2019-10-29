@@ -22,6 +22,17 @@
         android:icon="@drawable/ic_action_mark_unread"
         />
 
+    <item android:id="@+id/menu_drawer_episode_skip_start_time"
+        android:title="@string/menu_drawer_episode_skip_start_time"
+        android:icon="@drawable/ic_action_skip_start_time"
+        />
+
+    <item android:id="@+id/menu_drawer_episode_skip_finish_time"
+        android:title="@string/menu_drawer_episode_skip_finish_time"
+        android:icon="@drawable/ic_action_skip_finish_time"
+        />
+
+    <!--
     <item android:id="@+id/menu_drawer_episode_bluetooth_enable"
         android:title="@string/menu_episode_bluetooth_enable"
         android:icon="@drawable/ic_menu_episode_bluetooth_enable"
@@ -41,4 +52,5 @@
         android:title="@string/menu_episode_wifi_open"
         android:icon="@drawable/ic_menu_episode_wifi_open"
         />
+        -->
 </menu>

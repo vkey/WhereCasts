@@ -28,6 +28,7 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -187,6 +188,17 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipForward = findViewById(R.id.tv_skip_forward);
 
         mWearableActionDrawer.setOnMenuItemClickListener(this);
+
+        if (prefs.getBoolean("pref_display_show_clock_playing_screen", true))
+        {
+            findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
+            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 30 : 10, 0 ,0);
+        }
+        else
+        {
+            findViewById(R.id.podcast_episode_clock).setVisibility(View.GONE);
+            mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 35 : 10, 0 ,0);
+        }
 
         final ViewGroup.MarginLayoutParams paramsLoading = (ViewGroup.MarginLayoutParams)mProgressCircleLoading.getLayoutParams();
         final ViewGroup.MarginLayoutParams paramsDownloading = (ViewGroup.MarginLayoutParams)mProgressCircleDownloading.getLayoutParams();
@@ -1181,7 +1193,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mEpisodeTitle.setTextColor(ContextCompat.getColor(this, R.color.wc_text));
 
-        findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
 
         //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
 
@@ -1211,8 +1222,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     @Override
     public void onExitAmbient() {
         super.onExitAmbient();
-
-        findViewById(R.id.podcast_episode_clock).setVisibility(View.GONE);
 
         if (mThemeID == Enums.ThemeOptions.DEFAULT.getThemeId())
             mScrollView.setBackgroundColor(getColor(R.color.wc_transparent));
@@ -1246,7 +1255,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         final int itemId = menuItem.getItemId();
 
         switch (itemId) {
-            case R.id.menu_drawer_episode_bluetooth_disable:
+/*            case R.id.menu_drawer_episode_bluetooth_disable:
                 new AsyncTasks.ToggleBluetooth(mActivity, true,
                         new Interfaces.AsyncResponse() {
                             @Override
@@ -1271,7 +1280,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 break;
             case R.id.menu_drawer_episode_open_bluetooth:
                 startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                break;
+                break;*/
             case R.id.menu_drawer_episode_markunplayed:
                 markUnplayed(mContext, mEpisode);
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
@@ -1282,8 +1291,21 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
                 setMenu();
                 break;
+            case R.id.menu_drawer_episode_skip_start_time:
+                final SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(this);
+                final SharedPreferences.Editor editor1 = prefs1.edit();
+                editor1.putString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mSeekBar.getProgress()/1000));
+                editor1.apply();
+                Utilities.ShowConfirmationActivity(mActivity, getString(R.string.saved));
+                break;
+            case R.id.menu_drawer_episode_skip_finish_time:
+                final SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+                final SharedPreferences.Editor editor2 = prefs2.edit();
+                editor2.putString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf((mSeekBar.getMax() -  mSeekBar.getProgress()) / 1000));
+                editor2.apply();
+                Utilities.ShowConfirmationActivity(mActivity, getString(R.string.saved));
+                break;
             case R.id.menu_drawer_episode_add_playlist:
-
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(EpisodeActivity.this);
                 builder.setView(playlistAddView);
@@ -1353,14 +1375,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         menu.clear();
         getMenuInflater().inflate(R.menu.menu_drawer_episode, menu);
 
-        if (adapter != null)
+ /*       if (adapter != null)
             menu.removeItem(adapter.isEnabled() ? R.id.menu_drawer_episode_bluetooth_enable : R.id.menu_drawer_episode_bluetooth_disable);
         else
         {
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_enable);
             menu.removeItem(R.id.menu_drawer_episode_bluetooth_disable);
             menu.removeItem(R.id.menu_drawer_episode_open_bluetooth);
-        }
+        }*/
 
         menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
     }

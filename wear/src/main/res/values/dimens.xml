@@ -10,6 +10,9 @@
     <!--episode context-->
     <dimen name="episode_context_activity_layout_padding">30dp</dimen>
 
+    <!--settings context-->
+    <dimen name="settings_context_activity_layout_padding">30dp</dimen>
+
     <!--directory recyclerview-->
     <dimen name="fragment_add_podcast_list_recycler_padding_bottom">70dp</dimen>
 

@@ -128,6 +128,7 @@
     <string name="settings_podcasts_label_continuous_play">Jouer le prochain épisode automatiquement</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">Dans la liste des épisodes et des playlists</string>
     <string name="settings_podcasts_label_disable_ambient">Désactiver le mode ambiant</string>
+    <string name="settings_podcasts_label_display_show_clock_playing_screen">Afficher l\'horloge sur l\'écran de jeu</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Le mode ambiant est uniquement sur l\'écran de lecture</string>
     <string name="settings_podcasts_label_playlists_progress_first">Afficher les épisodes avec progrès en premier</string>
     <string name="settings_podcasts_label_playlists_progress_first_summary">Les progrès les plus éloignés sont les premiers</string>
@@ -220,29 +221,9 @@
     <string name="settings_podcasts_label_skip_start_time">Démarrer le podcast à</string>
     <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
     <string name="settings_podcasts_label_skip_start_time_10_seconds">10 secondes</string>
-    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 secondes</string>
+    <string name="settings_podcasts_label_skip_start_time_15_seconds">15 secondes</string>
     <string name="settings_podcasts_label_skip_start_time_30_seconds">30 secondes</string>
-    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 secondes</string>
-    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minute</string>
-    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 restant</string>
-    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 restant</string>
+    <string name="settings_podcasts_label_skip_start_time_60_seconds">60 secondes</string>
 
     <string name="settings_podcasts_label_finish_end_time">Terminer le podcast avec</string>
     <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
@@ -281,6 +262,8 @@
     <string name="menu_main_title_download_delete">Supprimer Télécharger</string>
     <string name="menu_main_title_download_cancel">Annuler Télécharger</string>
     <string name="menu_main_title_playlist_add">Ajouter à la playlist</string>
+    <string name="menu_drawer_episode_skip_start_time">Commencez ce podcast à partir d\'ici</string>
+    <string name="menu_drawer_episode_skip_finish_time">Arrêtez ce podcast d\'ici</string>
 
     <string name="menu_episode_wifi_open">Ouvrir les paramètres WiFi</string>
     <string name="menu_episode_wifi_bluietooth">Ouvrir les paramètres Bluetooth</string>

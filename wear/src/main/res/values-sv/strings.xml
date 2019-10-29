@@ -127,6 +127,7 @@
     <string name="settings_podcasts_label_continuous_play">Spela nästa avsnitt automatiskt</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">I avsnittslistor och spellistor</string>
     <string name="settings_podcasts_label_disable_ambient">Inaktivera omgivande läge</string>
+    <string name="settings_podcasts_label_display_show_clock_playing_screen">Visa klocka på skärmen</string>
     <string name="settings_podcasts_label_disable_ambient_summary">Omgivningsläge är endast på spelskärmen</string>
     <string name="settings_podcasts_label_playlists_progress_first">Visa episoder med framsteg först</string>
     <string name="settings_podcasts_label_playlists_progress_first_summary">Första framsteg som visas först</string>
@@ -219,29 +220,9 @@
     <string name="settings_podcasts_label_skip_start_time">Starta podcast på</string>
     <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
     <string name="settings_podcasts_label_skip_start_time_10_seconds">10 sekunder</string>
-    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 sekunder</string>
+    <string name="settings_podcasts_label_skip_start_time_15_seconds">15 sekunder</string>
     <string name="settings_podcasts_label_skip_start_time_30_seconds">30 sekunder</string>
-    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 sekunder</string>
-    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minut</string>
-    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 minuter kvar</string>
-    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 minuter kvar</string>
+    <string name="settings_podcasts_label_skip_start_time_60_seconds">60 sekunder</string>
 
     <string name="settings_podcasts_label_finish_end_time">Avsluta podcast med</string>
     <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
@@ -280,6 +261,8 @@
     <string name="menu_main_title_download_delete">Ta bort hämtning</string>
     <string name="menu_main_title_download_cancel">Avbryt Ladda ner</string>
     <string name="menu_main_title_playlist_add">Lägg till i spellista</string>
+    <string name="menu_drawer_episode_skip_start_time">Starta denna podcast härifrån</string>
+    <string name="menu_drawer_episode_skip_finish_time">Stoppa den här podcasten härifrån</string>
 
     <string name="menu_episode_wifi_open">Öppna WiFi-inställningarna</string>
     <string name="menu_episode_wifi_bluietooth">Öppna Bluetooth-inställningar</string>

@@ -127,6 +127,7 @@
     <string name="settings_podcasts_label_continuous_play">Juega el siguiente episodio automáticamente</string>
     <string name="settings_podcasts_label_show_downloaded_episodes_summary">En la lista de episodios y listas de reproducción.</string>
     <string name="settings_podcasts_label_disable_ambient">Desactiva el modo ambiente</string>
+    <string name="settings_podcasts_label_display_show_clock_playing_screen">Mostrar reloj en pantalla de reproducción</string>
     <string name="settings_podcasts_label_disable_ambient_summary">El modo ambiente solo está en la pantalla de juego</string>
     <string name="settings_podcasts_label_playlists_progress_first">Mostrar episodios con progreso primero</string>
     <string name="settings_podcasts_label_playlists_progress_first_summary">El progreso más lejano se muestra primero</string>
@@ -219,29 +220,9 @@
     <string name="settings_podcasts_label_skip_start_time">Comience el podcast en</string>
     <string name="settings_podcasts_label_skip_start_time_0_seconds">0</string>
     <string name="settings_podcasts_label_skip_start_time_10_seconds">10 segundos</string>
-    <string name="settings_podcasts_label_skip_start_time_20_seconds">20 segundos</string>
+    <string name="settings_podcasts_label_skip_start_time_15_seconds">15 segundos</string>
     <string name="settings_podcasts_label_skip_start_time_30_seconds">30 segundos</string>
-    <string name="settings_podcasts_label_skip_start_time_45_seconds">45 segundos</string>
-    <string name="settings_podcasts_label_skip_start_time_1_minute">1 minuto</string>
-    <string name="settings_podcasts_label_skip_start_time_130_minute">1.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_2_minutes">2 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_25_minutes">2.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_3_minutes">3 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_35_minutes">3.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_4_minutes">4 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_45_minutes">4.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_5_minutes">5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_55_minutes">5.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_6_minutes">6 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_65_minutes">6.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_7_minutes">7 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_75_minutes">7.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_8_minutes">8 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_85_minutes">8.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_9_minutes">9 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_95_minutes">9.5 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_10_minutes">10 restantes</string>
-    <string name="settings_podcasts_label_skip_start_time_15_minutes">15 restantes</string>
+    <string name="settings_podcasts_label_skip_start_time_60_seconds">60 segundos</string>
 
     <string name="settings_podcasts_label_finish_end_time">Termine el podcast con</string>
     <string name="setting_podcasts_label_finish_end_time_0_seconds">0</string>
@@ -280,6 +261,8 @@
     <string name="menu_main_title_download_delete">Eliminar Descargar</string>
     <string name="menu_main_title_download_cancel">Cancelar descarga</string>
     <string name="menu_main_title_playlist_add">Agregar a la lista\nde reproducción</string>
+    <string name="menu_drawer_episode_skip_start_time">Comience este podcast desde aquí</string>
+    <string name="menu_drawer_episode_skip_finish_time">Detén este podcast desde aquí</string>
 
     <string name="menu_episode_wifi_open">Abrir la configuración de WiFi</string>
     <string name="menu_episode_wifi_bluietooth">Abra la configuración de Bluetooth</string>
