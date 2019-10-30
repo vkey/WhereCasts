@@ -364,6 +364,8 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
             editor.apply();
         }
 
+        Utilities.SetPodcstRefresh(mActivity);
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 

@@ -366,6 +366,13 @@ public class Utilities {
         return output;
     }
 
+    public static void SetPodcstRefresh(final Context ctx)
+    {
+        final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+        editor.putBoolean("refresh_podcast_list", true);
+        editor.apply();
+    }
+
     public static boolean sleepTimerEnabled(final Context ctx)
     {
         return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0")) > 0;

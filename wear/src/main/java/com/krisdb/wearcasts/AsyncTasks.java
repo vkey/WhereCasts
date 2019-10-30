@@ -156,6 +156,8 @@ public class AsyncTasks {
             Utilities.DeleteFiles(ctx, mPodcastID);
             db.unsubscribe(ctx, mPodcastID);
             db.close();
+
+            Utilities.SetPodcstRefresh(ctx);
             //CacheUtils.deletePodcastsCache(ctx);
             return null;
         }

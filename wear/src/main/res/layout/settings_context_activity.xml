@@ -68,7 +68,7 @@
 
         <EditText
             android:id="@+id/settings_context_skip_start_time"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:maxLength="3"

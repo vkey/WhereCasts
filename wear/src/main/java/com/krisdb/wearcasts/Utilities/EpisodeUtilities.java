@@ -15,7 +15,6 @@ import com.krisdb.wearcasts.Databases.DatabaseHelper;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -42,9 +41,6 @@ public class EpisodeUtilities {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
         db.update(cv, episode.getEpisodeId());
         db.close();
-
-        if (Integer.valueOf(androidx.preference.PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
-            Utilities.DeleteMediaFile(ctx, episode);
 
         Utilities.ShowConfirmationActivity(ctx, ConfirmationActivity.SUCCESS_ANIMATION, ctx.getString(R.string.alert_marked_played), true);
         //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_marked_played));
@@ -280,6 +276,25 @@ public class EpisodeUtilities {
         try (
                 SQLiteDatabase sdb = db.select();
                 Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [new] = 1 AND [pid] = ?", new String[]{String.valueOf(podcastId) }))
+        {
+            count = cursor.getCount();
+        } catch (SQLiteException ex) {
+            count = 0;
+        } finally {
+            db.close();
+        }
+
+        return count;
+    }
+
+    public static int NewEpisodeCount(final Context ctx) {
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        int count;
+
+        try (
+                SQLiteDatabase sdb = db.select();
+                Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [new] = 1", null))
         {
             count = cursor.getCount();
         } catch (SQLiteException ex) {

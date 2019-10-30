@@ -303,6 +303,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                             mStatus.setVisibility(View.VISIBLE);
                         } else {
                             if (HasNewEpisodes(mActivity, mPodcastId)) {
+                                Utilities.SetPodcstRefresh(mActivity);
                                 final ContentValues cv = new ContentValues();
                                 cv.put("new", 0);
                                 final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);

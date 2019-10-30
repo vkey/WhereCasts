@@ -206,7 +206,15 @@ public class PodcastsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null)
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
+        if (mAdapter != null && prefs.getBoolean("refresh_podcast_list", false)) {
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("refresh_podcast_list", false);
+            editor.apply();
+
             showCopy(mAdapter.refreshContent());
+        }
     }
 }
