@@ -33,8 +33,8 @@ public class Processor {
         mContext = ctx;
     }
 
-    public void processEpisodes(final PodcastItem podcast)
-    {
+    public void processEpisodes(final PodcastItem podcast) {
+
         final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_episode_limit", "50"));
 
         final List<PodcastItem> newEpisodes = FeedParser.parse(podcast, limit);
@@ -53,8 +53,7 @@ public class Processor {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
         downloadEpisodes = new ArrayList<>();
 
-        for (final PodcastItem newEpisode : newEpisodes)
-        {
+        for (final PodcastItem newEpisode : newEpisodes) {
             try {
                 if (newEpisode == null || newEpisode.getPubDate() == null) continue;
 
@@ -93,20 +92,33 @@ public class Processor {
                 }
 
                 newEpisodesCount++;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        db.close();
 
         TrimEpisodes(mContext, podcast);
 
+        //remove duplicate
+        final List<PodcastItem> episodes = EpisodeUtilities.GetEpisodes(mContext, podcast.getPodcastId());
+
+        for (final PodcastItem episode1 : episodes) {
+            boolean exitLoop = false;
+            for (final PodcastItem episode2 : episodes) {
+                if (episode1.getMediaUrl() != null && episode2.getMediaUrl()!= null && episode1.getMediaUrl().equals(episode2.getMediaUrl()) && episode1.getEpisodeId() != episode2.getEpisodeId()) {
+                    db.delete(episode1.getEpisodeId());
+                    exitLoop = true;
+                    break;
+                }
+            }
+            if (exitLoop) break;
+        }
+
+        db.close();
+
         final int episodesDownloadedCount = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloaded_episodes_count", "0"));
 
-        if (episodesDownloadedCount > 0)
-        {
+        if (episodesDownloadedCount > 0) {
             List<PodcastItem> episodes2 = GetEpisodes(mContext, podcast.getPodcastId());
 
             if (episodes2.size() > 0) {
@@ -121,8 +133,7 @@ public class Processor {
             }
         }
 
-        if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false)
-        {
+        if (downloadCount > 0 && prefs.getBoolean("cleanup_downloads", false) == false) {
             //need to detect in download receiver that the download is from a background update and not manual download
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("cleanup_downloads", true);
