@@ -41,7 +41,6 @@ import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 public class SyncWorker extends Worker {
 
     private static WeakReference<Context> mContext;
-
     private static List<PodcastItem> mDownloadEpisodes;
     private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
@@ -71,19 +70,19 @@ public class SyncWorker extends Worker {
         final Context ctx = mContext.get();
 
         final List<PodcastItem> podcasts = GetPodcasts(ctx);
-        mDownloadEpisodes = new ArrayList<>();
         int newEpisodes = 0, downloadCount = 0;
+
+        final Processor processor = new Processor(ctx);
+        processor.newEpisodesCount = 0;
+        processor.downloadCount = 0;
+        processor.downloadEpisodes = new ArrayList<>();
 
         for (final PodcastItem podcast : podcasts) {
 
-            final Processor processor = new Processor(ctx);
             processor.processEpisodes(podcast);
 
-            newEpisodes = newEpisodes + processor.newEpisodesCount;
-            downloadCount = downloadCount + processor.downloadCount;
-
-            if (processor.downloadEpisodes != null && processor.downloadEpisodes.size() > 0)
-                mDownloadEpisodes.addAll(processor.downloadEpisodes);
+            newEpisodes = processor.newEpisodesCount;
+            downloadCount = processor.downloadCount;
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
@@ -147,7 +146,9 @@ public class SyncWorker extends Worker {
                 mPlayer.start();
             }
 
-            if (mDownloadEpisodes.size() > 0) {
+            if (processor.downloadEpisodes.size() > 0) {
+
+                mDownloadEpisodes =  processor.downloadEpisodes;
 
                 editor.putBoolean("from_job", true);
                 editor.apply();

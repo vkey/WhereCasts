@@ -11,7 +11,7 @@ import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +51,6 @@ public class Processor {
         final int autoAssignPlaylistId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
         final boolean assignPlaylist = autoAssignPlaylistId != autoAssignDefaultPlaylistId;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
-        downloadEpisodes = new ArrayList<>();
 
         for (final PodcastItem newEpisode : newEpisodes) {
             try {
@@ -106,6 +105,11 @@ public class Processor {
             boolean exitLoop = false;
             for (final PodcastItem episode2 : episodes) {
                 if (episode1.getMediaUrl() != null && episode2.getMediaUrl()!= null && episode1.getMediaUrl().equals(episode2.getMediaUrl()) && episode1.getEpisodeId() != episode2.getEpisodeId()) {
+                    final File file = Utilities.getEpisodeFile(mContext, episode1);
+
+                    if (file.exists())
+                        file.delete();
+
                     db.delete(episode1.getEpisodeId());
                     exitLoop = true;
                     break;
