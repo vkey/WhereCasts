@@ -52,8 +52,7 @@
             android:title="@string/settings_podcasts_label_display_paging_indicator"
             android:defaultValue="false"
             />
-        -->
-
+            -->
 
     </PreferenceCategory>
 </PreferenceScreen>

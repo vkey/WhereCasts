@@ -659,14 +659,19 @@ public class Utilities {
             //SaveEpisodeValue(ctx, episode, "download", 0);
         }
 
+        final File file = getEpisodeFile(ctx, episode);
+
+        if (file.exists())
+            file.delete();
+    }
+
+    public static File getEpisodeFile(final Context ctx, final PodcastItem episode)
+    {
         String fileName = Utilities.GetMediaFile(ctx, episode);
 
         fileName = fileName.replace("file://","");
 
-        final File file = new File(fileName);
-
-        if (file.exists())
-            file.delete();
+        return new File(fileName);
     }
 
     public static int downloadsCount(final Context ctx)

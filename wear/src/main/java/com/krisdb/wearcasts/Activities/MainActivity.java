@@ -222,9 +222,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     }
 
     @Override
-    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-
-    }
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {}
 
     public static class Init extends AsyncTask<Void, Void, Void> {
         private static WeakReference<MainActivity> mActivity;
@@ -410,7 +408,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             });
             mViewPager.setVisibility(View.VISIBLE);
 
-
             /*
             mViewPager2 = ctx.findViewById(R.id.main_pager);
             mViewPager2.setAdapter(new FragmentPagerAdapter2(ctx));
@@ -423,17 +420,16 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }
             });
             mViewPager2.setVisibility(View.VISIBLE);
-            */
 
-            /*
             final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
 
             if (prefs.getBoolean("pref_paging_indicator", false) == false) {
-                tabs.setupWithViewPager(vpMain, true);
+                tabs.setupWithViewPager(mViewPager, true);
                 tabs.setVisibility(View.VISIBLE);
             } else
                 tabs.setVisibility(View.GONE);
-*/
+            */
+
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                 if (ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(ctx, new String[]
@@ -496,8 +492,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.getExtras().getBoolean("hide_paging_indicator"))
-                findViewById(R.id.main_pager_dots).setVisibility(View.GONE);
+            //if (intent.getExtras().getBoolean("hide_paging_indicator"))
+            //findViewById(R.id.main_pager_dots).setVisibility(View.GONE);
         }
     };
 

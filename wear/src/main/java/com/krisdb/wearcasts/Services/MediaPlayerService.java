@@ -876,20 +876,24 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
-            if (position >= finishTime || (mPlaybackCount%10 == 0 && mPlaybackPosition > 0 && mPlaybackPosition == position)) {
+            if (position >= finishTime) {
                 mMediaHandler.removeCallbacksAndMessages(null);
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;
-                completeMedia();
-            }
-            else {
+                completeMedia(false);
+            } else if (mPlaybackCount%11 == 0 && (mPlaybackPosition > 0 && mPlaybackPosition == position)) {
+                mMediaHandler.removeCallbacksAndMessages(null);
+                mPlaybackPosition = 0;
+                mPlaybackCount = 0;
+                completeMedia(true);
+            } else {
                 final Intent intentMediaPosition = new Intent();
                 intentMediaPosition.setAction("media_position");
                 intentMediaPosition.putExtra("position", position);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
                 //initMediaSessionMetadata();
-                mPlaybackCount++;
                 mPlaybackPosition = position;
+                mPlaybackCount++;
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
         }
@@ -910,7 +914,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     };
 
-    private void completeMedia()
+    private void completeMedia(final boolean playbackError)
     {
         setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
         mMediaPlayer.stop();
@@ -919,7 +923,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
         if (!mError) {
-            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile,
+            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile, playbackError,
                     new Interfaces.PodcastsResponse() {
                         @Override
                         public void processFinish(final List<PodcastItem> episodes) {

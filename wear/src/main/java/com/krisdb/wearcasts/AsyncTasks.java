@@ -33,7 +33,6 @@ import java.util.List;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SearchEpisodes;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.getNextEpisodeNotDownloaded;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistItems;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
@@ -53,8 +52,9 @@ public class AsyncTasks {
         private Interfaces.PodcastsResponse mResponse;
         private int mPlaylistID, mPodcastID;
         private List<PodcastItem> mEpisodes;
+        private boolean mPlaybackError;
 
-        public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final int podcastId, final String localFile, final Interfaces.PodcastsResponse response)
+        public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final int podcastId, final String localFile, final boolean playbackError, final Interfaces.PodcastsResponse response)
         {
             mContext = new WeakReference<>(context);
             mEpisode = episode;
@@ -62,6 +62,7 @@ public class AsyncTasks {
             mPlaylistID = playlistId;
             mPodcastID = podcastId;
             mResponse = response;
+            mPlaybackError = playbackError;
         }
 
         @Override
@@ -86,43 +87,44 @@ public class AsyncTasks {
             else
                 return null;
 
+            /*
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
                 final PodcastItem nextEpisode = getNextEpisodeNotDownloaded(ctx, mEpisode);
 
                 if (nextEpisode != null && Utilities.getDownloadId(ctx, nextEpisode.getEpisodeId()) == 0)
                     Utilities.startDownload(ctx, nextEpisode);
             }
+            */
 
-            if (mLocalFile == null) {
-                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
-                final ContentValues cv = new ContentValues();
-                cv.put("finished", 1);
-                cv.put("playing", 0);
-                cv.put("buffering", 0);
-                cv.put("position", 0);
-                db.update(cv, mEpisode.getEpisodeId());
+            if (!mPlaybackError) {
+                if (mLocalFile == null) {
+                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+                    final ContentValues cv = new ContentValues();
+                    cv.put("finished", 1);
+                    cv.put("playing", 0);
+                    cv.put("buffering", 0);
+                    cv.put("position", 0);
+                    db.update(cv, mEpisode.getEpisodeId());
 
-                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
-                    Utilities.DeleteMediaFile(ctx, mEpisode);
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                        Utilities.DeleteMediaFile(ctx, mEpisode);
 
-                if (mPlaylistID != -1 && prefs.getBoolean("pref_remove_playlist_onend", false))
-                    db.deleteEpisodeFromPlaylists(mEpisode.getEpisodeId());
+                    if (mPlaylistID != -1 && prefs.getBoolean("pref_remove_playlist_onend", false))
+                        db.deleteEpisodeFromPlaylists(mEpisode.getEpisodeId());
 
-                db.close();
-            }
-            else
-            {
-                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
-                {
-                    final File localFile = new File(GetLocalDirectory(ctx).concat(mLocalFile));
+                    db.close();
+                } else {
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                        final File localFile = new File(GetLocalDirectory(ctx).concat(mLocalFile));
 
-                    if (localFile.exists())
-                        localFile.delete();
+                        if (localFile.exists())
+                            localFile.delete();
+                    }
+
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
+                    editor.apply();
                 }
-
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
-                editor.apply();
             }
             return null;
         }
