@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -35,7 +36,10 @@ public class Processor {
 
     public void processEpisodes(final PodcastItem podcast) {
 
-        final int limit = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(mContext).getString("pref_episode_limit", "50"));
+        android.util.Log.d(mContext.getPackageName(), "Processing: Start " + podcast.getChannel().getTitle());
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        final int limit = Integer.valueOf(prefs.getString("pref_episode_limit", "50"));
 
         final List<PodcastItem> newEpisodes = FeedParser.parse(podcast, limit);
 
@@ -45,7 +49,6 @@ public class Processor {
 
         final Date latestEpisodeDate = latestPodcast != null && latestPodcast.getPubDate() != null ? DateUtils.ConvertDate(latestPodcast.getPubDate(), "yyyy-MM-dd HH:mm:ss") : null;
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final boolean autoDownload = prefs.getBoolean("pref_" + podcast.getPodcastId() + "_auto_download", false);
         final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
         final int autoAssignPlaylistId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
@@ -143,5 +146,8 @@ public class Processor {
             editor.putBoolean("cleanup_downloads", true);
             editor.apply();
         }
+
+        android.util.Log.d(mContext.getPackageName(), "Processing: End " + podcast.getChannel().getTitle());
+        android.util.Log.d(mContext.getPackageName(), "");
     }
 }
