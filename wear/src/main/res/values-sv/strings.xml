@@ -332,6 +332,8 @@
     <string name="alert_file_deleted">1 filen raderad</string>
     <string name="alert_files_deleted">%d filer raderade</string>
 
+    <string name="skip_start_end_time_dialog_shown">Gäller endast denna podcast</string>
+
     <string name="alert_no_rss_url">Det här flödet har inte en giltig RSS-adress.\nKontakta foderleverantören.</string>
     <string name="no_rss_title">Ingen titel tillgänglig</string>
 

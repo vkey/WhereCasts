@@ -332,6 +332,8 @@
     <string name="alert_file_deleted">1 archivo borrado</string>
     <string name="alert_files_deleted">%d archivos eliminados</string>
 
+    <string name="skip_start_end_time_dialog_shown">Solo se aplica a este podcast</string>
+
     <string name="alert_no_rss_url">Este feed no tiene una URL RSS válida.\nPor favor, póngase en contacto con el proveedor de alimentación.</string>
     <string name="no_rss_title">No titulo disponible</string>
 

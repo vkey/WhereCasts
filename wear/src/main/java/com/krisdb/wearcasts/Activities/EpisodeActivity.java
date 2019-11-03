@@ -1251,6 +1251,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         switch (itemId) {
             case R.id.menu_drawer_episode_bluetooth_disable:
@@ -1300,18 +1301,26 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 setMenu();
                 break;
             case R.id.menu_drawer_episode_skip_start_time:
-                final SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(this);
-                final SharedPreferences.Editor editor1 = prefs1.edit();
-                editor1.putString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mSeekBar.getProgress()/1000));
-                editor1.apply();
+                final SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mSeekBar.getProgress()/1000));
                 Utilities.ShowConfirmationActivity(mActivity, getString(R.string.saved));
+                if (!prefs.getBoolean("skip_start_end_time_dialog_shown", false))
+                {
+                    CommonUtils.showToast(mActivity, getString(R.string.skip_start_end_time_dialog_shown));
+                    editor.putBoolean("skip_start_end_time_dialog_shown", true);
+                }
+                editor.apply();
                 break;
             case R.id.menu_drawer_episode_skip_finish_time:
-                final SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
-                final SharedPreferences.Editor editor2 = prefs2.edit();
+                final SharedPreferences.Editor editor2 = prefs.edit();
                 editor2.putString("pref_" + mEpisode.getPodcastId() + "_finish_end_time", String.valueOf((mSeekBar.getMax() -  mSeekBar.getProgress()) / 1000));
-                editor2.apply();
                 Utilities.ShowConfirmationActivity(mActivity, getString(R.string.saved));
+                if (!prefs.getBoolean("skip_start_end_time_dialog_shown", false))
+                {
+                    CommonUtils.showToast(mActivity, getString(R.string.skip_start_end_time_dialog_shown));
+                    editor2.putBoolean("skip_start_end_time_dialog_shown", true);
+                }
+                editor2.apply();
                 break;
             case R.id.menu_drawer_episode_add_playlist:
                 final View playlistAddView = getLayoutInflater().inflate(R.layout.episode_add_playlist, null);

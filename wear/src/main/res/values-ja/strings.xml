@@ -332,6 +332,8 @@
     <string name="alert_file_deleted">1 ファイルを削除しました</string>
     <string name="alert_files_deleted">%d ファイルが削除された</string>
 
+    <string name="skip_start_end_time_dialog_shown">このポッドキャストのみに適用</string>
+
     <string name="alert_no_rss_url">このフィードには有効なRSS URLがありません.\nフィードプロバイダーに連絡してください.</string>
     <string name="no_rss_title">タイトルなし</string>
 

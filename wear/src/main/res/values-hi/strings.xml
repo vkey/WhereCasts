@@ -332,6 +332,8 @@
     <string name="alert_file_deleted">1 फ़ाइल हटा दी गई</string>
     <string name="alert_files_deleted">%d फ़ाइलें हटा दी गईं</string>
 
+    <string name="skip_start_end_time_dialog_shown">इस पॉडकास्ट पर ही लागू होता है</string>
+
     <string name="alert_no_rss_url">इस फ़ीड में एक मान्य RSS Url नहीं है.\nकृपया फीड प्रदाता से संपर्क करें.</string>
     <string name="no_rss_title">कोई शीर्षक उपलब्ध नहीं है</string>
 
