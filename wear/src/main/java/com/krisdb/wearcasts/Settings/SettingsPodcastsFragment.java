@@ -153,6 +153,9 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                         @Override
                         public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
 
+                            if (newEpisodeCount > 0)
+                                Utilities.SetPodcstRefresh(mActivity);
+
                             if (downloadEpisodes.size() > 0)
                                 downloadEpisodes(downloadEpisodes);
 

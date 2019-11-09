@@ -159,6 +159,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                         public void processFinish() {
                             SetContent();
                             setDeleteThumbnailsTitle();
+                            Utilities.SetPodcstRefresh(mActivity);
                             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -177,6 +178,7 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
                             public void processFinish() {
                                 SetContent();
                                 setDeleteThumbnailsTitle();
+                                Utilities.SetPodcstRefresh(mActivity);
                                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
