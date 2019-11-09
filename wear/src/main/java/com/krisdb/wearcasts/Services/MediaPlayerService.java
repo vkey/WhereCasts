@@ -75,6 +75,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private TelephonyManager mTelephonyManager;
     private Boolean mError = false;
     private boolean mHasPremium;
+    private AudioManager mAudioManager;
 
     public MediaPlayerService() {
         super();
@@ -87,6 +88,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         mMediaSessionCompat = new MediaSessionCompat(this, MediaPlayerService.class.getSimpleName());
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mContext = this;
 
         initMediaPlayer();
@@ -142,10 +144,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
-        final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        if (audioManager != null)
-            audioManager.abandonAudioFocus(this);
+        if (mAudioManager != null)
+            mAudioManager.abandonAudioFocus(this);
 
         mMediaSessionCompat.release();
         NotificationManagerCompat.from(this).cancel(mNotificationID);
@@ -219,7 +219,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         @Override
         public void onPause() {
             super.onPause();
-            PauseAudio(true);
+            PauseAudio();
         }
 
         @Override
@@ -277,6 +277,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
 
+        if (mAudioManager != null)
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
         mMediaSessionCompat.setActive(true);
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
 
@@ -311,13 +314,16 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     private void PauseAudio() {
-        PauseAudio(false);
+        PauseAudio(true, true);
     }
 
-    private void PauseAudio(final Boolean disableTelephony)
+    private void PauseAudio(final Boolean disableTelephony, final Boolean disableAudioFocus)
     {
         if (disableTelephony && mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
+
+        if (disableAudioFocus && mAudioManager != null)
+            mAudioManager.abandonAudioFocus(this);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
@@ -345,11 +351,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.pause();
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
 
-            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-            if (audioManager != null)
-                audioManager.abandonAudioFocus(this);
-
             final Intent intentMediaPaused = new Intent();
             intentMediaPaused.setAction("media_action");
             intentMediaPaused.putExtra("media_paused", true);
@@ -375,6 +376,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
+
+        if (mAudioManager != null)
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         final Intent intentMediaStart = new Intent();
         intentMediaStart.setAction("media_action");
@@ -577,7 +581,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
-        } else if (episodes.size() > 2) {
+        } else if (episodes != null && episodes.size() > 2) {
             {
                 int currentPosition = 0;
 
@@ -616,6 +620,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 if (mMediaPlayer != null)
                     mMediaPlayer.reset();
 
+                CommonUtils.writeToFile(mContext, "Next Episode: " + mEpisode.getTitle());
+
                 StartStream(Uri.parse(uri));
 
                 final Bundle extras = new Bundle();
@@ -628,13 +634,19 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 intentMediaPlaylist.putExtra("id", mEpisode.getEpisodeId());
                 if (mLocalFile != null)
                     intentMediaPlaylist.putExtra("local_file", mLocalFile);
+
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlaylist);
             }
         } else {
-            setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
             stopForeground(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_remove_notification", false));
+
+            if (mAudioManager != null)
+                mAudioManager.abandonAudioFocus(this);
+
+            if (mTelephonyManager != null)
+                mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
             if (mLocalFile == null && !mEpisode.getIsDownloaded())
                 Utilities.enableBluetooth(mContext);
@@ -824,33 +836,38 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public void onAudioFocusChange(final int focusChange) {
         switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_LOSS: {
-                if (mMediaPlayer.isPlaying()) {
-                    PauseAudio();
-                }
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (mMediaPlayer.isPlaying())
+                    PauseAudio(true, false);
                 break;
-            }
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT: {
-                PauseAudio();
-                break;
-            }
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: {
-                if (mMediaPlayer != null) {
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if (mMediaPlayer != null)
                     mMediaPlayer.setVolume(0.3f, 0.3f);
-                }
                 break;
-            }
-            case AudioManager.AUDIOFOCUS_GAIN: {
-                //if (mMediaPlayer != null) {
-                    //if (!mMediaPlayer.isPlaying()) {
-                    //mMediaPlayer.start();
-                    //}
-                    //mMediaPlayer.setVolume(1.0f, 1.0f);
-                //}
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if (mMediaPlayer != null && !mMediaPlayer.isPlaying())
+                    PlayAudio();
                 break;
-            }
         }
     }
+
+    final PhoneStateListener mPhoneState = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                if (mMediaPlayer.isPlaying())
+                    PauseAudio(false, true);
+            } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                if (mMediaPlayer != null && !mMediaPlayer.isPlaying())
+                    PlayAudio();
+            } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                PauseAudio(false, true);
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+
 
     private static class MediaHandler extends Handler {
         private final WeakReference<MediaPlayerService> mWeakReference;
@@ -899,40 +916,26 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     };
 
-    final PhoneStateListener mPhoneState = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (state == TelephonyManager.CALL_STATE_RINGING) {
-                PauseAudio();
-            } else if(state == TelephonyManager.CALL_STATE_IDLE) {
-                //if (mMediaPlayer != null && mMediaPlayer.isPlaying() == false)
-                //PlayAudio();
-            } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                PauseAudio();
-            }
-            super.onCallStateChanged(state, incomingNumber);
-        }
-    };
-
     private void completeMedia(final boolean playbackError)
     {
+        CommonUtils.writeToFile(mContext, "\n\n");
+        CommonUtils.writeToFile(mContext, "Playback Error: " + playbackError);
         setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
         mMediaPlayer.stop();
-
-        if (mTelephonyManager != null)
-            mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
 
         if (!mError) {
             new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile, playbackError,
                     new Interfaces.PodcastsResponse() {
                         @Override
                         public void processFinish(final List<PodcastItem> episodes) {
+                            CommonUtils.writeToFile(mContext, "Episode size 2: " + episodes.size());
+
                             final Intent intentMediaCompleted = new Intent();
                             intentMediaCompleted.setAction("media_action");
                             intentMediaCompleted.putExtra("media_completed", true);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
-                            if (episodes != null && episodes.size() > 0)
-                                playlistSkip(Enums.SkipDirection.NEXT, episodes);
+
+                            playlistSkip(Enums.SkipDirection.NEXT, episodes);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
