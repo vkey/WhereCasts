@@ -391,8 +391,10 @@ public class CommonUtils {
 
     public static String CleanString(String str)
     {
-        if (str == null) return "";
+        if (str == null || str.length() == 0) return "";
+
         str = str.replaceAll("[ ':.–!&|{}_-]","");
+
         return str;
     }
 
