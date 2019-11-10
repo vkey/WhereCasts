@@ -20,6 +20,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.WindowManager;
 
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -148,21 +149,17 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         else {
             findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
-                    new Interfaces.BackgroundSyncResponse() {
-                        @Override
-                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
 
-                            if (newEpisodeCount > 0)
-                                Utilities.SetPodcstRefresh(mActivity);
+            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (SyncPodcastsResponse) -> {
+                if (SyncPodcastsResponse.getNewEpisodeCount() > 0)
+                    Utilities.SetPodcstRefresh(mActivity);
 
-                            if (downloadEpisodes.size() > 0)
-                                downloadEpisodes(downloadEpisodes);
+                if (SyncPodcastsResponse.getDownloadEpisodes().size() > 0)
+                    downloadEpisodes(SyncPodcastsResponse.getDownloadEpisodes());
 
-                            SetContent(newEpisodeCount);
-                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                SetContent(SyncPodcastsResponse.getNewEpisodeCount());
+                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
         }
     }
 
@@ -270,17 +267,17 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
             if (requestCode == NO_NETWORK_RESULTS_CODE) {
                 findPreference("pref_sync_podcasts").setSummary(getString(R.string.syncing));
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncPodcasts(mActivity, 0, true, findPreference("pref_sync_podcasts"),
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                if (downloadEpisodes.size() > 0)
-                                    downloadEpisodes(downloadEpisodes);
 
-                                SetContent(newEpisodeCount);
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (SyncPodcastsResponse) -> {
+                    if (SyncPodcastsResponse.getNewEpisodeCount() > 0)
+                        Utilities.SetPodcstRefresh(mActivity);
+
+                    if (SyncPodcastsResponse.getDownloadEpisodes().size() > 0)
+                        downloadEpisodes(SyncPodcastsResponse.getDownloadEpisodes());
+
+                    SetContent(SyncPodcastsResponse.getNewEpisodeCount());
+                   mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                });
             }
             else if (requestCode == LOW_BANDWIDTH_RESULTS_CODE) {
                 CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_episode_download_start));

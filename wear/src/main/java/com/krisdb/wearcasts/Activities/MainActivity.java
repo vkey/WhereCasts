@@ -37,6 +37,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.Fragments.PodcastsListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
@@ -45,6 +46,7 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Interfaces;
@@ -81,8 +83,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(getResources().getInteger(R.integer.default_home_screen)))) == getResources().getInteger(R.integer.home_screen_option_playing_Screen))
@@ -204,83 +208,19 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             });
         }
 
-        new Init(this).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        findViewById(R.id.main_splash_image).setVisibility(View.VISIBLE);
 
-        if (!Utilities.sleepTimerEnabled(this))
-            setMainMenu();
-    }
+        CommonUtils.executeSingleThreadAsync(new com.krisdb.wearcasts.Async.Init(this), (playlistIds) -> {
 
-    private void setMainMenu()
-    {
-        mNavItems = Utilities.getNavItems(this);
-        mNavDrawer = new WeakReference<>((WearableNavigationDrawerView) findViewById(R.id.drawer_nav_main));
+            mPlayListIds = playlistIds;
 
-        if (mNavDrawer.get() != null) {
-            mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
-            mNavDrawer.get().addOnItemSelectedListener(this);
-        }
-    }
+            final Context ctx = this;
 
-    @Override
-    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {}
+            final boolean hasPremium = Utilities.hasPremium(this);
+            int mHomeScreen = 0;
+            final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(getResources().getInteger(R.integer.default_home_screen))));
 
-    public static class Init extends AsyncTask<Void, Void, Void> {
-        private static WeakReference<MainActivity> mActivity;
-        private int mHomeScreen = 0;
-
-        Init(final MainActivity context)
-        {
-            mActivity = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mActivity.get().findViewById(R.id.main_splash_layout).setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            final MainActivity ctx = mActivity.get();
-            final Resources resources = ctx.getResources();
-
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-            final int homeScreenId = Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(resources.getInteger(R.integer.default_home_screen))));
-
-            final boolean hideEmpty = prefs.getBoolean("pref_hide_empty_playlists", false);
-            final boolean localFiles = (ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && DBUtilities.GetLocalFiles(ctx).size() > 1);
-            final boolean hasPremium = Utilities.hasPremium(ctx);
-
-            mPlayListIds = new ArrayList<>();
-            mPlayListIds.add(-1);
-
-            //third party: add check for playlist
-            if (HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_playerfm)))
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_playerfm));
-
-            if (hasPremium) {
-
-                final List<PlaylistItem> playlists = getPlaylists(ctx, hideEmpty);
-
-                if (prefs.getBoolean("pref_display_show_downloaded_episodes", false)) {
-                    for (final PlaylistItem playlist : playlists)
-                        if (HasEpisodes(ctx, 0, playlist.getID()))
-                            mPlayListIds.add(playlist.getID());
-                } else {
-                    for (final PlaylistItem playlist : playlists)
-                        mPlayListIds.add(playlist.getID());
-                }
-            }
-            if (localFiles)
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_local));
-
-            if (!hideEmpty || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_inprogress)))
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_inprogress));
-
-            if (!hideEmpty || HasEpisodes(ctx, 0, resources.getInteger(R.integer.playlist_downloads)))
-                mPlayListIds.add(resources.getInteger(R.integer.playlist_downloads));
-
-            mNumberOfPages = mPlayListIds.size();
+            mNumberOfPages = playlistIds.size();
 
             if (hasPremium) {
                 for (int i = 0; i < mNumberOfPages; i++) {
@@ -291,16 +231,53 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 }
             }
 
-            return null;
-        }
+            mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
+            mViewPager.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                public void onPageScrollStateChanged(int state) { }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            final MainActivity ctx = mActivity.get();
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
-            ctx.findViewById(R.id.main_splash_image).setVisibility(View.GONE);
+                public void onPageSelected(int position) {
+                    if (mNavDrawer != null && mNavDrawer.get() != null)
+                        mNavDrawer.get().getController().closeDrawer();
+                }
+            });
+            mViewPager.setVisibility(View.VISIBLE);
 
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            /*
+            mViewPager2 = findViewById(R.id.main_pager);
+            mViewPager2.setAdapter(new FragmentPagerAdapter2(ctx));
+            mViewPager2.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
+            mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback()
+            {
+                public void onPageScrollStateChanged(int state) {
+                    if (mNavDrawer != null && mNavDrawer.get() != null)
+                        mNavDrawer.get().getController().closeDrawer();
+                }
+            });
+            mViewPager2.setVisibility(View.VISIBLE);
+
+            final TabLayout tabs = findViewById(R.id.main_pager_dots);
+
+            if (prefs.getBoolean("pref_paging_indicator", false) == false) {
+                tabs.setupWithViewPager(mViewPager, true);
+                tabs.setVisibility(View.VISIBLE);
+            } else
+                tabs.setVisibility(View.GONE);
+            */
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]
+                            {
+                                    WRITE_EXTERNAL_STORAGE,
+                                    READ_PHONE_STATE
+                            }, PERMISSIONS_CODE);
+                }
+            }
+
+
 
             if (prefs.getInt("new_episode_count", 0) > 0) {
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -311,8 +288,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             if (prefs.getBoolean("show_no_network_message", false)) {
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                    alert.setMessage(ctx.getString(R.string.alert_downloads_no_network));
-                    alert.setNeutralButton(ctx.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    alert.setMessage(getString(R.string.alert_downloads_no_network));
+                    alert.setNeutralButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -344,40 +321,26 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             }
 
             if (visits > 40 && !prefs.getBoolean("rate_app_reminded", false)) {
-                new AsyncTasks.WatchConnected(ctx,
-                        new Interfaces.BooleanResponse() {
-                            @Override
-                            public void processFinish(final Boolean connected) {
-                                if (connected && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                                    final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-                                    alert.setMessage(ctx.getString(R.string.rate_app_reminder));
-                                    alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                CommonUtils.executeSingleThreadAsync(new WatchConnected(this), (connected) -> {
+                    if (connected && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+                        alert.setMessage(getString(R.string.rate_app_reminder));
+                        alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
 
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                            Utilities.ShowOpenOnPhoneActivity(ctx);
 
-                                            Utilities.ShowOpenOnPhoneActivity(ctx);
+                            final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
+                            CommonUtils.DeviceSync(ctx, dataMap);
+                            dialog.dismiss();
+                        });
 
-                                            final PutDataMapRequest dataMap = PutDataMapRequest.create("/rateapp");
-                                            CommonUtils.DeviceSync(ctx, dataMap);
-                                            dialog.dismiss();
-                                        }
-                                    });
+                        alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
 
-                                    alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-
-                                    final SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putBoolean("rate_app_reminded", true);
-                                    editor.apply();
-                                }
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("rate_app_reminded", true);
+                        editor.apply();
+                    }
+                });
             }
 
             if (visits > 20 && prefs.getBoolean("updatesEnabled", true) && prefs.getBoolean("updatesRefactor", true)) {
@@ -394,53 +357,26 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
             }
 
-            mViewPager.setAdapter(new FragmentPagerAdapter(ctx.getSupportFragmentManager()));
-            mViewPager.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                public void onPageScrollStateChanged(int state) { }
+            findViewById(R.id.main_splash_image).setVisibility(View.GONE);
+        });
 
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+        if (!Utilities.sleepTimerEnabled(this))
+            setMainMenu();
+    }
 
-                public void onPageSelected(int position) {
-                    if (mNavDrawer != null && mNavDrawer.get() != null)
-                        mNavDrawer.get().getController().closeDrawer();
-                }
-            });
-            mViewPager.setVisibility(View.VISIBLE);
+    private void setMainMenu()
+    {
+        mNavItems = Utilities.getNavItems(this);
+        mNavDrawer = new WeakReference<>((WearableNavigationDrawerView) findViewById(R.id.drawer_nav_main));
 
-            /*
-            mViewPager2 = ctx.findViewById(R.id.main_pager);
-            mViewPager2.setAdapter(new FragmentPagerAdapter2(ctx));
-            mViewPager2.setCurrentItem(mShowPodcastList ? 0 : mHomeScreen);
-            mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback()
-            {
-                public void onPageScrollStateChanged(int state) {
-                    if (mNavDrawer != null && mNavDrawer.get() != null)
-                        mNavDrawer.get().getController().closeDrawer();
-                }
-            });
-            mViewPager2.setVisibility(View.VISIBLE);
-
-            final TabLayout tabs = ctx.findViewById(R.id.main_pager_dots);
-
-            if (prefs.getBoolean("pref_paging_indicator", false) == false) {
-                tabs.setupWithViewPager(mViewPager, true);
-                tabs.setVisibility(View.VISIBLE);
-            } else
-                tabs.setVisibility(View.GONE);
-            */
-
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                if (ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ctx, new String[]
-                            {
-                                    WRITE_EXTERNAL_STORAGE,
-                                    READ_PHONE_STATE
-                            }, PERMISSIONS_CODE);
-                }
-            }
+        if (mNavDrawer.get() != null) {
+            mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
+            mNavDrawer.get().addOnItemSelectedListener(this);
         }
     }
+
+    @Override
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {}
 
     private static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -509,7 +445,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             editor.putBoolean("refresh_vp", false);
             editor.apply();
             mRefresh = true;
-            new Init(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            //new Init(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         if (Utilities.sleepTimerEnabled(this))
@@ -560,16 +496,16 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 editor.apply();
                 setMainMenu();
                 Utilities.StartSleepTimerJob(ctx);
-                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
-                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                Utilities.ShowConfirmationActivity(ctx, getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
+                //CommonUtils.showToast(ctx, getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
                 editor.apply();
                 setMainMenu();
                 Utilities.CancelSleepTimerJob(ctx);
-                Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.sleep_timer_stopped));
-                //CommonUtils.showToast(ctx, ctx.getString(R.string.sleep_timer_stopped));
+                Utilities.ShowConfirmationActivity(ctx, getString(R.string.sleep_timer_stopped));
+                //CommonUtils.showToast(ctx, getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
                 handleNetwork();
@@ -607,15 +543,10 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(this, 0, false, null,
-                    new Interfaces.BackgroundSyncResponse() {
-                        @Override
-                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                            //mViewPager2.setAdapter(new FragmentPagerAdapter2(mActivityRef.get()));
-                            mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivityRef.get(), 0), (response) -> {
+                mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
         }
     }
 }

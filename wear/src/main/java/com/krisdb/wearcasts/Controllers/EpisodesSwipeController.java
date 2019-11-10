@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
+import com.krisdb.wearcasts.Async.DisplayEpisodes;
+import com.krisdb.wearcasts.Async.SaveLogo;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
@@ -83,13 +85,8 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
             if (episode.getChannel().getThumbnailUrl() != null) {
                 Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.alert_refreshing_thumb));
                 //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_refreshing_thumb));
-                new AsyncTasks.SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                mAdapter.refreshItem2(mEpisodes,0);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                CommonUtils.executeSingleThreadAsync(new SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true), (response) -> { });
             }
             mAdapter.refreshItem2(mEpisodes,0);
         }
@@ -107,14 +104,10 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
 
                 if (hidePlayed) {
-                    new com.krisdb.wearcasts.AsyncTasks.DisplayEpisodes(ctx, podcastId, mQuery,
-                            new Interfaces.PodcastsResponse() {
-                                @Override
-                                public void processFinish(final List<PodcastItem> episodes) {
-                                    mEpisodes = episodes;
-                                    mAdapter.refreshList(episodes);
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    CommonUtils.executeSingleThreadAsync(new DisplayEpisodes(ctx, podcastId, mQuery), (episodes) -> {
+                        mEpisodes = episodes;
+                        mAdapter.refreshList(episodes);
+                    });
                 }
                 else {
                     mEpisodes.get(position).setFinished(!episode.getFinished());

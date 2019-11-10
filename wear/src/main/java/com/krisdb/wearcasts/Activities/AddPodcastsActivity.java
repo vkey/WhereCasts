@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,13 +21,12 @@ import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
+import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcasts.Fragments.AddPodcastListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 
 import java.lang.ref.WeakReference;
@@ -101,20 +99,12 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         if (!CommonUtils.isNetworkAvailable(mContext) && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
             alert.setMessage(getString(R.string.alert_episode_network_notfound));
-            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), WIFI_RESULT_CODE);
-                    dialog.dismiss();
-                }
+            alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), WIFI_RESULT_CODE);
+                dialog.dismiss();
             });
 
-            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).show();
+            alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> finish()).show();
         }
         else
             SetDirectory();
@@ -125,33 +115,29 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         mProgressBarText.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        new AsyncTasks.GetDirectory(this, mForceRefresh, false, mProgressBar,
-                new Interfaces.DirectoryResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastCategory> categories) {
-                        if (categories.size() > 0) {
-                            mNumberOfPages = categories.size();
+        CommonUtils.executeSingleThreadAsync(new GetDirectory(this, mForceRefresh, false, mProgressBar), (categories) -> {
+            if (categories.size() > 0) {
+                mNumberOfPages = categories.size();
 
-                            //final AddPodcastsPagerAdapter2 adapter = new AddPodcastsPagerAdapter2(mActivityRef.get());
-                            final AddPodcastsPagerAdapter adapter = new AddPodcastsPagerAdapter(getSupportFragmentManager());
+                //final AddPodcastsPagerAdapter2 adapter = new AddPodcastsPagerAdapter2(mActivityRef.get());
+                final AddPodcastsPagerAdapter adapter = new AddPodcastsPagerAdapter(getSupportFragmentManager());
 
-                            for (final PodcastCategory category : categories)
-                                adapter.addFrag(AddPodcastListFragment.newInstance(category.getPodcasts()), category.getName());
+                for (final PodcastCategory category : categories)
+                    adapter.addFrag(AddPodcastListFragment.newInstance(category.getPodcasts()), category.getName());
 
-                            mViewPager.setAdapter(adapter);
+                mViewPager.setAdapter(adapter);
 
-                            mViewPager.setVisibility(View.VISIBLE);
-                            mProgressBar.setVisibility(View.GONE);
-                            mProgressBarText.setVisibility(View.GONE);
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        }
-                        else
-                        {
-                            Utilities.ShowConfirmationActivity(mContext, ConfirmationActivity.FAILURE_ANIMATION, getString(R.string.general_error), true);
-                            finish();
-                        }
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                mViewPager.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+                mProgressBarText.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+            else
+            {
+                Utilities.ShowConfirmationActivity(mContext, ConfirmationActivity.FAILURE_ANIMATION, getString(R.string.general_error), true);
+                finish();
+            }
+        });
     }
 
     @Override

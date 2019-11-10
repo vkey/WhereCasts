@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.widget.WearableRecyclerView;
 
+import com.krisdb.wearcasts.Async.SaveLogo;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
@@ -139,23 +142,15 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             cv.put("thumbnail_url", thumbUrl.toString());
             cv.put("thumbnail_name", thumbName);
 
-            new com.krisdb.wearcastslibrary.AsyncTasks.SaveLogo(mContext, thumbUrl.toString(), thumbName,
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {}
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CommonUtils.executeSingleThreadAsync(new SaveLogo(mContext, thumbUrl.toString(), thumbName), (response) -> { });
         }
 
         final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
 
-        new AsyncTasks.SyncPodcasts(mContext, podcastId,
-                new Interfaces.BackgroundSyncResponse() {
-                    @Override
-                    public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                        if (newEpisodeCount == 0)
-                            CommonUtils.showToast(mContext, mContext.getString(R.string.alert_add_podcast_no_episodes));
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mContext, podcastId), (response) -> {
+            if (response.getNewEpisodeCount() == 0)
+                CommonUtils.showToast(mContext, mContext.getString(R.string.alert_add_podcast_no_episodes));
+        });
 
         Utilities.vibrate(mContext);
         Utilities.ShowConfirmationActivity(mContext, mContext.getString(R.string.alert_podcast_added));

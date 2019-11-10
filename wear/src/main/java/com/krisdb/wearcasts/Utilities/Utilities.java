@@ -22,12 +22,15 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.SortedList;
 import androidx.wear.activity.ConfirmationActivity;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
@@ -44,6 +47,7 @@ import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
+import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -51,6 +55,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
@@ -488,6 +495,7 @@ public class Utilities {
     {
         return "local_file_position_".concat(CommonUtils.CleanString(name));
     }
+
 
     public static String GetLocalDurationKey(final String name)
     {

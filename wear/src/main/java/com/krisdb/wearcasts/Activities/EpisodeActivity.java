@@ -57,6 +57,7 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
@@ -1162,14 +1163,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     }
                 }
                 else
-                {
-                    new com.krisdb.wearcasts.AsyncTasks.SyncPodcasts(mActivityRef.get(), 0, false, null,
-                            new Interfaces.BackgroundSyncResponse() {
-                                @Override
-                                public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                    CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivityRef.get(), 0), (response) -> { });
+
                 break;
             case 4:
                 startActivity(new Intent(ctx, SettingsPodcastsActivity.class));

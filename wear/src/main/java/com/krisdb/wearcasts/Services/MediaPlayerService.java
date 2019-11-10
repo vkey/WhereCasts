@@ -919,7 +919,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private void completeMedia(final boolean playbackError)
     {
         CommonUtils.writeToFile(mContext, "\n\n");
-        CommonUtils.writeToFile(mContext, "Playback Error: " + playbackError);
         setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
         mMediaPlayer.stop();
 
@@ -928,8 +927,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     new Interfaces.PodcastsResponse() {
                         @Override
                         public void processFinish(final List<PodcastItem> episodes) {
-                            CommonUtils.writeToFile(mContext, "Episode size 2: " + episodes.size());
-
                             final Intent intentMediaCompleted = new Intent();
                             intentMediaCompleted.setAction("media_action");
                             intentMediaCompleted.putExtra("media_completed", true);

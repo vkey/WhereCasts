@@ -8,22 +8,17 @@ import java.util.List;
 
 public class Interfaces {
 
+    public interface Callback<R> {
+        void onComplete(R result);
+    }
+
     public interface FetchPodcastResponse {
         void processFinish(PodcastItem podcast);
         void processFinish(List<PodcastItem> podcasts);
     }
 
-    public interface EpisodeDownloadOLD
-    {
-        void refresh(List<PodcastItem> episodes, int position, int downloadId, boolean cancel);
-    }
-
     public interface AsyncResponse {
         void processFinish();
-    }
-
-    public interface PremiumResponse {
-        void processFinish(Boolean purchased, int playlistCount);
     }
 
     public interface PodcastsResponse {
@@ -49,9 +44,4 @@ public class Interfaces {
     public interface AssetResponse {
         void processFinish(DataClient.GetFdForAssetResponse response);
     }
-
-    public interface BundleResponse {
-        void processFinish(Bundle bundle);
-    }
-
 }

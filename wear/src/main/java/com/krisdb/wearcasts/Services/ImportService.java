@@ -24,6 +24,8 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.krisdb.wearcasts.Async.SaveLogo;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -269,11 +271,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     thumbnailUrl = dataMapItem.getDataMap().getString("thumbnail_url");
                     fileName = dataMapItem.getDataMap().getString("thumbnail_name");
 
-                    new com.krisdb.wearcastslibrary.AsyncTasks.SaveLogo(this, thumbnailUrl, fileName,
-                            new Interfaces.AsyncResponse() {
-                                @Override
-                                public void processFinish() {}
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    CommonUtils.executeSingleThreadAsync(new SaveLogo(this, thumbnailUrl, fileName), (response) -> { });
                 }
 
                 cv.put("thumbnail_url", thumbnailUrl);
@@ -281,10 +279,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final int podcastId = (int)new DBPodcastsEpisodes(getApplicationContext()).insertPodcast(cv);
 
-                new AsyncTasks.SyncPodcasts(getApplicationContext(), podcastId,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) { } }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CommonUtils.executeSingleThreadAsync(new SyncPodcasts(getApplicationContext(), podcastId), (response) -> { });
 
                 //CacheUtils.deletePodcastsCache(this);
                 Utilities.vibrate(this);

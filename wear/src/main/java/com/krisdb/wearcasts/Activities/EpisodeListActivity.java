@@ -40,6 +40,8 @@ import androidx.wear.widget.drawer.WearableActionDrawerView;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.Async.DisplayEpisodes;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Controllers.EpisodesSwipeController;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -119,62 +121,42 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mEpisodeList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
         ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-            if (mQuery != null)
-            {
-                mQuery = null;
-                RefreshContent();
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+        if (mQuery != null)
+        {
+            mQuery = null;
+            RefreshContent();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        else if (!CommonUtils.isNetworkAvailable(mActivity))
+        {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.alert_episode_network_notfound));
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), NO_NETWORK_RESULTS_CODE);
+                    dialog.dismiss();
+                });
+
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-            else if (!CommonUtils.isNetworkAvailable(mActivity))
-            {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                    alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), NO_NETWORK_RESULTS_CODE);
-                            dialog.dismiss();
-                        }
-                    });
+        }
+         else {
+            mStatus.setVisibility(View.GONE);
+            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            mSwipeRefreshLayout.setRefreshing(true);
 
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-             else {
-                mStatus.setVisibility(View.GONE);
-                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                mSwipeRefreshLayout.setRefreshing(true);
-                new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, false,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                                if (downloadEpisodes.size() > 0)
-                                    downloadEpisodes(downloadEpisodes);
-                                else
-                                {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            RefreshContent();
-                                        }
-                                    });
-                                }
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-            }
+            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, mPodcastId), (response) -> {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (response.getDownloadEpisodes().size() > 0)
+                    downloadEpisodes(response.getDownloadEpisodes());
+                else
+                    runOnUiThread(this::RefreshContent);
+
+                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
+        }
         });
 
         mSwipeRefreshLayout.setEnabled(true);
@@ -287,38 +269,34 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        new AsyncTasks.DisplayEpisodes(mActivity, mPodcastId, mQuery,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> episodes) {
-                        mEpisodes = episodes;
-                        mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
-                        mEpisodeList.setAdapter(mAdapter);
+        CommonUtils.executeSingleThreadAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
+            mEpisodes = episodes;
+            mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
+            mEpisodeList.setAdapter(mAdapter);
 
-                        final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
-                        itemTouchhelper.attachToRecyclerView(mEpisodeList);
+            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
+            itemTouchhelper.attachToRecyclerView(mEpisodeList);
 
-                        if (episodes != null && episodes.size() == 1) {
-                            mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
-                            mStatus.setVisibility(View.VISIBLE);
-                        } else {
-                            if (HasNewEpisodes(mActivity, mPodcastId)) {
-                                Utilities.SetPodcstRefresh(mActivity);
-                                final ContentValues cv = new ContentValues();
-                                cv.put("new", 0);
-                                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                                db.updateAll(cv, mPodcastId);
-                                db.close();
-                                //CacheUtils.deletePodcastsCache(mActivity);
-                            }
+            if (episodes != null && episodes.size() == 1) {
+                mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
+                mStatus.setVisibility(View.VISIBLE);
+            } else {
+                if (HasNewEpisodes(mActivity, mPodcastId)) {
+                    Utilities.SetPodcstRefresh(mActivity);
+                    final ContentValues cv = new ContentValues();
+                    cv.put("new", 0);
+                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                    db.updateAll(cv, mPodcastId);
+                    db.close();
+                    //CacheUtils.deletePodcastsCache(mActivity);
+                }
 
-                            mStatus.setVisibility(TextView.GONE);
-                        }
+                mStatus.setVisibility(TextView.GONE);
+            }
 
-                        mProgressThumb.setVisibility(View.GONE);
-                        mEpisodeList.setVisibility(View.VISIBLE);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressThumb.setVisibility(View.GONE);
+            mEpisodeList.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override
@@ -328,24 +306,16 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             if (requestCode == NO_NETWORK_RESULTS_CODE) {
                 mSwipeRefreshLayout.setRefreshing(true);
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncPodcasts(mActivity, mPodcastId, true,
-                        new Interfaces.BackgroundSyncResponse() {
-                            @Override
-                            public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                                if (downloadEpisodes.size() > 0)
-                                    downloadEpisodes(downloadEpisodes);
-                                else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            RefreshContent();
-                                        }
-                                    });
-                                }
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, mPodcastId), (response) -> {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (response.getDownloadEpisodes().size() > 0)
+                        downloadEpisodes(response.getDownloadEpisodes());
+                    else {
+                        runOnUiThread(this::RefreshContent);
+                    }
+                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                });
             } else if (requestCode == SEARCH_RESULTS_CODE) {
                 mQuery = data.getData().toString();
 

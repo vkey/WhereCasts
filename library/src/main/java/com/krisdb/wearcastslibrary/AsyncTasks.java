@@ -61,33 +61,6 @@ public class AsyncTasks {
         protected void onPostExecute(Void param) { }
     }
 
-    public static class WatchConnected extends AsyncTask<Void, Void, Void> {
-        private Boolean mWatchConnected = false;
-        private Interfaces.BooleanResponse mResponse;
-
-        public WatchConnected(final Context context, final Interfaces.BooleanResponse response) {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            final Task<List<Node>> nodeListTask = Wearable.getNodeClient(mContext.get()).getConnectedNodes();
-
-            try {
-                List<Node> nodes = Tasks.await(nodeListTask);
-                mWatchConnected = nodes.size() > 0;
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            mResponse.processFinish(mWatchConnected);
-        }
-    }
-
     public static class GetDirectory extends AsyncTask<Void, Void, Void> {
 
         private Interfaces.DirectoryResponse mResponse;
@@ -406,49 +379,6 @@ public class AsyncTasks {
         @Override
         protected void onPostExecute(Void result) {
             mResponse.processFinish(mPodcasts);
-        }
-    }
-
-    public static class SaveLogo extends AsyncTask<Void, Void, Void> {
-
-        private String mUrl, mFileName;
-        private Interfaces.AsyncResponse mResponse;
-        private Boolean mForce;
-
-        public SaveLogo(final Context context, final String url, final String filename, final Interfaces.AsyncResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mFileName = filename;
-            mUrl = url;
-            mResponse = response;
-            mForce = false;
-        }
-
-        public SaveLogo(final Context context, final String url, final String filename, final Boolean force, final Interfaces.AsyncResponse response)
-        {
-            mContext = new WeakReference<>(context);
-            mFileName = filename;
-            mUrl = url;
-            mResponse = response;
-            mForce = force;
-        }
-
-        @Override
-        protected Void doInBackground(Void... args) {
-            CommonUtils.SavePodcastLogo(
-                    mContext.get(),
-                    mUrl,
-                    GetThumbnailDirectory(mContext.get()),
-                    mFileName,
-                    mContext.get().getResources().getInteger(R.integer.podcast_art_download_width),
-                    mForce
-                    );
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            mResponse.processFinish();
         }
     }
 

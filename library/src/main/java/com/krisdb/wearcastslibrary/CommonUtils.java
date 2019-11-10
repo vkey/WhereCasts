@@ -27,6 +27,8 @@ import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -59,6 +61,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.snackbar.Snackbar;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -71,6 +74,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,6 +85,26 @@ import static android.content.Context.MODE_APPEND;
 import static android.os.Environment.getExternalStorageDirectory;
 
 public class CommonUtils {
+
+    public static <R> void executeSingleThreadAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
+        executeAsync(callable, Executors.newSingleThreadExecutor(), callback);
+    }
+
+    public static <R> void executeAsync(Callable<R> callable, Executor executor, Interfaces.Callback<R> callback) {
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            try {
+                final R result = callable.call();
+                handler.post(() -> {
+                    callback.onComplete(result);
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
 
     public static void showToast(final Context ctx, final String message) {
         showToast(ctx, message, Toast.LENGTH_SHORT);
@@ -310,34 +336,21 @@ public class CommonUtils {
     }
 
     public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap, final String message, final int toastLength) {
-        new AsyncTasks.WatchConnected(ctx,
-                new Interfaces.BooleanResponse() {
-                    @Override
-                    public void processFinish(final Boolean connected) {
-                        if (connected) {
-                            dataMap.getDataMap().putLong("time", new Date().getTime());
-                            final PutDataRequest request = dataMap.asPutDataRequest();
-                            request.setUrgent();
 
-                            final Task<DataItem> task = Wearable.getDataClient(ctx).putDataItem(request);
+        CommonUtils.executeSingleThreadAsync(new WatchConnected(ctx), (connected) -> {
+            dataMap.getDataMap().putLong("time", new Date().getTime());
+            final PutDataRequest request = dataMap.asPutDataRequest();
+            request.setUrgent();
 
-                            task.addOnSuccessListener(new OnSuccessListener<DataItem>() {
-                                @Override
-                                public void onSuccess(DataItem dataItem) {
-                                    if (message != null)
-                                        showToast(ctx, message, toastLength);
-                                }
-                            });
+            final Task<DataItem> task = Wearable.getDataClient(ctx).putDataItem(request);
 
-                            task.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    showToast(ctx, message, Toast.LENGTH_LONG);
-                                }
-                            });
-                        }
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            task.addOnSuccessListener(dataItem -> {
+                if (message != null)
+                    showToast(ctx, message, toastLength);
+            });
+
+            task.addOnFailureListener(e -> showToast(ctx, message, Toast.LENGTH_LONG));
+        });
     }
 
    public static String getDensityName(final Context context) {

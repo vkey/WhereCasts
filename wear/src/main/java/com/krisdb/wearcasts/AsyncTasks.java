@@ -69,10 +69,7 @@ public class AsyncTasks {
         protected Void doInBackground(Void... params) {
             final Context ctx = mContext.get();
 
-            //CommonUtils.writeToFile(ctx, "Episode: " + mEpisode.getTitle());
-            //CommonUtils.writeToFile(ctx, "PodcastID: " + mPodcastID);
-            //CommonUtils.writeToFile(ctx, "PlaylistID: " + mPlaylistID);
-            //CommonUtils.writeToFile(ctx, "\n\n");
+            CommonUtils.writeToFile(ctx, "Episode: " + mEpisode.getTitle());
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             mPlaylistID = prefs.getInt("next_episode_playlistid", -99);
@@ -86,6 +83,7 @@ public class AsyncTasks {
                 mEpisodes = EpisodeUtilities.GetEpisodes(ctx, mPodcastID);
             else
                 return null;
+            CommonUtils.writeToFile(ctx, "Episodes size: " + mEpisodes.size());
 
             /*
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {
@@ -202,81 +200,6 @@ public class AsyncTasks {
         }
     }
 
-    public static class DisplayPodcasts extends AsyncTask<Void, Void, Void> {
-        private Interfaces.PodcastsResponse mResponse;
-        private List<PodcastItem> mPodcasts;
-        private boolean mHideEmpty;
-
-        public DisplayPodcasts(final Context context, final Boolean hideEmpty, final Interfaces.PodcastsResponse response) {
-            mContext = new WeakReference<>(context);
-            mHideEmpty = hideEmpty;
-            mResponse = response;
-       }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            final Context ctx = mContext.get();
-
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
-
-            mPodcasts = GetPodcasts(ctx, mHideEmpty, showDownloaded);
-
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            mResponse.processFinish(mPodcasts);
-        }
-    }
-
-    public static class DisplayEpisodes extends AsyncTask<Void, Void, Void> {
-        private int mPodcastId, mPlayListId;
-        private Interfaces.PodcastsResponse mResponse;
-        private List<PodcastItem> mEpisodes;
-        private String mQuery;
-
-        public DisplayEpisodes(final Context context, final int playlistId, final Interfaces.PodcastsResponse response) {
-            mContext = new WeakReference<>(context);
-            mPodcastId = -1;
-            mPlayListId = playlistId;
-            mQuery = null;
-            mResponse = response;
-        }
-
-        public DisplayEpisodes(final Context context, final int podcastId, final String query, final Interfaces.PodcastsResponse response) {
-            mContext = new WeakReference<>(context);
-            mPodcastId = podcastId;
-            mPlayListId = -1;
-            mQuery = query;
-            mResponse = response;
-       }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            final Context ctx = mContext.get();
-
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-            final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
-
-            final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", ctx.getString(R.string.episode_list_default)));
-
-            if (mQuery == null)
-                mEpisodes = GetEpisodes(ctx, mPodcastId, hidePlayed, numberOfEpisode, null);
-            else
-                mEpisodes = SearchEpisodes(ctx, mPodcastId, mQuery);
-
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            mResponse.processFinish(mEpisodes);
-        }
-    }
-
     public static class DisplayPlaylistEpisodes extends AsyncTask<Void, Void, Void> {
         private int mPlayListId;
         private Interfaces.PodcastsResponse mResponse;
@@ -367,133 +290,6 @@ public class AsyncTasks {
         {
             //Utilities.showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
             mResponse.processFinish();
-        }
-    }
-
-    public static class SyncPodcasts extends AsyncTask<Void, String, Void> {
-        private int mPodcastId, mNewEpisodes, mDownloadCount;
-        private Interfaces.BackgroundSyncResponse mResponse;
-        private Boolean mDisableToast;
-        private Preference mPreference = null;
-        private List<PodcastItem> mDownloadEpisodes;
-
-        public SyncPodcasts(final Context context, final int podcastId, final Interfaces.BackgroundSyncResponse response) {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-            mPodcastId = podcastId;
-            mDisableToast = true;
-        }
-        public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Interfaces.BackgroundSyncResponse response) {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-            mPodcastId = podcastId;
-            mDisableToast = disableToast;
-        }
-
-        public SyncPodcasts(final Context context, final int podcastId, final Boolean disableToast, final Preference preference, final Interfaces.BackgroundSyncResponse response) {
-            mContext = new WeakReference<>(context);
-            mResponse = response;
-            mPodcastId = podcastId;
-            mDisableToast = disableToast;
-            mPreference = preference;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if (!mDisableToast)
-                showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_started));
-        }
-
-        @Override
-        protected void onProgressUpdate(String... podcast) {
-            super.onProgressUpdate(podcast);
-
-            if (podcast != null && podcast.length > 0)
-                mPreference.setSummary(podcast[0]);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            mNewEpisodes = 0;
-            mDownloadCount = 0;
-            mDownloadEpisodes = new ArrayList<>();
-            final Context ctx = mContext.get();
-
-            final Processor processor = new Processor(ctx);
-            processor.downloadEpisodes = new ArrayList<>();
-
-            if (mPodcastId > 0)
-            {
-                final PodcastItem podcast = GetPodcast(ctx, mPodcastId);
-                processor.processEpisodes(podcast);
-                mNewEpisodes = processor.newEpisodesCount;
-                mDownloadCount = processor.downloadCount;
-            }
-            else {
-                final List<PodcastItem> podcasts = GetPodcasts(mContext.get());
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-                for (final PodcastItem podcast : podcasts) {
-                    if (mPreference != null)
-                        publishProgress(podcast.getChannel().getTitle());
-
-                    processor.processEpisodes(podcast);
-
-                    mNewEpisodes = processor.newEpisodesCount;
-                    mDownloadCount = processor.downloadCount;
-
-                    final int downloadsToDeleteNumber = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_downloads_saved", "0"));
-
-                    if (downloadsToDeleteNumber > 0) {
-                        List<PodcastItem> downloads1 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId(), downloadsToDeleteNumber);
-
-                        if (downloads1.size() > 0) {
-                            for (final PodcastItem download : downloads1) {
-                                Utilities.DeleteMediaFile(ctx, download);
-                                SystemClock.sleep(500);
-                            }
-                        }
-                    }
-
-                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
-
-                    if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
-                        List<PodcastItem> downloads2 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId());
-
-                        for (final PodcastItem download : downloads2) {
-                            final Date downloadDate = DateUtils.ConvertDate(download.getDownloadDate(), "yyyy-MM-dd HH:mm:ss");
-                            final Date compareDate = DateUtils.addHoursToDate(new Date(), autoDeleteID);
-
-                            if (downloadDate.after(compareDate)) {
-                                Utilities.DeleteMediaFile(ctx, download);
-                                SystemClock.sleep(500);
-                            }
-                        }
-
-                    }
-                    SystemClock.sleep(500);
-                }
-            }
-
-            if (processor.downloadEpisodes.size() > 0)
-                mDownloadEpisodes = processor.downloadEpisodes;
-
-            if (mPodcastId == 0) {
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-                final SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("last_podcast_sync_date", new Date().toString());
-                editor.apply();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            if (!mDisableToast)
-                showToast(mContext.get(), mContext.get().getString(R.string.alert_sync_finished));
-
-            mResponse.processFinish(mNewEpisodes, mDownloadCount, mDownloadEpisodes);
         }
     }
 

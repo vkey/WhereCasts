@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
+import com.krisdb.wearcasts.Async.DisplayPodcasts;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -66,8 +69,10 @@ public class PodcastsListFragment extends Fragment {
         mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
         //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
 
-        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
+        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false)) {
             handleNetwork();
+            CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
+        }
 
         RefreshContent();
 
@@ -101,13 +106,12 @@ public class PodcastsListFragment extends Fragment {
         }
         else
         {
-            new AsyncTasks.SyncPodcasts(mActivity, 0, false,
-                    new Interfaces.BackgroundSyncResponse() {
-                        @Override
-                        public void processFinish(final int newEpisodeCount, final int downloads, final List<PodcastItem> downloadEpisodes) {
-                            RefreshContent();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
+                if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
+
+                RefreshContent();
+            });
         }
     }
 
@@ -122,15 +126,12 @@ public class PodcastsListFragment extends Fragment {
 
         final Boolean hideEmpty = PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hide_empty", false);
 
-        new AsyncTasks.DisplayPodcasts(mActivity, hideEmpty,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> podcasts) {
-                        mAdapter = new PodcastsAdapter(mActivity, podcasts);
-                        mPodcastsList.setAdapter(mAdapter);
-                        showCopy(podcasts.size());
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CommonUtils.executeSingleThreadAsync(new DisplayPodcasts(mActivity, hideEmpty), (podcasts) -> {
+            mAdapter = new PodcastsAdapter(mActivity, podcasts);
+            mPodcastsList.setAdapter(mAdapter);
+            showCopy(podcasts.size());
+        });
+
     }
 
     private void showCopy(final int number)
@@ -183,21 +184,15 @@ public class PodcastsListFragment extends Fragment {
             if (mLogo != null) {
                 mLogo.setImageDrawable(GetRoundedLogo(mActivity, null));
                 mLogo.setVisibility(TextView.VISIBLE);
-                mLogo.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        new AsyncTasks.DisplayPodcasts(mActivity, false,
-                                new Interfaces.PodcastsResponse() {
-                                    @Override
-                                    public void processFinish(final List<PodcastItem> podcasts) {
-                                        mAdapter = new PodcastsAdapter(mActivity, podcasts);
-                                        mPodcastsList.setAdapter(mAdapter);
-                                        showCopy(podcasts.size());
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                mLogo.setOnLongClickListener(view -> {
 
-                        return false;
-                    }
+                    CommonUtils.executeSingleThreadAsync(new DisplayPodcasts(mActivity, false), (podcasts) -> {
+                        mAdapter = new PodcastsAdapter(mActivity, podcasts);
+                        mPodcastsList.setAdapter(mAdapter);
+                        showCopy(podcasts.size());
+                    });
+
+                    return false;
                 });
             }
         }
