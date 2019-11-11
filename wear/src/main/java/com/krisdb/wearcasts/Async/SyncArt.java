@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -18,9 +20,15 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 
 public class SyncArt implements Callable<Boolean> {
     private final Context context;
+    private boolean mOpmlImport = false;
 
     public SyncArt(final Context context) {
         this.context = context;
+    }
+
+    public SyncArt(final Context context, final boolean opmlImport) {
+        this.context = context;
+        this.mOpmlImport = opmlImport;
     }
 
     @Override
@@ -44,8 +52,16 @@ public class SyncArt implements Callable<Boolean> {
         }
 
         for (final PodcastItem podcast : podcasts) {
-            if (podcast.getChannel().getThumbnailUrl() != null)
+            if (podcast.getChannel().getThumbnailUrl() != null) {
                 CommonUtils.SavePodcastLogo(context, podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(context), podcast.getChannel().getThumbnailName(), context.getResources().getInteger(R.integer.podcast_art_download_width));
+
+                if (mOpmlImport) {
+                    final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/opmlimport_art");
+                    final DataMap dataMap = dataMapRequest.getDataMap();
+                    dataMap.putString("podcast_title_art", podcast.getChannel().getTitle());
+                    CommonUtils.DeviceSync(context, dataMapRequest);
+                }
+            }
         }
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

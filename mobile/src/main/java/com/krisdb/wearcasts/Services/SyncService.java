@@ -89,16 +89,32 @@ public class SyncService extends WearableListenerService {
                 intent.putExtra("opmlimport_complete", true);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_podcasts")) {
+                final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
+
+                final Intent intent = new Intent();
+                intent.setAction("watchresponse");
+                intent.putExtra("opmlimport_podcasts", true);
+                intent.putExtra("podcast_title", dataMapItem.getDataMap().getString("podcast_title"));
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_episodes")) {
+                final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
+
                 final Intent intent = new Intent();
                 intent.setAction("watchresponse");
                 intent.putExtra("opmlimport_episodes", true);
+                intent.putExtra("podcast_title_episodes", dataMapItem.getDataMap().getString("podcast_title_episodes"));
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_art")) {
+                final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
+
                 final Intent intent = new Intent();
                 intent.setAction("watchresponse");
                 intent.putExtra("opmlimport_art", true);
+                intent.putExtra("podcast_title_art", dataMapItem.getDataMap().getString("podcast_title_art"));
+
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         }

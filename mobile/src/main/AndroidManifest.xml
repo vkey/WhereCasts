@@ -131,6 +131,10 @@
                     android:host="*"
                     android:pathPrefix="/opmlimport_complete"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/opmlimport_podcasts"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 

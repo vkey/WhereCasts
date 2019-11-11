@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textSize="15sp"
-                    android:paddingTop="15dp"
+                    android:paddingTop="20dp"
                     android:text="@string/text_third_party_auto_download"
                     android:layout_below="@+id/user_add_third_party_message"
                     />

@@ -12,8 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.DataClient;
@@ -23,15 +21,12 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.krisdb.wearcasts.Async.InsertPodcasts;
-import com.krisdb.wearcasts.Async.SaveLogo;
+import com.krisdb.wearcasts.Async.ProcessOPML;
 import com.krisdb.wearcasts.Async.SyncArt;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.Databases.DBPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.DBUtilities;
-import com.krisdb.wearcasts.Utilities.OPMLParser;
 import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Async.ConvertFileToAsset;
@@ -48,12 +43,10 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByTitle;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
 public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener {
 
@@ -287,30 +280,12 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final Asset asset = dataMapItem.getDataMap().getAsset("opml");
 
-                final Task<DataClient.GetFdForAssetResponse> getFdForAssetResponseTask = Wearable.getDataClient(getApplicationContext()).getFdForAsset(asset);
-
-                DataClient.GetFdForAssetResponse getFdForAssetResponse = null;
-                try {
-                    getFdForAssetResponse = Tasks.await(getFdForAssetResponseTask);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                final InputStream in = getFdForAssetResponse.getInputStream();
-
-                final List<PodcastItem> podcasts = OPMLParser.parse(this, in);
-
                 //podcasts
-                CommonUtils.executeSingleThreadAsync(new InsertPodcasts(context, podcasts), (response) -> {
-
+                CommonUtils.executeSingleThreadAsync(new ProcessOPML(context, asset, true), (response) -> {
                     //episodes
-                    CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_episodes"));
                     CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context), (data1) -> {
-
                         //art
-                        CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_art"));
-                        CommonUtils.executeSingleThreadAsync(new SyncArt(context), (data2) -> {
-
+                        CommonUtils.executeSingleThreadAsync(new SyncArt(context, true), (data2) -> {
                             CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_complete"));
                             Utilities.vibrate(context);
                         });

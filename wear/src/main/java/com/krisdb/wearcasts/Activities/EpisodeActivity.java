@@ -542,7 +542,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
+                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
                         mPlayPauseImage.setVisibility(View.VISIBLE);
+                        mProgressCircleLoading.setVisibility(View.INVISIBLE);
                         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
@@ -557,6 +559,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             mDownloadImage.setOnClickListener(view -> CancelDownload());
                             mDownloadStartTime = System.nanoTime();
                         }
+                        else
+                            Utilities.ShowFailureActivity(mContext, "");
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:

@@ -286,6 +286,8 @@
     <string name="playlist_title_unplayed">नहीं चलाए गए</string>
     <string name="playlist_title_local">स्थानीय</string>
 
+    <string name="alert_download_error">यह एपिसोड सही तरीके से डाउनलोड नहीं हुआ.  कृपया इसे फिर से डाउनलोड करने का प्रयास करें</string>
+
     <string name="alert_add_podcast_no_episodes">लेकिन कोई एपिसोड नहीं मिला</string>
     <string name="alert_no_system_audio">कोई सिस्टम ऑडियो नहीं मिला</string>
     <string name="text_episode_no_media">प्लेबैक के लिए मीडिया नहीं मिल सकता है पॉडकास्ट प्रदाता हटाएं और पुनः जोड़ें या संपर्क करें.</string>

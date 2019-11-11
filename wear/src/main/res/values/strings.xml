@@ -283,13 +283,14 @@
 
     <string name="nav_add_refresh">Refresh</string>
 
-
     <string name="playlist_title_inprogress">In Progress</string>
     <string name="playlist_title_downloads">Downloads</string>
     <string name="playlist_title_unplayed">Unplayed</string>
     <string name="playlist_title_local">Local</string>
 
     <string name="text_episode_no_media">Cannot find media for playback. Delete and re-add or contact podcast provider.</string>
+
+    <string name="alert_download_error">This episode did not download correctly.  Please try downloading it again</string>
 
     <string name="alert_main_menu_start_update">Start update?</string>
     <string name="alert_add_podcast_no_episodes">but no episodes found</string>

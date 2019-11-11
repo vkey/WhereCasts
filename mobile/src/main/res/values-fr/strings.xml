@@ -80,13 +80,16 @@
     <string name="text_third_party_auto_download">Téléchargement automatique de l\'épisode de podcast sous surveillance (s\'applique au prochain ajout)</string>
     <string name="text_third_party_no_watch">Aucune montre détectée</string>
 
-    <string name="text_importing_opml_sent">Analyser OPML (s\'il vous plaît soyez patient)…</string>
-    <string name="text_importing_opml_episodes">Synchroniser des épisodes…</string>
-    <string name="text_importing_opml_art">Téléchargement d\'art de podcast…</string>
+    <string name="notification_channel_opml_import_complete">Importation OPML</string>
+    <string name="notification_opml_import_complete_title">Importation OPML terminée</string>
+
+    <string name="text_importing_opml_sent">Votre fichier OPML sera traité en arrière-plan.  Vous serez averti lorsque l'importation est terminée.\n\nEn attente de la réponse de la montre…</string>
+    <string name="text_importing_opml_parsing">L\'analyse: %s</string>
+    <string name="text_importing_opml_episodes">Synchroniser des épisodes: %s</string>
+    <string name="text_importing_opml_art">Télécharger de l\'art: %s</string>
     <string name="text_importing_opml_complete">Importation terminée</string>
 
     <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>
-    <string name="text_importing_opml_parsing">Analyser OPML (peut prendre un certain temps en fonction du nombre de podcasts)…</string>
     <string name="alert_get_directory_error">Impossible d\'extraire le répertoire podcasts</string>
 
     <string name="alert_podcast_added">Envoyé à regarder</string>

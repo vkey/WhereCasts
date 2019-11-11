@@ -2,12 +2,17 @@ package com.krisdb.wearcasts.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -25,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -44,6 +51,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
@@ -267,30 +275,68 @@ public class UserAddActivity extends AppCompatActivity {
     private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-             if (intent.getExtras().getBoolean("thirdparty")) {
+            final Bundle extras = intent.getExtras();
+             if (extras.getBoolean("thirdparty")) {
                  findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
                  findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
              }
-            else if (intent.getExtras().getBoolean("opmlimport_complete")) {
+            else if (extras.getBoolean("opmlimport_complete")) {
                  mProgressOPML.setVisibility(View.GONE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
                  mOPMLView.setText(getString(R.string.text_importing_opml_complete));
                  mOPMLView.setTextColor(mActivity.getColor(R.color.wc_general_green));
                  getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+                 final Intent notificationIntent = new Intent(mActivity, DirectoryActivity.class);
+                 notificationIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                 final PendingIntent intentDirectory = PendingIntent.getActivity(mActivity, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                     final String channelID = getPackageName().concat(".opmlcomplete");
+
+                     final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                     final NotificationChannel channel = new NotificationChannel(channelID, getString(R.string.notification_channel_opml_import_complete), NotificationManager.IMPORTANCE_DEFAULT);
+                     notificationManager.createNotificationChannel(channel);
+
+                     final Notification notification = new NotificationCompat.Builder(mActivity, channelID)
+                             .setSmallIcon(R.drawable.ic_notification)
+                             .setContentTitle(getString(R.string.notification_opml_import_complete_title))
+                             .setContentIntent(intentDirectory)
+                             .build();
+
+                     notificationManager.notify(122, notification);
+                 } else {
+                     final NotificationCompat.Builder notificationBuilder =
+                             new NotificationCompat.Builder(mActivity)
+                                     .setSmallIcon(R.drawable.ic_notification)
+                                     .setContentIntent(intentDirectory)
+                                     .setContentTitle(getString(R.string.notification_opml_import_complete_title));
+
+                     NotificationManagerCompat.from(mActivity).notify(122, notificationBuilder.build());
+                 }
              }
-            else if (intent.getExtras().getBoolean("opmlimport_episodes")) {
+            else if (extras.getBoolean("opmlimport_podcasts")) {
                  mProgressOPML.setVisibility(View.VISIBLE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_episodes));
+                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title")));
                  mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
              }
-            else if (intent.getExtras().getBoolean("opmlimport_art")) {
+            else if (extras.getBoolean("opmlimport_episodes")) {
                  mProgressOPML.setVisibility(View.VISIBLE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_art));
+                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title_episodes")));
+                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+             }
+            else if (extras.getBoolean("opmlimport_art")) {
+                 mProgressOPML.setVisibility(View.VISIBLE);
+                 mOPMLView.setGravity(Gravity.START);
+                 mOPMLView.setVisibility(View.VISIBLE);
+                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title_art")));
                  mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
              }
         }
@@ -300,6 +346,24 @@ public class UserAddActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    public void onPause() {
+        //mBroadcastManger.unregisterReceiver(mWatchResponse);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mBroadcastManger.unregisterReceiver(mWatchResponse);
+        super.onDestroy();
     }
 
     @Override
@@ -333,11 +397,6 @@ public class UserAddActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onPause() {
-        mBroadcastManger.unregisterReceiver(mWatchResponse);
-        super.onPause();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

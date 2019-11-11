@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Models.SyncPodcastsResponse;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -23,10 +26,17 @@ import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 public class SyncPodcasts implements Callable<SyncPodcastsResponse> {
     private final Context context;
     private int mPodcastId;
+    private boolean mOpmlImport = false;
 
     public SyncPodcasts(final Context context) {
         this.context = context;
         this.mPodcastId = 0;
+    }
+
+    public SyncPodcasts(final Context context, final boolean opmlImport) {
+        this.context = context;
+        this.mPodcastId = 0;
+        this.mOpmlImport = opmlImport;
     }
 
     public SyncPodcasts(final Context context, final int podcastId) {
@@ -85,6 +95,13 @@ public class SyncPodcasts implements Callable<SyncPodcastsResponse> {
                             Utilities.DeleteMediaFile(context, download);
                     }
 
+                }
+
+                if (mOpmlImport) {
+                    final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/opmlimport_episodes");
+                    final DataMap dataMap = dataMapRequest.getDataMap();
+                    dataMap.putString("podcast_title_episodes", podcast.getChannel().getTitle());
+                    CommonUtils.DeviceSync(context, dataMapRequest);
                 }
             }
         }

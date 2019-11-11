@@ -82,13 +82,16 @@
     <string name="text_third_party_auto_download">Auto-download podcast episode on watch (applies to next added)</string>
     <string name="text_third_party_no_watch">No watch detected</string>
 
-    <string name="text_importing_opml_sent">Parsing OPML (please be patient)…</string>
-    <string name="text_importing_opml_episodes">Syncing episodes…</string>
-    <string name="text_importing_opml_art">Downloading podcast art…</string>
+    <string name="notification_channel_opml_import_complete">OPML Import</string>
+    <string name="notification_opml_import_complete_title">OPML import complete</string>
+
+    <string name="text_importing_opml_sent">Your OPML file will process in the background.  You will be notified when the import is complete.\n\nWaiting for response from watch…</string>
+    <string name="text_importing_opml_parsing">Parsing: %s</string>
+    <string name="text_importing_opml_episodes">Syncing episodes: %s</string>
+    <string name="text_importing_opml_art">Downloading art: %s</string>
     <string name="text_importing_opml_complete">Import complete</string>
 
     <string name="text_importing_opml_sending">Sending podcasts to your wear device…</string>
-    <string name="text_importing_opml_parsing">Parsing OPML (could take awhile depending on number of podcasts)…</string>
     <string name="alert_get_directory_error">Failed to fetch podcasts directory</string>
 
     <string name="alert_podcast_added">Sent to watch</string>

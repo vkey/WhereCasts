@@ -285,6 +285,8 @@
     <string name="playlist_title_unplayed">未播放</string>
     <string name="playlist_title_local">本地</string>
 
+    <string name="alert_download_error">此劇集下載不正確.  請嘗試再次下載</string>
+
     <string name="alert_add_podcast_no_episodes">但沒有找到劇集</string>
     <string name="alert_no_system_audio">找不到系統音頻</string>
     <string name="text_episode_no_media">找不到要播放的媒體。刪除並重新添加或聯繫播客提供商.</string>

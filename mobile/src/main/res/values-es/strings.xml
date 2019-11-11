@@ -80,13 +80,16 @@
     <string name="text_third_party_auto_download">Descargar automáticamente el episodio de podcast de servicio (se aplica al próximo agregado)</string>
     <string name="text_third_party_no_watch">No se detectó ningún reloj</string>
 
-    <string name="text_importing_opml_sent">Analizando OPML (por favor sea paciente)…</string>
-    <string name="text_importing_opml_episodes">Episodios de sincronización…</string>
-    <string name="text_importing_opml_art">Descargando arte podcast…</string>
+    <string name="notification_channel_opml_import_complete">Importar OPML</string>
+    <string name="notification_opml_import_complete_title">Importación OPML completa</string>
+
+    <string name="text_importing_opml_sent">Su archivo OPML se procesará en segundo plano.  Se le notificará cuando se complete la importación.\n\nEsperando respuesta del reloj…</string>
+    <string name="text_importing_opml_parsing">Analizando: %s</string>
+    <string name="text_importing_opml_episodes">Episodios de sincronización: %s</string>
+    <string name="text_importing_opml_art">Descargando arte: %s</string>
     <string name="text_importing_opml_complete">Importación completada</string>
 
     <string name="text_importing_opml_sending">Envío de podcasts a su dispositivo de desgaste…</string>
-    <string name="text_importing_opml_parsing">Analizando OPML (podría tomar un tiempo dependiendo de la cantidad de podcasts)…</string>
     <string name="alert_get_directory_error">Error al buscar el directorio de podcasts</string>
 
     <string name="alert_podcast_added">Enviado para mirar</string>

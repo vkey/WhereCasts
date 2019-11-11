@@ -43,6 +43,7 @@ public class DirectoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_directory);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        CommonUtils.cancelNotification(this, 122);
 
         mViewPager = findViewById(R.id.main_pager);
         mProgressBar = findViewById(R.id.main_progress_bar);

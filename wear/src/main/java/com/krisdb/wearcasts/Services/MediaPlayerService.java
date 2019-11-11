@@ -32,6 +32,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
+import androidx.wear.activity.ConfirmationActivity;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.Async.FinishMedia;
@@ -75,7 +77,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
     private Boolean mError = false;
-    private boolean mHasPremium;
+    private boolean mHasPremium, mCallStarted = false;
     private AudioManager mAudioManager;
 
     public MediaPlayerService() {
@@ -367,6 +369,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     private void StartStream(final Uri uri) {
+
+        if (mEpisode.getIsDownloaded() && !Utilities.getEpisodeFile(mContext, mEpisode).exists())
+        {
+            CommonUtils.showToast(mContext, getString(R.string.alert_download_error), Toast.LENGTH_LONG);
+            return;
+        }
+
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
         mMediaSessionCompat.setActive(true);
 
@@ -377,6 +386,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (mAudioManager != null)
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        mCallStarted = false;
 
         final Intent intentMediaStart = new Intent();
         intentMediaStart.setAction("media_action");
@@ -418,12 +429,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             }
 
             if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonUtils.showToast(mContext, getString(R.string.alert_streaming));
-                    }
-                });
+                new Handler(Looper.getMainLooper()).post(() -> CommonUtils.showToast(mContext, getString(R.string.alert_streaming)));
                 mMediaPlayer.prepareAsync();
             } else
                 mMediaPlayer.prepare();
@@ -457,111 +463,94 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             showNotification(false);
 
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                }
+            mMediaPlayer.setOnCompletionListener(mp -> {
             });
 
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer player) {
-                    if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
-                        int position;
-
-                        if (mLocalFile == null)
-                            position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
-                        else
-                            position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
-
-                        if (position == 0)
-                            position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
-
-                        mMediaPlayer.seekTo(position);
-                    }
-                }
-            });
-
-            mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-                @Override
-                public void onSeekComplete(MediaPlayer mp) {
-                    setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
-
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            mMediaPlayer.setOnPreparedListener(player -> {
+                if (mLocalFile == null && !mEpisode.getIsDownloaded()) {
+                    int position;
 
                     if (mLocalFile == null)
-                        SaveEpisodeValue(mContext, mEpisode, "duration", mMediaPlayer.getDuration());
-                    else {
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putLong(Utilities.GetLocalDurationKey(mLocalFile), mMediaPlayer.getDuration());
-                        editor.apply();
-                    }
+                        position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+                    else
+                        position = prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0);
 
-                    mPlaybackPosition = 0;
-                    mPlaybackCount = 0;
+                    if (position == 0)
+                        position = Integer.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_skip_start_time", String.valueOf(mContext.getResources().getInteger(R.integer.default_skip_start_time)))) * 1000;
 
-                    mMediaHandler.removeCallbacksAndMessages(null);
-                    mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
-
-                    final Intent intentMediaCompleted = new Intent();
-                    intentMediaCompleted.setAction("media_action");
-                    intentMediaCompleted.putExtra("media_started", false);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
-
-                    if (mLocalFile == null)
-                        SyncWithMobileDevice();
-
-                    mp.start();
+                    mMediaPlayer.seekTo(position);
                 }
             });
 
-            mMediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-                                                          @Override
-                                                          public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                                                              //Intent intentMediaBuffering = new Intent();
-                                                              //intentMediaBuffering.setAction("media_buffering");
-                                                              //intentMediaBuffering.putExtra("percent", percent);
-                                                              //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
-                                                              //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
-                                                          }
-                                                      }
+            mMediaPlayer.setOnSeekCompleteListener(mp -> {
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
+
+                final SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                if (mLocalFile == null)
+                    SaveEpisodeValue(mContext, mEpisode, "duration", mMediaPlayer.getDuration());
+                else {
+                    final SharedPreferences.Editor editor = prefs1.edit();
+                    editor.putLong(Utilities.GetLocalDurationKey(mLocalFile), mMediaPlayer.getDuration());
+                    editor.apply();
+                }
+
+                mPlaybackPosition = 0;
+                mPlaybackCount = 0;
+
+                mMediaHandler.removeCallbacksAndMessages(null);
+                mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
+
+                final Intent intentMediaCompleted = new Intent();
+                intentMediaCompleted.setAction("media_action");
+                intentMediaCompleted.putExtra("media_started", false);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+
+                if (mLocalFile == null)
+                    SyncWithMobileDevice();
+
+                mp.start();
+            });
+
+            mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+                //Intent intentMediaBuffering = new Intent();
+                //intentMediaBuffering.setAction("media_buffering");
+                //intentMediaBuffering.putExtra("percent", percent);
+                //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
+                //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
+            }
             );
 
-            mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                @Override
-                public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                    if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                        //Log.d(mPackage, "MediaPlayerService Buffering started");
-                    } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                        //Log.d(mPackage, "MediaPlayerService Buffering ended");
-                    }
-                    return false;
+            mMediaPlayer.setOnInfoListener((mp, what, extra) -> {
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                    //Log.d(mPackage, "MediaPlayerService Buffering started");
+                } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                    //Log.d(mPackage, "MediaPlayerService Buffering ended");
                 }
+                return false;
             });
 
-            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
+            mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
 
-                    final Intent intentMediaError = new Intent();
-                    intentMediaError.setAction("media_action");
-                    intentMediaError.putExtra("media_error", true);
-                    intentMediaError.putExtra("error_code", what);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
-                    mError = true;
+                final Intent intentMediaError = new Intent();
+                intentMediaError.setAction("media_action");
+                intentMediaError.putExtra("media_error", true);
+                intentMediaError.putExtra("error_code", what);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
+                PauseAudio();
+                mError = true;
 
-                    if (mMediaPlayer != null) {
-                        if (mMediaPlayer.isPlaying())
-                            mMediaPlayer.stop();
+                if (mMediaPlayer != null) {
+                    if (mMediaPlayer.isPlaying())
+                        mMediaPlayer.stop();
 
-                        try {
-                            mMediaPlayer.reset();
-                        } catch (Exception ignored) {
-                        }
+                    try {
+                        mMediaPlayer.reset();
+                    } catch (Exception ignored) {
                     }
-
-                    return true;
                 }
+
+                return true;
             });
 
             final SharedPreferences.Editor editor = prefs.edit();
@@ -874,18 +863,19 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
+                mCallStarted = true;
                 if (mMediaPlayer.isPlaying())
                     PauseAudio(false, true);
             } else if(state == TelephonyManager.CALL_STATE_IDLE) {
-                if (mMediaPlayer != null && !mMediaPlayer.isPlaying())
+                if (mCallStarted && mMediaPlayer != null && !mMediaPlayer.isPlaying())
                     PlayAudio();
             } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                mCallStarted = true;
                 PauseAudio(false, true);
             }
             super.onCallStateChanged(state, incomingNumber);
         }
     };
-
 
     private static class MediaHandler extends Handler {
         private final WeakReference<MediaPlayerService> mWeakReference;

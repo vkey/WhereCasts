@@ -80,13 +80,16 @@
     <string name="text_third_party_auto_download">ウォッチでポッドキャストのエピソードを自動ダウンロードする（次の追加時に適用されます）</string>
     <string name="text_third_party_no_watch">時計が検出されなかった</string>
 
-    <string name="text_importing_opml_sent">OPMLの解析 (しばらくお待ちください)…</string>
-    <string name="text_importing_opml_episodes">エピソードの同期…</string>
-    <string name="text_importing_opml_art">ポッドキャストアートをダウンロードする…</string>
+    <string name="notification_channel_opml_import_complete">OPMLインポート</string>
+    <string name="notification_opml_import_complete_title">OPMLインポート完了</string>
+
+    <string name="text_importing_opml_sent">OPMLファイルはバックグラウンドで処理されます.  インポートが完了すると通知されます.\n\n時計からの応答を待っています…</string>
+    <string name="text_importing_opml_parsing">解析: %s</string>
+    <string name="text_importing_opml_episodes">エピソードの同期: %s</string>
+    <string name="text_importing_opml_art">アートをダウンロードする: %s</string>
     <string name="text_importing_opml_complete">インポート完了</string>
 
     <string name="text_importing_opml_sending">あなたのウェアデバイスにポッドキャストを送信する…</string>
-    <string name="text_importing_opml_parsing">OPMLの解析（Podcastの数に応じてしばらく時間がかかります）…</string>
     <string name="alert_get_directory_error">Podcastディレクトリを取得できませんでした</string>
 
     <string name="alert_podcast_added">見るために送られた</string>
