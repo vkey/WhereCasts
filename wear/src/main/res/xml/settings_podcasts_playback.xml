@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:key="pref_general" android:title="@string/settings_podcasts_settings_title_playback">
+    <PreferenceCategory android:key="pref_playback" android:title="@string/settings_podcasts_settings_title_playback">
 
         <ListPreference
             android:key="pref_playback_speed"

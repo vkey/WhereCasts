@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             }
             else
             {
-                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_general");
+                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
                 category.removePreference(findPreference("pref_hardware_override_episode"));
             }
         }
@@ -68,38 +69,32 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
                 findPreference("pref_hardware_override_episode").setTitle(getString(R.string.settings_podcasts_label_hardware_buttons));
             }
             else {
-                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_general");
+                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
                 category.removePreference(findPreference("pref_hardware_override_episode"));
             }
 
             final Preference pfSkipBack = findPreference("pref_playback_skip_back");
-            pfSkipBack.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
-                    final Bundle bundle = new Bundle();
-                    bundle.putString("key", "pref_playback_skip_back");
-                    bundle.putString("default", "30");
-                    intent.putExtras(bundle);
+            pfSkipBack.setOnPreferenceClickListener(preference -> {
+                final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putString("key", "pref_playback_skip_back");
+                bundle.putString("default", "30");
+                intent.putExtras(bundle);
 
-                    startActivityForResult(intent, 1);
-                    return false;
-                }
+                startActivityForResult(intent, 1);
+                return false;
             });
 
             final Preference pfSkipForward = findPreference("pref_playback_skip_forward");
-            pfSkipForward.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
-                    final Bundle bundle = new Bundle();
-                    bundle.putString("key", "pref_playback_skip_forward");
-                    bundle.putString("default", "30");
-                    intent.putExtras(bundle);
+            pfSkipForward.setOnPreferenceClickListener(preference -> {
+                final Intent intent = new Intent(mActivity, SettingsContextActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putString("key", "pref_playback_skip_forward");
+                bundle.putString("default", "30");
+                intent.putExtras(bundle);
 
-                    startActivityForResult(intent, 1);
-                    return false;
-                }
+                startActivityForResult(intent, 1);
+                return false;
             });
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
@@ -116,6 +111,12 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
             findPreference("pref_sleep_timer").setSummary(((ListPreference)findPreference("pref_sleep_timer")).getEntry());
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
+        }
+
+        if (BluetoothAdapter.getDefaultAdapter() == null)
+        {
+            final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
+            category.removePreference(findPreference("pref_detect_bluetooth_changes"));
         }
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

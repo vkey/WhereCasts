@@ -1154,11 +1154,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         switch (itemId) {
             case R.id.menu_drawer_episode_bluetooth_disable:
                 CommonUtils.executeSingleThreadAsync(new ToggleBluetooth(mActivity, true), (response) -> {
+                    CommonUtils.showToast(this, getString(R.string.alert_disable_bluetooth_disabled_end));
                     setMenu();
                 });
                 break;
             case R.id.menu_drawer_episode_bluetooth_enable:
                 CommonUtils.executeSingleThreadAsync(new ToggleBluetooth(mActivity, false), (response) -> {
+                    CommonUtils.showToast(this, getString(R.string.alert_disable_bluetooth_enabled));
                     setMenu();
                 });
                 break;

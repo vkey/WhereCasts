@@ -42,7 +42,7 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
     public List<PodcastItem> call() {
         CommonUtils.writeToFile(context, "Episode: " + mEpisode.getTitle());
 
-        List<PodcastItem> episodes = new ArrayList<>();
+        List<PodcastItem> episodes;
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         mPlaylistID = prefs.getInt("next_episode_playlistid", -99);

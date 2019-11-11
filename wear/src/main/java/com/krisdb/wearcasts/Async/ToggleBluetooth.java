@@ -25,7 +25,7 @@ public class ToggleBluetooth implements Callable<Boolean> {
         else
             adapter.enable();
 
-        SystemClock.sleep(1300);
+        SystemClock.sleep(1000);
 
         return false;
     }
