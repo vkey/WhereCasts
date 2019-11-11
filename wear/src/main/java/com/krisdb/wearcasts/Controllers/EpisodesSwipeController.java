@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -26,9 +25,7 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.PlaylistsUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.AsyncTasks;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -121,24 +118,16 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                         alert.setMessage(ctx.getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putInt("no_network_position", position);
-                                editor.apply();
+                        alert.setPositiveButton(ctx.getString(R.string.confirm_yes), (dialog, which) -> {
+                            final SharedPreferences.Editor editor = prefs.edit();
+                            editor.putInt("no_network_position", position);
+                            editor.apply();
 
-                                mActivityRef.get().startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
-                                dialog.dismiss();
-                            }
+                            mActivityRef.get().startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
+                            dialog.dismiss();
                         });
 
-                        alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                     }
                 }
                 else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
@@ -155,12 +144,9 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                                 dialog.dismiss();
                             }
                         });
-                        alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                downloadEpisode(position);
-                                dialog.dismiss();
-                            }
+                        alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> {
+                            downloadEpisode(position);
+                            dialog.dismiss();
                         }).show();
 
                         final SharedPreferences.Editor editor = prefs.edit();
@@ -243,24 +229,18 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                         if (ctx != null && !ctx.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                             alert.setMessage(ctx.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-                                    editor.putInt("no_network_position", mNoNetworkPosition);
-                                    editor.apply();
+                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), (dialog, which) -> {
+                                final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+                                editor.putInt("no_network_position", mNoNetworkPosition);
+                                editor.apply();
 
-                                    ctx.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
-                                    dialog.dismiss();
-                                }
+                                ctx.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(ctx);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(ctx);
+                                dialog.dismiss();
                             }).show();
                         }
                         controller.unregisterNetworkCallback();

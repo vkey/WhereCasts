@@ -7,14 +7,12 @@ import android.widget.ProgressBar;
 
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

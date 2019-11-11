@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.EditTextPreference;
@@ -24,13 +23,12 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.Unsubscribe;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -285,14 +283,12 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
                         @Override
                         public void onClick(final DialogInterface dialog, int which) {
-                            new AsyncTasks.Unsubscribe(mActivity, mPodcastId,
-                                    new Interfaces.BooleanResponse() {
-                                        @Override
-                                        public void processFinish(Boolean done) {
-                                            dialog.dismiss();
-                                            mActivity.finish();
-                                        }
-                                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            CommonUtils.showToast(mActivity, getString(R.string.alert_unsubscribing));
+
+                            CommonUtils.executeSingleThreadAsync(new Unsubscribe(mActivity, mPodcastId), (response) -> {
+                                dialog.dismiss();
+                                mActivity.finish();
+                            });
                         }
                     });
                     alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {

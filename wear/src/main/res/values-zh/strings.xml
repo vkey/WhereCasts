@@ -157,6 +157,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">向前跳過</string>
     <string name="settings_podcasts_label_playback_remove_notification">刪除通知</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">暫停</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">藍牙連接後恢復播放</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">藍牙連接或斷開時恢復或暫停播放</string>
     <string name="settings_podcasts_label_playback_playlists">完成後從播放列表中刪除劇集</string>
     <string name="settings_podcasts_label_hardware_button">用硬件按鈕控製播放</string>
     <string name="settings_podcasts_label_hardware_buttons">用硬件按鈕控製播放</string>

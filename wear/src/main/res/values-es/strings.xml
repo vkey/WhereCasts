@@ -158,6 +158,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">Saltar hacia adelante</string>
     <string name="settings_podcasts_label_playback_remove_notification">Eliminar notificación</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">En pausa</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">Reanudar la reproducción cuando Bluetooth se conecta</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">Reanudar o pausar la reproducción cuando Bluetooth se conecta o desconecta</string>
     <string name="settings_podcasts_label_playback_playlists">Eliminar episodios de la lista de reproducción cuando haya terminado</string>
     <string name="settings_podcasts_label_hardware_button">Controle la reproducción con el botón de hardware</string>
     <string name="settings_podcasts_label_hardware_buttons">Controle la reproducción con botones de hardware</string>

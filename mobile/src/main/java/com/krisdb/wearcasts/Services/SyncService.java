@@ -83,6 +83,24 @@ public class SyncService extends WearableListenerService {
                 intent.putExtra("thirdparty", true);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_complete")) {
+                final Intent intent = new Intent();
+                intent.setAction("watchresponse");
+                intent.putExtra("opmlimport_complete", true);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_episodes")) {
+                final Intent intent = new Intent();
+                intent.setAction("watchresponse");
+                intent.putExtra("opmlimport_episodes", true);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            }
+            else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_art")) {
+                final Intent intent = new Intent();
+                intent.setAction("watchresponse");
+                intent.putExtra("opmlimport_art", true);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            }
         }
     }
 }

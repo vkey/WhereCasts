@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
@@ -62,57 +61,47 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.episode_row_item, viewGroup, false);
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.description.getVisibility() == View.VISIBLE)
-                    holder.description.setVisibility(View.GONE);
-                else
-                    holder.description.setVisibility(View.VISIBLE);
-            }
+        holder.title.setOnClickListener(v -> {
+            if (holder.description.getVisibility() == View.VISIBLE)
+                holder.description.setVisibility(View.GONE);
+            else
+                holder.description.setVisibility(View.VISIBLE);
         });
 
-        holder.sendEpisode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isConnected) {
-                    final int position = holder.getAdapterPosition();
+        holder.sendEpisode.setOnClickListener(v -> {
+            if (isConnected) {
+                final int position = holder.getAdapterPosition();
 
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                    if (prefs.getInt("episode_import", 0) == 0) {
-                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                            alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
-                            alert.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.sendEpisode(mContext, mEpisodes.get(position));
-                                    mEpisodes.get(position).setIsSenttoWatch(true);
-                                    notifyItemChanged(position);
-                                    dialog.dismiss();
-                                }
-                            });
+                if (prefs.getInt("episode_import", 0) == 0) {
+                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(mContext.getString(R.string.alert_episode_import_first));
+                        alert.setPositiveButton(mContext.getString(R.string.ok), (dialog, which) -> {
+                            Utilities.sendEpisode(mContext, mEpisodes.get(position));
+                            if (mEpisodes.get(position).getPlaylistId() == 0)
+                                CommonUtils.showSnackbar(holder.sendEpisode,  mContext.getString(R.string.alert_episode_added));
+                            mEpisodes.get(position).setIsSenttoWatch(true);
+                            notifyItemChanged(position);
+                            dialog.dismiss();
+                        });
 
-                            alert.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                        }
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("episode_import", 1);
-                        editor.apply();
-                    } else {
-                        Utilities.sendEpisode(mContext, mEpisodes.get(position));
-                        mEpisodes.get(position).setIsSenttoWatch(true);
-                        notifyItemChanged(position);
+                        alert.setNegativeButton(mContext.getString(R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
                     }
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("episode_import", 1);
+                    editor.apply();
+                } else {
+                    Utilities.sendEpisode(mContext, mEpisodes.get(position));
+                    if (mEpisodes.get(position).getPlaylistId() == 0)
+                        CommonUtils.showSnackbar(holder.sendEpisode,  mContext.getString(R.string.alert_episode_added));
+                    mEpisodes.get(position).setIsSenttoWatch(true);
+                    notifyItemChanged(position);
                 }
-                else
-                    CommonUtils.showSnackbar(holder.sendEpisode, mContext.getString(R.string.button_text_no_device));
             }
+            else
+                CommonUtils.showSnackbar(holder.sendEpisode, mContext.getString(R.string.button_text_no_device));
         });
 
         return holder;

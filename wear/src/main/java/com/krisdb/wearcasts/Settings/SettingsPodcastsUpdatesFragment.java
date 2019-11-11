@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -14,12 +13,11 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.view.WindowManager;
 
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.SyncArt;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -99,11 +97,9 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             findPreference("pref_updates_new_episodes_disable_end").setSummary("");
         }
 
-        findPreference("pref_sync_art").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                handleNetwork();
-                return false;
-            }
+        findPreference("pref_sync_art").setOnPreferenceClickListener(preference -> {
+            handleNetwork();
+            return false;
         });
         SetContent();
 
@@ -112,6 +108,8 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
     private void setDeleteThumbnailsTitle()
     {
+        if (!isAdded()) return;
+
         final File thumbsDirectory = new File(GetThumbnailDirectory(mActivity));
         final String[] thumbs = thumbsDirectory.list();
 
@@ -134,35 +132,24 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else {
             findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                            SetContent();
-                            setDeleteThumbnailsTitle();
-                            Utilities.SetPodcstRefresh(mActivity);
-                            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+            CommonUtils.executeSingleThreadAsync(new SyncArt(mActivity), (response) -> {
+                SetContent();
+                setDeleteThumbnailsTitle();
+                Utilities.SetPodcstRefresh(mActivity);
+                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
         }
     }
 
@@ -172,16 +159,12 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             if (requestCode == 1) {
                 findPreference("pref_sync_art").setSummary(getString(R.string.syncing));
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                new AsyncTasks.SyncArt(mActivity, findPreference("pref_sync_art"),
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                SetContent();
-                                setDeleteThumbnailsTitle();
-                                Utilities.SetPodcstRefresh(mActivity);
-                                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CommonUtils.executeSingleThreadAsync(new SyncArt(mActivity), (response) -> {
+                    SetContent();
+                    setDeleteThumbnailsTitle();
+                    Utilities.SetPodcstRefresh(mActivity);
+                    mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                });
             }
         }
     }

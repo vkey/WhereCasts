@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 

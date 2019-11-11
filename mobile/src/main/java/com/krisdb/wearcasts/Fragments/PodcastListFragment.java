@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.Fragments;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.AsyncTasks;
-import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.Serializable;
@@ -51,20 +50,15 @@ public class PodcastListFragment extends Fragment {
         final View listView = inflater.inflate(R.layout.fragment_podcast_list, container, false);
         if (getArguments() != null)
         {
-            new AsyncTasks.WatchConnected(mActivity,
-                    new Interfaces.BooleanResponse() {
-                        @Override
-                        public void processFinish(final Boolean connected) {
-                            List<PodcastItem> podcasts = (List<PodcastItem>) getArguments().getSerializable("podcasts");
+            CommonUtils.executeSingleThreadAsync(new WatchConnected(mActivity), (connected) -> {
+                List<PodcastItem> podcasts = (List<PodcastItem>) getArguments().getSerializable("podcasts");
 
-                            podcasts = podcasts.subList(1, podcasts.size());
+                podcasts = podcasts.subList(1, podcasts.size());
 
-                            final RecyclerView rv = listView.findViewById(R.id.podcasts_list);
-                            rv.setLayoutManager(new LinearLayoutManager(mActivity));
-                            rv.setAdapter(new PodcastsAdapter(mActivity, podcasts, connected));
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+                final RecyclerView rv = listView.findViewById(R.id.podcasts_list);
+                rv.setLayoutManager(new LinearLayoutManager(mActivity));
+                rv.setAdapter(new PodcastsAdapter(mActivity, podcasts, connected));
+            });
         }
         return listView;
     }

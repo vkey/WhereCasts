@@ -159,6 +159,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">Sauter en avant</string>
     <string name="settings_podcasts_label_playback_remove_notification">Supprimer la notification</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">En pause</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">Reprendre la lecture lorsque Bluetooth se connecte</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">Reprendre ou mettre en pause la lecture lorsque Bluetooth se connecte ou se déconnecte</string>
     <string name="settings_podcasts_label_playback_playlists">Supprimer les épisodes de la playlist lorsque vous avez terminé</string>
     <string name="settings_podcasts_label_hardware_button">Contrôlez la lecture avec le bouton matériel</string>
     <string name="settings_podcasts_label_hardware_buttons">Contrôlez la lecture avec les boutons matériels</string>

@@ -57,6 +57,12 @@
             />
 
         <SwitchPreference
+            android:key="pref_detect_bluetooth_changes"
+            android:title="@string/settings_podcasts_label_playback_detect_bluetooth"
+            android:defaultValue="true"
+            />
+
+        <SwitchPreference
             android:key="pref_remove_notification"
             android:title="@string/settings_podcasts_label_playback_remove_notification"
             android:summary="@string/settings_podcasts_label_playback_remove_notification_summary"

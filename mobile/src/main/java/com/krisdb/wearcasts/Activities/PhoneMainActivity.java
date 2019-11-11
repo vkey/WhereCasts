@@ -2,7 +2,7 @@ package com.krisdb.wearcasts.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -16,11 +16,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.AsyncTasks;
-import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.Async.NodesConnected;
+import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PhoneMainActivity extends AppCompatActivity {
     private static int mNumberOfPages = 2;
@@ -40,27 +41,33 @@ public class PhoneMainActivity extends AppCompatActivity {
         SetContent();
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getInt("visits", 0) == 0)
-            new AsyncTasks.CacheDirectory(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            final SharedPreferences.Editor editor = prefs.edit();
+
+            String json = CommonUtils.getRemoteContent(getString(com.krisdb.wearcastslibrary.R.string.podcast_json_url, Locale.getDefault().getLanguage()));
+
+            if(json == null)
+                json = CommonUtils.getRemoteContent(getString(com.krisdb.wearcastslibrary.R.string.podcast_json_url_default));
+
+            editor.putString("directory_json", json);
+            editor.apply();
+        }
     }
 
     private void SetContent() {
 
-        new AsyncTasks.NodesConnected(this,
-                new Interfaces.BooleanResponse() {
-                    @Override
-                    public void processFinish(final Boolean connected) {
-                        final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        CommonUtils.executeSingleThreadAsync(new NodesConnected(this), (connected) -> {
+            final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
 
-                        //adapter.addFrag(UserAddActivity.newInstance(connected), getString(R.string.tab_add));
-                        //adapter.addFrag(PremiumActivity.newInstance(connected), getString(R.string.tab_premium));
+            //adapter.addFrag(UserAddActivity.newInstance(connected), getString(R.string.tab_add));
+            //adapter.addFrag(PremiumActivity.newInstance(connected), getString(R.string.tab_premium));
 
-                        mViewPager.setAdapter(adapter);
+            mViewPager.setAdapter(adapter);
 
-                        if (Intent.ACTION_SEND.equals(getIntent().getAction()) && getIntent().getType() != null)
-                            mViewPager.setCurrentItem(mNumberOfPages == 3 ? 1 : 0);
-
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (Intent.ACTION_SEND.equals(getIntent().getAction()) && getIntent().getType() != null)
+                mViewPager.setCurrentItem(mNumberOfPages == 3 ? 1 : 0);
+        });
     }
 
     private class MainPagerAdapter extends FragmentPagerAdapter {

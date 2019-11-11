@@ -1,29 +1,16 @@
 package com.krisdb.wearcasts;
 
-
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
-import com.krisdb.wearcasts.Activities.PhoneMainActivity;
+import com.krisdb.wearcastslibrary.Async.FetchPodcast;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.FetchPodcast;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
-import java.util.List;
 
 public class Utilities {
 
@@ -48,15 +35,12 @@ public class Utilities {
         dataMap.putInt("playlistid", episode.getPlaylistId());
         dataMap.putBoolean("auto_download", autoDownload);
 
-        if (episode.getPlaylistId() == 0)
-            CommonUtils.DeviceSync(ctx, dataMapRequest, ctx.getString(R.string.alert_episode_added), Toast.LENGTH_SHORT);
-        else
-            CommonUtils.DeviceSync(ctx, dataMapRequest, null, Toast.LENGTH_SHORT);
+        CommonUtils.DeviceSync(ctx, dataMapRequest);
    }
 
     public static void SendToWatch(final Context ctx, final PodcastItem podcast)
     {
-        SendToWatch(ctx, podcast, true);
+        SendToWatch(ctx, podcast, false);
     }
 
     public static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased) {
@@ -88,53 +72,23 @@ public class Utilities {
             CommonUtils.DeviceSync(ctx, dataMap, showToast ? ctx.getString(R.string.alert_podcast_added, podcast.getChannel().getTitle()) : null, Toast.LENGTH_SHORT);
         }
         else {
-            new FetchPodcast(podcast.getChannel().getTitle(), podcast.getChannel().getRSSUrl().toString(), new Interfaces.FetchPodcastResponse() {
+            CommonUtils.executeSingleThreadAsync(new FetchPodcast(podcast.getChannel().getTitle(), podcast.getChannel().getRSSUrl().toString()), (p) -> {
+                final PutDataMapRequest dataMap = PutDataMapRequest.create("/podcastimport");
+                dataMap.getDataMap().putString("title", p.getChannel().getTitle());
+                dataMap.getDataMap().putString("rss_url", p.getChannel().getRSSUrl().toString());
+                dataMap.getDataMap().putLong("time", new Date().getTime());
 
-                @Override
-                public void processFinish(final PodcastItem podcast) {
+                dataMap.getDataMap().putString("site_url", (p.getChannel().getSiteUrl() != null) ? p.getChannel().getSiteUrl().toString() : "");
 
-                    final PutDataMapRequest dataMap = PutDataMapRequest.create("/podcastimport");
-                    dataMap.getDataMap().putString("title", podcast.getChannel().getTitle());
-                    dataMap.getDataMap().putString("rss_url", podcast.getChannel().getRSSUrl().toString());
-                    dataMap.getDataMap().putLong("time", new Date().getTime());
-
-                    dataMap.getDataMap().putString("site_url", (podcast.getChannel().getSiteUrl() != null) ? podcast.getChannel().getSiteUrl().toString() : "");
-
-                    if (podcast.getChannel().getThumbnailUrl() != null)
-                    {
-                        dataMap.getDataMap().putString("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
-                        dataMap.getDataMap().putString("thumbnail_name", podcast.getChannel().getThumbnailName());
-                    }
-                    CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_podcast_added, podcast.getChannel().getTitle()), Toast.LENGTH_SHORT);
+                if (p.getChannel().getThumbnailUrl() != null)
+                {
+                    dataMap.getDataMap().putString("thumbnail_url", p.getChannel().getThumbnailUrl().toString());
+                    dataMap.getDataMap().putString("thumbnail_name", p.getChannel().getThumbnailName());
                 }
 
-                @Override
-                public void processFinish(List<PodcastItem> podcasts) {
-                }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_podcast_added, p.getChannel().getTitle()), Toast.LENGTH_SHORT);
+            });
         }
-    }
-
-    public static void ShowPlayingNotification(final Context ctx)
-    {
-        final Intent notificationIntent = new Intent(ctx, PhoneMainActivity.class);
-        notificationIntent.setFlags(Notification.FLAG_ONGOING_EVENT);
-        notificationIntent.setFlags(Notification.FLAG_NO_CLEAR);
-        notificationIntent.setFlags(Notification.FLAG_FOREGROUND_SERVICE);
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-        final NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setContentTitle(prefs.getString("podcast_title", ""))
-                        .setContentText(prefs.getString("episode_title", ""))
-                        .setOngoing(true)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(false)
-                        .setContentIntent(PendingIntent.getActivity(ctx, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-
-        NotificationManagerCompat.from(ctx).notify(100, notificationBuilder.build());
     }
 
     public static boolean IsNetworkConnected(Context ctx) {

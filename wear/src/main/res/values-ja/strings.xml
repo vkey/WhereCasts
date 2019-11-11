@@ -158,6 +158,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">スキップフォワード</string>
     <string name="settings_podcasts_label_playback_remove_notification">通知を削除</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">休止中</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">Bluetooth接続時に再生を再開する</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">Bluetoothの接続または切断時に再生を再開または一時停止する</string>
     <string name="settings_podcasts_label_playback_playlists">終了時にプレイリストからエピソードを削除する</string>
     <string name="settings_podcasts_label_hardware_button">ハードウェアボタンで再生をコントロールする</string>
     <string name="settings_podcasts_label_hardware_buttons">ハードウェアボタンによる再生の制御</string>

@@ -5,13 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +20,11 @@ import androidx.wear.widget.WearableRecyclerView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Async.DisplayPodcasts;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
-import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
@@ -73,46 +67,34 @@ public class PodcastsListFragment extends Fragment {
             handleNetwork();
             CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
         }
-
-        RefreshContent();
+        else
+            RefreshContent();
 
         return listView;
     }
 
     private void handleNetwork()
     {
-        //final SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mActivity);
-
         if (!CommonUtils.isNetworkAvailable(mActivity))
         {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else
         {
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
-                if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
+                    RefreshContent();
                     CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
-
-                RefreshContent();
             });
-        }
+    }
     }
 
     @Override
@@ -131,7 +113,6 @@ public class PodcastsListFragment extends Fragment {
             mPodcastsList.setAdapter(mAdapter);
             showCopy(podcasts.size());
         });
-
     }
 
     private void showCopy(final int number)

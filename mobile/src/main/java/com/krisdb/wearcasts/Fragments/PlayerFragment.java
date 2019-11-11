@@ -94,72 +94,63 @@ public class PlayerFragment extends Fragment {
         mPositionView = mView.findViewById(R.id.tv_podcast_position);
         mInfoLayout = mView.findViewById(R.id.podcast_episode_info_layout);
 
-        mSkipBackImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = mSeekBar.getProgress() - 30000;
-                mSeekBar.setProgress(position);
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-            }
+        mSkipBackImage.setOnClickListener(view -> {
+            int position = mSeekBar.getProgress() - 30000;
+            mSeekBar.setProgress(position);
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
         });
 
-        mSkipForwardImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = mSeekBar.getProgress() + 30000;
-                mSeekBar.setProgress(position);
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-            }
+        mSkipForwardImage.setOnClickListener(view -> {
+            int position = mSeekBar.getProgress() + 30000;
+            mSeekBar.setProgress(position);
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
         });
 
-        mPlayPauseImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentState == STATE_PAUSED) {
+        mPlayPauseImage.setOnClickListener(view -> {
+            if (mCurrentState == STATE_PAUSED) {
 
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-                    String media_url = prefs.getString("episode_url", "");
-                    //String media_url = "http://media.adknit.com/a/f/11/amanpour/bczdoq.1-1.mp3";
+                String media_url = prefs.getString("episode_url", "");
+                //String media_url = "http://media.adknit.com/a/f/11/amanpour/bczdoq.1-1.mp3";
 
-                    Bundle extras = new Bundle();
-                    extras.putString("episode_url", media_url);
+                Bundle extras = new Bundle();
+                extras.putString("episode_url", media_url);
 
-                    Boolean isDownloaded = false;
+                boolean isDownloaded = false;
 
-                    //downloaded
-                    if (isDownloaded) {
+                //downloaded
+                if (isDownloaded) {
 
-                        //MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(Utilities.GetMediaFile(mActivity, mEpisode)), extras);
+                    //MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(Utilities.GetMediaFile(mActivity, mEpisode)), extras);
 
-                        mCurrentState = STATE_PLAYING;
-                        mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                        mInfoLayout.setVisibility(View.VISIBLE);
-                    } else if (Utilities.IsNetworkConnected(mActivity) == false) {
-                        Toast.makeText(mActivity, "No network available", Toast.LENGTH_SHORT).show();
-                        mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                        mProgressBar.setVisibility(View.GONE);
-                        mInfoLayout.setVisibility(View.GONE);
-                        mCurrentState = STATE_PAUSED;
-                    } else {
-                        //stream
-                        MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(media_url), extras);
-
-                        mCurrentState = STATE_PLAYING;
-                        mPlayPauseImage.setBackgroundResource(R.drawable.ic_action_episode_pause);
-                        mInfoLayout.setVisibility(View.VISIBLE);
-                    }
-                    currentPositionDisplay.run();
-                } else {
-                    //pause episode
-                    MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
+                    mCurrentState = STATE_PLAYING;
+                    mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+                    mInfoLayout.setVisibility(View.VISIBLE);
+                } else if (Utilities.IsNetworkConnected(mActivity) == false) {
+                    Toast.makeText(mActivity, "No network available", Toast.LENGTH_SHORT).show();
                     mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                     mProgressBar.setVisibility(View.GONE);
                     mInfoLayout.setVisibility(View.GONE);
-                    mSkipBackImage.setVisibility(View.INVISIBLE);
-                    mSkipForwardImage.setVisibility(View.INVISIBLE);
                     mCurrentState = STATE_PAUSED;
+                } else {
+                    //stream
+                    MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(media_url), extras);
+
+                    mCurrentState = STATE_PLAYING;
+                    mPlayPauseImage.setBackgroundResource(R.drawable.ic_action_episode_pause);
+                    mInfoLayout.setVisibility(View.VISIBLE);
                 }
+                currentPositionDisplay.run();
+            } else {
+                //pause episode
+                MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
+                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+                mProgressBar.setVisibility(View.GONE);
+                mInfoLayout.setVisibility(View.GONE);
+                mSkipBackImage.setVisibility(View.INVISIBLE);
+                mSkipForwardImage.setVisibility(View.INVISIBLE);
+                mCurrentState = STATE_PAUSED;
             }
         });
 

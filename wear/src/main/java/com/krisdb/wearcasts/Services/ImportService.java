@@ -8,7 +8,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -24,18 +23,21 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.krisdb.wearcasts.Async.InsertPodcasts;
 import com.krisdb.wearcasts.Async.SaveLogo;
+import com.krisdb.wearcasts.Async.SyncArt;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.DBUtilities;
 import com.krisdb.wearcasts.Utilities.OPMLParser;
 import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.ConvertFileToAsset;
+import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -51,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByTitle;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.getCurrentPosition;
 
 public class ImportService extends WearableListenerService implements DataClient.OnDataChangedListener, CapabilityClient.OnCapabilityChangedListener {
 
@@ -85,7 +88,10 @@ public class ImportService extends WearableListenerService implements DataClient
         DataMapItem dataMapItem;
         String path;
         int type;
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final Context context = mContext.get();
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         for (DataEvent event : dataEvents) {
             dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
@@ -104,7 +110,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/episodeimport")) {
 
-                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
                 //final Boolean isRadio = dataMapItem.getDataMap().getBoolean("radio");
 
                 PodcastItem episode = GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
@@ -146,9 +152,8 @@ public class ImportService extends WearableListenerService implements DataClient
                 db.close();
 
                 if (dataMapItem.getDataMap().getInt("playlistid") == 0 || dataMapItem.getDataMap().getBoolean("auto_download")) {
-                    final Context ctx = mContext.get();
 
-                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(ctx)) {
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(context)) {
                         unregisterNetworkCallback();
 
                         final PodcastItem finalEpisode = episode;
@@ -156,7 +161,7 @@ public class ImportService extends WearableListenerService implements DataClient
                             @Override
                             public void onAvailable(final Network network) {
                                 mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                                Utilities.startDownload(ctx, finalEpisode);
+                                Utilities.startDownload(context, finalEpisode);
                             }
                         };
 
@@ -175,7 +180,7 @@ public class ImportService extends WearableListenerService implements DataClient
                     }
                     else
                     {
-                        Utilities.startDownload(ctx, episode);
+                        Utilities.startDownload(this, episode);
                     }
                 }
                 Utilities.vibrate(this);
@@ -191,39 +196,36 @@ public class ImportService extends WearableListenerService implements DataClient
                 final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
                 final String fileName = dataMapItem.getDataMap().getString("local_filename");
 
-                new com.krisdb.wearcastslibrary.AsyncTasks.ConvertFileToAsset(this, asset,
-                        new Interfaces.AssetResponse() {
-                            @Override
-                            public void processFinish(DataClient.GetFdForAssetResponse response) {
-                                final InputStream inputStream = response.getInputStream();
+                CommonUtils.executeSingleThreadAsync(new ConvertFileToAsset(context, asset), (response) -> {
+                    final InputStream inputStream = response.getInputStream();
 
-                                try {
-                                    int size = 1024;
-                                    final File f = new File(GetLocalDirectory(mContext.get()).concat(fileName));
-                                    final OutputStream outputStream = new FileOutputStream(f);
-                                    final byte buffer[] = new byte[size];
+                    try {
+                        int size = 1024;
+                        final File f = new File(GetLocalDirectory(mContext.get()).concat(fileName));
+                        final OutputStream outputStream = new FileOutputStream(f);
+                        final byte buffer[] = new byte[size];
 
-                                    int bytes, totalSize = inputStream.available();
-                                    long total = 0;
-                                    SendToDevice("started", 0, totalSize);
+                        int bytes, totalSize = inputStream.available();
+                        long total = 0;
+                        SendToDevice("started", 0, totalSize);
 
-                                    while ((bytes = inputStream.read(buffer)) > 0) {
-                                        //total += bytes;
-                                        //int progress = (int)(total * 100 / totalSize);
-                                        outputStream.write(buffer, 0, bytes);
-                                        //SendToDevice("processing", 0, 0);
-                                    }
+                        while ((bytes = inputStream.read(buffer)) > 0) {
+                            //total += bytes;
+                            //int progress = (int)(total * 100 / totalSize);
+                            outputStream.write(buffer, 0, bytes);
+                            //SendToDevice("processing", 0, 0);
+                        }
 
-                                    SendToDevice("finished", 0, 0);
+                        SendToDevice("finished", 0, 0);
 
-                                    outputStream.close();
-                                    inputStream.close();
+                        outputStream.close();
+                        inputStream.close();
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/syncwear")) {
@@ -236,9 +238,9 @@ public class ImportService extends WearableListenerService implements DataClient
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/addplaylists")) {
                 int number = dataMapItem.getDataMap().getInt("number");
-                DBPodcastsEpisodes db = new DBPodcastsEpisodes(this);
+                DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
 
-                final List<PodcastItem> podcasts = PodcastUtilities.GetPodcasts(this);
+                final List<PodcastItem> podcasts = PodcastUtilities.GetPodcasts(context);
 
                 final int autoAssignDefaultPlaylistId = getResources().getInteger(R.integer.default_playlist_select);
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -260,33 +262,29 @@ public class ImportService extends WearableListenerService implements DataClient
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/podcastimport")) {
-                final ContentValues cv = new ContentValues();
-                cv.put("title", dataMapItem.getDataMap().getString("title"));
-                cv.put("url", dataMapItem.getDataMap().getString("rss_url"));
-                cv.put("site_url", dataMapItem.getDataMap().getString("site_url"));
-                cv.put("dateAdded", DateUtils.GetDate());
-                String thumbnailUrl = null;
-                String fileName = null;
-                if (dataMapItem.getDataMap().getString("thumbnail_url") != null) {
-                    thumbnailUrl = dataMapItem.getDataMap().getString("thumbnail_url");
-                    fileName = dataMapItem.getDataMap().getString("thumbnail_name");
 
-                    CommonUtils.executeSingleThreadAsync(new SaveLogo(this, thumbnailUrl, fileName), (response) -> { });
+                final PodcastItem podcast = new PodcastItem();
+                podcast.setTitle(dataMapItem.getDataMap().getString("title"));
+
+                final ChannelItem channel = new ChannelItem();
+                channel.setRSSUrl(dataMapItem.getDataMap().getString("rss_url"));
+                channel.setThumbnailUrl(dataMapItem.getDataMap().getString("rss_url"));
+                channel.setSiteUrl(dataMapItem.getDataMap().getString("site_url"));
+
+                if (dataMapItem.getDataMap().getString("thumbnail_url") != null) {
+                    channel.setThumbnailUrl(dataMapItem.getDataMap().getString("thumbnail_url"));
+                    channel.setThumbnailName(dataMapItem.getDataMap().getString("thumbnail_name"));
                 }
 
-                cv.put("thumbnail_url", thumbnailUrl);
-                cv.put("thumbnail_name", fileName);
+                podcast.setChannel(channel);
 
-                final int podcastId = (int)new DBPodcastsEpisodes(getApplicationContext()).insertPodcast(cv);
+                DBUtilities.insertPodcast(context, podcast);
 
-                CommonUtils.executeSingleThreadAsync(new SyncPodcasts(getApplicationContext(), podcastId), (response) -> { });
-
-                //CacheUtils.deletePodcastsCache(this);
                 Utilities.vibrate(this);
             }
 
             if (type == DataEvent.TYPE_CHANGED && path.equals("/opmlimport")) {
-                //new DBPodcasts(getApplicationContext()).deleteAll();
+
                 final Asset asset = dataMapItem.getDataMap().getAsset("opml");
 
                 final Task<DataClient.GetFdForAssetResponse> getFdForAssetResponseTask = Wearable.getDataClient(getApplicationContext()).getFdForAsset(asset);
@@ -300,8 +298,24 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final InputStream in = getFdForAssetResponse.getInputStream();
 
-                new DBPodcasts(getApplicationContext()).insert(OPMLParser.parse(this, in));
-                //CacheUtils.deletePodcastsCache(this);
+                final List<PodcastItem> podcasts = OPMLParser.parse(this, in);
+
+                //podcasts
+                CommonUtils.executeSingleThreadAsync(new InsertPodcasts(context, podcasts), (response) -> {
+
+                    //episodes
+                    CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_episodes"));
+                    CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context), (data1) -> {
+
+                        //art
+                        CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_art"));
+                        CommonUtils.executeSingleThreadAsync(new SyncArt(context), (data2) -> {
+
+                            CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_complete"));
+                            Utilities.vibrate(context);
+                        });
+                    });
+                });
             }
         }
 

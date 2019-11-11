@@ -122,67 +122,38 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.thumbnailTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        holder.thumbnailTitle.setOnLongClickListener(view17 -> {
 
-                final PodcastItem podcast = GetPodcast(viewGroup.getContext(), mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
+            final PodcastItem podcast = GetPodcast(viewGroup.getContext(), mEpisodes.get(holder.getAdapterPosition()).getPodcastId());
 
-                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putInt("podcastId", podcast.getPodcastId());
-                intent.putExtras(bundle);
+            final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
+            final Bundle bundle = new Bundle();
+            bundle.putInt("podcastId", podcast.getPodcastId());
+            intent.putExtras(bundle);
 
-                if (podcast.getPodcastId() > 0)
-                    mContext.startActivity(intent);
+            if (podcast.getPodcastId() > 0)
+                mContext.startActivity(intent);
 
-                return false;
-            }
+            return false;
         });
 
-        holder.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initDownload(holder, holder.getAdapterPosition());
-            }
+        holder.download.setOnClickListener(view1 -> initDownload(holder, holder.getAdapterPosition()));
+
+        holder.duration.setOnClickListener(view12 -> initDownload(holder, holder.getAdapterPosition()));
+
+        holder.date.setOnLongClickListener(view13 -> {
+            showContext(holder.getAdapterPosition());
+            return false;
         });
 
-        holder.duration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initDownload(holder, holder.getAdapterPosition());
-            }
+        holder.title.setOnLongClickListener(view14 -> {
+            showContext(holder.getAdapterPosition());
+            return true;
         });
 
-        holder.date.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return false;
-            }
-        });
+        holder.title.setOnClickListener(view15 -> openEpisode(holder.getAdapterPosition()));
 
-        holder.title.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return true;
-            }
-        });
-
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
-
-        holder.date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
+        holder.date.setOnClickListener(view16 -> openEpisode(holder.getAdapterPosition()));
 
         return holder;
     }
@@ -215,12 +186,8 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         notifyItemChanged(position);
                     }
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                 alert.show();
             }
 
@@ -239,12 +206,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         dialog.dismiss();
                     }
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                 alert.show();
             }
         }
@@ -253,46 +215,32 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("no_network_position", holder.getAdapterPosition());
-                        editor.apply();
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("no_network_position", holder.getAdapterPosition());
+                    editor.apply();
 
-                        mContext.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
-                        dialog.dismiss();
-                    }
+                    mContext.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("pref_disable_bluetooth", true);
-                        editor.apply();
-                        initDownload(holder, position);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("pref_disable_bluetooth", true);
+                    editor.apply();
+                    initDownload(holder, position);
+                    dialog.dismiss();
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        downloadEpisode(position, episode);
-                        dialog.dismiss();
-                    }
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> {
+                    downloadEpisode(position, episode);
+                    dialog.dismiss();
                 }).show();
 
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -443,24 +391,18 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                         if (ctx != null && !ctx.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                             alert.setMessage(ctx.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-                                    editor.putInt("no_network_position", mNoNetworkPosition);
-                                    editor.apply();
+                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), (dialog, which) -> {
+                                final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+                                editor.putInt("no_network_position", mNoNetworkPosition);
+                                editor.apply();
 
-                                    ctx.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
-                                    dialog.dismiss();
-                                }
+                                ctx.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 102);
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(ctx);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(ctx);
+                                dialog.dismiss();
                             }).show();
                         }
                         adapter.unregisterNetworkCallback();

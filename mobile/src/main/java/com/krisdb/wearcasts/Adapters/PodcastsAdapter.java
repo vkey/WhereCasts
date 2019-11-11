@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.Adapters;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
-import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.Async.GetEpisodes;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
@@ -60,26 +58,20 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
 
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.episodesExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.episodes.getVisibility() == View.GONE) {
-                    holder.episodesProgress.setVisibility(View.VISIBLE);
-                    new AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 50,
-                            new Interfaces.PodcastsResponse() {
-                                @Override
-                                public void processFinish(List<PodcastItem> episodes) {
-                                    holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
-                                    holder.episodes.setAdapter(new EpisodesAdapter(mContext, episodes, isConnected));
-                                    holder.episodes.setVisibility(View.VISIBLE);
-                                    holder.episodesProgress.setVisibility(View.GONE);
-                                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_contract));
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    holder.episodes.setVisibility(View.GONE);
-                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_expand));
-                }
+        holder.episodesExpand.setOnClickListener(v -> {
+            if (holder.episodes.getVisibility() == View.GONE) {
+                holder.episodesProgress.setVisibility(View.VISIBLE);
+
+                CommonUtils.executeSingleThreadAsync(new GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 50), (episodes) -> {
+                    holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
+                    holder.episodes.setAdapter(new EpisodesAdapter(mContext, episodes, isConnected));
+                    holder.episodes.setVisibility(View.VISIBLE);
+                    holder.episodesProgress.setVisibility(View.GONE);
+                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_contract));
+                });
+            } else {
+                holder.episodes.setVisibility(View.GONE);
+                holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_expand));
             }
         });
 
@@ -113,16 +105,15 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
             else
                 viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add));
 
-            viewHolder.add_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isConnected) {
-                        Utilities.SendToWatch(mContext, podcast);
-                        mPodcasts.get(position).setIsSenttoWatch(true);
-                        notifyItemChanged(position);
-                    } else
-                        CommonUtils.showSnackbar(viewHolder.add_image, mContext.getString(R.string.button_text_no_device));
-                }
+            viewHolder.add_image.setOnClickListener(view -> {
+                if (isConnected) {
+                    Utilities.SendToWatch(mContext, podcast);
+                    CommonUtils.showSnackbar(viewHolder.add_image, mContext.getString(R.string.alert_podcast_added));
+
+                    mPodcasts.get(position).setIsSenttoWatch(true);
+                    notifyItemChanged(position);
+                } else
+                    CommonUtils.showSnackbar(viewHolder.add_image, mContext.getString(R.string.button_text_no_device));
             });
         }
     }

@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Fragments;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,15 +20,12 @@ import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PlaylistsAdapter;
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.DisplayPlaylistEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
-import com.krisdb.wearcastslibrary.PodcastItem;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
@@ -139,19 +135,15 @@ public class PlaylistsListFragment extends Fragment {
         mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        new AsyncTasks.DisplayPlaylistEpisodes(getContext(), mPlaylistId,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> episodes) {
-                        if (!isAdded()) return;
-                        mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
-                        mPlaylistList.setAdapter(mAdapter);
+        CommonUtils.executeSingleThreadAsync(new DisplayPlaylistEpisodes(mActivity, mPlaylistId), (episodes) -> {
+            if (!isAdded()) return;
+            mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
+            mPlaylistList.setAdapter(mAdapter);
 
-                        mStatus.setVisibility(TextView.GONE);
-                        mProgressPlaylistLayout.setVisibility(View.GONE);
-                        mPlaylistList.setVisibility(View.VISIBLE);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mStatus.setVisibility(TextView.GONE);
+            mProgressPlaylistLayout.setVisibility(View.GONE);
+            mPlaylistList.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override

@@ -5,17 +5,13 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.OpenableColumns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -39,15 +34,13 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
-import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.Async.SendFileToWatch;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +75,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
         mActivityRef = new WeakReference<>(this);
 
-        mProgressFileUpload = new WeakReference<>((ProgressBar) findViewById(R.id.upload_file_progress));
+        mProgressFileUpload = new WeakReference<>(findViewById(R.id.upload_file_progress));
         mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
         mPlaylistsButButton = findViewById(R.id.btn_playlist_buy);
         mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
@@ -90,109 +83,79 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         tvUploadSummary = findViewById(R.id.upload_file_summary);
         mPremiumButton = findViewById(R.id.btn_unlock_premium);
 
-        findViewById(R.id.btn_upload_file).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(intent, UPLOAD_REQUEST_CODE);
+        findViewById(R.id.btn_upload_file).setOnClickListener(view -> {
+            final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            startActivityForResult(intent, UPLOAD_REQUEST_CODE);
+        });
+
+        CommonUtils.executeSingleThreadAsync(new WatchConnected(mActivity), (connected) -> {
+            if (!connected) {
+                mPlaylistsButButton.setOnClickListener(view -> CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.button_text_no_device)));
+
+                mPremiumButton.setOnClickListener(view -> CommonUtils.showSnackbar(mPremiumButton, getString(R.string.button_text_no_device)));
+            } else {
+
+                mPlaylistsButButton.setOnClickListener(view -> {
+                    if (mPlaylistSkus.getSelectedItemPosition() == 0)
+                        CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
+                    else if (mPlaylistPurchasedCount > 0) {
+                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                            alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
+                            alert.setPositiveButton(mActivity.getString(R.string.ok), (dialog, which) -> {
+                                if (mPremiumInappUnlocked)
+                                    showPlaylistPurchaseInapp();
+                                else
+                                    showPlaylistPurchaseSub();
+                            });
+
+                            alert.setNegativeButton(mActivity.getString(R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
+                        }
+                    } else
+                    if (mPremiumInappUnlocked)
+                        showPlaylistPurchaseInapp();
+                    else
+                        showPlaylistPurchaseSub();
+                });
+
+                mPremiumButton.setOnClickListener(view -> {
+                    final List<String> skuList = new ArrayList<>();
+                    skuList.add(getString(R.string.sub_premium_product_id));
+
+                    final SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder()
+                            .setSkusList(skuList)
+                            .setType(BillingClient.SkuType.SUBS);
+                    //.setType(BillingClient.SkuType.INAPP);
+
+                    mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+                        @Override
+                        public void onSkuDetailsResponse(final BillingResult billingResult, final List<SkuDetails> skuDetailsList) {
+
+                            for (final SkuDetails skuDetails : skuDetailsList) {
+                                if (getString(R.string.sub_premium_product_id).equals(skuDetails.getSku())) {
+
+                                    final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                            .setSkuDetails(skuDetails)
+                                            .build();
+
+                                    final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
+
+                                    if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
+                                        CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
+                                    } else if (result.getResponseCode() != OK) {
+                                        CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
             }
         });
 
-        new AsyncTasks.WatchConnected(mActivity,
-                new Interfaces.BooleanResponse() {
-                    @Override
-                    public void processFinish(Boolean connected) {
-                        if (!connected) {
-                            mPlaylistsButButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.button_text_no_device));
-                                }
-                            });
-
-                            mPremiumButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.button_text_no_device));
-                                }
-                            });
-                        } else {
-
-                            mPlaylistsButButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (mPlaylistSkus.getSelectedItemPosition() == 0)
-                                        CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
-                                    else if (mPlaylistPurchasedCount > 0) {
-                                        if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                                            final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                                            alert.setMessage(getString(R.string.alert_playlists_purchase_disclaimer));
-                                            alert.setPositiveButton(mActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    if (mPremiumInappUnlocked)
-                                                        showPlaylistPurchaseInapp();
-                                                    else
-                                                        showPlaylistPurchaseSub();
-                                                }
-                                            });
-
-                                            alert.setNegativeButton(mActivity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            }).show();
-                                        }
-                                    } else
-                                    if (mPremiumInappUnlocked)
-                                        showPlaylistPurchaseInapp();
-                                    else
-                                        showPlaylistPurchaseSub();
-                                }
-                            });
-
-                            mPremiumButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                final List<String> skuList = new ArrayList<>();
-                                skuList.add(getString(R.string.sub_premium_product_id));
-
-                                final SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder()
-                                        .setSkusList(skuList)
-                                        .setType(BillingClient.SkuType.SUBS);
-                                        //.setType(BillingClient.SkuType.INAPP);
-
-                                mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-                                    @Override
-                                    public void onSkuDetailsResponse(final BillingResult billingResult, final List<SkuDetails> skuDetailsList) {
-
-                                        for (final SkuDetails skuDetails : skuDetailsList) {
-                                            if (getString(R.string.sub_premium_product_id).equals(skuDetails.getSku())) {
-
-                                                final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                                        .setSkuDetails(skuDetails)
-                                                        .build();
-
-                                                final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
-
-                                                if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
-                                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
-                                                } else if (result.getResponseCode() != OK) {
-                                                    CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                                }
-                            });
-                        }
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         mBillingClient = BillingClient.newBuilder(this).enablePendingPurchases().setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
@@ -245,20 +208,12 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                                         final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                                         alert.setMessage(getString(R.string.alert_playlists_readd_disclaimer));
-                                        alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                sendPlaylistsToWatch(mPlaylistPurchasedCount);
-                                                CommonUtils.showSnackbar(mPlaylistsReadd, getString(R.string.success));
-                                            }
+                                        alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                                            sendPlaylistsToWatch(mPlaylistPurchasedCount);
+                                            CommonUtils.showSnackbar(mPlaylistsReadd, getString(R.string.success));
                                         });
 
-                                        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
+                                        alert.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
                                     }
                                 }
                             });
@@ -295,39 +250,23 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                         SetPremiumContent();
                         final AlertDialog.Builder alert1 = new AlertDialog.Builder(PremiumActivity.this);
                         alert1.setMessage(getString(R.string.alert_premium_purchased).concat("\n\n").concat(getString(R.string.alert_purchased_rating)));
-                        alert1.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                dialog.dismiss();
-                            }
+                        alert1.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            dialog.dismiss();
                         });
-                        alert1.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        alert1.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                     } else if (purchase.getSku().contains("playlist")) {
                         final AlertDialog.Builder alert2 = new AlertDialog.Builder(PremiumActivity.this);
                         alert2.setMessage(getString(R.string.alert_playlists_purchased).concat("\n\n").concat(getString(R.string.alert_purchased_rating)));
-                        alert2.setPositiveButton(getString(R.string.generic_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                dialog.dismiss();
-                            }
+                        alert2.setPositiveButton(getString(R.string.generic_yes), (dialog, which) -> {
+                            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            dialog.dismiss();
                         });
-                        alert2.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        alert2.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                         sendPlaylistsToWatch(mPlaylistSkus.getSelectedItemPosition());
                     }
 
@@ -336,11 +275,8 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                                 .setPurchaseToken(purchase.getPurchaseToken())
                                 .build();
 
-                        mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
-                            @Override
-                            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                                if (billingResult.getResponseCode() == OK) {
-                                }
+                        mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult1 -> {
+                            if (billingResult1.getResponseCode() == OK) {
                             }
                         });
                     }
@@ -352,21 +288,13 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
     private void showPlaylistPurchaseSub() {
         final AlertDialog.Builder alert2 = new AlertDialog.Builder(PremiumActivity.this);
         alert2.setMessage(getString(R.string.alert_playlists_purchased).concat("\n\n").concat(getString(R.string.alert_purchased_rating)));
-        alert2.setPositiveButton(getString(R.string.generic_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                dialog.dismiss();
-            }
+        alert2.setPositiveButton(getString(R.string.generic_yes), (dialog, which) -> {
+            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            dialog.dismiss();
         });
-        alert2.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
+        alert2.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
 
         sendPlaylistsToWatch(mPlaylistSkus.getSelectedItemPosition());
     }
@@ -380,22 +308,19 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                 .setSkusList(skuList)
                 .setType(BillingClient.SkuType.INAPP);
 
-        mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(final BillingResult billingResult, final List<SkuDetails> skuDetailsList) {
-                for (final SkuDetails skuDetails : skuDetailsList) {
-                    if (skuDetails.getSku().contains("playlist")) {
-                        final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                .setSkuDetails(skuDetails)
-                                .build();
+        mBillingClient.querySkuDetailsAsync(params.build(), (billingResult, skuDetailsList) -> {
+            for (final SkuDetails skuDetails : skuDetailsList) {
+                if (skuDetails.getSku().contains("playlist")) {
+                    final BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                            .setSkuDetails(skuDetails)
+                            .build();
 
-                        final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
+                    final BillingResult result = mBillingClient.launchBillingFlow(mActivity, flowParams);
 
-                        if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
-                            CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
-                        } else if (result.getResponseCode() != OK) {
-                            CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
-                        }
+                    if (result.getResponseCode() == ITEM_ALREADY_OWNED) {
+                        CommonUtils.showSnackbar(mPremiumButton, getString(R.string.alert_purchased));
+                    } else if (result.getResponseCode() != OK) {
+                        CommonUtils.showSnackbar(mPremiumButton, getString(R.string.general_error).concat("\n").concat("(").concat(result.getDebugMessage()).concat(")"));
                     }
                 }
             }
@@ -411,13 +336,10 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             findViewById(R.id.btn_upload_file).setEnabled(true);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_unlocked));
             mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
-            mPremiumButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mProgressFileUpload.get().setVisibility(View.VISIBLE);
-                    CommonUtils.showToast(mActivity, mActivity.getString(R.string.button_text_resync_premium_waiting), Toast.LENGTH_LONG);
-                    Utilities.TogglePremiumOnWatch(mActivity, true, true);
-                }
+            mPremiumButton.setOnClickListener(view -> {
+                mProgressFileUpload.get().setVisibility(View.VISIBLE);
+                CommonUtils.showToast(mActivity, mActivity.getString(R.string.button_text_resync_premium_waiting), Toast.LENGTH_LONG);
+                Utilities.TogglePremiumOnWatch(mActivity, true, true);
             });
             mPlaylistSkus.setEnabled(true);
             mPlaylistsButButton.setEnabled(true);
@@ -498,81 +420,22 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
                 if (clipData == null) {
                     final Uri uriLocal = resultData.getData();
-                    new SendFileToWatch(mActivity, uriLocal).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                    CommonUtils.executeSingleThreadAsync(new SendFileToWatch(mActivity, uriLocal), (response) -> { });
+
                 } else {
 
                     final int count = clipData.getItemCount();
 
                     for (int i = 0; i < count; i++) {
                         final ClipData.Item item = clipData.getItemAt(i);
-                        new SendFileToWatch(mActivity, item.getUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        CommonUtils.executeSingleThreadAsync(new SendFileToWatch(mActivity, item.getUri()), (response) -> { });
                     }
                 }
             }
         }
     }
 
-    public static class SendFileToWatch extends AsyncTask<Void, Void, Void> {
-        private static Uri mUri;
-        private static WeakReference<Activity> mActivity;
-
-        SendFileToWatch(final Activity activity, final Uri uri)
-        {
-            mActivity = new WeakReference<>(activity);
-            mUri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mProgressFileUpload.get().setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            /*
-            final Task<List<Node>> nodeListTask = Wearable.getNodeClient(mActivity.get()).getConnectedNodes();
-
-            try {
-                List<Node> nodes = Tasks.await(nodeListTask);
-
-                Task<ChannelClient.Channel> task = Wearable.getChannelClient(mActivity.get()).openChannel(nodes.get(0).getId(),"");
-
-                Task<Void> task2 = Wearable.getChannelClient(mActivity.get()).sendFile(task.getResult(), mUri);
-
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-
-*/
-            final PutDataMapRequest dataMapUpload = PutDataMapRequest.create("/uploadfile");
-
-            final Asset asset = Asset.createFromUri(mUri);
-            dataMapUpload.getDataMap().putAsset("local_file", asset);
-            String localFileName = null;
-
-            if (mUri.toString().startsWith("content://")) {
-                try (Cursor cursor = mActivity.get().getContentResolver().query(mUri, null, null, null, null)) {
-                    if (cursor != null && cursor.moveToFirst()) {
-                        localFileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                    }
-                }
-            } else if (mUri.toString().startsWith("file://")) {
-                final File myFile = new File(mUri.toString());
-                localFileName = myFile.getName();
-            }
-
-            dataMapUpload.getDataMap().putString("local_filename", localFileName);
-
-            CommonUtils.DeviceSync(mActivity.get(), dataMapUpload);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

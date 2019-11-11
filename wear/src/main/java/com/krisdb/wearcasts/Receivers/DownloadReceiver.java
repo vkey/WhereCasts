@@ -9,18 +9,17 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.CleanupDownloads;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Date;
@@ -126,11 +125,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                 editor.putBoolean("from_job", false);
                 editor.apply();
 
-                new AsyncTasks.CleanupDownloads(context,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {}
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                //CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
             }
 
             //managerDownload.remove(downloadId);

@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -18,6 +16,7 @@ import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -29,23 +28,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.krisdb.wearcasts.OPMLParser;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
-import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.Async.EpisodeCount;
+import com.krisdb.wearcastslibrary.Async.FetchPodcast;
+import com.krisdb.wearcastslibrary.Async.NodesConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.FetchPodcast;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Date;
-import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
@@ -78,114 +75,84 @@ public class UserAddActivity extends AppCompatActivity {
         mTipView = findViewById(R.id.main_tip);
         mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
 
-        btnImportPodcast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnImportPodcast.setOnClickListener(view -> {
 
-                final String title = ((TextView) findViewById(R.id.tv_import_podcast_title)).getText() != null ?
-                        ((TextView) findViewById(R.id.tv_import_podcast_title)).getText().toString() : null;
-                String link = ((TextView) findViewById(R.id.tv_import_podcast_link)).getText().toString().trim();
+            final String title = ((TextView) findViewById(R.id.tv_import_podcast_title)).getText() != null ?
+                    ((TextView) findViewById(R.id.tv_import_podcast_title)).getText().toString() : null;
+            String link = ((TextView) findViewById(R.id.tv_import_podcast_link)).getText().toString().trim();
 
-                if (link.length() > 0) {
-                    link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
-                    if (isValidUrl(link)) {
-                        CommonUtils.showToast(mActivity, getString(R.string.alert_users_add_fetching_feed));
-                        new FetchPodcast(title, link, new Interfaces.FetchPodcastResponse() {
-                            @Override
-                            public void processFinish(final PodcastItem podcast) {
-                                new AsyncTasks.EpisodeCount(mActivity, podcast, new Interfaces.IntResponse() {
-                                    @Override
-                                    public void processFinish(int response) {
-                                        if (response != 0) {
-                                            Utilities.SendToWatch(mActivity, podcast);
-                                            ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
-                                            ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
-                                            mTipView.setText(getString(R.string.tip_2));
-                                            mTipView.setTextSize(14);
-                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.dark_grey));
-                                        }
-                                        else
-                                        {
-                                            final SpannableString content = new SpannableString(getString(R.string.error_no_episode));
-                                            content.setSpan(new UnderlineSpan(), 49, content.length(), 0);
-                                            mTipView.setText(content);
-                                            mTipView.setTextSize(16);
+            if (link.length() > 0) {
+                link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
+                if (isValidUrl(link)) {
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_users_add_fetching_feed));
 
-                                            mTipView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.rss_validator_url))));
-                                                }
-                                            });
+                    CommonUtils.executeSingleThreadAsync(new FetchPodcast(title, link), (podcast) -> {
 
-                                            mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
-                                        }
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        CommonUtils.executeSingleThreadAsync(new EpisodeCount(mActivity, podcast), (count) -> {
+                            if (count != 0) {
+                                Utilities.SendToWatch(mActivity, podcast);
+                                ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
+                                ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
+                                mTipView.setText(getString(R.string.tip_2));
+                                mTipView.setTextSize(14);
+                                mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.dark_grey));
                             }
+                            else
+                            {
+                                final SpannableString content = new SpannableString(getString(R.string.error_no_episode));
+                                content.setSpan(new UnderlineSpan(), 49, content.length(), 0);
+                                mTipView.setText(content);
+                                mTipView.setTextSize(16);
 
-                            @Override
-                            public void processFinish(final List<PodcastItem> podcasts) {
-                                sendToWatch(podcasts);
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                mTipView.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.rss_validator_url)))));
 
-                    } else
-                        showToast(mActivity, getString(R.string.validation_invalid_url), Toast.LENGTH_LONG);
-                } else
-                    showToast(mActivity, getString(R.string.validation_empty_url), Toast.LENGTH_LONG);
-            }
-        });
-
-        btnImportOPML.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
-                final SharedPreferences.Editor editor = prefs.edit();
-
-                final int imports = prefs.getInt("opml_imports", 0) + 1;
-
-                if (imports == 1) {
-                    if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                        alert.setMessage(getString(R.string.confirm_import_opml));
-
-                        alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                                intent.setType("*/*");
-                                startActivityForResult(intent, OPML_REQUEST_CODE);
-
-                                dialog.dismiss();
+                                mTipView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
                             }
                         });
-                        alert.show();
-                    }
-                } else {
-                    final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("*/*");
-                    startActivityForResult(intent, OPML_REQUEST_CODE);
-                }
+                    });
 
-                //stop tracking at 100 visits
-                if (imports < 100) {
-                    editor.putInt("opml_imports", imports);
-                    editor.apply();
+                } else
+                    showToast(mActivity, getString(R.string.validation_invalid_url), Toast.LENGTH_LONG);
+            } else
+                showToast(mActivity, getString(R.string.validation_empty_url), Toast.LENGTH_LONG);
+        });
+
+        btnImportOPML.setOnClickListener(view -> {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+            final SharedPreferences.Editor editor = prefs.edit();
+
+            final int imports = prefs.getInt("opml_imports", 0) + 1;
+
+            if (imports == 1) {
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                    alert.setMessage(getString(R.string.confirm_import_opml));
+
+                    alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("*/*");
+                        startActivityForResult(intent, OPML_REQUEST_CODE);
+
+                        dialog.dismiss();
+                    });
+                    alert.show();
                 }
+            } else {
+                final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                startActivityForResult(intent, OPML_REQUEST_CODE);
+            }
+
+            //stop tracking at 100 visits
+            if (imports < 100) {
+                editor.putInt("opml_imports", imports);
+                editor.apply();
             }
         });
 
-       new AsyncTasks.NodesConnected(this,
-                new Interfaces.BooleanResponse() {
-                    @Override
-                    public void processFinish(final Boolean connected) {
-                        SetContent(connected);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CommonUtils.executeSingleThreadAsync(new NodesConnected(this), this::SetContent);
     }
 
     private void SetContent(final Boolean connected)
@@ -276,12 +243,9 @@ public class UserAddActivity extends AppCompatActivity {
 
         final SharedPreferences.Editor editor = prefs.edit();
 
-        mThirdPartyAutoDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editor.putBoolean("third_party_auto_download", mThirdPartyAutoDownload.isChecked());
-                editor.apply();
-            }
+        mThirdPartyAutoDownload.setOnClickListener(view -> {
+            editor.putBoolean("third_party_auto_download", mThirdPartyAutoDownload.isChecked());
+            editor.apply();
         });
 
         final int visits = prefs.getInt("visits", 0) + 1;
@@ -305,7 +269,30 @@ public class UserAddActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
              if (intent.getExtras().getBoolean("thirdparty")) {
                  findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
-                 findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);            }
+                 findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+             }
+            else if (intent.getExtras().getBoolean("opmlimport_complete")) {
+                 mProgressOPML.setVisibility(View.GONE);
+                 mOPMLView.setGravity(Gravity.START);
+                 mOPMLView.setVisibility(View.VISIBLE);
+                 mOPMLView.setText(getString(R.string.text_importing_opml_complete));
+                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_general_green));
+                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+             }
+            else if (intent.getExtras().getBoolean("opmlimport_episodes")) {
+                 mProgressOPML.setVisibility(View.VISIBLE);
+                 mOPMLView.setGravity(Gravity.START);
+                 mOPMLView.setVisibility(View.VISIBLE);
+                 mOPMLView.setText(getString(R.string.text_importing_opml_episodes));
+                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+             }
+            else if (intent.getExtras().getBoolean("opmlimport_art")) {
+                 mProgressOPML.setVisibility(View.VISIBLE);
+                 mOPMLView.setGravity(Gravity.START);
+                 mOPMLView.setVisibility(View.VISIBLE);
+                 mOPMLView.setText(getString(R.string.text_importing_opml_art));
+                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+             }
         }
     };
 
@@ -322,83 +309,28 @@ public class UserAddActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK)
         {
             if (requestCode == OPML_REQUEST_CODE) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (resultData != null) {
-                            Uri uri = resultData.getData();
+                new Thread(() -> {
+                    if (resultData != null) {
+                        Uri uri = resultData.getData();
 
-                            InputStream in = null;
-                            try {
-                                in = mActivity.getContentResolver().openInputStream(uri);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
+                        PutDataMapRequest dataMap = PutDataMapRequest.create("/opmlimport");
+                        dataMap.getDataMap().putAsset("opml", Asset.createFromUri(uri));
 
-                            mActivity.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    mProgressOPML.setVisibility(View.VISIBLE);
-                                    mProgressOPML.setIndeterminate(true);
-                                    mOPMLView.setGravity(Gravity.START);
-                                    mOPMLView.setVisibility(View.VISIBLE);
-                                    mOPMLView.setText(mActivity.getString(R.string.text_importing_opml_parsing));
-                                    mOPMLView.setTextColor(mActivity.getColor(R.color.dark_grey));
-                                }
-                            });
+                        CommonUtils.DeviceSync(mActivity, dataMap);
 
-                            final List<PodcastItem> podcasts = OPMLParser.parse(mActivity, in);
-
-                            if (podcasts.size() > 0) {
-
-                                new FetchPodcast(podcasts, new Interfaces.FetchPodcastResponse() {
-                                    @Override
-                                    public void processFinish(PodcastItem podcast) {
-                                        Utilities.SendToWatch(mActivity, podcast);
-                                        ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
-                                        ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
-                                    }
-
-                                    @Override
-                                    public void processFinish(List<PodcastItem> podcasts) {
-                                        sendToWatch(podcasts);
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            } else {
-                                mActivity.runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        mProgressOPML.setVisibility(View.INVISIBLE);
-                                        ((TextView) findViewById(R.id.import_opml_text)).setText(getString(R.string.error_opml_import));
-                                        ((TextView) findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.wc_red));
-                                    }
-                                });
-                            }
-                        }
+                        mActivity.runOnUiThread(() -> {
+                            mProgressOPML.setVisibility(View.VISIBLE);
+                            mProgressOPML.setIndeterminate(true);
+                            mOPMLView.setGravity(Gravity.START);
+                            mOPMLView.setVisibility(View.VISIBLE);
+                            mOPMLView.setText(getString(R.string.text_importing_opml_sent));
+                            mOPMLView.setTextColor(mActivity.getColor(R.color.dark_grey));
+                            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        });
                     }
                 }).start();
             }
         }
-        //else
-            //CommonUtils.showToast(mActivity, mActivity.getString(R.string.general_error));
-    }
-
-    private void sendToWatch(final List<PodcastItem> podcasts)
-    {
-        mProgressOPML.setIndeterminate(false);
-        ((TextView)findViewById(R.id.import_opml_text)).setText(getString(R.string.text_importing_opml_sending));
-        ((TextView)findViewById(R.id.import_opml_text)).setTextColor(mActivity.getColor(R.color.dark_grey));
-
-        new com.krisdb.wearcasts.AsyncTasks.SendToWatch(mActivity, podcasts, mProgressOPML,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> podcasts) {
-                        mProgressOPML.setVisibility(View.INVISIBLE);
-
-                        final TextView opmlText = findViewById(R.id.import_opml_text);
-                        opmlText.setText(getResources().getQuantityString(R.plurals.podcasts_added, podcasts.size(), podcasts.size()));
-                        opmlText.setTextColor(mActivity.getColor(R.color.green));
-                        opmlText.setGravity(Gravity.CENTER_HORIZONTAL);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -119,6 +119,18 @@
                     android:host="*"
                     android:pathPrefix="/thirdparty"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/opmlimport_episodes"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/opmlimport_art"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/opmlimport_complete"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 

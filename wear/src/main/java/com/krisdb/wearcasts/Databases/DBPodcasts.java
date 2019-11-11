@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import com.krisdb.wearcasts.Async.SyncPodcasts;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
@@ -34,10 +36,7 @@ public class DBPodcasts extends SQLiteOpenHelper
     }
 
     @Override
-    public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-
-
-    }
+    public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {}
 
     public SQLiteDatabase select()
     {
@@ -56,8 +55,8 @@ public class DBPodcasts extends SQLiteOpenHelper
                 statement.bindString(1, podcast.getTitle());
                 statement.bindString(2, podcast.getChannel().getRSSUrl().toString());
                 statement.bindString(3, podcast.getChannel().getSiteUrl().toString());
-                statement.bindString(4, podcast.getChannel().getThumbnailUrl().toString());
-                statement.execute();
+                statement.bindString(4, podcast.getChannel().getThumbnailUrl() != null ? podcast.getChannel().getThumbnailUrl().toString() : null);
+                statement.executeInsert();
             }
             db.setTransactionSuccessful();
         } finally {

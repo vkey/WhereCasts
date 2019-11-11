@@ -3,6 +3,7 @@ package com.krisdb.wearcasts.Services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothA2dp;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -16,7 +17,6 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,13 +42,14 @@ import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.FinishMedia;
+import com.krisdb.wearcasts.Async.SyncWithMobileDevice;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -113,27 +114,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
-        /*
-            MediaButtonReceiver.handleIntent(mMediaSessionCompat, intent);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                final NotificationChannel channel = new NotificationChannel(mPackage.concat(".service"), getString(R.string.notification_channel_media_service), NotificationManager.IMPORTANCE_DEFAULT);
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-
-                final Notification notification = new NotificationCompat.Builder(this, mPackage.concat(".service"))
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(getString(R.string.notification_channel_media_service))
-                        .setSmallIcon(R.drawable.ic_notification).build();
-
-              startForeground(1, notification);
-            }
-            */
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         final ContentValues cv = new ContentValues();
         cv.put("playing", 0);
@@ -163,6 +152,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
 
         mMediaHandler.removeCallbacksAndMessages(null);
+
+        if (prefs.getBoolean("pref_detect_bluetooth_changes", true))
+            unregisterReceiver(mBluetoothConnected);
 
         disableNoisyReceiver();
         stopForeground(true);
@@ -254,12 +246,17 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     private void SyncWithMobileDevice(boolean finished) {
-        new AsyncTasks.SyncWithMobileDevice(mContext, mEpisode, mMediaPlayer, finished).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CommonUtils.executeSingleThreadAsync(new WatchConnected(this), (connected) -> {
+            if (connected)
+                CommonUtils.executeSingleThreadAsync(new SyncWithMobileDevice(mContext, mEpisode, mMediaPlayer, finished), (response) -> { });
+        });
     }
 
     private void PlayAudio()
     {
         if (successfullyRetrievedAudioFocus() == false) return;
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (mLocalFile == null) {
             final ContentValues cv = new ContentValues();
@@ -288,14 +285,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         intentMediaPlayed.putExtra("media_played", true);
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlayed);
 
-        initNoisyReceiver();
-
         showNotification(false);
 
         mMediaPlayer.start();
 
         if (mHasPremium) {
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
             float playbackSpeed2 = Float.valueOf(prefs.getString("pref_" + mEpisode.getPodcastId() + "_playback_speed", "0"));
@@ -306,6 +300,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (playbackSpeed != 1.0f)
                 mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
         }
+
+        initNoisyReceiver();
 
         mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
@@ -374,6 +370,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
         mMediaSessionCompat.setActive(true);
 
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
         if (mTelephonyManager != null)
             mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_CALL_STATE);
 
@@ -399,8 +397,15 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             db.close();
         }
 
-        initMediaSessionMetadata();
+        if (prefs.getBoolean("pref_detect_bluetooth_changes", true)) {
+            final IntentFilter filterBluetooth = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+            registerReceiver(mBluetoothConnected, filterBluetooth);
+        }
+        else
+            unregisterReceiver(mBluetoothConnected);
+
         initNoisyReceiver();
+        initMediaSessionMetadata();
 
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -424,8 +429,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 mMediaPlayer.prepare();
 
             mError = false;
-
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             if (mHasPremium) {
                 float playbackSpeed = Float.parseFloat(prefs.getString("pref_playback_speed", "1.0f"));
@@ -570,11 +573,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     }
 
-    private void disableNoisyReceiver() {
-        try { unregisterReceiver(mNoisyReceiver); }
-        catch(Exception ex) {}
-    }
-
     private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
         if (mPodcastID > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false) {
@@ -653,10 +651,16 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     }
 
+    private void disableNoisyReceiver() {
+        try {
+            unregisterReceiver(mNoisyReceiver);
+        }
+        catch(Exception ex) {}
+    }
+
     private void initNoisyReceiver() {
-        //Handles headphones coming unplugged. cannot be done through a manifest receiver
-        final IntentFilter filter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        registerReceiver(mNoisyReceiver, filter);
+        final IntentFilter filterNoisy = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(mNoisyReceiver, filterNoisy);
     }
 
     private BroadcastReceiver mNoisyReceiver = new BroadcastReceiver() {
@@ -665,6 +669,20 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             //Log.d(mPackage, "MediaPlayerService Noisy receiver hit");
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 PauseAudio();
+            }
+        }
+    };
+
+    private BroadcastReceiver mBluetoothConnected = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
+
+                int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_DISCONNECTED);
+
+                if (state == BluetoothA2dp.STATE_CONNECTED)
+                    PlayAudio();
             }
         }
     };
@@ -923,18 +941,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaPlayer.stop();
 
         if (!mError) {
-            new AsyncTasks.FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile, playbackError,
-                    new Interfaces.PodcastsResponse() {
-                        @Override
-                        public void processFinish(final List<PodcastItem> episodes) {
-                            final Intent intentMediaCompleted = new Intent();
-                            intentMediaCompleted.setAction("media_action");
-                            intentMediaCompleted.putExtra("media_completed", true);
-                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+            CommonUtils.executeSingleThreadAsync(new FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile, playbackError), (episodes) -> {
+                final Intent intentMediaCompleted = new Intent();
+                intentMediaCompleted.setAction("media_action");
+                intentMediaCompleted.putExtra("media_completed", true);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
 
-                            playlistSkip(Enums.SkipDirection.NEXT, episodes);
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                playlistSkip(Enums.SkipDirection.NEXT, episodes);
+            });
         }
     }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Databases.DBDirectoryPodcasts;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.AsyncTasks;
+import com.krisdb.wearcastslibrary.Async.GetPodcastsDirectory;
+import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.ChannelItem;
-import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
@@ -117,39 +117,29 @@ public class SearchResultsActivity extends AppCompatActivity {
         cursor.close();
         dbPodcasts.close();
 
-        new AsyncTasks.GetPodcastsDirectory(this, mQuery,
-                new Interfaces.PodcastsResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastItem> podcasts) {
+        CommonUtils.executeSingleThreadAsync(new GetPodcastsDirectory(this, mQuery), (podcasts) -> {
+            if (podcasts.size() > 0) {
+                mPodcasts.addAll(podcasts);
+                findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
+            }
+            else
+                findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
 
-                        if (podcasts.size() > 0) {
-                            mPodcasts.addAll(podcasts);
-                            findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
-                        }
-                        else
-                            findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
-
-                        new AsyncTasks.WatchConnected(getApplicationContext(),
-                                new Interfaces.BooleanResponse() {
-                                    @Override
-                                    public void processFinish(final Boolean connected) {
-                                        mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        if (podcasts.size() > 1) {
-                                            mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));
-                                            mProgressText.setVisibility(View.GONE);
-                                            mResultsList.setVisibility(View.VISIBLE);
-                                        }
-                                        else
-                                        {
-                                            mProgressText.setText(getString(R.string.text_no_search_results));
-                                            mProgressText.setVisibility(View.VISIBLE);
-                                        }
-                                        mProgressBar.setVisibility(View.GONE);
-                                    }
-                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CommonUtils.executeSingleThreadAsync(new WatchConnected(getApplicationContext()), (connected) -> {
+                mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                if (podcasts.size() > 1) {
+                    mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));
+                    mProgressText.setVisibility(View.GONE);
+                    mResultsList.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    mProgressText.setText(getString(R.string.text_no_search_results));
+                    mProgressText.setVisibility(View.VISIBLE);
+                }
+                mProgressBar.setVisibility(View.GONE);
+            });
+        });
     }
 
     @Override

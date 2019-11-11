@@ -55,34 +55,28 @@ public class SearchEpisodesActivity extends BaseFragmentActivity implements Wear
         navDrawer.setAdapter(new NavigationAdapter(this, mNavItems));
         navDrawer.addOnItemSelectedListener(this);
 
-        mSearchVoiceImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                startActivityForResult(intent, SPEECH_REQUEST_CODE);
-            }
+        mSearchVoiceImage.setOnClickListener(v -> {
+            final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            startActivityForResult(intent, SPEECH_REQUEST_CODE);
         });
 
-        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    final String text = mSearchText.getText().toString();
+        mSearchText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                final String text = mSearchText.getText().toString();
 
-                    if (text.length() == 0) {
-                        Utilities.ShowFailureActivity(mActivity, getString(R.string.alert_search_empty));
-                        //CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
-                        return true;
-                    }
-                    runSearch(text);
-
-                    final InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                if (text.length() == 0) {
+                    Utilities.ShowFailureActivity(mActivity, getString(R.string.alert_search_empty));
+                    //CommonUtils.showToast(mActivity, getString(R.string.alert_search_empty));
                     return true;
                 }
-                return false;
+                runSearch(text);
+
+                final InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
             }
+            return false;
         });
     }
 

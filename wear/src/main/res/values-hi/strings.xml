@@ -158,6 +158,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">छोड़कर आगे बढ़ो</string>
     <string name="settings_podcasts_label_playback_remove_notification">अधिसूचना निकालें</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">ठहराव पर</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">ब्लूटूथ कनेक्ट होने पर प्लेबैक फिर से शुरू करें</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">ब्लूटूथ कनेक्ट या डिस्कनेक्ट होने पर प्लेबैक को फिर से शुरू या पॉज़ करें</string>
     <string name="settings_podcasts_label_playback_playlists">समाप्त होने पर प्लेलिस्ट से एपिसोड निकालें</string>
     <string name="settings_podcasts_label_hardware_button">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>
     <string name="settings_podcasts_label_hardware_buttons">हार्डवेयर बटन के साथ प्लेबैक को नियंत्रित करें</string>

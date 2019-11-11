@@ -2,12 +2,10 @@ package com.krisdb.wearcasts.Adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,14 +17,13 @@ import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Async.SaveLogo;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.GetEpisodes;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.net.URL;
@@ -78,42 +75,26 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.episodesExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.episodes.getVisibility() == View.GONE) {
-                    holder.episodesProgress.setVisibility(View.VISIBLE);
-                    new com.krisdb.wearcastslibrary.AsyncTasks.GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 10,
-                            new Interfaces.PodcastsResponse() {
-                                @Override
-                                public void processFinish(List<PodcastItem> episodes) {
-                                    holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
-                                    holder.episodes.setAdapter(new EpisodesPreviewAdapter(mContext, episodes));
-                                    holder.episodes.setVisibility(View.VISIBLE);
-                                    holder.episodesProgress.setVisibility(View.GONE);
-                                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_preview_row_item_contract));
-                                }
-                            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    holder.episodes.setVisibility(View.GONE);
-                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_preview_row_item_expand));
-                }
+        holder.episodesExpand.setOnClickListener(v -> {
+            if (holder.episodes.getVisibility() == View.GONE) {
+                holder.episodesProgress.setVisibility(View.VISIBLE);
+
+                CommonUtils.executeSingleThreadAsync(new GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 10), (episodes) -> {
+                    holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
+                    holder.episodes.setAdapter(new EpisodesPreviewAdapter(mContext, episodes));
+                    holder.episodes.setVisibility(View.VISIBLE);
+                    holder.episodesProgress.setVisibility(View.GONE);
+                    holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_preview_row_item_contract));
+                });
+            } else {
+                holder.episodes.setVisibility(View.GONE);
+                holder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_preview_row_item_expand));
             }
         });
 
-        holder.add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addPodcast(holder);
-            }
-        });
+        holder.add.setOnClickListener(view1 -> addPodcast(holder));
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addPodcast(holder);
-            }
-        });
+        holder.title.setOnClickListener(view12 -> addPodcast(holder));
 
         return holder;
     }

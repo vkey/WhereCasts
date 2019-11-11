@@ -23,7 +23,6 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
@@ -45,7 +44,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -53,8 +51,6 @@ import androidx.core.text.HtmlCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -97,9 +93,7 @@ public class CommonUtils {
         executor.execute(() -> {
             try {
                 final R result = callable.call();
-                handler.post(() -> {
-                    callback.onComplete(result);
-                });
+                handler.post(() -> callback.onComplete(result));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

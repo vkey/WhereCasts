@@ -1,6 +1,7 @@
 package com.krisdb.wearcasts.Utilities;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,9 +9,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 
+import com.krisdb.wearcasts.Async.SaveLogo;
+import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
+import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -21,6 +26,35 @@ import java.util.List;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
 public class DBUtilities {
+
+    public static void insertPodcast(final Context context, final PodcastItem podcast) {
+        insertPodcast(context, new DBPodcastsEpisodes(context), podcast, true, true);
+    }
+
+    public static void insertPodcast(final Context context, final DBPodcastsEpisodes db, final PodcastItem podcast, final boolean fetchArt, final boolean fetchEpisodes)
+    {
+        final ContentValues cv = new ContentValues();
+        cv.put("title", podcast.getTitle());
+        cv.put("url", podcast.getChannel().getRSSUrl().toString());
+        cv.put("site_url", podcast.getChannel().getSiteUrl().toString());
+        cv.put("dateAdded", DateUtils.GetDate());
+        String thumbnailUrl = null;
+        String fileName = null;
+        if (podcast.getChannel().getThumbnailUrl() != null) {
+            thumbnailUrl = podcast.getChannel().getThumbnailUrl().toString();
+            fileName = podcast.getChannel().getThumbnailName();
+            if (fetchArt)
+                CommonUtils.executeSingleThreadAsync(new SaveLogo(context, thumbnailUrl, fileName), (response) -> { });
+        }
+
+        cv.put("thumbnail_url", thumbnailUrl);
+        cv.put("thumbnail_name", fileName);
+
+        final int podcastId = (int)db.insertPodcast(cv);
+
+        if (fetchEpisodes)
+            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context, podcastId), (response) -> { });
+    }
 
     static ChannelItem GetChannel(final Context ctx, final int podcastId) {
         final ChannelItem channel = new ChannelItem();

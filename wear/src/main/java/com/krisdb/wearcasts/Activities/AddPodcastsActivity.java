@@ -21,11 +21,11 @@ import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
-import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcasts.Fragments.AddPodcastListFragment;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 
@@ -130,6 +130,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 mViewPager.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
                 mProgressBarText.setVisibility(View.GONE);
+
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
             else
@@ -160,25 +161,17 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(AddPodcastsActivity.this);
                     alert.setMessage(getString(R.string.alert_directory_resync));
-                    alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            {
-                                final Intent intent = getIntent();
-                                final Bundle bundle = new Bundle();
-                                bundle.putBoolean("refresh", true);
-                                intent.putExtras(bundle);
-                                finish();
-                                startActivity(intent);
-                            }
+                    alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        {
+                            final Intent intent = getIntent();
+                            final Bundle bundle = new Bundle();
+                            bundle.putBoolean("refresh", true);
+                            intent.putExtras(bundle);
+                            finish();
+                            startActivity(intent);
                         }
                     });
-                    alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    alert.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
 
                     alert.show();
                 }
@@ -218,31 +211,6 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
 
         @Override
         public int getCount() {
-            return mNumberOfPages;
-        }
-    }
-
-    private class AddPodcastsPagerAdapter2 extends FragmentStateAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        AddPodcastsPagerAdapter2(FragmentActivity fa) {
-            super(fa);
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getItemCount() {
             return mNumberOfPages;
         }
     }

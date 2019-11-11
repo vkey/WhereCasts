@@ -2,15 +2,11 @@ package com.krisdb.wearcasts.Async;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Models.SyncPodcastsResponse;
-import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -28,6 +24,10 @@ public class SyncPodcasts implements Callable<SyncPodcastsResponse> {
     private final Context context;
     private int mPodcastId;
 
+    public SyncPodcasts(final Context context) {
+        this.context = context;
+        this.mPodcastId = 0;
+    }
 
     public SyncPodcasts(final Context context, final int podcastId) {
         this.context = context;

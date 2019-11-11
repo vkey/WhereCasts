@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -23,13 +22,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
 import com.krisdb.wearcasts.Fragments.PodcastListFragment;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.AsyncTasks;
-import com.krisdb.wearcastslibrary.Interfaces;
+import com.krisdb.wearcastslibrary.Async.GetDirectory;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 
 import java.util.ArrayList;
@@ -52,15 +50,11 @@ public class DirectoryActivity extends AppCompatActivity {
         findViewById(R.id.main_progress_text).setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        new AsyncTasks.GetDirectory(this,
-                new Interfaces.DirectoryResponse() {
-                    @Override
-                    public void processFinish(final List<PodcastCategory> categories) {
-                        SetDirectory(categories);
-                        mProgressBar.setVisibility(View.GONE);
-                        findViewById(R.id.main_progress_text).setVisibility(View.GONE);
-                    }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        CommonUtils.executeSingleThreadAsync(new GetDirectory(this), (categories) -> {
+            SetDirectory(categories);
+            mProgressBar.setVisibility(View.GONE);
+            findViewById(R.id.main_progress_text).setVisibility(View.GONE);
+        });
     }
 
     private void SetDirectory(final List<PodcastCategory> categories)
@@ -79,17 +73,14 @@ public class DirectoryActivity extends AppCompatActivity {
             adapter.addFrag(PodcastListFragment.newInstance(category.getPodcasts()), category.getName());
 
         mViewPager.setAdapter(adapter);
-
-        new TabLayoutMediator((TabLayout)findViewById(R.id.podcasts_tabs), mViewPager,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        if (prefs.getInt("id", 0) > 0)
-                            tab.setText(position == 0 ? getString(R.string.tab_play) : categories.get(position-1).getName());
-                        else
-                            tab.setText(categories.get(position).getName());
-                    }
+        new TabLayoutMediator(findViewById(R.id.podcasts_tabs), mViewPager,
+                (tab, position) -> {
+                    if (prefs.getInt("id", 0) > 0)
+                        tab.setText(position == 0 ? getString(R.string.tab_play) : categories.get(position-1).getName());
+                    else
+                        tab.setText(categories.get(position).getName());
                 }).attach();
+
     }
 
     private class MainPagerAdapter extends FragmentStateAdapter {

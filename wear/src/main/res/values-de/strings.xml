@@ -136,6 +136,8 @@
     <string name="settings_podcasts_label_playback_skip_forward">Nach vorne spulen</string>
     <string name="settings_podcasts_label_playback_remove_notification">Benachrichtigung entfernen</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">Pause</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth">Setzen Sie die Wiedergabe fort, wenn eine Bluetooth-Verbindung besteht</string>
+    <string name="settings_podcasts_label_playback_detect_bluetooth_summary">Setzen Sie die Wiedergabe fort oder unterbrechen Sie sie, wenn die Bluetooth-Verbindung hergestellt oder getrennt wird</string>
     <string name="settings_podcasts_label_playback_playlists">Entferne Episoden aus der Playlist, wenn sie fertig ist</string>
     <string name="settings_podcasts_label_hardware_button">Steuern Sie die Wiedergabe mit der Hardware-Taste</string>
     <string name="settings_podcasts_label_hardware_buttons">Steuern Sie die Wiedergabe mit Hardwaretasten</string>

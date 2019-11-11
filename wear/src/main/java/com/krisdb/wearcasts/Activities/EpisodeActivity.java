@@ -20,7 +20,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,7 +57,7 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.AsyncTasks;
+import com.krisdb.wearcasts.Async.ToggleBluetooth;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -70,7 +69,6 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -222,49 +220,30 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBack.setText(String.valueOf(skipBack));
         mSkipForward.setText(String.valueOf(skipForward));
 
-        mVolumeUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+        mVolumeUp.setOnClickListener(view -> {
+            final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 
-                if (audioManager != null)
-                    audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-                else
-                    CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
-            }
+            if (audioManager != null)
+                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+            else
+                CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
         });
 
-        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleNetwork(true);
-            }
+        mDownloadImage.setOnClickListener(view -> handleNetwork(true));
+
+        mSkipBackImage.setOnClickListener(view -> {
+            final int position = mSeekBar.getProgress() - (skipBack * 1000);
+            mSeekBar.setProgress(position);
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
         });
 
-        mSkipBackImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final int position = mSeekBar.getProgress() - (skipBack * 1000);
-                mSeekBar.setProgress(position);
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-            }
+        mSkipForwardImage.setOnClickListener(view -> {
+            final int position = mSeekBar.getProgress() + (skipForward * 1000);
+            mSeekBar.setProgress(position);
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
         });
 
-        mSkipForwardImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final int position = mSeekBar.getProgress() + (skipForward * 1000);
-                mSeekBar.setProgress(position);
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().seekTo(position);
-            }
-        });
-
-        mPlayPauseImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                togglePlayback();
-            }
-        });
+        mPlayPauseImage.setOnClickListener(view -> togglePlayback());
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -412,12 +391,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1)
         {
             mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
-            mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DeleteEpisode();
-                }
-            });
+            mDownloadImage.setOnClickListener(view -> DeleteEpisode());
         }
 
         if (mLocalFile == null && mEpisode.getMediaUrl() == null) {
@@ -564,12 +538,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mPlayPauseImage.setVisibility(View.INVISIBLE);
 
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
-                        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                CancelDownload();
-                            }
-                        });
+                        mDownloadImage.setOnClickListener(view -> CancelDownload());
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
@@ -585,12 +554,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
                             mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                             mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
-                            mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    CancelDownload();
-                                }
-                            });
+                            mDownloadImage.setOnClickListener(view -> CancelDownload());
                             mDownloadStartTime = System.nanoTime();
                         }
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -604,12 +568,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mEpisode.setIsDownloaded(true);
-                        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                DeleteEpisode();
-                            }
-                        });
+                        mDownloadImage.setOnClickListener(view -> DeleteEpisode());
                         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
@@ -623,23 +582,15 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mDownloadId = Utilities.startDownload(mContext, mEpisode);
 
         //needed for high-bandwidth check
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPlayPauseImage.setVisibility(View.INVISIBLE);
-                mDownloadSpeed.setVisibility(View.VISIBLE);
-                mProgressCircleDownloading.setVisibility(View.VISIBLE);
-                mProgressCircleDownloading.setProgress(0);
-                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
-                mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        CancelDownload();
-                    }
-                });
-                mProgressCircleLoading.setVisibility(View.VISIBLE);
-                //showToast(mActivity, getString(R.string.alert_episode_download_start));
-            }
+        runOnUiThread(() -> {
+            mPlayPauseImage.setVisibility(View.INVISIBLE);
+            mDownloadSpeed.setVisibility(View.VISIBLE);
+            mProgressCircleDownloading.setVisibility(View.VISIBLE);
+            mProgressCircleDownloading.setProgress(0);
+            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
+            mDownloadImage.setOnClickListener(view -> CancelDownload());
+            mProgressCircleLoading.setVisibility(View.VISIBLE);
+            //showToast(mActivity, getString(R.string.alert_episode_download_start));
         });
 
         mDownloadStartTime = System.nanoTime();
@@ -666,12 +617,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleNetwork(true);
-            }
-        });
+        mDownloadImage.setOnClickListener(view -> handleNetwork(true));
 
         final ContentValues cv = new ContentValues();
         cv.put("download", 0);
@@ -693,42 +639,28 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
                 alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("pref_disable_bluetooth", true);
-                        editor.apply();
-                        handleNetwork(download);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("pref_disable_bluetooth", true);
+                    editor.apply();
+                    handleNetwork(download);
+                    dialog.dismiss();
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        handleNetwork(download);
-                        dialog.dismiss();
-                    }
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> {
+                    handleNetwork(download);
+                    dialog.dismiss();
                 }).show();
 
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -791,20 +723,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         if (!activity.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                             alert.setMessage(activity.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
-                                    dialog.dismiss();
-                                }
+                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), (dialog, which) -> {
+                                activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), mDownload ? 1 : 2);
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(activity);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(activity.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(activity);
+                                dialog.dismiss();
                             }).show();
                         }
                         activity.unregisterNetworkCallback();
@@ -861,39 +787,24 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
             alert.setMessage(getString(R.string.confirm_delete_episode_download));
-            alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+            alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    if (mLocalFile != null)
-                    {
-                        Utilities.deleteLocal(mContext, mEpisode.getTitle());
-                        mDownloadImage.setVisibility(View.INVISIBLE);
-                    }
-                    else {
-                        Utilities.DeleteMediaFile(mActivity, mEpisode);
-
-                        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-                        mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                handleNetwork(true);
-                            }
-                        });
-                    }
-
-                    dialog.dismiss();
+                if (mLocalFile != null)
+                {
+                    Utilities.deleteLocal(mContext, mEpisode.getTitle());
+                    mDownloadImage.setVisibility(View.INVISIBLE);
                 }
+                else {
+                    Utilities.DeleteMediaFile(mActivity, mEpisode);
+
+                    mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                    mDownloadImage.setOnClickListener(view -> handleNetwork(true));
+                }
+
+                dialog.dismiss();
             });
 
-            alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
+            alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
         }
     }
 
@@ -1146,20 +1057,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                         alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                                dialog.dismiss();
-                            }
+                        alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                            startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                            dialog.dismiss();
                         });
 
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                     }
                 }
                 else
@@ -1250,24 +1153,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         switch (itemId) {
             case R.id.menu_drawer_episode_bluetooth_disable:
-                new AsyncTasks.ToggleBluetooth(mActivity, true,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                setMenu();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                CommonUtils.executeSingleThreadAsync(new ToggleBluetooth(mActivity, true), (response) -> {
+                    setMenu();
+                });
                 break;
             case R.id.menu_drawer_episode_bluetooth_enable:
-                new AsyncTasks.ToggleBluetooth(mActivity, false,
-                        new Interfaces.AsyncResponse() {
-                            @Override
-                            public void processFinish() {
-                                mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
-                                setMenu();
-                            }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+                CommonUtils.executeSingleThreadAsync(new ToggleBluetooth(mActivity, false), (response) -> {
+                    setMenu();
+                });
                 break;
   /*          case R.id.menu_drawer_episode_open_wifi:
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
@@ -1284,12 +1177,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 if (mEpisode.getIsDownloaded())
                 {
                     mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-                    mDownloadImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            handleNetwork(true);
-                        }
-                    });
+                    mDownloadImage.setOnClickListener(view -> handleNetwork(true));
                 }
                 markPlayed(mContext, mEpisode);
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);

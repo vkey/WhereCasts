@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,7 +41,6 @@ import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
-import com.krisdb.wearcasts.AsyncTasks;
 import com.krisdb.wearcasts.Controllers.EpisodesSwipeController;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
@@ -52,7 +50,6 @@ import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
-import com.krisdb.wearcastslibrary.Interfaces;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -464,39 +461,31 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertRead = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertRead.setMessage(getString(R.string.confirm_mark_all_played));
-                    alertRead.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final ContentValues cv = new ContentValues();
-                            cv.put("finished", 1);
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.updateAll(cv, mPodcastId);
-                            db.close();
+                    alertRead.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                        final ContentValues cv = new ContentValues();
+                        cv.put("finished", 1);
+                        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                        db.updateAll(cv, mPodcastId);
+                        db.close();
 
-                            final boolean autoDelete = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
+                        final boolean autoDelete1 = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
 
-                            if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                                RefreshContent();
-                            else {
-                                for (final PodcastItem episode : episodes) {
-                                    episode.setFinished(true);
-                                    if (autoDelete) {
-                                        Utilities.DeleteMediaFile(mActivity, episode);
-                                        episode.setIsDownloaded(false);
-                                    }
+                        if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
+                            RefreshContent();
+                        else {
+                            for (final PodcastItem episode : episodes) {
+                                episode.setFinished(true);
+                                if (autoDelete1) {
+                                    Utilities.DeleteMediaFile(mActivity, episode);
+                                    episode.setIsDownloaded(false);
                                 }
-
-                                mAdapter.notifyDataSetChanged();
                             }
-                            resetMenu();
+
+                            mAdapter.notifyDataSetChanged();
                         }
+                        resetMenu();
                     });
-                    alertRead.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    alertRead.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                     alertRead.show();
                 }
                 break;
@@ -505,31 +494,23 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
-                    alertUnread.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final ContentValues cv = new ContentValues();
-                            cv.put("finished", 0);
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-                            db.updateAll(cv, mPodcastId);
-                            db.close();
-                            if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                                RefreshContent();
-                            else {
-                                for (final PodcastItem episode : episodes)
-                                    episode.setFinished(false);
+                    alertUnread.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                        final ContentValues cv = new ContentValues();
+                        cv.put("finished", 0);
+                        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
+                        db.updateAll(cv, mPodcastId);
+                        db.close();
+                        if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
+                            RefreshContent();
+                        else {
+                            for (final PodcastItem episode : episodes)
+                                episode.setFinished(false);
 
-                                mAdapter.notifyDataSetChanged();
-                            }
-                            resetMenu();
+                            mAdapter.notifyDataSetChanged();
                         }
+                        resetMenu();
                     });
-                    alertUnread.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    alertUnread.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                     alertUnread.show();
                 }
                 break;
@@ -541,42 +522,28 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                         alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), DOWNLOAD_RESULTS_CODE);
-                                dialog.dismiss();
-                            }
+                        alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                            startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), DOWNLOAD_RESULTS_CODE);
+                            dialog.dismiss();
                         });
 
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
                     }
                 }
                 else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeListActivity.this);
                         alert.setMessage(getString(R.string.confirm_initial_download_message));
-                        alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putBoolean("pref_disable_bluetooth", true);
-                                editor.apply();
-                                onMenuItemClick(menuItem);
-                                dialog.dismiss();
-                            }
+                        alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                            final SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("pref_disable_bluetooth", true);
+                            editor.apply();
+                            onMenuItemClick(menuItem);
+                            dialog.dismiss();
                         });
-                        alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                downloadEpisodes(itemId);
-                                dialog.dismiss();
-                            }
+                        alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> {
+                            downloadEpisodes(itemId);
+                            dialog.dismiss();
                         }).show();
 
                         final SharedPreferences.Editor editor = prefs.edit();
@@ -687,41 +654,11 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     }
 
     private void downloadEpisodes(final int itemId) {
-        if (itemId == R.id.menu_drawer_episode_list_selected_downloaad) {
-
+        if (itemId == R.id.menu_drawer_episode_list_selected_downloaad)
             mAdapter.downloadSelectedEpisodes();
-
-
-/*            new AsyncTasks.DownloadMultipleEpisodes(mActivity, mAdapter.mSelectedEpisodes,
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                            for (final Integer position : mAdapter.mSelectedPositions) {
-                                mAdapter.downloadEpisode(position, );
-                                episodes.get(position).setIsDownloaded(true);
-                                episodes.get(position).setIsSelected(false);
-                                mAdapter.notifyItemChanged(position);
-                            }
-                            mAdapter.mSelectedPositions = new ArrayList<>();
-                            mAdapter.mSelectedEpisodes = new ArrayList<>();
-                            resetMenu();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
-        } else {
+        else
             mAdapter.downloadAllEpisodes();
-/*
-            new AsyncTasks.DownloadMultipleEpisodes(mActivity, episodes.subList(1, episodes.size()),
-                    new Interfaces.AsyncResponse() {
-                        @Override
-                        public void processFinish() {
-                            for (final PodcastItem episode : episodes)
-                                episode.setIsDownloaded(true);
 
-                            mAdapter.notifyDataSetChanged();
-                            resetMenu();
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
-        }
         resetMenu();
     }
 
@@ -748,20 +685,14 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         if (!activity.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                             alert.setMessage(activity.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), LOW_BANDWIDTH_RESULTS_CODE);
-                                    dialog.dismiss();
-                                }
+                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), (dialog, which) -> {
+                                activity.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), LOW_BANDWIDTH_RESULTS_CODE);
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(activity);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(activity.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(activity);
+                                dialog.dismiss();
                             }).show();
                         }
                         activity.unregisterNetworkCallback();

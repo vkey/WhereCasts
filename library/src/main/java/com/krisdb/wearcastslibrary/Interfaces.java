@@ -1,7 +1,5 @@
 package com.krisdb.wearcastslibrary;
 
-import android.os.Bundle;
-
 import com.google.android.gms.wearable.DataClient;
 
 import java.util.List;
