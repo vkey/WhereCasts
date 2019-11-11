@@ -32,6 +32,8 @@
 
     <string name="playback_speed_option_normal">साधारण</string>
 
+    <string name="dialog_refresh_pocasts">पॉडकास्ट अपडेट करें?</string>
+
     <string name="rate_app_reminder">क्या आप इस ऐप को रेट करना चाहेंगे? (हां क्लिक करने पर आपके फोन पर स्टोर पेज खुल जाएगा).</string>
 
     <string name="text_loading_episodes">लोड हो रहा है…</string>
@@ -136,7 +138,7 @@
     <string name="settings_podcasts_label_podcast_sort">पॉडकास्ट सूची क्रमबद्ध क्रम</string>
     <string name="settings_podcasts_label_home_screen">\'होम स्क्रीन</string>
     <string name="settings_podcasts_label_sync_thumbnails">थंबनेल समन्वयित करने के लिए क्लिक करें</string>
-    <string name="settings_podcasts_label_sync_startup">स्टार्टअप पर समन्वयन</string>
+    <string name="settings_podcasts_label_sync_startup">स्टार्टअप पर अपडेट</string>
     <string name="settings_podcasts_label_updates_enabled">अपडेट सक्षम करें</string>
     <string name="settings_podcasts_label_updates_interval">अंतराल का आधुनिकीकरण</string>
     <string name="settings_podcasts_label_updates_charging">केवल चार्ज करते समय अद्यतन करें</string>
@@ -297,8 +299,8 @@
     <string name="alert_downloads_all_cancelled">सभी डाउनलोड रद्द कर दिया गया</string>
     <string name="alert_locating_network">नेटवर्क की प्रतीक्षा कर रहा है…</string>
     <string name="alert_locating_network_notfound">कोई नेटवर्क नहीं ढूँढा जा सकता</string>
-    <string name="alert_sync_started">सिंकिंग प्रारंभ हुआ</string>
-    <string name="alert_sync_finished">सिंकिंग पूर्ण हुआ</string>
+    <string name="alert_sync_started">अपडेट शुरू हुआ</string>
+    <string name="alert_sync_finished">सिअपडेट पूर्ण हो गया</string>
     <string name="alert_disable_bluetooth_disabling">ब्लूटूथ को अक्षम करना…</string>
     <string name="alert_disable_bluetooth_enabling">ब्लूटूथ को सक्षम करना…</string>
     <string name="alert_unsubscribing">सदस्यता रद्द किए…</string>

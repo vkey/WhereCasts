@@ -32,6 +32,8 @@
 
     <string name="playback_speed_option_normal">Ordinaire</string>
 
+    <string name="dialog_refresh_pocasts">Mettre à jour des podcasts?</string>
+
     <string name="rate_app_reminder">Voulez-vous évaluer cette application? (cliquer OUI ouvrira la page du magasin sur votre téléphone).</string>
 
     <string name="text_loading_episodes">Chargement…</string>
@@ -139,7 +141,7 @@
     <string name="settings_podcasts_label_podcast_sort">Podcast List Ordre de tri</string>
     <string name="settings_podcasts_label_home_screen">\'Écran d\'accueil</string>
     <string name="settings_podcasts_label_sync_thumbnails">Cliquez pour synchroniser les vignettes</string>
-    <string name="settings_podcasts_label_sync_startup">Synchronisation au démarrage</string>
+    <string name="settings_podcasts_label_sync_startup">Mise à jour au démarrage</string>
     <string name="settings_podcasts_label_updates_enabled">Activer les mises à jour</string>
     <string name="settings_podcasts_label_updates_interval">Intervalle de mise à jour</string>
     <string name="settings_podcasts_label_updates_charging">Mettre à jour en chargeant seulement</string>
@@ -298,8 +300,8 @@
     <string name="alert_downloads_all_cancelled">Tous les téléchargements annulés</string>
     <string name="alert_locating_network">En attente de réseau…</string>
     <string name="alert_locating_network_notfound">Impossible de localiser un réseau</string>
-    <string name="alert_sync_started">La synchronisation a commencé</string>
-    <string name="alert_sync_finished">Synchronisation terminée</string>
+    <string name="alert_sync_started">Mise à jour commencée</string>
+    <string name="alert_sync_finished">Mise à jour terminée</string>
     <string name="alert_disable_bluetooth_disabling">Désactiver Bluetooth…</string>
     <string name="alert_disable_bluetooth_enabling">Activer Bluetooth…</string>
     <string name="alert_unsubscribing">Se désinscrire…</string>

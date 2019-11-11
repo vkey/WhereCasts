@@ -63,12 +63,10 @@ public class PodcastsListFragment extends Fragment {
         mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
         //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
 
-        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
-            CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
-        }
-        else
-            RefreshContent();
+
+        RefreshContent();
 
         return listView;
     }
@@ -90,6 +88,7 @@ public class PodcastsListFragment extends Fragment {
         }
         else
         {
+            CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
                     RefreshContent();
                     CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));

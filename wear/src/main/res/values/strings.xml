@@ -32,6 +32,8 @@
 
     <string name="playback_speed_option_normal">Normal</string>
 
+    <string name="dialog_refresh_pocasts">Update podcasts?</string>
+
     <string name="text_loading_episodes">Loading…</string>
     <string name="text_loading_episodes_playlist">Refreshing…</string>
     <string name="text_loading_podcasts">Loading your podcasts…</string>
@@ -135,7 +137,7 @@
     <string name="settings_podcasts_label_podcast_sort">Podcast list sort order</string>
     <string name="settings_podcasts_label_home_screen">\'Home\' Screen</string>
     <string name="settings_podcasts_label_sync_thumbnails">Click to sync thumbnails</string>
-    <string name="settings_podcasts_label_sync_startup">Sync on startup</string>
+    <string name="settings_podcasts_label_sync_startup">Update on startup</string>
     <string name="settings_podcasts_label_updates_enabled">Enable Updates</string>
     <string name="settings_podcasts_label_updates_enabled_summary">Runs only when device is charging</string>
     <string name="settings_podcasts_label_updates_interval">Update Interval</string>
@@ -301,8 +303,8 @@
     <string name="alert_downloads_all_cancelled">All downloads cancelled</string>
     <string name="alert_locating_network">Waiting for network…</string>
     <string name="alert_locating_network_notfound">Cannot locate a network</string>
-    <string name="alert_sync_started">Syncing started</string>
-    <string name="alert_sync_finished">Syncing completed</string>
+    <string name="alert_sync_started">Update started</string>
+    <string name="alert_sync_finished">Update completed</string>
     <string name="alert_disable_bluetooth_disabling">Disabling Bluetooth…</string>
     <string name="alert_disable_bluetooth_enabling">Enabling Bluetooth…</string>
     <string name="alert_unsubscribing">Unsubscribing…</string>

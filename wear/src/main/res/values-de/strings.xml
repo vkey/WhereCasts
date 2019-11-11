@@ -116,7 +116,7 @@
     <string name="settings_podcasts_label_podcast_sort">Podcast-Liste Sortierreihenfolge</string>
     <string name="settings_podcasts_label_home_screen">\'Startbildschirm</string>
     <string name="settings_podcasts_label_sync_thumbnails">Zum Synchronisieren von Miniaturansichten klicken</string>
-    <string name="settings_podcasts_label_sync_startup">Beim Start synchronisieren</string>
+    <string name="settings_podcasts_label_sync_startup">Update beim Start</string>
     <string name="settings_podcasts_label_updates_enabled">Updates aktivieren</string>
     <string name="settings_podcasts_label_updates_interval">Updateintervall</string>
     <string name="settings_podcasts_label_updates_charging">Aktualisieren während des Ladevorgangs</string>
@@ -260,6 +260,8 @@
 
     <string name="playback_speed_option_normal">Normal</string>
 
+    <string name="dialog_refresh_pocasts">Podcasts aktualisieren?</string>
+
     <string name="menu_episodes_mark_selected_played">Als ausgewählt markieren</string>
     <string name="menu_episodes_mark_selected_unplayed">Als ausgewählt markieren</string>
     <string name="menu_episodes_mark_selected_unplayed_single">Markiere alles als von hier gespielt</string>
@@ -297,8 +299,8 @@
     <string name="alert_downloads_all_cancelled">Alle Downloads wurden abgebrochen</string>
     <string name="alert_locating_network">Warte auf Netzwerk…</string>
     <string name="alert_locating_network_notfound">Kann kein Netzwerk finden</string>
-    <string name="alert_sync_started">Synchronisierung gestartet</string>
-    <string name="alert_sync_finished">Synchronisierung abgeschlossen</string>
+    <string name="alert_sync_started">Update gestartet</string>
+    <string name="alert_sync_finished">Update abgeschlossen</string>
     <string name="alert_disable_bluetooth_disabling">Bluetooth deaktivieren…</string>
     <string name="alert_disable_bluetooth_enabling">Bluetooth aktivieren…</string>
     <string name="alert_unsubscribing">Abmeldung…</string>

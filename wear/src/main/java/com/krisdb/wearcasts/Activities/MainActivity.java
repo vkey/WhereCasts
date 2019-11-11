@@ -369,7 +369,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private void setMainMenu()
     {
         mNavItems = Utilities.getNavItems(this);
-        mNavDrawer = new WeakReference<>((WearableNavigationDrawerView) findViewById(R.id.drawer_nav_main));
+        mNavDrawer = new WeakReference<>(findViewById(R.id.drawer_nav_main));
 
         if (mNavDrawer.get() != null) {
             mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
@@ -499,7 +499,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 setMainMenu();
                 Utilities.StartSleepTimerJob(ctx);
                 Utilities.ShowConfirmationActivity(ctx, getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
-                //CommonUtils.showToast(ctx, getString(R.string.sleep_timer_started, prefs.getString("pref_sleep_timer", "0")));
                 break;
             case 2:
                 editor.putBoolean("sleep_timer_running", false);
@@ -507,10 +506,18 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                 setMainMenu();
                 Utilities.CancelSleepTimerJob(ctx);
                 Utilities.ShowConfirmationActivity(ctx, getString(R.string.sleep_timer_stopped));
-                //CommonUtils.showToast(ctx, getString(R.string.sleep_timer_stopped));
                 break;
             case 3:
-                handleNetwork();
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setMessage(getString(R.string.dialog_refresh_pocasts));
+                    alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                        handleNetwork();
+                        dialog.dismiss();
+                    });
+
+                    alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
+                }
                 break;
             case 4:
                 startActivity(new Intent(ctx, SettingsPodcastsActivity.class));
@@ -518,10 +525,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         }
     }
 
-    private void handleNetwork()
-    {
-        if (!CommonUtils.isNetworkAvailable(this))
-        {
+    private void handleNetwork() {
+        if (!CommonUtils.isNetworkAvailable(this)) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
@@ -532,12 +537,12 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
                 alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
-        }
-            else {
+        } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+            CommonUtils.showToast(this, getString(R.string.alert_sync_started));
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivityRef.get(), 0), (response) -> {
                 mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));
+                CommonUtils.showToast(this, getString(R.string.alert_sync_finished));
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             });
         }

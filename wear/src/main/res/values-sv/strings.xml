@@ -32,6 +32,8 @@
 
     <string name="playback_speed_option_normal">Vanligt</string>
 
+    <string name="dialog_refresh_pocasts">Uppdatera podcast?</string>
+
     <string name="rate_app_reminder">Vill du betygsätta den här appen? (klicka på JA öppnar butikssidan på din telefon).</string>
 
     <string name="text_loading_episodes">Läser in…</string>
@@ -138,7 +140,7 @@
     <string name="settings_podcasts_label_podcast_sort">Podcast List Sorteringsorder</string>
     <string name="settings_podcasts_label_home_screen">\'Hemskärm</string>
     <string name="settings_podcasts_label_sync_thumbnails">Klicka för att synkronisera miniatyrer</string>
-    <string name="settings_podcasts_label_sync_startup">Synkronisera vid uppstart</string>
+    <string name="settings_podcasts_label_sync_startup">Uppdatering vid start</string>
     <string name="settings_podcasts_label_updates_enabled">Aktivera uppdateringar</string>
     <string name="settings_podcasts_label_updates_interval">Uppdateringsintervall</string>
     <string name="settings_podcasts_label_updates_charging">Uppdatera endast under laddning</string>
@@ -297,8 +299,8 @@
     <string name="alert_downloads_all_cancelled">Alla nedladdningar avbröts</string>
     <string name="alert_locating_network">Väntar på nätverk…</string>
     <string name="alert_locating_network_notfound">Det går inte att hitta ett nätverk</string>
-    <string name="alert_sync_started">Synkronisering startade</string>
-    <string name="alert_sync_finished">Synkronisering slutförd</string>
+    <string name="alert_sync_started">Uppdateringen startade</string>
+    <string name="alert_sync_finished">Uppdateringen slutförd</string>
     <string name="alert_disable_bluetooth_disabling">Inaktiverar Bluetooth…</string>
     <string name="alert_disable_bluetooth_enabling">Aktiverar Bluetooth…</string>
     <string name="alert_unsubscribing">Gå ur…</string>
