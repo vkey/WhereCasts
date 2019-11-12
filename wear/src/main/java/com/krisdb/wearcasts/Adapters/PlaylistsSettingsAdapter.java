@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
