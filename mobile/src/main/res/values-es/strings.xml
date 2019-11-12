@@ -84,6 +84,7 @@
     <string name="notification_opml_import_complete_title">Importación OPML completa</string>
 
     <string name="text_importing_opml_sent">Su archivo OPML se está procesando en segundo plano y se le notificará cuando se complete la importación</string>
+    <string name="text_importing_opml_start">\n\nAnalizando OPML…</string>
     <string name="text_importing_opml_parsing">\n\nAnalizando: %s</string>
     <string name="text_importing_opml_episodes">\n\nEpisodios de sincronización: %s</string>
     <string name="text_importing_opml_art">\n\nDescargando arte: %s</string>

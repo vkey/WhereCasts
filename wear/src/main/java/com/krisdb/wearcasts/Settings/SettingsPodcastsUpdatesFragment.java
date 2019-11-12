@@ -42,41 +42,31 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
         setDeleteThumbnailsTitle();
 
-        findPreference("pref_delete_thumbs").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                    alert.setMessage(getString(R.string.confirm_delete_all_thumbs));
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int count = Utilities.deleteAllThumbnails(mActivity);
+        findPreference("pref_delete_thumbs").setOnPreferenceClickListener(preference -> {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setMessage(getString(R.string.confirm_delete_all_thumbs));
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    int count = Utilities.deleteAllThumbnails(mActivity);
 
-                            String message;
+                    String message;
 
-                            if (count == 0)
-                                message = getString(R.string.alert_file_none_deleted);
-                            else if (count == 1)
-                                message = getString(R.string.alert_file_deleted);
-                            else
-                                message = getString(R.string.alert_files_deleted, count);
+                    if (count == 0)
+                        message = getString(R.string.alert_file_none_deleted);
+                    else if (count == 1)
+                        message = getString(R.string.alert_file_deleted);
+                    else
+                        message = getString(R.string.alert_files_deleted, count);
 
-                            Utilities.ShowConfirmationActivity(getActivity(), message);
-                            //CommonUtils.showToast(getActivity(), message);
+                    Utilities.ShowConfirmationActivity(getActivity(), message);
+                    //CommonUtils.showToast(getActivity(), message);
 
-                            setDeleteThumbnailsTitle();
-                        }
-                    });
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                }
-                return false;
+                    setDeleteThumbnailsTitle();
+                });
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
+                alert.show();
             }
+            return false;
         });
 
         final SwitchPreference cbUpdates = (SwitchPreference)findPreference("updatesEnabled");

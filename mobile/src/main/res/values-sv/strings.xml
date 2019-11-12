@@ -84,6 +84,7 @@
     <string name="notification_opml_import_complete_title">OPML-importen är klar</string>
 
     <string name="text_importing_opml_sent">Din OPML-fil behandlas i bakgrunden och du kommer att meddelas när importen är klar</string>
+    <string name="text_importing_opml_start">\n\nAnalysera OPML…</string>
     <string name="text_importing_opml_parsing">\n\nparsing: %s</string>
     <string name="text_importing_opml_episodes">\n\nSynkronisera avsnitt: %s</string>
     <string name="text_importing_opml_art">\n\nNedladdning av konst: %s</string>

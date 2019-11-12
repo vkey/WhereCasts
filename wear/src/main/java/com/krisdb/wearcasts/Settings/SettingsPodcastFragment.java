@@ -274,35 +274,23 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
         final Preference pfUnsubscribe = findPreference("pref_delete_podcast");
         pfUnsubscribe.setOrder(count++);
-        pfUnsubscribe.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                    alert.setMessage(getString(R.string.confirm_delete_podcast));
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+        pfUnsubscribe.setOnPreferenceClickListener(preference -> {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+                alert.setMessage(getString(R.string.confirm_delete_podcast));
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_unsubscribing));
 
-                        @Override
-                        public void onClick(final DialogInterface dialog, int which) {
-                            CommonUtils.showToast(mActivity, getString(R.string.alert_unsubscribing));
-
-                            CommonUtils.executeSingleThreadAsync(new Unsubscribe(mActivity, mPodcastId), (response) -> {
-                                dialog.dismiss();
-                                mActivity.finish();
-                            });
-                        }
+                    CommonUtils.executeSingleThreadAsync(new Unsubscribe(mActivity, mPodcastId), (response) -> {
+                        dialog.dismiss();
+                        mActivity.finish();
                     });
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
+                });
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alert.show();
-                }
-                return false;
+                alert.show();
             }
+            return false;
         });
 
         category.addPreference(etRename);

@@ -84,6 +84,7 @@
     <string name="notification_opml_import_complete_title">OPML導入完成</string>
 
     <string name="text_importing_opml_sent">您的OPML文件正在後台處理，導入完成時會通知您</string>
+    <string name="text_importing_opml_start">\n\n解析OPML…</string>
     <string name="text_importing_opml_parsing">\n\n解析中: %s</string>
     <string name="text_importing_opml_episodes">\n\n同步劇集: %s</string>
     <string name="text_importing_opml_art">\n\n下載藝術品: %s</string>

@@ -283,7 +283,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 //podcasts
                 CommonUtils.executeSingleThreadAsync(new ProcessOPML(context, asset, true), (response) -> {
                     //episodes
-                    CommonUtils.executeAsync(new SyncPodcasts(context), (data1) -> {
+                    CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context, true), (data1) -> {
                         //art
                         CommonUtils.executeAsync(new SyncArt(context, true), (data2) -> {
                             CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_complete"));

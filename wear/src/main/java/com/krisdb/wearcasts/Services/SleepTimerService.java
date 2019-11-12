@@ -63,9 +63,7 @@ public class SleepTimerService extends IntentService {
 
         timer = new CountDownTimer(timerMinutes * 60000, 1000) {
 
-            public void onTick(long millisUntilFinished) {
-                //CommonUtils.showToast(ctx, "" + millisUntilFinished/1000);
-            }
+            public void onTick(long millisUntilFinished) {}
 
             public void onFinish() {
                 final SharedPreferences.Editor editor = prefs.edit();

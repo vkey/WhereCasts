@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Settings;
 
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -20,8 +19,6 @@ public class SettingsPodcastsPodcastsFragment extends PreferenceFragment impleme
 
         findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference)findPreference("pref_display_podcasts_sort_order")).getEntry());
 
-        Utilities.SetPodcstRefresh(getActivity());
-
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -35,11 +32,9 @@ public class SettingsPodcastsPodcastsFragment extends PreferenceFragment impleme
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
         SystemClock.sleep(500);
 
+        Utilities.SetPodcstRefresh(getActivity());
 
-        if (key.equals("pref_display_podcasts_sort_order")) {
+        if (key.equals("pref_display_podcasts_sort_order"))
             findPreference("pref_display_podcasts_sort_order").setSummary(((ListPreference) findPreference("pref_display_podcasts_sort_order")).getEntry());
-            //CacheUtils.deletePodcastsCache(getActivity());
-        }
-
     }
 }

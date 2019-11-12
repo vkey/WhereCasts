@@ -384,7 +384,7 @@ public class UserAddActivity extends AppCompatActivity {
                             mProgressOPML.setIndeterminate(true);
                             mOPMLView.setGravity(Gravity.START);
                             mOPMLView.setVisibility(View.VISIBLE);
-                            mOPMLView.setText(getString(R.string.text_importing_opml_sent));
+                            mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_start)));
                             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         });
                     }

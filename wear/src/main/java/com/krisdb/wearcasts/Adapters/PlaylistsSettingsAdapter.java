@@ -91,53 +91,41 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
             }
         });
 
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setMessage(mContext.getString(R.string.alert_playlist_delete));
-                    alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final int position = holder.getAdapterPosition();
-                            final int playlistId = mPlaylists.get(position).getID();
+        holder.delete.setOnClickListener(v -> {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                alert.setMessage(mContext.getString(R.string.alert_playlist_delete));
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
+                    final int position = holder.getAdapterPosition();
+                    final int playlistId = mPlaylists.get(position).getID();
 
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                            if (Integer.valueOf(prefs.getString("pref_display_home_screen", "0")) == playlistId)
-                                Utilities.resetHomeScreen(mContext);
+                    if (Integer.valueOf(prefs.getString("pref_display_home_screen", "0")) == playlistId)
+                        Utilities.resetHomeScreen(mContext);
 
-                            db.deletePlaylist(playlistId);
-                            mPlaylists = getPlaylists(mContext, false);
+                    db.deletePlaylist(playlistId);
+                    mPlaylists = getPlaylists(mContext, false);
 
-                            final List<PodcastItem> podcasts = GetPodcasts(mContext);
-                            final SharedPreferences.Editor editor = prefs.edit();
-                            final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
+                    final List<PodcastItem> podcasts = GetPodcasts(mContext);
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    final int autoAssignDefaultPlaylistId = mContext.getResources().getInteger(R.integer.default_playlist_select);
 
-                            for (final PodcastItem podcast : podcasts) {
-                                final int autoAssignId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
+                    for (final PodcastItem podcast : podcasts) {
+                        final int autoAssignId = Integer.valueOf(prefs.getString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId)));
 
-                                if (autoAssignId == playlistId)
-                                    editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
-                            }
+                        if (autoAssignId == playlistId)
+                            editor.putString("pref_" + podcast.getPodcastId() + "_auto_assign_playlist", String.valueOf(autoAssignDefaultPlaylistId));
+                    }
 
-                            editor.putBoolean("refresh_vp", true);
-                            editor.apply();
+                    editor.putBoolean("refresh_vp", true);
+                    editor.apply();
 
-                            notifyDataSetChanged();
-                        }
-                    });
+                    notifyDataSetChanged();
+                });
 
-                    alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                }
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
+                alert.show();
             }
         });
 

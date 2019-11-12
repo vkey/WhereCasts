@@ -134,15 +134,12 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                     if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                         alert.setMessage(ctx.getString(R.string.confirm_initial_download_message));
-                        alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putBoolean("pref_disable_bluetooth", true);
-                                editor.apply();
-                                downloadEpisode(position);
-                                dialog.dismiss();
-                            }
+                        alert.setPositiveButton(ctx.getString(R.string.confirm_yes), (dialog, which) -> {
+                            final SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("pref_disable_bluetooth", true);
+                            editor.apply();
+                            downloadEpisode(position);
+                            dialog.dismiss();
                         });
                         alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> {
                             downloadEpisode(position);

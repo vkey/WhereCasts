@@ -62,60 +62,44 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
         //mTimeOutHandler = new TimeOutHandler(this);
         //mManager = (ConnectivityManager)mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        findPreference("pref_updates").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsUpdatesActivity.class));
-                return false;
-            }
+        findPreference("pref_updates").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsUpdatesActivity.class));
+            return false;
         });
 
-        findPreference("pref_podcasts").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsPodcastsActivity.class));
-                return false;
-            }
+        findPreference("pref_podcasts").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsPodcastsActivity.class));
+            return false;
         });
 
-        findPreference("pref_episodes").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsEpisodesActivity.class));
-                return false;
-            }
+        findPreference("pref_episodes").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsEpisodesActivity.class));
+            return false;
         });
 
-        findPreference("pref_display").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsDisplayActivity.class));
-                return false;
-            }
+        findPreference("pref_display").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsDisplayActivity.class));
+            return false;
         });
 
-        findPreference("pref_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsDownloadsActivity.class));
-                return false;
-            }
+        findPreference("pref_downloads").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsDownloadsActivity.class));
+            return false;
         });
 
-        findPreference("pref_playback").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPodcastsPlaybackActivity.class));
-                return false;
-            }
+        findPreference("pref_playback").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPodcastsPlaybackActivity.class));
+            return false;
         });
 
-        findPreference("pref_playlists").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(mActivity, SettingsPlaylistsActivity.class));
-                return false;
-            }
+        findPreference("pref_playlists").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(mActivity, SettingsPlaylistsActivity.class));
+            return false;
         });
 
-        findPreference("pref_sync_podcasts").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                handleNetwork();
-                return false;
-            }
+        findPreference("pref_sync_podcasts").setOnPreferenceClickListener(preference -> {
+            handleNetwork();
+            return false;
         });
     }
 
@@ -127,20 +111,12 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                 alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), NO_NETWORK_RESULTS_CODE);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), NO_NETWORK_RESULTS_CODE);
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else {
@@ -226,20 +202,14 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
                         if (activity != null && !activity.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                             alert.setMessage(activity.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    fragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), LOW_BANDWIDTH_RESULTS_CODE);
-                                    dialog.dismiss();
-                                }
+                            alert.setPositiveButton(activity.getString(R.string.confirm_yes), (dialog, which) -> {
+                                fragment.startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), LOW_BANDWIDTH_RESULTS_CODE);
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(activity.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(activity);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(activity.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(activity);
+                                dialog.dismiss();
                             }).show();
                         }
                         fragment.unregisterNetworkCallback();

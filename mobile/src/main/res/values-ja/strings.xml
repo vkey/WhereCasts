@@ -84,6 +84,7 @@
     <string name="notification_opml_import_complete_title">OPMLインポート完了</string>
 
     <string name="text_importing_opml_sent">OPMLファイルはバックグラウンドで処理されており、インポートが完了すると通知されます</string>
+    <string name="text_importing_opml_start">\n\nOPMLの解析…</string>
     <string name="text_importing_opml_parsing">\n\n解析: %s</string>
     <string name="text_importing_opml_episodes">\n\nエピソードの同期: %s</string>
     <string name="text_importing_opml_art">\n\nアートをダウンロードする: %s</string>

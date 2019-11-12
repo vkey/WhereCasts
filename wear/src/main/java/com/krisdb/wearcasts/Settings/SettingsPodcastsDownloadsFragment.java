@@ -64,66 +64,54 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
         setDeleteDownloadsTitle();
 
-        findPreference("pref_delete_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                    final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                    alert.setMessage(getString(R.string.confirm_delete_all_downloads));
-                    alert.setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int count = Utilities.deleteAllDownloadedFiles(mActivityRef.get());
+        findPreference("pref_delete_downloads").setOnPreferenceClickListener(preference -> {
+            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setMessage(getString(R.string.confirm_delete_all_downloads));
+                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                    int count = Utilities.deleteAllDownloadedFiles(mActivityRef.get());
 
-                            final DBPodcastsEpisodes db = new DBPodcastsEpisodes(getActivity());
-                            final ContentValues cv = new ContentValues();
-                            cv.put("downloadid", 0);
-                            cv.put("download", 0);
-                            cv.put("downloadurl", "");
+                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(getActivity());
+                    final ContentValues cv = new ContentValues();
+                    cv.put("downloadid", 0);
+                    cv.put("download", 0);
+                    cv.put("downloadurl", "");
 
-                            db.updateAll(cv);
-                            db.close();
+                    db.updateAll(cv);
+                    db.close();
 
-                            String message;
+                    String message;
 
-                            if (count == 0)
-                                message = getString(R.string.alert_file_none_deleted);
-                            else if (count == 1)
-                                message = getString(R.string.alert_file_deleted);
-                            else
-                                message = getString(R.string.alert_files_deleted, count);
+                    if (count == 0)
+                        message = getString(R.string.alert_file_none_deleted);
+                    else if (count == 1)
+                        message = getString(R.string.alert_file_deleted);
+                    else
+                        message = getString(R.string.alert_files_deleted, count);
 
-                            Utilities.ShowConfirmationActivity(getActivity(), message);
-                            //CommonUtils.showToast(getActivity(), message);
+                    Utilities.ShowConfirmationActivity(getActivity(), message);
+                    //CommonUtils.showToast(getActivity(), message);
 
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-                            if (prefs.getBoolean("pref_hide_empty_playlists", false)) {
-                                final SharedPreferences.Editor editor = prefs.edit();
-                                editor.putBoolean("refresh_vp", true);
-                                editor.apply();
-                            }
-                            setDeleteDownloadsTitle();
-                        }
-                    });
-                    alert.setNegativeButton(getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                }
-                return false;
+                    if (prefs.getBoolean("pref_hide_empty_playlists", false)) {
+                        final SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("refresh_vp", true);
+                        editor.apply();
+                    }
+                    setDeleteDownloadsTitle();
+                });
+                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
+                alert.show();
             }
+            return false;
         });
 
-        findPreference("pref_cancel_downloads").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Utilities.cancelAllDownloads(getActivity());
-                Utilities.ShowConfirmationActivity(getActivity(), getString(R.string.alert_downloads_all_cancelled));
-                //CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
-                return false;
-            }
+        findPreference("pref_cancel_downloads").setOnPreferenceClickListener(preference -> {
+            Utilities.cancelAllDownloads(getActivity());
+            Utilities.ShowConfirmationActivity(getActivity(), getString(R.string.alert_downloads_all_cancelled));
+            //CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
+            return false;
         });
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

@@ -168,12 +168,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     refreshList();
                 }
             });
-            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
             alert.show();
             return;
         }
@@ -205,12 +200,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         notifyItemChanged(position);
                     }
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                 alert.show();
             }
         } else if (episode.getIsDownloaded()) {
@@ -233,12 +223,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         }
                     }
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
                 alert.show();
             }
         }
@@ -247,43 +232,29 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
 
-                        mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
-                        dialog.dismiss();
-                    }
+                    mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                    dialog.dismiss();
                 });
 
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
             }
         }
         else if (prefs.getBoolean("initialDownload", true) && Utilities.BluetoothEnabled()) {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(mContext.getString(R.string.confirm_initial_download_message));
-                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("pref_disable_bluetooth", true);
-                        editor.apply();
-                        downloadEpisode(position, episode);
-                        dialog.dismiss();
-                    }
+                alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("pref_disable_bluetooth", true);
+                    editor.apply();
+                    downloadEpisode(position, episode);
+                    dialog.dismiss();
                 });
-                alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        downloadEpisode(position, episode);
-                        dialog.dismiss();
-                    }
+                alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> {
+                    downloadEpisode(position, episode);
+                    dialog.dismiss();
                 }).show();
 
                 final SharedPreferences.Editor editor = prefs.edit();
@@ -342,20 +313,14 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                         if (ctx != null && !ctx.isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                             alert.setMessage(ctx.getString(R.string.alert_episode_network_notfound));
-                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
-                                    dialog.dismiss();
-                                }
+                            alert.setPositiveButton(ctx.getString(R.string.confirm_yes), (dialog, which) -> {
+                                mFragmentContext.get().startActivity(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent));
+                                dialog.dismiss();
                             });
 
-                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utilities.enableBluetooth(ctx);
-                                    dialog.dismiss();
-                                }
+                            alert.setNegativeButton(ctx.getString(R.string.confirm_no), (dialog, which) -> {
+                                Utilities.enableBluetooth(ctx);
+                                dialog.dismiss();
                             }).show();
                         }
                         adapter.unregisterNetworkCallback();
@@ -397,56 +362,46 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             else
                 alert.setMessage(mEpisodes.get(position).getFinished() ? mContext.getString(R.string.confirm_mark_unplayed) : mContext.getString(R.string.confirm_mark_played));
 
-            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+            alert.setPositiveButton(mContext.getString(R.string.confirm_yes), (dialog, which) -> {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
 
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
+                if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress)) //in progress
+                {
+                    final ContentValues cv = new ContentValues();
+                    cv.put("position", 0);
+                    cv.put("finished", 1);
+                    db.update(cv, mEpisodes.get(position).getEpisodeId());
 
-                    if (mPlaylistId == mResources.getInteger(R.integer.playlist_inprogress)) //in progress
-                    {
-                        final ContentValues cv = new ContentValues();
-                        cv.put("position", 0);
-                        cv.put("finished", 1);
-                        db.update(cv, mEpisodes.get(position).getEpisodeId());
-
-                        if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
-                            Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-
-                    } else if (mPlaylistId == mPlaylistDownloads)
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                    else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
-                        db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
-                        db.delete(mEpisodes.get(position).getEpisodeId());
-                        final ContentValues cv = new ContentValues();
-                        cv.put("position", 0);
-                        cv.put("finished", 1);
-                        db.update(cv, mEpisodes.get(position).getEpisodeId());
-                    } else if (mPlaylistId > -1)
-                        db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
-                    else if (mPlaylistId == mPlaylistLocal) {
-                        Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
-                    }
-                    else {
-                        SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
-                        if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
-                            Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
-                    }
-                    refreshList();
 
-                    db.close();
-                    dialog.dismiss();
+                } else if (mPlaylistId == mPlaylistDownloads)
+                    Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+                else if (mPlaylistId <= mResources.getInteger(R.integer.playlist_playerfm)) {
+                    db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
+                    db.delete(mEpisodes.get(position).getEpisodeId());
+                    final ContentValues cv = new ContentValues();
+                    cv.put("position", 0);
+                    cv.put("finished", 1);
+                    db.update(cv, mEpisodes.get(position).getEpisodeId());
+                } else if (mPlaylistId > -1)
+                    db.deleteEpisodeFromPlaylist(mPlaylistId, mEpisodes.get(position).getEpisodeId());
+                else if (mPlaylistId == mPlaylistLocal) {
+                    Utilities.deleteLocal(mContext, mEpisodes.get(position).getTitle());
                 }
+                else {
+                    SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                        Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
+                }
+                refreshList();
+
+                db.close();
+                dialog.dismiss();
             });
 
-            alert.setNegativeButton(mContext.getString(R.string.confirm_no), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            alert.setNegativeButton(mContext.getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
 
             alert.show();
         }
