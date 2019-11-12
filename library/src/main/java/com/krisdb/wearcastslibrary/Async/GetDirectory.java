@@ -23,18 +23,16 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 public class GetDirectory implements Callable<List<PodcastCategory>> {
     private final Context context;
     private Boolean mForceRefresh = false, mSaveThumbs = false;
-    private ProgressBar mProgressBar;
 
     public GetDirectory(final Context context)
     {
         this.context = context;
     }
 
-    public GetDirectory(final Context context, final Boolean forceRefresh, final Boolean saveThumbs, final ProgressBar progressBar) {
+    public GetDirectory(final Context context, final Boolean forceRefresh, final Boolean saveThumbs) {
         this.context = context;
         this.mForceRefresh = forceRefresh;
         this.mSaveThumbs = saveThumbs;
-        this.mProgressBar = progressBar;
     }
 
     @Override

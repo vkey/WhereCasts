@@ -14,9 +14,11 @@ import android.preference.PreferenceManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.krisdb.wearcasts.Activities.MainActivity;
+import com.krisdb.wearcasts.Async.CleanupDownloads;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -123,10 +125,8 @@ public class DownloadReceiver extends BroadcastReceiver  {
                 editor.putBoolean("from_job", false);
                 editor.apply();
 
-                //CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
+                CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
             }
-
-            //managerDownload.remove(downloadId);
         }
     }
 

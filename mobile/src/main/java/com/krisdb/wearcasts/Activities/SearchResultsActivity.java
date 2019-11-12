@@ -11,32 +11,37 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Databases.DBDirectoryPodcasts;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.Async.GetPodcastsDirectory;
+import com.krisdb.wearcastslibrary.Async.SearchPodcasts;
 import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
+import com.krisdb.wearcastslibrary.ViewModels.SearchPodcastsViewModel;
+import com.krisdb.wearcastslibrary.ViewModels.SearchPodcastsViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private RecyclerView mResultsList;
-    private List<PodcastItem> mPodcasts;
     private ProgressBar mProgressBar;
     private TextView mProgressText;
     private String mQuery;
+    private boolean mQueryComplete;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.search_results_progress_bar);
         mProgressText = findViewById(R.id.search_results_progress_text);
         mResultsList = findViewById(R.id.search_results_list);
+
         handleIntent(getIntent());
     }
 
@@ -55,15 +61,17 @@ public class SearchResultsActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (!mQueryComplete && Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
             mProgressText.setText(getString(R.string.retrieving_search_results));
             mResultsList.setVisibility(View.INVISIBLE);
             SetSearchResults();
+            mQueryComplete = true;
             setTitle(mQuery);
         }
     }
@@ -75,6 +83,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView)menu.findItem(R.id.search_directory).getActionView();
+        searchView.setOnSearchClickListener(view ->  mQueryComplete = false );
         searchView.setQuery(mQuery, false);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), SearchResultsActivity.class)));
 
@@ -85,7 +94,8 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         mProgressBar.setVisibility(View.VISIBLE);
         mProgressText.setVisibility(View.VISIBLE);
-        String db_query = "%".concat(mQuery.toLowerCase()).concat("%");
+
+/*        String db_query = "%".concat(mQuery.toLowerCase()).concat("%");
 
         final DBDirectoryPodcasts dbPodcasts = new DBDirectoryPodcasts(this);
         final SQLiteDatabase sdbPodcasts = dbPodcasts.select();
@@ -115,11 +125,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
 
         cursor.close();
-        dbPodcasts.close();
+        dbPodcasts.close();*/
 
-        CommonUtils.executeAsync(new GetPodcastsDirectory(this, mQuery), (podcasts) -> {
-            if (podcasts.size() > 0) {
-                mPodcasts.addAll(podcasts);
+        CommonUtils.executeAsync(new SearchPodcasts(this, mQuery), (results) -> {
+            if (results.size() > 0) {
                 findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
             }
             else
@@ -127,8 +136,8 @@ public class SearchResultsActivity extends AppCompatActivity {
 
             CommonUtils.executeAsync(new WatchConnected(getApplicationContext()), (connected) -> {
                 mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                if (podcasts.size() > 1) {
-                    mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));
+                if (results.size() > 1) {
+                    mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, results.subList(1, results.size()), connected));
                     mProgressText.setVisibility(View.GONE);
                     mResultsList.setVisibility(View.VISIBLE);
                 }
@@ -140,6 +149,10 @@ public class SearchResultsActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(View.GONE);
             });
         });
+
+/*        final SearchPodcastsViewModel model = ViewModelProviders.of(this, new SearchPodcastsViewModelFactory(getApplication(), mQuery)).get(SearchPodcastsViewModel.class);
+        model.getResults().observe(this, results -> {
+        });*/
     }
 
     @Override

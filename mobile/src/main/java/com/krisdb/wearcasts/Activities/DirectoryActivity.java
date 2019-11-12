@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
@@ -19,8 +20,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.wear.activity.ConfirmationActivity;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
@@ -29,6 +32,8 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
+import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModel;
+import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,8 @@ public class DirectoryActivity extends AppCompatActivity {
         findViewById(R.id.main_progress_text).setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        CommonUtils.executeAsync(new GetDirectory(this), (categories) -> {
+        final DirectoryViewModel model = ViewModelProviders.of(this).get(DirectoryViewModel.class);
+        model.getDirectory().observe(this, categories -> {
             SetDirectory(categories);
             mProgressBar.setVisibility(View.GONE);
             findViewById(R.id.main_progress_text).setVisibility(View.GONE);

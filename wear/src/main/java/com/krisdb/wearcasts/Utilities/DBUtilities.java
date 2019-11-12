@@ -36,7 +36,7 @@ public class DBUtilities {
         final ContentValues cv = new ContentValues();
         cv.put("title", podcast.getTitle());
         cv.put("url", podcast.getChannel().getRSSUrl().toString());
-        cv.put("site_url", podcast.getChannel().getSiteUrl().toString());
+        cv.put("site_url", podcast.getChannel().getSiteUrl() != null ? podcast.getChannel().getSiteUrl().toString() : null);
         cv.put("dateAdded", DateUtils.GetDate());
         String thumbnailUrl = null;
         String fileName = null;

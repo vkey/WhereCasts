@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
@@ -20,6 +21,7 @@ import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Async.DisplayPodcasts;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.ViewModels.PodcastsViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 
@@ -104,14 +106,13 @@ public class PodcastsListFragment extends Fragment {
     private void RefreshContent() {
         if (!isAdded()) return;
 
-        final Boolean hideEmpty = PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hide_empty", false);
-
-        CommonUtils.executeAsync(new DisplayPodcasts(mActivity, hideEmpty), (podcasts) -> {
+        final  PodcastsViewModel model = ViewModelProviders.of(getActivity()).get(PodcastsViewModel.class);
+        model.getPodcasts().observe(this, podcasts -> {
             mAdapter = new PodcastsAdapter(mActivity, podcasts);
             mPodcastsList.setAdapter(mAdapter);
             showCopy(podcasts.size());
         });
-    }
+   }
 
     private void showCopy(final int number)
     {

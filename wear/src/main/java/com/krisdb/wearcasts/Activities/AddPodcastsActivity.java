@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
@@ -24,6 +25,8 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
+import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModel;
+import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModelFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -111,11 +114,11 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         mProgressBarText.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        CommonUtils.executeAsync(new GetDirectory(this, mForceRefresh, false, mProgressBar), (categories) -> {
+        final DirectoryViewModel model = ViewModelProviders.of(this, new DirectoryViewModelFactory(getApplication(), mForceRefresh, false)).get(DirectoryViewModel.class);
+        model.getDirectory().observe(this, categories -> {
             if (categories.size() > 0) {
                 mNumberOfPages = categories.size();
 
-                //final AddPodcastsPagerAdapter2 adapter = new AddPodcastsPagerAdapter2(mActivityRef.get());
                 final AddPodcastsPagerAdapter adapter = new AddPodcastsPagerAdapter(getSupportFragmentManager());
 
                 for (final PodcastCategory category : categories)
@@ -128,9 +131,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
                 mProgressBarText.setVisibility(View.GONE);
 
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-            else
-            {
+            } else {
                 Utilities.ShowConfirmationActivity(mContext, ConfirmationActivity.FAILURE_ANIMATION, getString(R.string.general_error), true);
                 finish();
             }

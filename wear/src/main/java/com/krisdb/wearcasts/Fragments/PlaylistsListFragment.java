@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
@@ -24,6 +25,8 @@ import com.krisdb.wearcasts.Async.DisplayPlaylistEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcasts.ViewModels.PlaylistViewModel;
+import com.krisdb.wearcasts.ViewModels.PlaylistViewModelFactory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.Objects;
@@ -135,7 +138,8 @@ public class PlaylistsListFragment extends Fragment {
         mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        CommonUtils.executeAsync(new DisplayPlaylistEpisodes(mActivity, mPlaylistId), (episodes) -> {
+        final PlaylistViewModel model = ViewModelProviders.of(this, new PlaylistViewModelFactory(mActivity.getApplication(), mPlaylistId)).get(PlaylistViewModel.class);
+        model.getEpisodes().observe(this, episodes -> {
             if (!isAdded()) return;
             mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);

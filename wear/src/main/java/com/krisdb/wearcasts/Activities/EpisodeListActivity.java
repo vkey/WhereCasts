@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -38,6 +39,7 @@ import androidx.wear.widget.drawer.WearableActionDrawerView;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Controllers.EpisodesSwipeController;
@@ -47,6 +49,9 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcasts.ViewModels.EpisodesViewModel;
+import com.krisdb.wearcasts.ViewModels.EpisodesViewModelFactory;
+import com.krisdb.wearcasts.ViewModels.PodcastsViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -265,7 +270,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        CommonUtils.executeAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
+        final EpisodesViewModel model = ViewModelProviders.of(this, new EpisodesViewModelFactory(this.getApplication(), mPodcastId, mQuery)).get(EpisodesViewModel.class);
+        model.getEpisodes().observe(this, episodes -> {
             mEpisodes = episodes;
             mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
             mEpisodeList.setAdapter(mAdapter);
@@ -284,7 +290,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                     db.updateAll(cv, mPodcastId);
                     db.close();
-                    //CacheUtils.deletePodcastsCache(mActivity);
                 }
 
                 mStatus.setVisibility(TextView.GONE);

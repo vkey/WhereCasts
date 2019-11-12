@@ -119,9 +119,6 @@ public class SyncWorker extends Worker {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final SharedPreferences.Editor editor = prefs.edit();
 
-        //CommonUtils.writeToFile(mContext.get(),"new episodes: " + newEpisodes);
-        //CommonUtils.writeToFile(mContext.get(),"new downloads: " + downloadCount);
-
         if (newEpisodes > 0) {
             //used to track failed download attempts and total notification over night
             final int episodeCount = prefs.getInt("new_episode_count", 0) + newEpisodes;
@@ -161,7 +158,6 @@ public class SyncWorker extends Worker {
                         @Override
                         public void onAvailable(final Network network) {
                             mTimeOutHandler.removeMessages(MESSAGE_CONNECTIVITY_TIMEOUT);
-                            //CommonUtils.writeToFile(mContext.get(),"network found");
 
                             for (final PodcastItem episode : mDownloadEpisodes)
                                 Utilities.startDownload(mContext.get(), episode);
@@ -176,8 +172,6 @@ public class SyncWorker extends Worker {
                             .build();
 
                     mManager.requestNetwork(request, mNetworkCallback);
-
-                    //CommonUtils.writeToFile(mContext.get(),"requesting network");
 
                     mTimeOutHandler.sendMessageDelayed(
                             mTimeOutHandler.obtainMessage(MESSAGE_CONNECTIVITY_TIMEOUT),

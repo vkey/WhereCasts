@@ -25,11 +25,11 @@ import java.util.concurrent.Callable;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class GetPodcastsDirectory implements Callable<List<PodcastItem>> {
+public class SearchPodcasts implements Callable<List<PodcastItem>> {
     private final Context context;
     private String mQuery;
 
-    public  GetPodcastsDirectory(final Context context, final String query)
+    public SearchPodcasts(final Context context, final String query)
     {
         this.context = context;
         this.mQuery = query;
