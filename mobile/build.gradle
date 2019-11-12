@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.1.0"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -55,6 +57,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation 'com.google.android.support:wearable:2.5.0'
     implementation 'com.android.billingclient:billing:2.0.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     compileOnly 'com.google.android.wearable:wearable:2.5.0'
 
