@@ -57,7 +57,7 @@ public class PhoneMainActivity extends AppCompatActivity {
 
     private void SetContent() {
 
-        CommonUtils.executeSingleThreadAsync(new NodesConnected(this), (connected) -> {
+        CommonUtils.executeAsync(new NodesConnected(this), (connected) -> {
             final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
 
             //adapter.addFrag(UserAddActivity.newInstance(connected), getString(R.string.tab_add));

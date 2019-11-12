@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">OPML-Import</string>
     <string name="notification_opml_import_complete_title">OPML-Import abgeschlossen</string>
 
-    <string name="text_importing_opml_sent">Ihre OPML-Datei wird im Hintergrund verarbeitet.  Sie werden benachrichtigt, wenn der Import abgeschlossen ist..\n\nWarten auf Antwort von der Uhr…</string>
-    <string name="text_importing_opml_parsing">Parsing: %s</string>
-    <string name="text_importing_opml_episodes">Episoden synchronisieren: %s</string>
-    <string name="text_importing_opml_art">Kunst herunterladen: %s</string>
+    <string name="text_importing_opml_sent">Ihre OPML-Datei wird im Hintergrund verarbeitet und Sie werden benachrichtigt, wenn der Import abgeschlossen ist</string>
+    <string name="text_importing_opml_parsing">\n\nParsing: %s</string>
+    <string name="text_importing_opml_episodes">\n\nEpisoden synchronisieren: %s</string>
+    <string name="text_importing_opml_art">\n\nKunst herunterladen: %s</string>
     <string name="text_importing_opml_complete">Import abgeschlossen</string>
 
     <string name="text_importing_opml_sending">Senden von Podcasts an Ihr Verschleißgerät…</string>

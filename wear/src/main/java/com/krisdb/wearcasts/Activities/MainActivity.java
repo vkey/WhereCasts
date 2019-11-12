@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -199,7 +198,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         findViewById(R.id.main_splash_image).setVisibility(View.VISIBLE);
 
-        CommonUtils.executeSingleThreadAsync(new com.krisdb.wearcasts.Async.Init(this), this::SetInit);
+        CommonUtils.executeAsync(new com.krisdb.wearcasts.Async.Init(this), this::SetInit);
 
         if (!Utilities.sleepTimerEnabled(this))
             setMainMenu();
@@ -327,7 +326,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         }
 
         if (visits > 40 && !prefs.getBoolean("rate_app_reminded", false)) {
-            CommonUtils.executeSingleThreadAsync(new WatchConnected(this), (connected) -> {
+            CommonUtils.executeAsync(new WatchConnected(this), (connected) -> {
                 if (connected && mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
                     alert.setMessage(getString(R.string.rate_app_reminder));
@@ -447,7 +446,7 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
             editor.putBoolean("refresh_vp", false);
             editor.apply();
             mRefresh = true;
-            CommonUtils.executeSingleThreadAsync(new com.krisdb.wearcasts.Async.Init(this), this::SetInit);
+            CommonUtils.executeAsync(new com.krisdb.wearcasts.Async.Init(this), this::SetInit);
         }
 
         if (Utilities.sleepTimerEnabled(this))

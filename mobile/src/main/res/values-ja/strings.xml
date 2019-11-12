@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">OPMLインポート</string>
     <string name="notification_opml_import_complete_title">OPMLインポート完了</string>
 
-    <string name="text_importing_opml_sent">OPMLファイルはバックグラウンドで処理されます.  インポートが完了すると通知されます.\n\n時計からの応答を待っています…</string>
-    <string name="text_importing_opml_parsing">解析: %s</string>
-    <string name="text_importing_opml_episodes">エピソードの同期: %s</string>
-    <string name="text_importing_opml_art">アートをダウンロードする: %s</string>
+    <string name="text_importing_opml_sent">OPMLファイルはバックグラウンドで処理されており、インポートが完了すると通知されます</string>
+    <string name="text_importing_opml_parsing">\n\n解析: %s</string>
+    <string name="text_importing_opml_episodes">\n\nエピソードの同期: %s</string>
+    <string name="text_importing_opml_art">\n\nアートをダウンロードする: %s</string>
     <string name="text_importing_opml_complete">インポート完了</string>
 
     <string name="text_importing_opml_sending">あなたのウェアデバイスにポッドキャストを送信する…</string>

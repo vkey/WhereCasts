@@ -51,7 +51,7 @@ public class DirectoryActivity extends AppCompatActivity {
         findViewById(R.id.main_progress_text).setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        CommonUtils.executeSingleThreadAsync(new GetDirectory(this), (categories) -> {
+        CommonUtils.executeAsync(new GetDirectory(this), (categories) -> {
             SetDirectory(categories);
             mProgressBar.setVisibility(View.GONE);
             findViewById(R.id.main_progress_text).setVisibility(View.GONE);

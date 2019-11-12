@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">Importation OPML</string>
     <string name="notification_opml_import_complete_title">Importation OPML terminée</string>
 
-    <string name="text_importing_opml_sent">Votre fichier OPML sera traité en arrière-plan.  Vous serez averti lorsque l'importation est terminée.\n\nEn attente de la réponse de la montre…</string>
-    <string name="text_importing_opml_parsing">L\'analyse: %s</string>
-    <string name="text_importing_opml_episodes">Synchroniser des épisodes: %s</string>
-    <string name="text_importing_opml_art">Télécharger de l\'art: %s</string>
+    <string name="text_importing_opml_sent">Votre fichier OPML est en cours de traitement en arrière-plan et vous serez averti à la fin de l\'importation.</string>
+    <string name="text_importing_opml_parsing">\n\nL\'analyse: %s</string>
+    <string name="text_importing_opml_episodes">\n\nSynchroniser des épisodes: %s</string>
+    <string name="text_importing_opml_art">\n\nTélécharger de l\'art: %s</string>
     <string name="text_importing_opml_complete">Importation terminée</string>
 
     <string name="text_importing_opml_sending">Envoi de podcasts à votre appareil d\'usure…</string>

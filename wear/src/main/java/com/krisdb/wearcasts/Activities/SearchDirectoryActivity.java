@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -96,7 +95,7 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
         mSearchVoiceImage.setVisibility(View.GONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        CommonUtils.executeSingleThreadAsync(new GetPodcastsDirectory(this, query), (podcasts) -> {
+        CommonUtils.executeAsync(new GetPodcastsDirectory(this, query), (podcasts) -> {
             if (podcasts.size() == 1) {
                 mProgressText.setText(getString(R.string.text_no_search_results));
                 mProgressBar.setVisibility(View.GONE);

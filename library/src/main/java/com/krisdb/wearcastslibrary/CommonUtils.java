@@ -41,7 +41,6 @@ import android.util.Pair;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -73,6 +72,9 @@ import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,6 +86,15 @@ public class CommonUtils {
 
     public static <R> void executeSingleThreadAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
         executeAsync(callable, Executors.newSingleThreadExecutor(), callback);
+    }
+
+    public static <R> void executeMultiThreadAsync(Callable<R> callable, int corePoolSize, Interfaces.Callback<R> callback) {
+        executeAsync(callable, new ThreadPoolExecutor(corePoolSize, corePoolSize, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), callback);
+    }
+
+    public static <R> void executeAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
+        final int cores = Runtime.getRuntime().availableProcessors();
+        executeAsync(callable, new ThreadPoolExecutor(cores, cores, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), callback);
     }
 
     public static <R> void executeAsync(Callable<R> callable, Executor executor, Interfaces.Callback<R> callback) {

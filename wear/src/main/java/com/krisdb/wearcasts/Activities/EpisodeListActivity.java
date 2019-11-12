@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -266,7 +265,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        CommonUtils.executeSingleThreadAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
+        CommonUtils.executeAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
             mEpisodes = episodes;
             mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
             mEpisodeList.setAdapter(mAdapter);
@@ -346,27 +345,18 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 for (final PodcastItem episode : mDownloadEpisodes)
                     Utilities.startDownload(mActivity, episode, false);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        RefreshContent();
-                    }
-                });
+                runOnUiThread(() -> RefreshContent());
             }
         }
     }
 
     private void resetMenu()
     {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                final Menu menu = mWearableActionDrawer.getMenu();
-                menu.clear();
-                getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menu);
-                mSwipeRefreshLayout.setEnabled(true);
-            }
+        runOnUiThread(() -> {
+            final Menu menu = mWearableActionDrawer.getMenu();
+            menu.clear();
+            getMenuInflater().inflate(R.menu.menu_drawer_episode_list, menu);
+            mSwipeRefreshLayout.setEnabled(true);
         });
     }
 

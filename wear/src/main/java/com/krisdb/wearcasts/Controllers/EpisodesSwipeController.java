@@ -101,7 +101,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 final boolean hidePlayed = prefs.getBoolean("pref_" + podcastId + "_hide_played", false);
 
                 if (hidePlayed) {
-                    CommonUtils.executeSingleThreadAsync(new DisplayEpisodes(ctx, podcastId, mQuery), (episodes) -> {
+                    CommonUtils.executeAsync(new DisplayEpisodes(ctx, podcastId, mQuery), (episodes) -> {
                         mEpisodes = episodes;
                         mAdapter.refreshList(episodes);
                     });

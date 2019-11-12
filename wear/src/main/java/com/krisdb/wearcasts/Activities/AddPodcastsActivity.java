@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,13 +9,10 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
@@ -115,7 +111,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         mProgressBarText.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        CommonUtils.executeSingleThreadAsync(new GetDirectory(this, mForceRefresh, false, mProgressBar), (categories) -> {
+        CommonUtils.executeAsync(new GetDirectory(this, mForceRefresh, false, mProgressBar), (categories) -> {
             if (categories.size() > 0) {
                 mNumberOfPages = categories.size();
 

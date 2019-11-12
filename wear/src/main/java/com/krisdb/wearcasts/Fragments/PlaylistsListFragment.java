@@ -135,7 +135,7 @@ public class PlaylistsListFragment extends Fragment {
         mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        CommonUtils.executeSingleThreadAsync(new DisplayPlaylistEpisodes(mActivity, mPlaylistId), (episodes) -> {
+        CommonUtils.executeAsync(new DisplayPlaylistEpisodes(mActivity, mPlaylistId), (episodes) -> {
             if (!isAdded()) return;
             mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);

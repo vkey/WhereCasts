@@ -27,7 +27,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -53,7 +52,6 @@ import java.util.Date;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class UserAddActivity extends AppCompatActivity {
 
@@ -92,13 +90,14 @@ public class UserAddActivity extends AppCompatActivity {
             if (link.length() > 0) {
                 link = link.startsWith("http") == false ? "http://" + link.toLowerCase() : link.toLowerCase();
                 if (isValidUrl(link)) {
-                    CommonUtils.showToast(mActivity, getString(R.string.alert_users_add_fetching_feed));
+                    CommonUtils.showSnackbar(findViewById(R.id.tv_import_podcast_title), getString(R.string.alert_users_add_fetching_feed));
 
-                    CommonUtils.executeSingleThreadAsync(new FetchPodcast(title, link), (podcast) -> {
+                    CommonUtils.executeAsync(new FetchPodcast(title, link), (podcast) -> {
 
-                        CommonUtils.executeSingleThreadAsync(new EpisodeCount(mActivity, podcast), (count) -> {
+                        CommonUtils.executeAsync(new EpisodeCount(mActivity, podcast), (count) -> {
                             if (count != 0) {
                                 Utilities.SendToWatch(mActivity, podcast);
+                                CommonUtils.showSnackbar(findViewById(R.id.tv_import_podcast_title), getString(R.string.alert_podcast_added));
                                 ((TextView) findViewById(R.id.tv_import_podcast_title)).setText(null);
                                 ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(null);
                                 mTipView.setText(getString(R.string.tip_2));
@@ -120,9 +119,9 @@ public class UserAddActivity extends AppCompatActivity {
                     });
 
                 } else
-                    showToast(mActivity, getString(R.string.validation_invalid_url), Toast.LENGTH_LONG);
+                    CommonUtils.showSnackbar(findViewById(R.id.tv_import_podcast_title), getString(R.string.validation_invalid_url));
             } else
-                showToast(mActivity, getString(R.string.validation_empty_url), Toast.LENGTH_LONG);
+                CommonUtils.showSnackbar(findViewById(R.id.tv_import_podcast_title), getString(R.string.validation_empty_url));
         });
 
         btnImportOPML.setOnClickListener(view -> {
@@ -160,7 +159,7 @@ public class UserAddActivity extends AppCompatActivity {
             }
         });
 
-        CommonUtils.executeSingleThreadAsync(new NodesConnected(this), this::SetContent);
+        CommonUtils.executeAsync(new NodesConnected(this), this::SetContent);
     }
 
     private void SetContent(final Boolean connected)
@@ -175,6 +174,7 @@ public class UserAddActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.btn_import_podcast)).setText(getString(R.string.button_text_no_device));
             ((TextView)findViewById(R.id.btn_import_opml)).setText(getString(R.string.button_text_no_device));
         }
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         mThirdPartyAutoDownload.setChecked(prefs.getBoolean("third_party_auto_download", false));
@@ -322,22 +322,19 @@ public class UserAddActivity extends AppCompatActivity {
                  mProgressOPML.setVisibility(View.VISIBLE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title")));
-                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title"))));
              }
             else if (extras.getBoolean("opmlimport_episodes")) {
                  mProgressOPML.setVisibility(View.VISIBLE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title_episodes")));
-                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_episodes, extras.getString("podcast_title_episodes"))));
              }
             else if (extras.getBoolean("opmlimport_art")) {
                  mProgressOPML.setVisibility(View.VISIBLE);
                  mOPMLView.setGravity(Gravity.START);
                  mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title_art")));
-                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_gray));
+                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_art, extras.getString("podcast_title_art"))));
              }
         }
     };
@@ -388,7 +385,6 @@ public class UserAddActivity extends AppCompatActivity {
                             mOPMLView.setGravity(Gravity.START);
                             mOPMLView.setVisibility(View.VISIBLE);
                             mOPMLView.setText(getString(R.string.text_importing_opml_sent));
-                            mOPMLView.setTextColor(mActivity.getColor(R.color.dark_grey));
                             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         });
                     }
@@ -396,7 +392,6 @@ public class UserAddActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

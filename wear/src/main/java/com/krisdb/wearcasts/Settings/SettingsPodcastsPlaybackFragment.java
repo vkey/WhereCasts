@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 

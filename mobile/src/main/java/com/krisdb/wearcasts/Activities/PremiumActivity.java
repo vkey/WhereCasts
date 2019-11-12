@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +17,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,7 +89,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             startActivityForResult(intent, UPLOAD_REQUEST_CODE);
         });
 
-        CommonUtils.executeSingleThreadAsync(new WatchConnected(mActivity), (connected) -> {
+        CommonUtils.executeAsync(new WatchConnected(mActivity), (connected) -> {
             if (!connected) {
                 mPlaylistsButButton.setOnClickListener(view -> CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.button_text_no_device)));
 
@@ -100,7 +98,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
                 mPlaylistsButButton.setOnClickListener(view -> {
                     if (mPlaylistSkus.getSelectedItemPosition() == 0)
-                        CommonUtils.showToast(mActivity, getString(R.string.alert_playlists_quantity_none));
+                        CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.alert_playlists_quantity_none));
                     else if (mPlaylistPurchasedCount > 0) {
                         if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                             final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
@@ -329,7 +327,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
     private void SetPremiumContent()
     {
-        boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+        //boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
         //mPlaylistsReadd.setVisibility(mPlaylistPurchasedCount  > 0 ? View.VISIBLE : View.INVISIBLE);
 
         if (mPremiumInappUnlocked || mPremiumSubUnlocked) {
@@ -338,7 +336,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             mPremiumButton.setText(mActivity.getString(R.string.button_text_resync_premium));
             mPremiumButton.setOnClickListener(view -> {
                 mProgressFileUpload.get().setVisibility(View.VISIBLE);
-                CommonUtils.showToast(mActivity, mActivity.getString(R.string.button_text_resync_premium_waiting), Toast.LENGTH_LONG);
+                CommonUtils.showSnackbar(mPremiumButton, getString(R.string.button_text_resync_premium_waiting));
                 Utilities.TogglePremiumOnWatch(mActivity, true, true);
             });
             mPlaylistSkus.setEnabled(true);
@@ -380,7 +378,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getExtras().getBoolean("premium")) {
-                CommonUtils.showToast(context, context.getString(R.string.success));
+                CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.success));
                 mProgressFileUpload.get().setVisibility(View.GONE);
             }
         }
@@ -421,7 +419,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                 if (clipData == null) {
                     final Uri uriLocal = resultData.getData();
 
-                    CommonUtils.executeSingleThreadAsync(new SendFileToWatch(mActivity, uriLocal), (response) -> { });
+                    CommonUtils.executeAsync(new SendFileToWatch(mActivity, uriLocal), (response) -> { });
 
                 } else {
 
@@ -429,7 +427,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
                     for (int i = 0; i < count; i++) {
                         final ClipData.Item item = clipData.getItemAt(i);
-                        CommonUtils.executeSingleThreadAsync(new SendFileToWatch(mActivity, item.getUri()), (response) -> { });
+                        CommonUtils.executeAsync(new SendFileToWatch(mActivity, item.getUri()), (response) -> { });
                     }
                 }
             }

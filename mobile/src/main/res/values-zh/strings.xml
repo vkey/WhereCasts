@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">OPML導入</string>
     <string name="notification_opml_import_complete_title">OPML導入完成</string>
 
-    <string name="text_importing_opml_sent">您的OPML文件將在後台處理.  導入完成後會通知您.\n\n等待手錶的回應…</string>
-    <string name="text_importing_opml_parsing">解析中: %s</string>
-    <string name="text_importing_opml_episodes">同步劇集: %s</string>
-    <string name="text_importing_opml_art">下載藝術品: %s</string>
+    <string name="text_importing_opml_sent">您的OPML文件正在後台處理，導入完成時會通知您</string>
+    <string name="text_importing_opml_parsing">\n\n解析中: %s</string>
+    <string name="text_importing_opml_episodes">\n\n同步劇集: %s</string>
+    <string name="text_importing_opml_art">\n\n下載藝術品: %s</string>
     <string name="text_importing_opml_complete">匯入完成</string>
 
     <string name="text_importing_opml_sending">將播客發送到您的穿戴設備…</string>

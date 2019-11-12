@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">OPML-import</string>
     <string name="notification_opml_import_complete_title">OPML-importen är klar</string>
 
-    <string name="text_importing_opml_sent">Din OPML-fil kommer att behandlas i bakgrunden.  Du kommer att meddelas när importen är klar.\n\nVäntar på svar från klockan…</string>
-    <string name="text_importing_opml_parsing">parsing: %s</string>
-    <string name="text_importing_opml_episodes">Synkronisera avsnitt: %s</string>
-    <string name="text_importing_opml_art">Nedladdning av konst: %s</string>
+    <string name="text_importing_opml_sent">Din OPML-fil behandlas i bakgrunden och du kommer att meddelas när importen är klar</string>
+    <string name="text_importing_opml_parsing">\n\nparsing: %s</string>
+    <string name="text_importing_opml_episodes">\n\nSynkronisera avsnitt: %s</string>
+    <string name="text_importing_opml_art">\n\nNedladdning av konst: %s</string>
     <string name="text_importing_opml_complete">Importen är klar</string>
 
     <string name="text_importing_opml_sending">Skickar podcaster till din slitage enhet…</string>

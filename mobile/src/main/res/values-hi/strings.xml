@@ -83,10 +83,10 @@
     <string name="notification_channel_opml_import_complete">ओपीएमएल आयात</string>
     <string name="notification_opml_import_complete_title">ओपीएमएल आयात पूरा</string>
 
-    <string name="text_importing_opml_sent">आपकी OPML फाइल बैकग्राउंड में प्रोसेस होगी.  आयात पूरा होने पर आपको सूचित किया जाएगा.\n\nघड़ी से प्रतिक्रिया का इंतजार है…</string>
-    <string name="text_importing_opml_parsing">पदच्छेद: %s</string>
-    <string name="text_importing_opml_episodes">सिंकिंग एपिसोड: %s</string>
-    <string name="text_importing_opml_art">डाउनलोडिंग आर्ट: %s</string>
+    <string name="text_importing_opml_sent">आपकी OPML फ़ाइल को पृष्ठभूमि में संसाधित किया जा रहा है और आयात पूरा होने पर आपको सूचित किया जाएगा</string>
+    <string name="text_importing_opml_parsing">\n\nपदच्छेद: %s</string>
+    <string name="text_importing_opml_episodes">स\n\nिंकिंग एपिसोड: %s</string>
+    <string name="text_importing_opml_art">\n\nडाउनलोडिंग आर्ट: %s</string>
     <string name="text_importing_opml_complete">आयात पूरा करें</string>
 
     <string name="text_importing_opml_sending">अपने पहनने के उपकरण में पॉडकास्ट भेज रहा है…</string>

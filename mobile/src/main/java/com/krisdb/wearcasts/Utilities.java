@@ -2,7 +2,6 @@ package com.krisdb.wearcasts;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.widget.Toast;
 
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -38,11 +37,6 @@ public class Utilities {
         CommonUtils.DeviceSync(ctx, dataMapRequest);
    }
 
-    public static void SendToWatch(final Context ctx, final PodcastItem podcast)
-    {
-        SendToWatch(ctx, podcast, false);
-    }
-
     public static void TogglePremiumOnWatch(final Context ctx, final Boolean purchased) {
         TogglePremiumOnWatch(ctx, purchased, false);
     }
@@ -55,7 +49,7 @@ public class Utilities {
         CommonUtils.DeviceSync(ctx, dataMap);
     }
 
-    public static void SendToWatch(final Context ctx, final PodcastItem podcast, final Boolean showToast) {
+    public static void SendToWatch(final Context ctx, final PodcastItem podcast) {
 
         if (podcast.getChannel().getThumbnailUrl() != null) {
 
@@ -69,10 +63,10 @@ public class Utilities {
             dataMap.getDataMap().putString("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
             dataMap.getDataMap().putString("thumbnail_name", podcast.getChannel().getThumbnailName());
 
-            CommonUtils.DeviceSync(ctx, dataMap, showToast ? ctx.getString(R.string.alert_podcast_added, podcast.getChannel().getTitle()) : null, Toast.LENGTH_SHORT);
+            CommonUtils.DeviceSync(ctx, dataMap);
         }
         else {
-            CommonUtils.executeSingleThreadAsync(new FetchPodcast(podcast.getChannel().getTitle(), podcast.getChannel().getRSSUrl().toString()), (p) -> {
+            CommonUtils.executeAsync(new FetchPodcast(podcast.getChannel().getTitle(), podcast.getChannel().getRSSUrl().toString()), (p) -> {
                 final PutDataMapRequest dataMap = PutDataMapRequest.create("/podcastimport");
                 dataMap.getDataMap().putString("title", p.getChannel().getTitle());
                 dataMap.getDataMap().putString("rss_url", p.getChannel().getRSSUrl().toString());
@@ -86,7 +80,7 @@ public class Utilities {
                     dataMap.getDataMap().putString("thumbnail_name", p.getChannel().getThumbnailName());
                 }
 
-                CommonUtils.DeviceSync(ctx, dataMap, ctx.getString(R.string.alert_podcast_added, p.getChannel().getTitle()), Toast.LENGTH_SHORT);
+                CommonUtils.DeviceSync(ctx, dataMap);
             });
         }
     }

@@ -117,7 +117,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         cursor.close();
         dbPodcasts.close();
 
-        CommonUtils.executeSingleThreadAsync(new GetPodcastsDirectory(this, mQuery), (podcasts) -> {
+        CommonUtils.executeAsync(new GetPodcastsDirectory(this, mQuery), (podcasts) -> {
             if (podcasts.size() > 0) {
                 mPodcasts.addAll(podcasts);
                 findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
@@ -125,7 +125,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             else
                 findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
 
-            CommonUtils.executeSingleThreadAsync(new WatchConnected(getApplicationContext()), (connected) -> {
+            CommonUtils.executeAsync(new WatchConnected(getApplicationContext()), (connected) -> {
                 mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 if (podcasts.size() > 1) {
                     mResultsList.setAdapter(new PodcastsAdapter(SearchResultsActivity.this, podcasts.subList(1, podcasts.size()), connected));

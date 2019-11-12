@@ -189,7 +189,7 @@ public class ImportService extends WearableListenerService implements DataClient
                 final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
                 final String fileName = dataMapItem.getDataMap().getString("local_filename");
 
-                CommonUtils.executeSingleThreadAsync(new ConvertFileToAsset(context, asset), (response) -> {
+                CommonUtils.executeAsync(new ConvertFileToAsset(context, asset), (response) -> {
                     final InputStream inputStream = response.getInputStream();
 
                     try {
@@ -283,9 +283,9 @@ public class ImportService extends WearableListenerService implements DataClient
                 //podcasts
                 CommonUtils.executeSingleThreadAsync(new ProcessOPML(context, asset, true), (response) -> {
                     //episodes
-                    CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context), (data1) -> {
+                    CommonUtils.executeAsync(new SyncPodcasts(context), (data1) -> {
                         //art
-                        CommonUtils.executeSingleThreadAsync(new SyncArt(context, true), (data2) -> {
+                        CommonUtils.executeAsync(new SyncArt(context, true), (data2) -> {
                             CommonUtils.DeviceSync(mContext.get(), PutDataMapRequest.create("/opmlimport_complete"));
                             Utilities.vibrate(context);
                         });

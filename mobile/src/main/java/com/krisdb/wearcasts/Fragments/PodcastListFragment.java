@@ -50,7 +50,7 @@ public class PodcastListFragment extends Fragment {
         final View listView = inflater.inflate(R.layout.fragment_podcast_list, container, false);
         if (getArguments() != null)
         {
-            CommonUtils.executeSingleThreadAsync(new WatchConnected(mActivity), (connected) -> {
+            CommonUtils.executeAsync(new WatchConnected(mActivity), (connected) -> {
                 List<PodcastItem> podcasts = (List<PodcastItem>) getArguments().getSerializable("podcasts");
 
                 podcasts = podcasts.subList(1, podcasts.size());

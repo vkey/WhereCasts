@@ -85,10 +85,10 @@
     <string name="notification_channel_opml_import_complete">OPML Import</string>
     <string name="notification_opml_import_complete_title">OPML import complete</string>
 
-    <string name="text_importing_opml_sent">Your OPML file will process in the background.  You will be notified when the import is complete.\n\nWaiting for response from watch…</string>
-    <string name="text_importing_opml_parsing">Parsing: %s</string>
-    <string name="text_importing_opml_episodes">Syncing episodes: %s</string>
-    <string name="text_importing_opml_art">Downloading art: %s</string>
+    <string name="text_importing_opml_sent">Your OPML file is being processed in the background and you will be notified when the import is complete.</string>
+    <string name="text_importing_opml_parsing">\n\nParsing: %s</string>
+    <string name="text_importing_opml_episodes">\n\nSyncing episodes: %s</string>
+    <string name="text_importing_opml_art">\n\nDownloading art: %s</string>
     <string name="text_importing_opml_complete">Import complete</string>
 
     <string name="text_importing_opml_sending">Sending podcasts to your wear device…</string>

@@ -41,7 +41,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
-import androidx.wear.activity.ConfirmationActivity;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.Async.FinishMedia;
@@ -248,9 +247,9 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     private void SyncWithMobileDevice(boolean finished) {
-        CommonUtils.executeSingleThreadAsync(new WatchConnected(this), (connected) -> {
+        CommonUtils.executeAsync(new WatchConnected(this), (connected) -> {
             if (connected)
-                CommonUtils.executeSingleThreadAsync(new SyncWithMobileDevice(mContext, mEpisode, mMediaPlayer, finished), (response) -> { });
+                CommonUtils.executeAsync(new SyncWithMobileDevice(mContext, mEpisode, mMediaPlayer, finished), (response) -> { });
         });
     }
 

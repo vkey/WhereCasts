@@ -79,7 +79,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             if (holder.episodes.getVisibility() == View.GONE) {
                 holder.episodesProgress.setVisibility(View.VISIBLE);
 
-                CommonUtils.executeSingleThreadAsync(new GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 10), (episodes) -> {
+                CommonUtils.executeAsync(new GetEpisodes(mPodcasts.get(holder.getAdapterPosition()), 10), (episodes) -> {
                     holder.episodes.setLayoutManager(new LinearLayoutManager(mContext));
                     holder.episodes.setAdapter(new EpisodesPreviewAdapter(mContext, episodes));
                     holder.episodes.setVisibility(View.VISIBLE);

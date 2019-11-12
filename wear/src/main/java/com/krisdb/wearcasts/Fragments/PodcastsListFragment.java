@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -107,7 +106,7 @@ public class PodcastsListFragment extends Fragment {
 
         final Boolean hideEmpty = PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("pref_hide_empty", false);
 
-        CommonUtils.executeSingleThreadAsync(new DisplayPodcasts(mActivity, hideEmpty), (podcasts) -> {
+        CommonUtils.executeAsync(new DisplayPodcasts(mActivity, hideEmpty), (podcasts) -> {
             mAdapter = new PodcastsAdapter(mActivity, podcasts);
             mPodcastsList.setAdapter(mAdapter);
             showCopy(podcasts.size());
@@ -165,8 +164,7 @@ public class PodcastsListFragment extends Fragment {
                 mLogo.setImageDrawable(GetRoundedLogo(mActivity, null));
                 mLogo.setVisibility(TextView.VISIBLE);
                 mLogo.setOnLongClickListener(view -> {
-
-                    CommonUtils.executeSingleThreadAsync(new DisplayPodcasts(mActivity, false), (podcasts) -> {
+                    CommonUtils.executeAsync(new DisplayPodcasts(mActivity, false), (podcasts) -> {
                         mAdapter = new PodcastsAdapter(mActivity, podcasts);
                         mPodcastsList.setAdapter(mAdapter);
                         showCopy(podcasts.size());
