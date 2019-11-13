@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +16,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
-import com.krisdb.wearcasts.Async.DisplayPodcasts;
+import com.krisdb.wearcasts.Async.GetPodcasts;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.ViewModels.PodcastsViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
+import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
@@ -37,6 +43,7 @@ public class PodcastsListFragment extends Fragment {
     private PodcastsAdapter mAdapter;
     private static WeakReference<Activity> mActivityRef;
     private ImageView mLogo;
+    private PodcastsViewModel mPodcastsModel;
 
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
@@ -67,10 +74,30 @@ public class PodcastsListFragment extends Fragment {
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
 
-        RefreshContent();
+        mPodcastsModel = ViewModelProviders.of(getActivity()).get(PodcastsViewModel.class);
+
+        final Observer<List<PodcastItem>> podcastsObserver = new Observer<List<PodcastItem>>() {
+            @Override
+            public void onChanged(List<PodcastItem> podcasts) {
+                mAdapter = new PodcastsAdapter(mActivity, podcasts);
+                mPodcastsList.setAdapter(mAdapter);
+                showCopy(podcasts.size());
+            }
+        };
+
+        mPodcastsModel.getPodcasts().observe(this, podcastsObserver);
+
 
         return listView;
     }
+
+
+    private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+
+        }
+    };
 
     private void handleNetwork()
     {
@@ -106,12 +133,13 @@ public class PodcastsListFragment extends Fragment {
     private void RefreshContent() {
         if (!isAdded()) return;
 
-        final  PodcastsViewModel model = ViewModelProviders.of(getActivity()).get(PodcastsViewModel.class);
-        model.getPodcasts().observe(this, podcasts -> {
+
+/*        model.getPodcasts().observe(this, podcasts -> {
             mAdapter = new PodcastsAdapter(mActivity, podcasts);
             mPodcastsList.setAdapter(mAdapter);
             showCopy(podcasts.size());
         });
+        */
    }
 
     private void showCopy(final int number)
@@ -165,7 +193,7 @@ public class PodcastsListFragment extends Fragment {
                 mLogo.setImageDrawable(GetRoundedLogo(mActivity, null));
                 mLogo.setVisibility(TextView.VISIBLE);
                 mLogo.setOnLongClickListener(view -> {
-                    CommonUtils.executeAsync(new DisplayPodcasts(mActivity, false), (podcasts) -> {
+                    CommonUtils.executeAsync(new GetPodcasts(mActivity, false), (podcasts) -> {
                         mAdapter = new PodcastsAdapter(mActivity, podcasts);
                         mPodcastsList.setAdapter(mAdapter);
                         showCopy(podcasts.size());
@@ -181,7 +209,9 @@ public class PodcastsListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        mPodcastsModel.getPodcasts();
+
+/*        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (mAdapter != null && prefs.getBoolean("refresh_podcast_list", false)) {
             final SharedPreferences.Editor editor = prefs.edit();
@@ -189,6 +219,7 @@ public class PodcastsListFragment extends Fragment {
             editor.apply();
 
             showCopy(mAdapter.refreshContent());
-        }
+        }*/
+        //showCopy(mAdapter.refreshContent());
     }
 }

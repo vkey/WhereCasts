@@ -111,42 +111,22 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.playlist_row_item, viewGroup, false);
 
         final ViewHolder holder = new ViewHolder(view);
+        final int position = holder.getAdapterPosition();
 
-        holder.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initDownload(holder, holder.getAdapterPosition());
-            }
+        holder.download.setOnClickListener(view1 -> initDownload(holder, position));
+
+        holder.title.setOnClickListener(view2 -> openEpisode(position));
+
+        holder.thumbnail.setOnClickListener(view3 -> openEpisode(position));
+
+        holder.thumbnail.setOnLongClickListener(view1 -> {
+            showContext(holder.getAdapterPosition());
+            return true;
         });
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
-
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEpisode(holder.getAdapterPosition());
-            }
-        });
-
-        holder.thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return true;
-            }
-        });
-
-        holder.title.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                showContext(holder.getAdapterPosition());
-                return false;
-            }
+        holder.title.setOnLongClickListener(view15 -> {
+            showContext(holder.getAdapterPosition());
+            return false;
         });
 
         return holder;

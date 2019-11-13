@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.ViewModels;
 
 import android.app.Application;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -9,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.krisdb.wearcasts.Async.DisplayEpisodes;
-import com.krisdb.wearcasts.Async.DisplayPodcasts;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -34,6 +32,12 @@ public class EpisodesViewModel extends AndroidViewModel {
             loadEpisodes();
         }
         return episodes;
+    }
+
+    public void refresh() {
+        CommonUtils.executeAsync(new DisplayEpisodes(application, mPodcastID, mQuery), (episodes) -> {
+            this.episodes.setValue(episodes);
+        });
     }
 
     private void loadEpisodes() {

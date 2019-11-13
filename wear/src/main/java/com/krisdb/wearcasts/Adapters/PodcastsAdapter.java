@@ -21,6 +21,8 @@ import androidx.wear.widget.WearableRecyclerView;
 import com.krisdb.wearcasts.Activities.EpisodeListActivity;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
+import com.krisdb.wearcasts.Utilities.PodcastUtilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
@@ -63,9 +65,6 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
         if (prefs.getBoolean("long_press_tip_shown", false) == false && GetPodcasts(mContext).size() > 0)
             showToast(mContext, mContext.getString(R.string.tips_swipe_long_press));
 
-        mPodcasts = GetPodcasts(mContext, hideEmpty, showDownloaded);
-        notifyDataSetChanged();
-
         return mPodcasts.size();
     }
 
@@ -76,29 +75,23 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
 
         final ViewHolder holder = new ViewHolder(view);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = new Intent(mContext, EpisodeListActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putInt("podcastId", mPodcasts.get(holder.getAdapterPosition()).getPodcastId());
-                intent.putExtras(bundle);
+        holder.layout.setOnClickListener(view1 -> {
+            final Intent intent = new Intent(mContext, EpisodeListActivity.class);
+            final Bundle bundle = new Bundle();
+            bundle.putInt("podcastId", mPodcasts.get(holder.getAdapterPosition()).getPodcastId());
+            intent.putExtras(bundle);
 
-                mContext.startActivity(intent);
-            }
+            mContext.startActivity(intent);
         });
 
-        holder.layout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
-                final Bundle bundle = new Bundle();
-                bundle.putInt("podcastId", mPodcasts.get(holder.getAdapterPosition()).getPodcastId());
-                intent.putExtras(bundle);
+        holder.layout.setOnLongClickListener(view2 -> {
+            final Intent intent = new Intent(mContext, SettingsPodcastActivity.class);
+            final Bundle bundle = new Bundle();
+            bundle.putInt("podcastId", mPodcasts.get(holder.getAdapterPosition()).getPodcastId());
+            intent.putExtras(bundle);
 
-                mContext.startActivity(intent);
-                return true;
-            }
+            mContext.startActivity(intent);
+            return true;
         });
 
         return holder;

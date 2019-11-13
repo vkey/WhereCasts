@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
@@ -23,17 +22,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.wear.activity.ConfirmationActivity;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.krisdb.wearcasts.Fragments.PlayerFragment;
 import com.krisdb.wearcasts.Fragments.PodcastListFragment;
 import com.krisdb.wearcasts.R;
-import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModel;
-import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;

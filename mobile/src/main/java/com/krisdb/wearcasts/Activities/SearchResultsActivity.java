@@ -4,37 +4,24 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
-import com.krisdb.wearcasts.Databases.DBDirectoryPodcasts;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.Async.SearchPodcasts;
 import com.krisdb.wearcastslibrary.Async.WatchConnected;
-import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.PodcastItem;
-import com.krisdb.wearcastslibrary.ViewModels.SearchPodcastsViewModel;
-import com.krisdb.wearcastslibrary.ViewModels.SearchPodcastsViewModelFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private RecyclerView mResultsList;

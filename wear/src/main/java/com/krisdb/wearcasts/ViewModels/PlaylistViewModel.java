@@ -1,18 +1,13 @@
 package com.krisdb.wearcasts.ViewModels;
 
 import android.app.Application;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.krisdb.wearcasts.Adapters.PlaylistsAdapter;
-import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.DisplayPlaylistEpisodes;
-import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 

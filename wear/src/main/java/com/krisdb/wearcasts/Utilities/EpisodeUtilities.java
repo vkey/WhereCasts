@@ -32,6 +32,17 @@ public class EpisodeUtilities {
     private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload,tbl_podcast_episodes.downloadid";
     private static WeakReference<Context> mContext;
 
+    public static void resetDownload(final Context context, final int episodeId)
+    {
+        final ContentValues cv = new ContentValues();
+        cv.put("download", 0);
+        cv.put("downloadid", 0);
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
+        db.update(cv, episodeId);
+        db.close();
+    }
+
     public static void markPlayed(final Context ctx, final PodcastItem episode)
     {
         final ContentValues cv = new ContentValues();

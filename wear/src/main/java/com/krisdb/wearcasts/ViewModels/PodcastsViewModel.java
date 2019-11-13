@@ -1,16 +1,19 @@
 package com.krisdb.wearcasts.ViewModels;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
-import com.krisdb.wearcasts.Async.DisplayPodcasts;
+import com.krisdb.wearcasts.Async.DisplayEpisodes;
+import com.krisdb.wearcasts.Async.GetPodcasts;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -25,7 +28,7 @@ public class PodcastsViewModel extends AndroidViewModel {
         this.application = application;
     }
 
-    public LiveData<List<PodcastItem>> getPodcasts() {
+    public MutableLiveData<List<PodcastItem>> getPodcasts() {
         if (podcasts == null) {
             podcasts = new MutableLiveData<>();
             loadPodcasts();
@@ -33,11 +36,19 @@ public class PodcastsViewModel extends AndroidViewModel {
         return podcasts;
     }
 
-    private void loadPodcasts() {
-        final Boolean hideEmpty = PreferenceManager.getDefaultSharedPreferences(application).getBoolean("pref_hide_empty", false);
+    public void loadPodcasts() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(application);
 
-        CommonUtils.executeAsync(new DisplayPodcasts(application, hideEmpty), (podcasts) -> {
-            this.podcasts.setValue(podcasts);
-        });
+        final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+
+        CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty), (podcasts) -> this.podcasts.setValue(podcasts));
     }
+
+
+    private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            loadPodcasts();
+        }
+    };
 }

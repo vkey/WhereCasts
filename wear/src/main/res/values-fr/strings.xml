@@ -288,6 +288,7 @@
     <string name="playlist_title_local">Local</string>
 
     <string name="alert_download_error">Cet épisode n\'a pas été téléchargé correctement.  S\'il vous plaît essayez de le télécharger à nouveau</string>
+    <string name="alert_download_error_low">Impossible de démarrer le téléchargement. Très probablement en raison d\'un faible stockage.\nEssayez de libérer de l\'espace sur votre appareil et de télécharger à nouveau.</string>
 
     <string name="alert_add_podcast_no_episodes">mais aucun épisode trouvé</string>
     <string name="alert_no_system_audio">Aucun système audio trouvé</string>

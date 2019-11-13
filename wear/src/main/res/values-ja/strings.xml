@@ -287,6 +287,7 @@
     <string name="playlist_title_local">地元</string>
 
     <string name="alert_download_error">このエピソードは正しくダウンロードされませんでした.  もう一度ダウンロードしてみてください</string>
+    <string name="alert_download_error_low">ダウンロードを開始できませんでした. おそらくストレージ不足が原因.\nデバイスのスペースをクリアして、もう一度ダウンロードしてみてください.</string>
 
     <string name="alert_add_podcast_no_episodes">エピソードは見つかりませんでした</string>
     <string name="alert_no_system_audio">システムオーディオが見つかりません</string>

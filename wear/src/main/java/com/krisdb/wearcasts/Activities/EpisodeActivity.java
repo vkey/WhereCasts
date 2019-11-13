@@ -53,6 +53,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
@@ -486,25 +487,23 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
             if (mDownloadStartTime == 0)
                 mDownloadStartTime = System.nanoTime();
+                Log.d(mContext.getPackageName(), "Status: moveToFirst: " + cursor.moveToFirst());
 
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircleDownloading.setMax(bytes_total);
-
-                //mProgressCircleDownloading.setSecondaryProgress(bytes_total);
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-                //Log.d(mContext.getPackageName(), "Status: " + status);
+                Log.d(mContext.getPackageName(), "Status: " + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
-
                 switch (status) {
                     case DownloadManager.STATUS_PAUSED:
                     case DownloadManager.STATUS_RUNNING:
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                         try {
                             if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
@@ -524,9 +523,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                                 }
                             } else
                                 mDownloadSpeed.setVisibility(View.INVISIBLE);
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
                             if (mDownloadStartTime == 0)
                                 mDownloadStartTime = System.nanoTime();
@@ -557,8 +554,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                             mDownloadImage.setOnClickListener(view -> CancelDownload());
                             mDownloadStartTime = System.nanoTime();
-                        }
-                        else
+                        } else
                             Utilities.ShowFailureActivity(mContext, "");
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
@@ -575,6 +571,26 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
+                }
+            }
+            else
+            {
+                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                mPlayPauseImage.setVisibility(View.VISIBLE);
+                mControlsLayout.setVisibility(View.VISIBLE);
+                mInfoLayout.setVisibility(View.GONE);
+                mVolumeUp.setVisibility(View.GONE);
+                mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+                mDownloadSpeed.setVisibility(View.INVISIBLE);
+                mEpisode.setIsDownloaded(true);
+                mDownloadImage.setOnClickListener(view -> DeleteEpisode());
+                mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                Utilities.DeleteMediaFile(mActivity, mEpisode);
+
+                if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
+                    alert.setMessage(getString(R.string.alert_download_error_low));
+                    alert.setNeutralButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss()).show();
                 }
             }
             cursor.close();
@@ -622,13 +638,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mDownloadImage.setOnClickListener(view -> handleNetwork(true));
 
-        final ContentValues cv = new ContentValues();
-        cv.put("download", 0);
-        cv.put("downloadid", 0);
 
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
-        db.update(cv, mEpisode.getEpisodeId());
-        db.close();
 
         //if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled())
             //Utilities.enableBlutooth(mContext);

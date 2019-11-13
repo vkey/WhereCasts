@@ -39,8 +39,6 @@ import androidx.wear.widget.drawer.WearableActionDrawerView;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
-import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
-import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Controllers.EpisodesSwipeController;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -51,7 +49,6 @@ import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcasts.ViewModels.EpisodesViewModel;
 import com.krisdb.wearcasts.ViewModels.EpisodesViewModelFactory;
-import com.krisdb.wearcasts.ViewModels.PodcastsViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
