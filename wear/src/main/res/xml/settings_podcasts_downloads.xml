@@ -13,11 +13,13 @@
             android:defaultValue="1"
             />
 
+        <!--
         <SwitchPreference
             android:key="pref_downloads_restart_on_failure"
             android:title="@string/settings_podcasts_label_downloads_restart_failed"
-            android:defaultValue="true"
+            android:defaultValue="false"
             />
+        -->
 
         <SwitchPreference
             android:key="pref_download_complete_sound"

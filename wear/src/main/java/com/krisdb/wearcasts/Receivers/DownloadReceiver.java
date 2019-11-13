@@ -93,7 +93,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                     clearFailedDownload(context, episode);
                     final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
 
-                    final SharedPreferences.Editor editor = prefs.edit();
+/*                    final SharedPreferences.Editor editor = prefs.edit();
 
                     if (prefs.getBoolean("pref_downloads_restart_on_failure", true) && downloadCount < 10) {
                         long id = startDownload(context, episode);
@@ -105,7 +105,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                         editor.putInt("downloads_" + episode.getEpisodeId(), 0);
                     }
 
-                    editor.apply();
+                    editor.apply();*/
                 }
             }
 

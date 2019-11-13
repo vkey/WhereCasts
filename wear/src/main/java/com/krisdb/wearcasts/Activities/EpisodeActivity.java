@@ -394,6 +394,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mDownloadImage.setOnClickListener(view -> DeleteEpisode());
         }
 
+
         if (mLocalFile == null && mEpisode.getMediaUrl() == null) {
             mPlayPauseImage.setEnabled(false);
             //mPlayPauseImage.setText("Error");
@@ -487,8 +488,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
             if (mDownloadStartTime == 0)
                 mDownloadStartTime = System.nanoTime();
-                Log.d(mContext.getPackageName(), "Status: moveToFirst: " + cursor.moveToFirst());
-
+                Log.d(mContext.getPackageName(), "Status: moveToFirst "  + cursor.moveToFirst());
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircleDownloading.setMax(bytes_total);
@@ -497,7 +497,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-                Log.d(mContext.getPackageName(), "Status: " + status);
+                Log.d(mContext.getPackageName(), "Status: "  + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
                 switch (status) {
                     case DownloadManager.STATUS_PAUSED:
@@ -547,6 +547,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mVolumeUp.setVisibility(View.GONE);
                         mDownloadManager.remove(mDownloadId);
+
+                        /*
                         if (prefs.getBoolean("pref_downloads_restart_on_failure", true)) {
                             SystemClock.sleep(200);
                             mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mContext, mEpisode);
@@ -554,8 +556,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_cancel));
                             mDownloadImage.setOnClickListener(view -> CancelDownload());
                             mDownloadStartTime = System.nanoTime();
-                        } else
-                            Utilities.ShowFailureActivity(mContext, "");
+                        }*/
+
+                        Utilities.ShowFailureActivity(mContext, "");
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:
@@ -575,17 +578,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             }
             else
             {
-                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-                mPlayPauseImage.setVisibility(View.VISIBLE);
-                mControlsLayout.setVisibility(View.VISIBLE);
-                mInfoLayout.setVisibility(View.GONE);
-                mVolumeUp.setVisibility(View.GONE);
-                mProgressCircleDownloading.setVisibility(View.INVISIBLE);
-                mDownloadSpeed.setVisibility(View.INVISIBLE);
-                mEpisode.setIsDownloaded(true);
-                mDownloadImage.setOnClickListener(view -> DeleteEpisode());
                 mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
                 Utilities.DeleteMediaFile(mActivity, mEpisode);
+                mEpisode.setIsDownloaded(false);
+                SetContent();
 
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(EpisodeActivity.this);
@@ -637,11 +633,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mDownloadImage.setOnClickListener(view -> handleNetwork(true));
-
-
-
-        //if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled())
-            //Utilities.enableBlutooth(mContext);
     }
 
     private void handleNetwork(final Boolean download) {
