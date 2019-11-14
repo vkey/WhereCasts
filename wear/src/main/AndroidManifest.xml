@@ -63,6 +63,12 @@
             android:name="com.google.android.wearable.notificationBridgeMode"
             android:value="NO_BRIDGING" />
 
+        <provider
+            android:name="com.krisdb.wearcasts.Providers.FilesProvider"
+            android:authorities="com.krisdb.wearcasts.Providers.FilesProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name_wc"

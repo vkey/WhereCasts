@@ -1,8 +1,6 @@
 package com.krisdb.wearcasts.Async;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -10,22 +8,30 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
-
 public class GetPodcasts implements Callable<List<PodcastItem>> {
     private final Context context;
-    private boolean mHideEmpty;
+    private boolean mHideEmpty, mShowDownloaded;
+
+    public GetPodcasts(final Context context) {
+        this.context = context;
+        this.mShowDownloaded = false;
+        this.mHideEmpty = false;
+    }
 
     public GetPodcasts(final Context context, final Boolean hideEmpty) {
         this.context = context;
+        this.mShowDownloaded = false;
         this.mHideEmpty = hideEmpty;
+    }
+
+    public GetPodcasts(final Context context, final Boolean hideEmpty, final Boolean showDownloaded) {
+        this.context = context;
+        this.mHideEmpty = hideEmpty;
+        this.mShowDownloaded = showDownloaded;
     }
 
     @Override
     public List<PodcastItem> call() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
-
-        return PodcastUtilities.GetPodcasts(context, mHideEmpty, showDownloaded);
+        return PodcastUtilities.GetPodcasts(context, mHideEmpty, mShowDownloaded);
     }
 }

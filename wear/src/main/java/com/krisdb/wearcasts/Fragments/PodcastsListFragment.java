@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
@@ -25,25 +21,23 @@ import com.krisdb.wearcasts.Adapters.PodcastsAdapter;
 import com.krisdb.wearcasts.Async.GetPodcasts;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcasts.ViewModels.PodcastsViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class PodcastsListFragment extends Fragment {
 
-    private WearableRecyclerView mPodcastsList = null;
+    private WearableRecyclerView mPodcastsList;
     private Activity mActivity;
     private TextView mEmptyView;
     private PodcastsAdapter mAdapter;
     private static WeakReference<Activity> mActivityRef;
     private ImageView mLogo;
-    private PodcastsViewModel mPodcastsModel;
 
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
@@ -74,82 +68,59 @@ public class PodcastsListFragment extends Fragment {
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();
 
-        mPodcastsModel = ViewModelProviders.of(getActivity()).get(PodcastsViewModel.class);
-
-        final Observer<List<PodcastItem>> podcastsObserver = new Observer<List<PodcastItem>>() {
-            @Override
-            public void onChanged(List<PodcastItem> podcasts) {
-                mAdapter = new PodcastsAdapter(mActivity, podcasts);
-                mPodcastsList.setAdapter(mAdapter);
-                showCopy(podcasts.size());
-            }
-        };
-
-        mPodcastsModel.getPodcasts().observe(this, podcastsObserver);
-
+        RefreshContent();
 
         return listView;
     }
 
+   private void handleNetwork() {
+       if (!CommonUtils.isNetworkAvailable(mActivity)) {
+           if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
+               final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
+               alert.setMessage(getString(R.string.alert_episode_network_notfound));
+               alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
+                   startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                   dialog.dismiss();
+               });
 
-    private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-
-        }
-    };
-
-    private void handleNetwork()
-    {
-        if (!CommonUtils.isNetworkAvailable(mActivity))
-        {
-            if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-                alert.setMessage(getString(R.string.alert_episode_network_notfound));
-                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
-                    startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
-                    dialog.dismiss();
-                });
-
-                alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
-            }
-        }
-        else
-        {
-            CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
-            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
-                    RefreshContent();
-                    CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
-            });
-    }
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle icicle) {
-
-        super.onActivityCreated(icicle);
-    }
+               alert.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss()).show();
+           }
+       } else {
+           CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
+           CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
+               RefreshContent();
+               CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
+           });
+       }
+   }
 
     private void RefreshContent() {
         if (!isAdded()) return;
 
+        final PodcastsViewModel podcastsModel = ViewModelProviders.of(this).get(PodcastsViewModel.class);
 
-/*        model.getPodcasts().observe(this, podcasts -> {
+        podcastsModel.getPodcasts().observe(this, podcasts -> {
             mAdapter = new PodcastsAdapter(mActivity, podcasts);
             mPodcastsList.setAdapter(mAdapter);
             showCopy(podcasts.size());
         });
-        */
    }
 
-    private void showCopy(final int number)
+    private void showCopy() {
+        showCopy(-1);
+    }
+
+    private void showCopy(int podcastCount)
     {
         if (!isAdded()) return;
+
+        if (podcastCount == -1)
+            podcastCount = PodcastUtilities.GetPodcastCount(mActivity);
 
         final ImageView swipeLeftView = mActivity.findViewById(R.id.podcast_list_swipe_left);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
-        if (number > 0)
+        if (podcastCount > 0)
         {
             if (mEmptyView != null)
                 mEmptyView.setVisibility(TextView.GONE);
@@ -209,17 +180,15 @@ public class PodcastsListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mPodcastsModel.getPodcasts();
-
-/*        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
         if (mAdapter != null && prefs.getBoolean("refresh_podcast_list", false)) {
             final SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("refresh_podcast_list", false);
             editor.apply();
 
-            showCopy(mAdapter.refreshContent());
-        }*/
-        //showCopy(mAdapter.refreshContent());
+            mAdapter.refreshContent();
+            showCopy();
+        }
     }
 }

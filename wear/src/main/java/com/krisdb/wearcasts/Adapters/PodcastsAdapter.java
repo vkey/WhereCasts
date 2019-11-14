@@ -19,17 +19,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Activities.EpisodeListActivity;
+import com.krisdb.wearcasts.Async.GetPodcasts;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
-import com.krisdb.wearcasts.Utilities.PodcastUtilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
-import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
-
 
 public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapter.ViewHolder> {
 
@@ -56,16 +54,21 @@ public class  PodcastsAdapter extends WearableRecyclerView.Adapter<PodcastsAdapt
         mContext = activity;
     }
 
-    public int refreshContent()
-    {
+    public void refreshContent() {
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
         final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-        if (prefs.getBoolean("long_press_tip_shown", false) == false && GetPodcasts(mContext).size() > 0)
-            showToast(mContext, mContext.getString(R.string.tips_swipe_long_press));
+        CommonUtils.executeAsync(new GetPodcasts(mContext, hideEmpty, showDownloaded), (podcasts) ->
+                {
+                    if (prefs.getBoolean("long_press_tip_shown", false) == false && podcasts.size() > 0)
+                        showToast(mContext, mContext.getString(R.string.tips_swipe_long_press));
 
-        return mPodcasts.size();
+                    mPodcasts = podcasts;
+                    notifyDataSetChanged();
+                }
+        );
     }
 
     @NonNull

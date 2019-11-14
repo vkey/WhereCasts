@@ -29,21 +29,11 @@ public class EpisodesViewModel extends AndroidViewModel {
     public LiveData<List<PodcastItem>> getEpisodes() {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
-            loadEpisodes();
+
+            CommonUtils.executeAsync(new DisplayEpisodes(application, mPodcastID, mQuery), (episodes) -> {
+                this.episodes.setValue(episodes);
+            });
         }
         return episodes;
-    }
-
-    public void refresh() {
-        CommonUtils.executeAsync(new DisplayEpisodes(application, mPodcastID, mQuery), (episodes) -> {
-            this.episodes.setValue(episodes);
-        });
-    }
-
-    private void loadEpisodes() {
-
-        CommonUtils.executeAsync(new DisplayEpisodes(application, mPodcastID, mQuery), (episodes) -> {
-            this.episodes.setValue(episodes);
-        });
     }
 }

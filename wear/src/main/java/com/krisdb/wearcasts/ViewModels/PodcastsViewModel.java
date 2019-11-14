@@ -2,9 +2,6 @@ package com.krisdb.wearcasts.ViewModels;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -12,7 +9,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.GetPodcasts;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -28,27 +24,62 @@ public class PodcastsViewModel extends AndroidViewModel {
         this.application = application;
     }
 
-    public MutableLiveData<List<PodcastItem>> getPodcasts() {
+    public LiveData<List<PodcastItem>> getPodcasts() {
         if (podcasts == null) {
             podcasts = new MutableLiveData<>();
-            loadPodcasts();
+
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(application);
+
+            final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+            final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
+
+            CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (podcasts) ->
+                    this.podcasts.setValue(podcasts));
         }
+
         return podcasts;
     }
 
-    public void loadPodcasts() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(application);
+    /*
+    public MutableLiveData<List<PodcastItem>> getPodcasts() {
+        if (podcasts == null) {
+            podcasts = new MutableLiveData<List<PodcastItem>>() {
+                @Override
+                public void onActive() {
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(application);
 
-        final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+                    final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+                    final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-        CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty), (podcasts) -> this.podcasts.setValue(podcasts));
+                    CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (p) ->
+                            {
+                                podcasts.postValue(p);
+                                //application.getContentResolver().registerContentObserver(FilesProvider.getFilePath(application.getDatabasePath("episodes.db")), true, podcastContentObserver);
+                            }
+                    );
+                }
+
+                @Override
+                public void onInactive() {
+                    //application.getContentResolver().unregisterContentObserver(podcastContentObserver);
+                }
+            };
+        }
+
+       return podcasts;
     }
 
-
-    private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
+    private final ContentObserver podcastContentObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
-            loadPodcasts();
+            getPodcasts();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            getPodcasts();
         }
     };
+    */
+
 }

@@ -40,6 +40,8 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
     @Override
     public List<PodcastItem> call() {
         CommonUtils.writeToFile(context, "Episode: " + mEpisode.getTitle());
+        CommonUtils.writeToFile(context, "PlaylistID: " + mPlaylistID);
+        CommonUtils.writeToFile(context, "PodcastID: " + mPodcastID);
 
         List<PodcastItem> episodes;
 

@@ -142,24 +142,19 @@ public class PlaylistsUtilities {
 
             //final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);
             final int truncateLength = ctx.getResources().getInteger(R.integer.episode_truncate_length);
-            CommonUtils.writeToFile(ctx, "PlaylistID: " + playlistId);
 
-             if (playlistId == resources.getInteger(R.integer.playlist_downloads)) {//downloads can also be in progress, so need separate query for downloads
+             if (playlistId == resources.getInteger(R.integer.playlist_downloads)) //downloads can also be in progress, so need separate query for downloads
                  cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [download] = 1 AND [downloadid] = 0 ORDER BY ".concat(orderString)), null);
-                 CommonUtils.writeToFile(ctx, "Downloads query");
-             }
             else if (playlistId == resources.getInteger(R.integer.playlist_unplayed))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
             else if (playlistId == resources.getInteger(R.integer.playlist_inprogress))
                 cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [position] > 0".concat(" ORDER BY ").concat(orderString)), null);
              else if (playlistId > -1 || playlistId <= resources.getInteger(R.integer.playlist_playerfm))
                  cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(",tbl_playlists_xref.playlist_id FROM tbl_podcast_episodes INNER JOIN tbl_playlists_xref ON tbl_playlists_xref.episode_id = tbl_podcast_episodes.id WHERE tbl_playlists_xref.playlist_id = ?".concat(" ORDER BY ").concat(orderString)), new String[]{String.valueOf(playlistId)});
-             else {
+             else
                  cursor = sdb.rawQuery("SELECT ".concat(mEpisodeColumns).concat(" FROM [tbl_podcast_episodes] WHERE [finished] = 0 ORDER BY ".concat(orderString)), null);
-                 CommonUtils.writeToFile(ctx, "Default query");
-             }
+
             if (cursor.moveToFirst()) {
-                CommonUtils.writeToFile(ctx, "Count: " + cursor.getColumnCount());
 
                 while (!cursor.isAfterLast()) {
                     final PodcastItem episode = SetPodcastEpisode(cursor);

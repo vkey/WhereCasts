@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,31 +61,28 @@ public class PlaylistsSettingsAdapter extends RecyclerView.Adapter<PlaylistsSett
         final ViewHolder holder = new ViewHolder(view);
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
 
-        holder.name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    final String text = holder.name.getText().toString();
+        holder.name.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                final String text = holder.name.getText().toString();
 
-                    if (text.length() == 0) {
-                        Utilities.ShowFailureActivity(mContext, mContext.getString(R.string.validation_podcast_rename_title));
-                        //CommonUtils.showToast(mContext, mContext.getString(R.string.validation_podcast_rename_title));
-                        return true;
-                    }
-
-                    final int position = holder.getAdapterPosition();
-                    final int playlistId = mPlaylists.get(position).getID();
-                    db.updatePlaylist(holder.name.getText().toString(), playlistId);
-                    mPlaylists = getPlaylists(mContext, false);
-                    notifyItemChanged(position);
-
-                    holder.name.setText(v.getText().toString());
-                    final InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                if (text.length() == 0) {
+                    Utilities.ShowFailureActivity(mContext, mContext.getString(R.string.validation_podcast_rename_title));
+                    //CommonUtils.showToast(mContext, mContext.getString(R.string.validation_podcast_rename_title));
                     return true;
                 }
-                return false;
+
+                final int position = holder.getAdapterPosition();
+                final int playlistId = mPlaylists.get(position).getID();
+                db.updatePlaylist(holder.name.getText().toString(), playlistId);
+                mPlaylists = getPlaylists(mContext, false);
+                notifyItemChanged(position);
+
+                holder.name.setText(v.getText().toString());
+                final InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
             }
+            return false;
         });
 
         holder.delete.setOnClickListener(v -> {

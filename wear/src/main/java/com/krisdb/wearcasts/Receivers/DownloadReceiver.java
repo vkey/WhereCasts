@@ -27,9 +27,7 @@ import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
-import static com.krisdb.wearcasts.Utilities.Utilities.startDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
-import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
 
 public class DownloadReceiver extends BroadcastReceiver  {
 

@@ -428,7 +428,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     private BroadcastReceiver mFragmentsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             //if (intent.getExtras().getBoolean("hide_paging_indicator"))
             //findViewById(R.id.main_pager_dots).setVisibility(View.GONE);
         }

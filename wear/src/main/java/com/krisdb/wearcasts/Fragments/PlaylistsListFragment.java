@@ -138,9 +138,9 @@ public class PlaylistsListFragment extends Fragment {
         mPlaylistList.setVisibility(View.INVISIBLE);
 
         final PlaylistViewModel model = ViewModelProviders.of(this, new PlaylistViewModelFactory(mActivity.getApplication(), mPlaylistId)).get(PlaylistViewModel.class);
+
         model.getEpisodes().observe(this, episodes -> {
-            if (!isAdded()) return;
-            mAdapter = new PlaylistsAdapter(mActivity, PlaylistsListFragment.this, episodes, mPlaylistId, mTextColor, mHeaderColor);
+            mAdapter = new PlaylistsAdapter(mActivity, this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);
 
             mStatus.setVisibility(TextView.GONE);

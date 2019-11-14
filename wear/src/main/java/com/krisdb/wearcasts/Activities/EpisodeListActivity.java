@@ -164,7 +164,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         RefreshContent();
     }
 
-
     private void downloadEpisodes(final List<PodcastItem> episodes) {
         mDownloadEpisodes = episodes;
         downloadEpisodes();
@@ -657,7 +656,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     @Override
     public void onPause() {
         super.onPause();
-        //mHandler.removeCallbacksAndMessages(downloadsProgress);
+        //mHandler.removeCallbacks(downloadsProgress);
     }
 
     private static class TimeOutHandler extends Handler {

@@ -3,7 +3,6 @@ package com.krisdb.wearcastslibrary.Async;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.ProgressBar;
 
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;

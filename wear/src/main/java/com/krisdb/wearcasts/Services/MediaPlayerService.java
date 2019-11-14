@@ -152,7 +152,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             }
         }
 
-        mMediaHandler.removeCallbacksAndMessages(null);
+        mMediaHandler.removeCallbacks(null);
 
         if (prefs.getBoolean("pref_detect_bluetooth_changes", true))
             unregisterReceiver(mBluetoothConnected);
@@ -363,7 +363,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (mLocalFile == null && !mEpisode.getIsDownloaded())
                 Utilities.enableBluetooth(mContext);
 
-            mMediaHandler.removeCallbacksAndMessages(null);
+            mMediaHandler.removeCallbacks(null);
         }
     }
 
@@ -497,7 +497,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;
 
-                mMediaHandler.removeCallbacksAndMessages(null);
+                mMediaHandler.removeCallbacks(null);
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
                 final Intent intentMediaCompleted = new Intent();
@@ -901,12 +901,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
             if (position >= finishTime) {
-                mMediaHandler.removeCallbacksAndMessages(null);
+                mMediaHandler.removeCallbacks(null);
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;
                 completeMedia(false);
             } else if (mPlaybackCount%11 == 0 && (mPlaybackPosition > 0 && mPlaybackPosition == position)) {
-                mMediaHandler.removeCallbacksAndMessages(null);
+                mMediaHandler.removeCallbacks(null);
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;
                 completeMedia(true);

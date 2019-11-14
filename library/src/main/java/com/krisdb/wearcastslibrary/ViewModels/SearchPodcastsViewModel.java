@@ -7,10 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.Async.SearchPodcasts;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.PodcastCategory;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;

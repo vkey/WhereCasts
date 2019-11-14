@@ -335,7 +335,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             if (hasDownloads)
                 mHandler.postDelayed(downloadsProgress, 1000);
             else
-                mHandler.removeCallbacksAndMessages(this);
+                mHandler.removeCallbacks(this);
         }
     };
 

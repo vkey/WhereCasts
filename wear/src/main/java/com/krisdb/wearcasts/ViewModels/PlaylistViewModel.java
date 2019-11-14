@@ -27,14 +27,12 @@ public class PlaylistViewModel extends AndroidViewModel {
     public LiveData<List<PodcastItem>> getEpisodes() {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
-            loadEpisodes();
-        }
-        return episodes;
-    }
 
-    private void loadEpisodes() {
-        CommonUtils.executeAsync(new DisplayPlaylistEpisodes(application, mPlaylistID), (episodes) -> {
-            this.episodes.setValue(episodes);
-        });
+            CommonUtils.executeAsync(new DisplayPlaylistEpisodes(application, mPlaylistID), (episodes) -> {
+                this.episodes.setValue(episodes);
+            });
+        }
+
+        return episodes;
     }
 }

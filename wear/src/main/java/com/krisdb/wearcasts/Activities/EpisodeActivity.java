@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -53,7 +52,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
-import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Adapters.NavigationAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
@@ -64,7 +62,6 @@ import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
-import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
@@ -484,11 +481,11 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(mDownloadId);
             final Cursor cursor = mDownloadManager.query(query);
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             if (mDownloadStartTime == 0)
                 mDownloadStartTime = System.nanoTime();
-                Log.d(mContext.getPackageName(), "Status: moveToFirst "  + cursor.moveToFirst());
+
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 mProgressCircleDownloading.setMax(bytes_total);
@@ -497,7 +494,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-                Log.d(mContext.getPackageName(), "Status: "  + status);
+                //Log.d(mContext.getPackageName(), "Status: "  + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
                 switch (status) {
                     case DownloadManager.STATUS_PAUSED:
@@ -571,14 +568,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mEpisode.setIsDownloaded(true);
                         mDownloadImage.setOnClickListener(view -> DeleteEpisode());
-                        mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                        mDownloadProgressHandler.removeCallbacks(downloadProgress);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                 }
             }
             else
             {
-                mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                mDownloadProgressHandler.removeCallbacks(downloadProgress);
                 Utilities.DeleteMediaFile(mActivity, mEpisode);
                 mEpisode.setIsDownloaded(false);
                 SetContent();
@@ -614,11 +611,11 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     public void CancelDownload()
     {
-        mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+        mDownloadProgressHandler.removeCallbacks(downloadProgress);
+        mDownloadManager.remove(mDownloadId);
 
         mPlayPauseImage.setEnabled(true);
         mControlsLayout.setVisibility(View.VISIBLE);
-        mDownloadManager.remove(mDownloadId);
         mProgressBar.setVisibility(View.GONE);
         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
         mProgressCircleDownloading.setProgress(0);
@@ -764,16 +761,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     private void StreamEpisode()
     {
-        runOnUiThread(new Runnable() {
-            public void run(){
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                mInfoLayout.setVisibility(View.VISIBLE);
-                mDownloadImage.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
-                mSeekBar.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.VISIBLE);
-                mVolumeUp.setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+            mInfoLayout.setVisibility(View.VISIBLE);
+            mDownloadImage.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mSeekBar.setVisibility(View.GONE);
+            //mVolumeDown.setVisibility(View.VISIBLE);
+            mVolumeUp.setVisibility(View.VISIBLE);
         });
 
         final Bundle extras = new Bundle();
@@ -1015,7 +1010,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
                 mDurationView.setVisibility(View.VISIBLE);
                 mPositionView.setVisibility(View.VISIBLE);
-                mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                mDownloadProgressHandler.removeCallbacks(downloadProgress);
                 mDownloadSpeed.setVisibility(View.INVISIBLE);
                 mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                 mDownloadImage.setVisibility(View.INVISIBLE);
@@ -1092,7 +1087,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         super.onEnterAmbient(ambientDetails);
 
         mEpisodeTitle.setTextColor(ContextCompat.getColor(this, R.color.wc_text));
-
 
         //((ImageView)findViewById(R.id.ic_podcast_playpause)).setColorFilter(getColor(R.color.wc_ambient_playpause_on), PorterDuff.Mode.SRC_IN);
 

@@ -25,6 +25,23 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class PodcastUtilities {
 
+    public static int GetPodcastCount(final Context context)
+    {
+        int count = 0;
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
+        final SQLiteDatabase sdb = db.select();
+        final Cursor cursor = sdb.rawQuery("SELECT COUNT(id) FROM [tbl_podcasts]",null);
+
+        if (cursor.moveToFirst())
+            count = cursor.getInt(0);
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return count;
+    }
+
     public static PodcastItem GetPodcast(final Context ctx, final int podcastId) {
         final PodcastItem podcast = new PodcastItem();
 

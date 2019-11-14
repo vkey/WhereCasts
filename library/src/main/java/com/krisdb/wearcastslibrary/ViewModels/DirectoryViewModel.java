@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.krisdb.wearcastslibrary.Async.GetDirectory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
-import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
 
@@ -36,14 +35,11 @@ public class DirectoryViewModel extends AndroidViewModel {
     public LiveData<List<PodcastCategory>> getDirectory() {
         if (categories == null) {
             categories = new MutableLiveData<>();
-            loadDirectory();
+            CommonUtils.executeAsync(new GetDirectory(application, mForceRefresh, mSaveThumbs), (categories) -> {
+                this.categories.setValue(categories);
+            });
         }
-        return categories;
-    }
 
-    private void loadDirectory() {
-        CommonUtils.executeAsync(new GetDirectory(application, mForceRefresh, mSaveThumbs), (categories) -> {
-            this.categories.setValue(categories);
-        });
+        return categories;
     }
 }

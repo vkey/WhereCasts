@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Activities.EpisodeActivity;
+import com.krisdb.wearcasts.Async.DisplayPlaylistEpisodes;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.R;
@@ -45,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
-import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.GetEpisodes;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isFinishedDownload;
 
@@ -111,13 +111,12 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
         final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.playlist_row_item, viewGroup, false);
 
         final ViewHolder holder = new ViewHolder(view);
-        final int position = holder.getAdapterPosition();
 
-        holder.download.setOnClickListener(view1 -> initDownload(holder, position));
+        holder.download.setOnClickListener(view1 -> initDownload(holder, holder.getAdapterPosition()));
 
-        holder.title.setOnClickListener(view2 -> openEpisode(position));
+        holder.title.setOnClickListener(view2 -> openEpisode(holder.getAdapterPosition()));
 
-        holder.thumbnail.setOnClickListener(view3 -> openEpisode(position));
+        holder.thumbnail.setOnClickListener(view3 -> openEpisode(holder.getAdapterPosition()));
 
         holder.thumbnail.setOnLongClickListener(view1 -> {
             showContext(holder.getAdapterPosition());
@@ -419,7 +418,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     public void refreshList()
     {
-        refreshList(GetEpisodes(mContext, mPlaylistId));
+        CommonUtils.executeAsync(new DisplayPlaylistEpisodes(mContext, mPlaylistId), this::refreshList);
     }
 
     public void refreshItem(final int position)
@@ -450,7 +449,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             if (hasDownloads)
                 mHandler.postDelayed(downloadsProgress, 1000);
             else
-                mHandler.removeCallbacksAndMessages(this);
+                mHandler.removeCallbacks(this);
         }
     };
 
