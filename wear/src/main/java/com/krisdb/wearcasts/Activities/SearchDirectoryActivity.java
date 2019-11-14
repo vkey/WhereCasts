@@ -115,12 +115,6 @@ public class SearchDirectoryActivity extends BaseFragmentActivity implements Wea
             mNavDrawer.getController().peekDrawer();
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
-
-/*
-        final SearchPodcastsViewModel model = ViewModelProviders.of(this, new SearchPodcastsViewModelFactory(getApplication(), query)).get(SearchPodcastsViewModel.class);
-        model.getResults().observe(this, results -> {
-        });
-*/
     }
 
     @Override

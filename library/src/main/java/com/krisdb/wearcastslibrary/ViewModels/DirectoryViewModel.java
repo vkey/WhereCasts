@@ -16,26 +16,20 @@ import java.util.List;
 public class DirectoryViewModel extends AndroidViewModel {
     private MutableLiveData<List<PodcastCategory>> categories;
     private Application application;
-    private boolean mForceRefresh, mSaveThumbs;
 
     public DirectoryViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
-        this.mForceRefresh = false;
-        this.mSaveThumbs = false;
-    }
-
-    public DirectoryViewModel(@NonNull Application application, boolean forceRefresh, boolean saveThumbs) {
-        super(application);
-        this.application = application;
-        this.mForceRefresh = forceRefresh;
-        this.mSaveThumbs = saveThumbs;
     }
 
     public LiveData<List<PodcastCategory>> getDirectory() {
+        return getDirectory(false, false);
+    }
+
+    public LiveData<List<PodcastCategory>> getDirectory(boolean forceRefresh, boolean saveThumbs) {
         if (categories == null) {
             categories = new MutableLiveData<>();
-            CommonUtils.executeAsync(new GetDirectory(application, mForceRefresh, mSaveThumbs), (categories) -> {
+            CommonUtils.executeAsync(new GetDirectory(application, forceRefresh, saveThumbs), (categories) -> {
                 this.categories.setValue(categories);
             });
         }

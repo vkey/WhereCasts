@@ -66,10 +66,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_directory, menu);
+        inflater.inflate(R.menu.menu_search_results, menu);
 
         final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView)menu.findItem(R.id.search_directory).getActionView();
+        final SearchView searchView = (SearchView)menu.findItem(R.id.search_results).getActionView();
         searchView.setOnSearchClickListener(view ->  mQueryComplete = false );
         searchView.setQuery(mQuery, false);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), SearchResultsActivity.class)));
@@ -136,10 +136,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(View.GONE);
             });
         });
-
-/*        final SearchPodcastsViewModel model = ViewModelProviders.of(this, new SearchPodcastsViewModelFactory(getApplication(), mQuery)).get(SearchPodcastsViewModel.class);
-        model.getResults().observe(this, results -> {
-        });*/
     }
 
     @Override

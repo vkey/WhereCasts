@@ -25,7 +25,6 @@ import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastCategory;
 import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModel;
-import com.krisdb.wearcastslibrary.ViewModels.DirectoryViewModelFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -113,8 +112,8 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         mProgressBarText.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final DirectoryViewModel model = ViewModelProviders.of(this, new DirectoryViewModelFactory(getApplication(), mForceRefresh, false)).get(DirectoryViewModel.class);
-        model.getDirectory().observe(this, categories -> {
+        final DirectoryViewModel model = ViewModelProviders.of(this).get(DirectoryViewModel.class);
+        model.getDirectory(mForceRefresh, false).observe(this, categories -> {
             if (categories.size() > 0) {
                 mNumberOfPages = categories.size();
 
