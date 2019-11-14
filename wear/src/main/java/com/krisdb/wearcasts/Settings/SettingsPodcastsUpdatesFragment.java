@@ -26,7 +26,6 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
 public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Activity mActivity;
-    private Boolean mNoResume = false;
     private static WeakReference<Activity> mActivityRef;
 
     @Override
@@ -37,8 +36,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
         mActivityRef = new WeakReference<>(getActivity());
 
         mActivity = getActivity();
-
-        setDeleteThumbnailsTitle();
 
         findPreference("pref_delete_thumbs").setOnPreferenceClickListener(preference -> {
             if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -89,15 +86,12 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
             handleNetwork();
             return false;
         });
-        SetContent();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     private void setDeleteThumbnailsTitle()
     {
-        if (!isAdded()) return;
-
         final File thumbsDirectory = new File(GetThumbnailDirectory(mActivity));
         final String[] thumbs = thumbsDirectory.list();
 
@@ -161,8 +155,9 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        if (mNoResume == false)
-            SetContent();
+
+        SetContent();
+        setDeleteThumbnailsTitle();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -190,7 +185,6 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
     @Override
     public void onPause() {
         super.onPause();
-        mNoResume = false;
 
         mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
