@@ -154,8 +154,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mMediaHandler.removeCallbacksAndMessages(null);
 
-        if (prefs.getBoolean("pref_detect_bluetooth_changes", true))
-            unregisterReceiver(mBluetoothConnected);
+        if (CommonUtils.inDebugMode(mContext)) {
+            if (prefs.getBoolean("pref_detect_bluetooth_changes", true))
+                unregisterReceiver(mBluetoothConnected);
+        }
 
         disableNoisyReceiver();
         stopForeground(true);
@@ -407,12 +409,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             db.close();
         }
 
-        if (prefs.getBoolean("pref_detect_bluetooth_changes", true)) {
-            final IntentFilter filterBluetooth = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-            registerReceiver(mBluetoothConnected, filterBluetooth);
+        if (CommonUtils.inDebugMode(mContext)) {
+            if (prefs.getBoolean("pref_detect_bluetooth_changes", true)) {
+                final IntentFilter filterBluetooth = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+                registerReceiver(mBluetoothConnected, filterBluetooth);
+            } else
+                unregisterReceiver(mBluetoothConnected);
         }
-        else
-            unregisterReceiver(mBluetoothConnected);
 
         initNoisyReceiver();
         initMediaSessionMetadata();

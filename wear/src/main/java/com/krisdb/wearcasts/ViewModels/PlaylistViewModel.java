@@ -16,19 +16,17 @@ import java.util.List;
 public class PlaylistViewModel extends AndroidViewModel {
     private MutableLiveData<List<PodcastItem>> episodes;
     private Application application;
-    private int mPlaylistID;
 
-    public PlaylistViewModel(@NonNull Application application, int playlistId) {
+    public PlaylistViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
-        this.mPlaylistID = playlistId;
     }
 
-    public LiveData<List<PodcastItem>> getEpisodes() {
+    public LiveData<List<PodcastItem>> getEpisodes(final int playlistId) {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
 
-            CommonUtils.executeAsync(new DisplayPlaylistEpisodes(application, mPlaylistID), (episodes) -> {
+            CommonUtils.executeAsync(new DisplayPlaylistEpisodes(application, playlistId), (episodes) -> {
                 this.episodes.setValue(episodes);
             });
         }

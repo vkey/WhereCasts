@@ -25,7 +25,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcasts.ViewModels.PlaylistViewModel;
-import com.krisdb.wearcasts.ViewModels.PlaylistViewModelFactory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.Objects;
@@ -43,13 +42,13 @@ public class PlaylistsListFragment extends Fragment {
 
     public static PlaylistsListFragment newInstance(final int playlistId) {
 
-        final PlaylistsListFragment elf = new PlaylistsListFragment();
+        final PlaylistsListFragment plf = new PlaylistsListFragment();
 
         final Bundle bundle = new Bundle();
         bundle.putInt("playlistId", playlistId);
-        elf.setArguments(bundle);
+        plf.setArguments(bundle);
 
-        return elf;
+        return plf;
     }
 
     @Override
@@ -137,9 +136,9 @@ public class PlaylistsListFragment extends Fragment {
         mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        final PlaylistViewModel model = ViewModelProviders.of(this, new PlaylistViewModelFactory(mActivity.getApplication(), mPlaylistId)).get(PlaylistViewModel.class);
+        final PlaylistViewModel model = ViewModelProviders.of(this).get(PlaylistViewModel.class);
 
-        model.getEpisodes().observe(this, episodes -> {
+        model.getEpisodes(mPlaylistId).observe(this, episodes -> {
             mAdapter = new PlaylistsAdapter(mActivity, this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);
 

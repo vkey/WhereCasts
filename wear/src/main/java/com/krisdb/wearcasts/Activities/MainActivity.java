@@ -182,7 +182,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
                                     break;
                                 }
                             }
-
                         }
 
                         final SharedPreferences.Editor editor = prefs.edit();

@@ -48,7 +48,6 @@ import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcasts.ViewModels.EpisodesViewModel;
-import com.krisdb.wearcasts.ViewModels.EpisodesViewModelFactory;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -266,8 +265,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        final EpisodesViewModel model = ViewModelProviders.of(this, new EpisodesViewModelFactory(this.getApplication(), mPodcastId, mQuery)).get(EpisodesViewModel.class);
-        model.getEpisodes().observe(this, episodes -> {
+        final EpisodesViewModel model = ViewModelProviders.of(this).get(EpisodesViewModel.class);
+        model.getEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
             mEpisodes = episodes;
             mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
             mEpisodeList.setAdapter(mAdapter);
@@ -374,38 +373,38 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build();
 
+        final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
+        final boolean autoDelete = autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID();
+        final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
+
         switch (itemId) {
             case R.id.menu_drawer_episode_list_selected_markplayed: //Mark selected played
                 final DBPodcastsEpisodes dbMarkPlayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 1);
                 dbMarkPlayed.close();
-                if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                {
-                    RefreshContent();
-                }
-                else {
-                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
-                    for (final Integer position : mAdapter.mSelectedPositions) {
-                        episodes.get(position).setFinished(true);
-                        episodes.get(position).setIsSelected(false);
 
-                        if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
-                            Utilities.DeleteMediaFile(mActivity, episodes.get(position));
-                            episodes.get(position).setIsDownloaded(false);
-                        }
-                        mAdapter.notifyItemChanged(position);
+                for (final Integer position : mAdapter.mSelectedPositions) {
+                    episodes.get(position).setFinished(true);
+                    episodes.get(position).setIsSelected(false);
+
+                    if (autoDelete) {
+                        Utilities.DeleteMediaFile(mActivity, episodes.get(position));
+                        episodes.get(position).setIsDownloaded(false);
                     }
-                    mAdapter.mSelectedPositions = new ArrayList<>();
-                    mAdapter.mSelectedEpisodes = new ArrayList<>();
+                    if (hidePlayed)
+                        mAdapter.notifyDataSetChanged();
+                    else
+                        mAdapter.notifyItemChanged(position);
                 }
+
+                mAdapter.mSelectedPositions = new ArrayList<>();
+                mAdapter.mSelectedEpisodes = new ArrayList<>();
                 resetMenu();
                 break;
             case R.id.menu_drawer_episode_list_selected_markunplayed: //Mark selected unplayed
                 final DBPodcastsEpisodes dbMarkUnplayed = new DBPodcastsEpisodes(mActivity);
                 dbMarkUnplayed.updateEpisodes(mAdapter.mSelectedEpisodes, "finished", 0);
                 dbMarkUnplayed.close();
-
-                final boolean autoDelete = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
 
                 for (final Integer position : mAdapter.mSelectedPositions) {
                     episodes.get(position).setFinished(false);
@@ -416,6 +415,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     }
                     mAdapter.notifyItemChanged(position);
                 }
+
                 mAdapter.mSelectedPositions = new ArrayList<>();
                 mAdapter.mSelectedEpisodes = new ArrayList<>();
                 resetMenu();
@@ -425,28 +425,21 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 final DBPodcastsEpisodes dbMarkPlayedSingle = new DBPodcastsEpisodes(mActivity);
                 dbMarkPlayedSingle.updateEpisodes(episodesAfter, "finished", 1);
                 dbMarkPlayedSingle.close();
-                if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                {
-                    RefreshContent();
-                }
-                else {
-                    final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
 
-                    for (final PodcastItem episodeAfter : episodesAfter) {
-                        for (final PodcastItem episode : episodes) {
-                            if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
-                                episode.setFinished(true);
-                                episode.setIsSelected(false);
-                                if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
-                                    Utilities.DeleteMediaFile(mActivity, episode);
-                                    episode.setIsDownloaded(false);
-                                }
+                for (final PodcastItem episodeAfter : episodesAfter) {
+                    for (final PodcastItem episode : episodes) {
+                        if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
+                            episode.setFinished(true);
+                            episode.setIsSelected(false);
+                            if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                                Utilities.DeleteMediaFile(mActivity, episode);
+                                episode.setIsDownloaded(false);
                             }
                         }
-                        mAdapter.notifyDataSetChanged();
                     }
-                    resetMenu();
+                    mAdapter.notifyDataSetChanged();
                 }
+                resetMenu();
                 break;
             case R.id.menu_drawer_episode_list_markplayed: //Mark all played
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
@@ -459,21 +452,15 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         db.updateAll(cv, mPodcastId);
                         db.close();
 
-                        final boolean autoDelete1 = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID();
-
-                        if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                            RefreshContent();
-                        else {
-                            for (final PodcastItem episode : episodes) {
-                                episode.setFinished(true);
-                                if (autoDelete1) {
-                                    Utilities.DeleteMediaFile(mActivity, episode);
-                                    episode.setIsDownloaded(false);
-                                }
+                        for (final PodcastItem episode : episodes) {
+                            episode.setFinished(true);
+                            if (autoDelete) {
+                                Utilities.DeleteMediaFile(mActivity, episode);
+                                episode.setIsDownloaded(false);
                             }
-
-                            mAdapter.notifyDataSetChanged();
                         }
+
+                        mAdapter.notifyDataSetChanged();
                         resetMenu();
                     });
                     alertRead.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());
@@ -481,7 +468,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 }
                 break;
             case R.id.menu_drawer_episode_list_markunplayed: //Mark all unplayed
-
                 if (mActivityRef.get() != null && !mActivityRef.get().isFinishing()) {
                     final AlertDialog.Builder alertUnread = new AlertDialog.Builder(EpisodeListActivity.this);
                     alertUnread.setMessage(getString(R.string.confirm_mark_all_unplayed));
@@ -491,14 +477,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mActivity);
                         db.updateAll(cv, mPodcastId);
                         db.close();
-                        if (prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false))
-                            RefreshContent();
-                        else {
-                            for (final PodcastItem episode : episodes)
-                                episode.setFinished(false);
+                        for (final PodcastItem episode : episodes)
+                            episode.setFinished(false);
 
-                            mAdapter.notifyDataSetChanged();
-                        }
+                        mAdapter.notifyDataSetChanged();
                         resetMenu();
                     });
                     alertUnread.setNegativeButton(getString(R.string.confirm_no), (dialog, which) -> dialog.dismiss());

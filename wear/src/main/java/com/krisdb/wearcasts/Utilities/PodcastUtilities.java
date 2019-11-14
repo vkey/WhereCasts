@@ -27,10 +27,43 @@ public class PodcastUtilities {
 
     public static int GetPodcastCount(final Context context)
     {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
+        final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
+
         int count = 0;
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
         final SQLiteDatabase sdb = db.select();
-        final Cursor cursor = sdb.rawQuery("SELECT COUNT(id) FROM [tbl_podcasts]",null);
+
+        String sql;
+
+        if (hideEmpty && showDownloaded)
+            sql = "SELECT COUNT(tbl_podcasts.id) "
+                    .concat("FROM [tbl_podcasts] ")
+                    .concat("JOIN tbl_podcast_episodes ")
+                    .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                    .concat("WHERE tbl_podcast_episodes.new = 1 AND tbl_podcast_episodes.download = 1 ")
+                    .concat("GROUP BY tbl_podcast_episodes.pid ");
+        else if (hideEmpty)
+            sql = "SELECT COUNT(tbl_podcasts.id) "
+                    .concat("FROM [tbl_podcasts] ")
+                    .concat("JOIN tbl_podcast_episodes ")
+                    .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                    .concat("WHERE tbl_podcast_episodes.new = 1 ")
+                    .concat("GROUP BY tbl_podcast_episodes.pid ");
+        else if (showDownloaded)
+            sql = "SELECT COUNT(tbl_podcasts.id) "
+                    .concat("FROM [tbl_podcasts] ")
+                    .concat("JOIN tbl_podcast_episodes ")
+                    .concat("ON tbl_podcast_episodes.pid = tbl_podcasts.id ")
+                    .concat("WHERE tbl_podcast_episodes.download = 1 ")
+                    .concat("GROUP BY tbl_podcast_episodes.pid ");
+        else
+            sql = "SELECT COUNT(tbl_podcasts.id) "
+                    .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
+                    .concat("FROM [tbl_podcasts] ");
+
+        final Cursor cursor = sdb.rawQuery(sql,null);
 
         if (cursor.moveToFirst())
             count = cursor.getInt(0);

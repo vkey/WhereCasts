@@ -16,24 +16,21 @@ import java.util.List;
 public class EpisodesViewModel extends AndroidViewModel {
     private MutableLiveData<List<PodcastItem>> episodes;
     private Application application;
-    private int mPodcastID;
-    private String mQuery;
 
-    public EpisodesViewModel(@NonNull Application application, int podcastId, String query) {
+    public EpisodesViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
-        this.mPodcastID = podcastId;
-        this.mQuery = query;
     }
 
-    public LiveData<List<PodcastItem>> getEpisodes() {
+    public LiveData<List<PodcastItem>> getEpisodes(final int podcastId, final String query) {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
 
-            CommonUtils.executeAsync(new DisplayEpisodes(application, mPodcastID, mQuery), (episodes) -> {
+            CommonUtils.executeAsync(new DisplayEpisodes(application, podcastId, query), (episodes) -> {
                 this.episodes.setValue(episodes);
             });
         }
+
         return episodes;
     }
 }
