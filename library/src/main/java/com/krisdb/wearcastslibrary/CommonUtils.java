@@ -208,6 +208,7 @@ public class CommonUtils {
     }
 
    public static void writeToFile(final Context ctx, String data) {
+        if (!inDebugMode(ctx)) return;
         try {
             final FileOutputStream fOut = ctx.openFileOutput("log.txt", MODE_APPEND);
 

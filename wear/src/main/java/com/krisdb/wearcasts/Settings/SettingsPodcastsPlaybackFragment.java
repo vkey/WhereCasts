@@ -112,7 +112,7 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
         }
 
-        if (BluetoothAdapter.getDefaultAdapter() == null)
+        if (BluetoothAdapter.getDefaultAdapter() == null || !CommonUtils.inDebugMode(mActivity))
         {
             final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
             category.removePreference(findPreference("pref_detect_bluetooth_changes"));

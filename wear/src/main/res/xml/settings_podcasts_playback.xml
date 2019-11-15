@@ -47,32 +47,32 @@
             />
         -->
 
-        <ListPreference
-            android:key="pref_sleep_timer"
-            android:title="@string/sleep_timer_pref_title"
-            android:entries="@array/sleep_timer_text"
-            android:entryValues="@array/sleep_timer_values"
-            android:defaultValue="0"
-            android:icon="@drawable/ic_setting_dropdown_indicator"
-            />
-        <!--
-                  <SwitchPreference
-                      android:key="pref_detect_bluetooth_changes"
-                      android:title="@string/settings_podcasts_label_playback_detect_bluetooth"
-                      android:defaultValue="true"
-                      />
-              -->
-                <SwitchPreference
-                    android:key="pref_remove_notification"
-                    android:title="@string/settings_podcasts_label_playback_remove_notification"
-                    android:summary="@string/settings_podcasts_label_playback_remove_notification_summary"
-                    android:defaultValue="false"
-                    />
+            <ListPreference
+                android:key="pref_sleep_timer"
+                android:title="@string/sleep_timer_pref_title"
+                android:entries="@array/sleep_timer_text"
+                android:entryValues="@array/sleep_timer_values"
+                android:defaultValue="0"
+                android:icon="@drawable/ic_setting_dropdown_indicator"
+             />
 
-                <SwitchPreference
-                    android:key="pref_hardware_override_episode"
-                    android:defaultValue="false"
-                    />
+            <SwitchPreference
+              android:key="pref_detect_bluetooth_changes"
+              android:title="@string/settings_podcasts_label_playback_detect_bluetooth"
+              android:defaultValue="true"
+              />
 
-            </PreferenceCategory>
-        </PreferenceScreen>
+            <SwitchPreference
+                android:key="pref_remove_notification"
+                android:title="@string/settings_podcasts_label_playback_remove_notification"
+                android:summary="@string/settings_podcasts_label_playback_remove_notification_summary"
+                android:defaultValue="false"
+                />
+
+            <SwitchPreference
+                android:key="pref_hardware_override_episode"
+                android:defaultValue="false"
+                />
+
+        </PreferenceCategory>
+</PreferenceScreen>
