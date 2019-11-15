@@ -26,7 +26,7 @@ public class EpisodesViewModel extends AndroidViewModel {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
 
-            CommonUtils.executeAsync(new DisplayEpisodes(application, podcastId, query), (episodes) -> {
+            CommonUtils.executeCachedAsync(new DisplayEpisodes(application, podcastId, query), (episodes) -> {
                 this.episodes.setValue(episodes);
             });
         }

@@ -92,8 +92,13 @@ public class CommonUtils {
         executeAsync(callable, new ThreadPoolExecutor(corePoolSize, corePoolSize, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), callback);
     }
 
+    public static <R> void executeCachedAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
+        executeAsync(callable, Executors.newCachedThreadPool(), callback);
+    }
+
     public static <R> void executeAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
         final int cores = Runtime.getRuntime().availableProcessors();
+
         executeAsync(callable, new ThreadPoolExecutor(cores, cores, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), callback);
     }
 
@@ -346,7 +351,7 @@ public class CommonUtils {
 
     public static void DeviceSync(final Context ctx, final PutDataMapRequest dataMap, final String message, final int toastLength) {
 
-        CommonUtils.executeSingleThreadAsync(new WatchConnected(ctx), (connected) -> {
+        CommonUtils.executeCachedAsync(new WatchConnected(ctx), (connected) -> {
             dataMap.getDataMap().putLong("time", new Date().getTime());
             final PutDataRequest request = dataMap.asPutDataRequest();
             request.setUrgent();

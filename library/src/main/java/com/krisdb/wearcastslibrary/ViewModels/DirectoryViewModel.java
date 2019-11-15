@@ -29,7 +29,7 @@ public class DirectoryViewModel extends AndroidViewModel {
     public LiveData<List<PodcastCategory>> getDirectory(boolean forceRefresh, boolean saveThumbs) {
         if (categories == null) {
             categories = new MutableLiveData<>();
-            CommonUtils.executeAsync(new GetDirectory(application, forceRefresh, saveThumbs), (categories) -> {
+            CommonUtils.executeCachedAsync(new GetDirectory(application, forceRefresh, saveThumbs), (categories) -> {
                 this.categories.setValue(categories);
             });
         }

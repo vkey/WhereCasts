@@ -14,6 +14,7 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class PodcastsViewModel extends AndroidViewModel {
     private MutableLiveData<List<PodcastItem>> podcasts;
@@ -33,7 +34,10 @@ public class PodcastsViewModel extends AndroidViewModel {
             final Boolean hideEmpty = prefs.getBoolean("pref_hide_empty", false);
             final Boolean showDownloaded = prefs.getBoolean("pref_display_show_downloaded", false);
 
-            CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (podcasts) ->
+            //CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (podcasts) ->
+            //this.podcasts.setValue(podcasts));
+
+            CommonUtils.executeCachedAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (podcasts) ->
                     this.podcasts.setValue(podcasts));
         }
 
