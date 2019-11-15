@@ -30,26 +30,4 @@
             android:layout_height="match_parent"
             android:paddingBottom="50dp" />
 
-    <ImageView
-        android:id="@+id/playlist_progress_text_thumbnail"
-        android:maxWidth="90dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:visibility="gone"
-        android:layout_below="@+id/playlist_progress_text_playlist_layout"
-        />
-    <TextView
-        android:id="@+id/playlist_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        android:text="@string/text_loading_episodes"
-        />
 </RelativeLayout>

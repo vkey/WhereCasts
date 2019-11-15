@@ -54,14 +54,15 @@ public class PodcastsViewModel extends AndroidViewModel {
                     CommonUtils.executeAsync(new GetPodcasts(application, hideEmpty, showDownloaded), (p) ->
                             {
                                 podcasts.postValue(p);
-                                //application.getContentResolver().registerContentObserver(FilesProvider.getFilePath(application.getDatabasePath("episodes.db")), true, podcastContentObserver);
+                                application.getContentResolver().registerContentObserver(FilesProvider.getFilePath(application.getDatabasePath("episodes.db")), true, podcastContentObserver);
+                                //application.getContentResolver().registerContentObserver(FilesProvider.getFilePath(new android.content.ContextWrapper(application).getFilesDir()), true, podcastContentObserver);
                             }
                     );
                 }
 
                 @Override
                 public void onInactive() {
-                    //application.getContentResolver().unregisterContentObserver(podcastContentObserver);
+                    application.getContentResolver().unregisterContentObserver(podcastContentObserver);
                 }
             };
         }

@@ -672,7 +672,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                 int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_DISCONNECTED);
 
-                if (state == BluetoothA2dp.STATE_CONNECTED)
+                if (state == BluetoothA2dp.STATE_CONNECTED && mMediaPlayer != null && !mMediaPlayer.isPlaying())
                     PlayAudio();
             }
         }

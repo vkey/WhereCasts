@@ -36,7 +36,7 @@ public class PlaylistsListFragment extends Fragment {
     private WearableRecyclerView mPlaylistList;
     private int mPlaylistId, mTextColor, mHeaderColor;
     private Activity mActivity;
-    private TextView mStatus, mProgressPlaylistText;
+    private TextView mProgressPlaylistText;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
 
@@ -65,7 +65,6 @@ public class PlaylistsListFragment extends Fragment {
         mPlaylistList = listView.findViewById(R.id.playlist_list);
         mProgressPlaylistLayout = listView.findViewById(R.id.playlist_progress_text_playlist_layout);
         mProgressPlaylistText = listView.findViewById(R.id.playlist_progress_text_playlist);
-        mStatus = listView.findViewById(R.id.playlist_status);
 
         mPlaylistList.setEdgeItemsCenteringEnabled(false);
         mPlaylistList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
@@ -89,8 +88,6 @@ public class PlaylistsListFragment extends Fragment {
         final Resources resources = mActivity.getResources();
         final String densityName = CommonUtils.getDensityName(mActivity);
         final boolean isRound = resources.getConfiguration().isScreenRound();
-
-        mStatus.setTextColor(mTextColor);
 
         mProgressPlaylistLayout.setBackgroundColor(mHeaderColor);
         mProgressPlaylistText.setBackgroundColor(mHeaderColor);
@@ -133,7 +130,6 @@ public class PlaylistsListFragment extends Fragment {
         }
 
         mProgressPlaylistLayout.setVisibility(View.VISIBLE);
-        mStatus.setVisibility(View.GONE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
         final PlaylistViewModel model = ViewModelProviders.of(this).get(PlaylistViewModel.class);
@@ -142,7 +138,6 @@ public class PlaylistsListFragment extends Fragment {
             mAdapter = new PlaylistsAdapter(mActivity, this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);
 
-            mStatus.setVisibility(TextView.GONE);
             mProgressPlaylistLayout.setVisibility(View.GONE);
             mPlaylistList.setVisibility(View.VISIBLE);
         });

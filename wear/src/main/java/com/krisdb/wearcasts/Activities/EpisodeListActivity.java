@@ -274,7 +274,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
             itemTouchhelper.attachToRecyclerView(mEpisodeList);
 
-            if (episodes != null && episodes.size() == 1) {
+            if (episodes.size() == 1) {
                 mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
                 mStatus.setVisibility(View.VISIBLE);
             } else {
@@ -288,10 +288,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 }
 
                 mStatus.setVisibility(TextView.GONE);
-            }
 
-            mProgressThumb.setVisibility(View.GONE);
-            mEpisodeList.setVisibility(View.VISIBLE);
+                mProgressThumb.setVisibility(View.GONE);
+                mEpisodeList.setVisibility(View.VISIBLE);
+            }
         });
     }
 
