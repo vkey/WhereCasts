@@ -49,7 +49,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
