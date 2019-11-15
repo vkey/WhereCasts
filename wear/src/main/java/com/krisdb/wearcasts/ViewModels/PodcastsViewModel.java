@@ -14,7 +14,6 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class PodcastsViewModel extends AndroidViewModel {
     private MutableLiveData<List<PodcastItem>> podcasts;
