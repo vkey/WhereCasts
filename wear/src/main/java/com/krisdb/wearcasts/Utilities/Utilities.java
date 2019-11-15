@@ -1,6 +1,5 @@
 package com.krisdb.wearcasts.Utilities;
 
-
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationChannel;

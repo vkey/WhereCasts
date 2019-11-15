@@ -20,21 +20,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
     private String mEpisodesTable = "tbl_podcast_episodes";
     private String mPlayistTableRef = "tbl_playlists_xref";
     private String mPodcastsTable = "tbl_podcasts";
-    private static DBPodcastsEpisodes mInstance = null;
     private Context mContext;
-
-    public static DBPodcastsEpisodes getInstance(Context ctx) {
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
-        if (mInstance == null) {
-            mInstance = new DBPodcastsEpisodes(ctx.getApplicationContext());
-        }
-
-        return mInstance;
-    }
-
 
     public DBPodcastsEpisodes(final Context context) {
         super(context, "Episodes", null, 5);

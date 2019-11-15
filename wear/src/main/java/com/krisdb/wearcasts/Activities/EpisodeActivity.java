@@ -49,6 +49,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
@@ -116,7 +117,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
-    private static boolean mDownload, mHasPremium;
+    private static boolean mDownload;
     private AlertDialog mPlaylistDialog = null;
 
 /*    @Override
@@ -140,13 +141,15 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mContext = getApplicationContext();
         mActivity = this;
-        mHasPremium = Utilities.hasPremium(this);
+        boolean hasPremium = Utilities.hasPremium(this);
         mActivityRef = new WeakReference<>(this);
 
         mNavItems = Utilities.getNavItems(this);
 
         if (!Utilities.sleepTimerEnabled(mContext))
             setMainMenu();
+
+        mThemeID = Utilities.getThemeOptionId(mActivity);
 
         mMediaBrowserCompat = new MediaBrowserCompat(
                 mContext,
@@ -211,8 +214,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             paramsDownloading.setMargins(0, 0, -38, 0);
         }
 
-        final int skipBack = mHasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
-        final int skipForward = mHasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
+        final int skipBack = hasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_back", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
+        final int skipForward = hasPremium ? Integer.valueOf(prefs.getString("pref_playback_skip_forward", String.valueOf(getResources().getInteger(R.integer.default_playback_skip)))) : 30;
 
         mSkipBack.setText(String.valueOf(skipBack));
         mSkipForward.setText(String.valueOf(skipForward));
@@ -492,7 +495,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                //final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
                 //Log.d(mContext.getPackageName(), "Status: "  + status);
                 //Log.d(mContext.getPackageName(), "Bytes: "  +bytes_total);
@@ -535,6 +537,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
+                        final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mProgressCircleLoading.setVisibility(View.INVISIBLE);
@@ -555,7 +559,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                             mDownloadStartTime = System.nanoTime();
                         }*/
 
-                        Utilities.ShowFailureActivity(mContext, "");
+                        CommonUtils.showToast(mActivity, Utilities.GetDownloadErrorReason(mActivity, reason));
+
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:
