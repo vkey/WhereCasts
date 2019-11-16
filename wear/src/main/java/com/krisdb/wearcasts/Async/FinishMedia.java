@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -39,9 +38,9 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
 
     @Override
     public List<PodcastItem> call() {
-        CommonUtils.writeToFile(context, "Episode: " + mEpisode.getTitle());
-        CommonUtils.writeToFile(context, "PlaylistID: " + mPlaylistID);
-        CommonUtils.writeToFile(context, "PodcastID: " + mPodcastID);
+        //CommonUtils.writeToFile(context, "Episode: " + mEpisode.getTitle());
+        //CommonUtils.writeToFile(context, "PlaylistID: " + mPlaylistID);
+        //CommonUtils.writeToFile(context, "PodcastID: " + mPodcastID);
 
         List<PodcastItem> episodes;
 
@@ -57,7 +56,7 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
             episodes = EpisodeUtilities.GetEpisodes(context, mPodcastID);
         else
             return null;
-        CommonUtils.writeToFile(context, "Episodes size: " + episodes.size());
+        //CommonUtils.writeToFile(context, "Episodes size: " + episodes.size());
 
             /*
             if (prefs.getBoolean("pref_" + mEpisode.getPodcastId() + "_download_next", false)) {

@@ -609,7 +609,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 if (mMediaPlayer != null)
                     mMediaPlayer.reset();
 
-                CommonUtils.writeToFile(mContext, "Next Episode: " + mEpisode.getTitle());
+                //CommonUtils.writeToFile(mContext, "Next Episode: " + mEpisode.getTitle());
 
                 StartStream(Uri.parse(uri));
 
@@ -928,7 +928,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void completeMedia(final boolean playbackError)
     {
-        CommonUtils.writeToFile(mContext, "\n\n");
+        //CommonUtils.writeToFile(mContext, "\n\n");
         setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
         mMediaPlayer.stop();
 
