@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.krisdb.wearcasts"
         minSdkVersion 24
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
-        versionCode 557
-        versionName "1.31.35"
+        versionCode 559
+        versionName "1.31.36"
     }
     buildTypes {
         release {
@@ -27,6 +27,7 @@ android {
 
 dependencies {
     def lifecycle_version = "2.1.0"
+    def preference_version = "1.1.0"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -39,11 +40,11 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.3.0-alpha03'
     implementation "androidx.viewpager2:viewpager2:1.0.0-rc01"
 
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation 'com.google.android.support:wearable:2.5.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "com.android.support:preference-v7:28.0.0"
+    implementation "androidx.preference:preference:$preference_version"
     compileOnly 'com.google.android.wearable:wearable:2.5.0'
     implementation 'com.android.billingclient:billing:2.0.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
