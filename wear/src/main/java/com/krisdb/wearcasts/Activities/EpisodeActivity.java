@@ -539,6 +539,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                        mDownloadImage.setOnClickListener(view -> DownloadEpisode());
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mProgressCircleLoading.setVisibility(View.INVISIBLE);
                         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
@@ -579,7 +580,19 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             }
             else
             {
+                mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                mDownloadImage.setOnClickListener(view -> DownloadEpisode());
+                mPlayPauseImage.setVisibility(View.VISIBLE);
+                mProgressCircleLoading.setVisibility(View.INVISIBLE);
+                mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+                mDownloadSpeed.setVisibility(View.INVISIBLE);
+                mInfoLayout.setVisibility(View.GONE);
+                mControlsLayout.setVisibility(View.VISIBLE);
+                mVolumeUp.setVisibility(View.GONE);
+                mDownloadManager.remove(mDownloadId);
                 mDownloadProgressHandler.removeCallbacks(downloadProgress);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
                 Utilities.DeleteMediaFile(mActivity, mEpisode);
                 mEpisode.setIsDownloaded(false);
                 SetContent();

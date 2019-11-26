@@ -1,7 +1,6 @@
 package com.krisdb.wearcasts.Settings;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -112,11 +111,11 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             findPreference("pref_playback_speed").setSummary(((ListPreference)findPreference("pref_playback_speed")).getEntry());
         }
 
-        if (BluetoothAdapter.getDefaultAdapter() == null || !CommonUtils.inDebugMode(mActivity))
+/*        if (BluetoothAdapter.getDefaultAdapter() == null || !CommonUtils.inDebugMode(mActivity))
         {
             final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
             category.removePreference(findPreference("pref_detect_bluetooth_changes"));
-        }
+        }*/
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }

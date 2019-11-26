@@ -286,7 +286,7 @@
     <string name="playlist_title_local">本地</string>
 
     <string name="alert_download_error">此劇集下載不正確.  請嘗試再次下載</string>
-    <string name="alert_download_error_low">無法開始下載. 最有可能是由於存儲空間不足.\n嘗試清除設備上的空間，然後重新下載.</string>
+    <string name="alert_download_error_low">無法開始下載.\n如果問題仍然存在，請嘗試禁用藍牙或聯繫播客提供商.</string>
 
     <string name="alert_add_podcast_no_episodes">但沒有找到劇集</string>
     <string name="alert_no_system_audio">找不到系統音頻</string>

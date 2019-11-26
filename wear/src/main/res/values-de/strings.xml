@@ -291,7 +291,7 @@
     <string name="alert_main_menu_start_update">Update starten?</string>
 
     <string name="alert_download_error">Diese Episode wurde nicht korrekt heruntergeladen.  Bitte versuchen Sie es erneut</string>
-    <string name="alert_download_error_low">Could not start download. Most likely due to low storage.\nTry clearing space on your device and downloading again.</string>
+    <string name="alert_download_error_low">Download konnte nicht gestartet werden.\nDeaktivieren Sie Bluetooth oder wenden Sie sich an den Podcast-Anbieter, wenn das Problem weiterhin besteht.</string>
 
     <string name="alert_podcast_added">Hinzugefügt</string>
     <string name="alert_episode_playlist_added">Hinzugefügt zu %s</string>

@@ -287,7 +287,7 @@
     <string name="playlist_title_local">स्थानीय</string>
 
     <string name="alert_download_error">यह एपिसोड सही तरीके से डाउनलोड नहीं हुआ.  कृपया इसे फिर से डाउनलोड करने का प्रयास करें</string>
-    <string name="alert_download_error_low">डाउनलोड शुरू नहीं कर सका. कम भंडारण के कारण सबसे अधिक संभावना है.\nअपने डिवाइस पर क्लियरिंग स्पेस और फिर से डाउनलोड करने का प्रयास करें.</string>
+    <string name="alert_download_error_low">डाउनलोड शुरू नहीं किया जा सका.\nयदि समस्या बनी रहती है, तो ब्लूटूथ या पॉडकास्ट प्रदाता से संपर्क करने का प्रयास करें.</string>
 
     <string name="alert_add_podcast_no_episodes">लेकिन कोई एपिसोड नहीं मिला</string>
     <string name="alert_no_system_audio">कोई सिस्टम ऑडियो नहीं मिला</string>

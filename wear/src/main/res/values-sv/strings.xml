@@ -287,7 +287,7 @@
     <string name="playlist_title_local">Lokal</string>
 
     <string name="alert_download_error">Det här avsnittet laddades inte korrekt.  Försök att ladda ner den igen</string>
-    <string name="alert_download_error_low">Det gick inte att starta nedladdningen. Troligtvis på grund av låg lagring.\nFörsök rensa utrymme på enheten och ladda ner igen.</string>
+    <string name="alert_download_error_low">Nedladdningen kunde inte startas.\nFörsök att inaktivera Bluetooth eller kontakta podcastleverantören om problemet kvarstår.</string>
 
     <string name="alert_add_podcast_no_episodes">men inga episoder hittades</string>
     <string name="alert_no_system_audio">Inget systemljud hittades</string>

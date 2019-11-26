@@ -291,7 +291,7 @@
     <string name="text_episode_no_media">Cannot find media for playback. Delete and re-add or contact podcast provider.</string>
 
     <string name="alert_download_error">This episode did not download correctly.  Please try downloading it again</string>
-    <string name="alert_download_error_low">Could not start download. Most likely due to low storage.\nPlease try clearing space on your device and downloading again.</string>
+    <string name="alert_download_error_low">Download could not be started.\nTry disabling Bluetooth or contact podcast provider if issue persists.</string>
 
     <string name="alert_main_menu_start_update">Start update?</string>
     <string name="alert_add_podcast_no_episodes">but no episodes found</string>
