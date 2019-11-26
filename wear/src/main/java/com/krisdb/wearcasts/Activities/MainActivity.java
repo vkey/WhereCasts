@@ -105,8 +105,8 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         //final android.database.sqlite.SQLiteDatabase sdb2 = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
         //sdb2.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubdate] DESC LIMIT 1)"); //CNN
 
-        //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
-        //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = -7");
+        //final android.database.sqlite.SQLiteDatabase sdb = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
+        //sdb.execSQL("DELETE FROM [tbl_playlists_xref] WHERE playlist_id = 20");
 
         //final android.database.sqlite.SQLiteDatabase sdb = DatabaseHelper.select(this);
         //sdb.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE title = 'NPR'");
