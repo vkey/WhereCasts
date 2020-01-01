@@ -158,6 +158,7 @@
     <string name="settings_podcasts_label_playback_speed">प्लेबैक स्पीड</string>
     <string name="settings_podcasts_label_playback_skip_back">वापस छोड़ें</string>
     <string name="settings_podcasts_label_playback_skip_forward">छोड़कर आगे बढ़ो</string>
+    <string name="settings_podcasts_label_playback_auto_start">प्लेबैक स्वचालित रूप से प्रारंभ करें</string>
     <string name="settings_podcasts_label_playback_remove_notification">अधिसूचना निकालें</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">ठहराव पर</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">ब्लूटूथ कनेक्ट होने पर प्लेबैक फिर से शुरू करें</string>

@@ -158,6 +158,7 @@
     <string name="settings_podcasts_label_playback_speed">Velocidad de reproducción</string>
     <string name="settings_podcasts_label_playback_skip_back">Saltar atrás</string>
     <string name="settings_podcasts_label_playback_skip_forward">Saltar hacia adelante</string>
+    <string name="settings_podcasts_label_playback_auto_start">Iniciar reproducción automáticamente</string>
     <string name="settings_podcasts_label_playback_remove_notification">Eliminar notificación</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">En pausa</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">Reanudar la reproducción cuando Bluetooth se conecta</string>
