@@ -422,17 +422,11 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
 
     private void openEpisode(final int position)
     {
-        final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-        editor.putInt("next_episode_playlistid", -1);
-        editor.putInt("next_episode_podcastid", mEpisodes.get(position).getPodcastId());
-        editor.apply();
-
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
-        bundle.putInt("podcastid", mEpisodes.get(position).getPodcastId());
-        bundle.putInt("playlistid", -1);
+        bundle.putInt("playlistid", mContext.getResources().getInteger(R.integer.playlist_episodes));
 
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());

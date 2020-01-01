@@ -71,7 +71,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
     private final MediaHandler mMediaHandler = new MediaHandler(this);
-    private int mPlaylistID, mPodcastID, mPlaybackCount = 0, mPlaybackPosition = 0;
+    private int mPlaylistID, mPlaybackCount = 0, mPlaybackPosition = 0;
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
@@ -122,8 +122,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         final ContentValues cv = new ContentValues();
         cv.put("playing", 0);
@@ -224,7 +222,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mPlaylistID = extras.getInt("playlistid");
             mLocalFile = extras.getString("local_file");
-            mPodcastID = extras.getInt("podcastid");
             mEpisode = GetEpisode(mContext, extras.getInt("episodeid"));
 
             StartStream(uri);
@@ -570,7 +567,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
 
-        if (mPodcastID > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false) {
+        if (mEpisode.getPodcastId() > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false) {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
             disableNoisyReceiver();
             SyncWithMobileDevice(true);
@@ -624,7 +621,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 final Intent intentMediaPlaylist = new Intent();
                 intentMediaPlaylist.setAction("media_action");
                 intentMediaPlaylist.putExtra("media_playlist_skip", true);
-                intentMediaPlaylist.putExtra("id", mEpisode.getEpisodeId());
+                intentMediaPlaylist.putExtra("episodeid", mEpisode.getEpisodeId());
+                intentMediaPlaylist.putExtra("playlistid", mPlaylistID);
                 if (mLocalFile != null)
                     intentMediaPlaylist.putExtra("local_file", mLocalFile);
 
@@ -935,7 +933,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaPlayer.stop();
 
         if (!mError) {
-            CommonUtils.executeSingleThreadAsync(new FinishMedia(mContext, mEpisode, mPlaylistID, mPodcastID, mLocalFile, playbackError), (episodes) -> {
+            CommonUtils.executeSingleThreadAsync(new FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile, playbackError), (episodes) -> {
                 final Intent intentMediaCompleted = new Intent();
                 intentMediaCompleted.setAction("media_action");
                 intentMediaCompleted.putExtra("media_completed", true);

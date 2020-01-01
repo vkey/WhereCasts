@@ -113,7 +113,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
 
     private String mLocalFile;
-    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID, mPodcastID;
+    private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
     private long mDownloadId, mDownloadStartTime;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
     private static boolean mDownload;
@@ -144,9 +144,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mActivityRef = new WeakReference<>(this);
 
         mNavItems = Utilities.getNavItems(this);
-
-        if (!Utilities.sleepTimerEnabled(mContext))
-            setMainMenu();
 
         mThemeID = Utilities.getThemeOptionId(mActivity);
 
@@ -304,24 +301,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     @Override
     public void onResume() {
         super.onResume();
-
-       if (mMediaBrowserCompat != null && mMediaBrowserCompat.isConnected() == false) {
-           try {
-               mMediaBrowserCompat.connect();
-           }
-           catch (Exception ex) {
-               mMediaBrowserCompat.disconnect();
-           }
-       }
-        else {
-           SetContent();
-       }
-
-        if (Utilities.sleepTimerEnabled(mContext))
-            setMainMenu();
-    }
-
-    private void SetContent() {
+        setMainMenu();
 
         if (mLocalFile != null) {
             mEpisode = new PodcastItem();
@@ -329,6 +309,23 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else if (mEpisodeID > -1)
             mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
+
+        if (mMediaBrowserCompat != null) {
+            try {
+                if (!mMediaBrowserCompat.isConnected())
+                    mMediaBrowserCompat.connect();
+                else {
+                    mMediaBrowserCompat.disconnect();
+                    mMediaBrowserCompat.connect();
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void SetContent() {
 
         setMenu();
 
@@ -416,11 +413,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private void StartPlayback()
     {
         final Bundle extras = new Bundle();
-        extras.putInt("id", mEpisode.getEpisodeId());
         extras.putString("local_file", mLocalFile);
         extras.putInt("playlistid", mPlaylistID);
         extras.putInt("episodeid", mEpisodeID);
-        extras.putInt("podcastid", mPodcastID);
+
         //check for downloaded episode
         if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
 
@@ -435,14 +431,13 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         else
             handleNetwork(false);
 
-        int position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+        final int position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+
         mSeekBar.setProgress(position);
     }
 
     private void togglePlayback()
     {
-        mWearableActionDrawer.setEnabled(true);
-
         final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId();
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying))
@@ -797,7 +792,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         extras.putInt("id", mEpisode.getEpisodeId());
         extras.putString("local_file", mLocalFile);
         extras.putInt("playlistid", mPlaylistID);
-        extras.putInt("podcastid", mPodcastID);
         extras.putInt("episodeid", mEpisodeID);
         mCurrentState = STATE_PLAYING;
 
@@ -847,13 +841,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 final MediaControllerCompat mcc = new MediaControllerCompat(EpisodeActivity.this, mMediaBrowserCompat.getSessionToken());
                 mcc.registerCallback(mMediaControllerCompatCallback);
                 MediaControllerCompat.setMediaController(mActivity, mcc);
-
-                final Bundle extras = getIntent().getExtras();
-
-                mPlaylistID = extras.getInt("playlistid");
-                mPodcastID = extras.getInt("podcastid");
-                mLocalFile = extras.getString("local_file");
-                mEpisodeID = extras.getInt("episodeid");
 
                 SetContent();
                 findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
@@ -926,7 +913,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mSkipForward.setVisibility(View.INVISIBLE);
                 mDurationView.setVisibility(View.INVISIBLE);
                 mPositionView.setVisibility(View.INVISIBLE);
-                mWearableActionDrawer.setEnabled(false);
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
             else if (extras.getBoolean("media_paused"))
@@ -1000,11 +986,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             }
             else if (extras.getBoolean("media_playlist_skip"))
             {
+                mEpisodeID = extras.getInt("episodeid");
+                mPlaylistID = extras.getInt("playlistid");
+
                 if (extras.getString("local_file") != null)
                     mLocalFile = extras.getString("local_file");
                 else
-                    mEpisode = GetEpisode(mContext, extras.getInt("id"), mPlaylistID);
-                mEpisodeID = extras.getInt("id");
+                    mEpisode = GetEpisode(mContext, mEpisodeID, mPlaylistID);
+
                 SetContent();
             }
             else {
@@ -1037,7 +1026,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                 mDownloadImage.setVisibility(View.INVISIBLE);
 
-                mWearableActionDrawer.setEnabled(true);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 //SaveEpisodeValue(mActivity, mEpisode, "buffering", 0);

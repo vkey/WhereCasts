@@ -388,21 +388,15 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     private void openEpisode(final int position)
     {
-        final SharedPreferences.Editor editor = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-        editor.putInt("next_episode_playlistid", mPlaylistId);
-        editor.putInt("next_episode_podcastid", -1);
-        editor.apply();
-
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisodes.get(position).getEpisodeId());
+        bundle.putInt("playlistid", mPlaylistId);
 
         if (mEpisodes.get(position).getIsLocal())
             bundle.putString("local_file", mEpisodes.get(position).getTitle());
 
-        bundle.putInt("playlistid", mPlaylistId);
-        bundle.putInt("podcastid", -1);
         intent.putExtras(bundle);
 
         //prevent clicking on thumbnail

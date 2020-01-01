@@ -1,7 +1,7 @@
 <resources>
     <integer name="default_update_interval">21600000</integer> <!-- 6 hours -->
     <integer name="default_skip_start_time">0</integer>
-    <integer name="playlist_default_old">-1</integer>
+    <integer name="playlist_episodes">-1</integer>
     <integer name="playlist_inprogress">-2</integer>
     <integer name="playlist_downloads">-3</integer>
     <integer name="playlist_unplayed">-4</integer>

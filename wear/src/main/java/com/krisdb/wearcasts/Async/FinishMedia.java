@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Enums;
@@ -23,16 +24,15 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
     private final Context context;
     private PodcastItem mEpisode;
     private String mLocalFile;
-    private int mPlaylistID, mPodcastID;
+    private int mPlaylistID;
     private boolean mPlaybackError;
 
-    public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final int podcastId, final String localFile, final boolean playbackError)
+    public FinishMedia(final Context context, final PodcastItem episode, final int playlistId, final String localFile, final boolean playbackError)
     {
         this.context = context;
         mEpisode = episode;
         mLocalFile = localFile;
         mPlaylistID = playlistId;
-        mPodcastID = podcastId;
         mPlaybackError = playbackError;
     }
 
@@ -45,17 +45,12 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
         List<PodcastItem> episodes;
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        mPlaylistID = prefs.getInt("next_episode_playlistid", -99);
-        mPodcastID = prefs.getInt("next_episode_podcastid", -1);
 
-        if (mPlaylistID == -99)
-            return null;
-        else if (mPlaylistID != -1)
-            episodes = getPlaylistItems(context, mPlaylistID, mLocalFile == null);
-        else if (mPodcastID > 0)
-            episodes = EpisodeUtilities.GetEpisodes(context, mPodcastID);
+        if (mPlaylistID == context.getResources().getInteger(R.integer.playlist_episodes))
+            episodes = EpisodeUtilities.GetEpisodes(context, mEpisode.getPodcastId());
         else
-            return null;
+            episodes = getPlaylistItems(context, mPlaylistID, mLocalFile == null);
+
         //CommonUtils.writeToFile(context, "Episodes size: " + episodes.size());
 
             /*

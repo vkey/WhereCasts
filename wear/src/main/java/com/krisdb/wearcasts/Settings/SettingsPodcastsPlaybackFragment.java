@@ -3,6 +3,7 @@ package com.krisdb.wearcasts.Settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.ListPreference;
@@ -34,6 +35,10 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
         mActivity = getActivity();
 
         final int buttonCount = WearableButtons.getButtonCount(mActivity);
+        final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            category.removePreference(findPreference("pref_remove_notification"));
 
         if (!Utilities.hasPremium(mActivity))
         {
@@ -52,7 +57,6 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             }
             else
             {
-                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
                 category.removePreference(findPreference("pref_hardware_override_episode"));
             }
         }
@@ -67,7 +71,6 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
                 findPreference("pref_hardware_override_episode").setTitle(getString(R.string.settings_podcasts_label_hardware_buttons));
             }
             else {
-                final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
                 category.removePreference(findPreference("pref_hardware_override_episode"));
             }
 
