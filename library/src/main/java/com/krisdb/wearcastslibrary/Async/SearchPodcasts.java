@@ -40,38 +40,7 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
         List<PodcastItem> podcasts = new ArrayList<>();
 
         try {
-
-            String searchLanguage;
-
-            switch (Locale.getDefault().getLanguage())
-            {
-                case "fr":
-                    searchLanguage = "French";
-                    break;
-                case "es":
-                    searchLanguage = "Spanish";
-                    break;
-                case "de":
-                    searchLanguage = "German";
-                    break;
-                case "ja":
-                    searchLanguage = "Japanese";
-                    break;
-                case "hi":
-                    searchLanguage = "Hindi";
-                    break;
-                case "sv":
-                    searchLanguage = "Swedish";
-                    break;
-                case "zh":
-                    searchLanguage = "Chinese";
-                    break;
-                default:
-                    searchLanguage = "English";
-                    break;
-            }
-
-            final URL url = new URL(context.getString(R.string.listennotes_rest, searchLanguage, URLEncoder.encode(mQuery, "UTF-8")));
+            final URL url = new URL(context.getString(R.string.listennotes_rest, Locale.getDefault().getDisplayLanguage(), URLEncoder.encode(mQuery, "UTF-8")));
             final HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
             conn.setConnectTimeout(3000);
             conn.setReadTimeout(5000);
