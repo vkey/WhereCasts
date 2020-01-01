@@ -63,7 +63,8 @@ public class PodcastsListFragment extends Fragment {
 
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
         mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
-        //mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutPodcasts()));
+        //final WearableLinearLayoutManager manager = new WearableLinearLayoutManager(mActivity, new com.krisdb.wearcasts.Utilities.ScrollingLayoutPodcasts());
+        //mPodcastsList.setLayoutManager(manager);
 
         if (PreferenceManager.getDefaultSharedPreferences(mActivity).getBoolean("syncOnStart", false))
             handleNetwork();

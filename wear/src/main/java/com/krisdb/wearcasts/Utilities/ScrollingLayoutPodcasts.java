@@ -26,5 +26,4 @@ public class ScrollingLayoutPodcasts extends WearableLinearLayoutManager.LayoutC
         child.setScaleX(1 - progressToCenter);
         child.setScaleY(1 - progressToCenter);
     }
-
 }

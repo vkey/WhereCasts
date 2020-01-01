@@ -600,7 +600,7 @@ public class CommonUtils {
     public static Bitmap GetLogo(final Context ctx, final PodcastItem podcast) {
         Bitmap output;
 
-        if (podcast.getChannel() == null || podcast.getChannel().getThumbnailName() == null)
+        if (podcast == null || podcast.getChannel() == null || podcast.getChannel().getThumbnailName() == null)
             output = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_thumb_default);
         else
             output = BitmapFactory.decodeFile(GetThumbnailDirectory(ctx) + podcast.getChannel().getThumbnailName());

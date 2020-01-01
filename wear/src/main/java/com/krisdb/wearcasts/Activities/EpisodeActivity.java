@@ -393,7 +393,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mDownloadImage.setOnClickListener(view -> DeleteEpisode());
         }
 
-
         if (mLocalFile == null && mEpisode.getMediaUrl() == null) {
             mPlayPauseImage.setEnabled(false);
             //mPlayPauseImage.setText("Error");
@@ -414,34 +413,40 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         catch(Exception ignored){}
     }
 
+    private void StartPlayback()
+    {
+        final Bundle extras = new Bundle();
+        extras.putInt("id", mEpisode.getEpisodeId());
+        extras.putString("local_file", mLocalFile);
+        extras.putInt("playlistid", mPlaylistID);
+        extras.putInt("episodeid", mEpisodeID);
+        extras.putInt("podcastid", mPodcastID);
+        //check for downloaded episode
+        if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
+
+            Utilities.enableBluetooth(mContext);
+
+            final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
+
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
+
+            mCurrentState = STATE_PLAYING;
+        }
+        else
+            handleNetwork(false);
+
+        int position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
+        mSeekBar.setProgress(position);
+    }
+
     private void togglePlayback()
     {
         mWearableActionDrawer.setEnabled(true);
 
         final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisode(mContext).getEpisodeId();
 
-        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying)) { //play episode
-            final Bundle extras = new Bundle();
-            extras.putInt("id", mEpisode.getEpisodeId());
-            extras.putString("local_file", mLocalFile);
-            extras.putInt("playlistid", mPlaylistID);
-            extras.putInt("episodeid", mEpisodeID);
-            extras.putInt("podcastid", mPodcastID);
-            //check for downloaded episode
-            if (mLocalFile != null || GetEpisodeValue(mActivity, mEpisode, "download") == 1) {
-
-                final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
-
-                MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
-
-                mCurrentState = STATE_PLAYING;
-            }
-            else
-                handleNetwork(false);
-
-            int position = GetEpisodeValue(getApplicationContext(), mEpisode, "position");
-            mSeekBar.setProgress(position);
-        }
+        if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying))
+            StartPlayback();
         else
         {
             //pause episode

@@ -96,8 +96,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         initMediaPlayer();
         initMediaSession();
 
-        if (Utilities.sleepTimerEnabled(mContext))
-            LocalBroadcastManager.getInstance(this).registerReceiver(mSleepTimer, new IntentFilter("sleep_timer"));
+        //if (Utilities.sleepTimerEnabled(mContext))
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mSleepTimer, new IntentFilter("sleep_timer"));
 
         mHasPremium = Utilities.hasPremium(this);
     }
@@ -145,10 +145,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             SyncWithMobileDevice();
         }
 
-        if (Utilities.sleepTimerEnabled(mContext)) {
-            try { unregisterReceiver(mSleepTimer); }
-            catch (Exception ignored) {}
-        }
+        //if (Utilities.sleepTimerEnabled(mContext)) {
+            //try { unregisterReceiver(mSleepTimer); }
+        //catch (Exception ignored) {}
+        //}
 
         mMediaHandler.removeCallbacksAndMessages(null);
 
