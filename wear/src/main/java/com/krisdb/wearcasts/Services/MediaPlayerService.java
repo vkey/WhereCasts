@@ -678,20 +678,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     };
 
-    private BroadcastReceiver mSleepTimer = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (mMediaPlayer != null && mMediaPlayer.isPlaying())
-                PauseAudio();
-        }
-    };
-
     private void showNotification(final Boolean pause) {
         showNotification(pause, false);
     }
     private void showNotification(final Boolean pause, final boolean cancel) {
 
-         final Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());
         bundle.putInt("playlistid", mPlaylistID);
 
@@ -700,7 +692,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         String channelID = mPackage.concat(".playing");
 
-        final NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -718,7 +710,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 .setPriority(PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-                //.setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
+        //.setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, PlaybackStateCompat.ACTION_STOP));
 
         if (pause) {
             builder.setOngoing(false);

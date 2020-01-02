@@ -406,6 +406,24 @@ public class EpisodeUtilities {
         return podcast;
     }
 
+    public static int GetPlayingEpisodeID(final Context ctx) {
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        final Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [playing] = 1", null);
+
+        int id = 0;
+
+        if (cursor.moveToFirst())
+            id = cursor.getInt(0);
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return id;
+    }
+
     public static PodcastItem GetLatestEpisode(final Context ctx, final int podcastId)
     {
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
