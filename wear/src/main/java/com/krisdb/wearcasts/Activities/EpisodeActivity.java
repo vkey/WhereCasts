@@ -295,20 +295,26 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             } else if (mEpisodeID > -1)
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
 
-            if (mMediaBrowserCompat != null) {
-                try {
-                    if (!mMediaBrowserCompat.isConnected())
-                        mMediaBrowserCompat.connect();
-                    else {
-                        mMediaBrowserCompat.disconnect();
-                        mMediaBrowserCompat.connect();
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
+            MediaBrowserConnect();
+
         } else
             Utilities.ShowFailureActivity(mActivity, getString(R.string.general_error));
+    }
+
+    private void MediaBrowserConnect()
+    {
+        if (mMediaBrowserCompat != null) {
+            try {
+                if (!mMediaBrowserCompat.isConnected())
+                    mMediaBrowserCompat.connect();
+                else {
+                    mMediaBrowserCompat.disconnect();
+                    mMediaBrowserCompat.connect();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void SetContent() {
@@ -977,7 +983,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 else
                     mEpisode = GetEpisode(mContext, mEpisodeID, mPlaylistID);
 
-                SetContent();
+                MediaBrowserConnect();
             }
             else {
                 int duration;
