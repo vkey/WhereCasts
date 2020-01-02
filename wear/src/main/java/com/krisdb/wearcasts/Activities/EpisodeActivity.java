@@ -301,19 +301,23 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             Utilities.ShowFailureActivity(mActivity, getString(R.string.general_error));
     }
 
-    private void MediaBrowserConnect()
-    {
+    private void MediaBrowserConnect() {
         if (mMediaBrowserCompat != null) {
-            try {
-                if (!mMediaBrowserCompat.isConnected())
-                    mMediaBrowserCompat.connect();
-                else {
-                    mMediaBrowserCompat.disconnect();
-                    mMediaBrowserCompat.connect();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (!mMediaBrowserCompat.isConnected())
+                mMediaBrowserCompat.connect();
+            else {
+                mMediaBrowserCompat.disconnect();
+                mMediaBrowserCompat.connect();
             }
+        } else {
+            mMediaBrowserCompat = new MediaBrowserCompat(
+                    mContext,
+                    new ComponentName(mContext, MediaPlayerService.class),
+                    mMediaBrowserCompatConnectionCallback,
+                    getIntent().getExtras()
+            );
+
+            mMediaBrowserCompat.connect();
         }
     }
 
