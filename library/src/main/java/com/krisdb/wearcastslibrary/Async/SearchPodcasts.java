@@ -40,7 +40,7 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
         List<PodcastItem> podcasts = new ArrayList<>();
 
         try {
-            final URL url = new URL(context.getString(R.string.listennotes_rest, Locale.getDefault().getDisplayLanguage(), URLEncoder.encode(mQuery, "UTF-8")));
+            final URL url = new URL(context.getString(R.string.listennotes_rest, URLEncoder.encode(mQuery, "UTF-8")));
             final HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
             conn.setConnectTimeout(3000);
             conn.setReadTimeout(5000);

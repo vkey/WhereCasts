@@ -28,7 +28,6 @@ public class SearchResultsActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private TextView mProgressText;
     private String mQuery;
-    private boolean mQueryComplete;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +52,11 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        if (!mQueryComplete && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
             mProgressText.setText(getString(R.string.retrieving_search_results));
             mResultsList.setVisibility(View.INVISIBLE);
             SetSearchResults();
-            mQueryComplete = true;
             setTitle(mQuery);
         }
     }
@@ -70,7 +68,6 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView)menu.findItem(R.id.search_results).getActionView();
-        searchView.setOnSearchClickListener(view ->  mQueryComplete = false );
         searchView.setQuery(mQuery, false);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), SearchResultsActivity.class)));
 
