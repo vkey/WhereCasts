@@ -926,10 +926,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         if (!mError) {
             CommonUtils.executeSingleThreadAsync(new FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile, playbackError), (episodes) -> {
-                final Intent intentMediaCompleted = new Intent();
-                intentMediaCompleted.setAction("media_action");
-                intentMediaCompleted.putExtra("media_completed", true);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+                if (episodes.size() < 3) {
+                    final Intent intentMediaCompleted = new Intent();
+                    intentMediaCompleted.setAction("media_action");
+                    intentMediaCompleted.putExtra("media_completed", true);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+                }
 
                 playlistSkip(Enums.SkipDirection.NEXT, episodes);
             });

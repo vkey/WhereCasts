@@ -91,10 +91,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private Activity mActivity;
 
     private ProgressBar mProgressBar, mProgressCircleDownloading, mProgressCircleLoading;
-    private SeekBar mSeekBar;
+    private SeekBar mSeekBar, mVolumeSeekBar;
     private RelativeLayout mInfoLayout, mControlsLayout;
     private TextView mPositionView, mDurationView, mSkipBack, mSkipForward, mDownloadSpeed, mEpisodeTitle;
-    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mDownloadImage;
+    private ImageView mSkipBackImage, mSkipForwardImage, mPlayPauseImage, mVolumeUp, mVolumeDown, mDownloadImage;
 
     private PodcastItem mEpisode;
     private MediaBrowserCompat mMediaBrowserCompat;
@@ -104,6 +104,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     private WeakReference<EpisodeActivity> mActivityRef;
     private WearableNavigationDrawerView mNavDrawer;
     private Handler mDownloadProgressHandler = new Handler();
+    private Handler mVolumeBarHandler;
     private DownloadManager mDownloadManager;
 
     private ConnectivityManager mManager;
@@ -166,12 +167,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
 
         mSeekBar = findViewById(R.id.sb_podcast_episode);
+        mVolumeSeekBar = findViewById(R.id.sb_podcast_volume_bar);
         mDownloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
         mPlayPauseImage = findViewById(R.id.ic_podcast_playpause);
         mSkipBackImage = findViewById(R.id.ic_skip_back);
         mSkipForwardImage = findViewById(R.id.ic_skip_forward);
         mDownloadSpeed = findViewById(R.id.podcast_episode_download_speed);
-        mVolumeUp = findViewById(R.id.ic_volume_up);
+        mVolumeDown = findViewById(R.id.ic_episode_volume_down);
+        mVolumeUp = findViewById(R.id.ic_episode_volume_up);
         mDurationView = findViewById(R.id.tv_podcast_duration);
         mPositionView = findViewById(R.id.tv_podcast_position);
         mInfoLayout = findViewById(R.id.podcast_episode_info_layout);
@@ -216,6 +219,68 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBack.setText(String.valueOf(skipBack));
         mSkipForward.setText(String.valueOf(skipForward));
 
+        mVolumeDown.setOnClickListener(view -> {
+            final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+            if (audioManager != null) {
+                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                mVolumeSeekBar = findViewById(R.id.sb_podcast_volume_bar);
+                mVolumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                mVolumeSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+                mVolumeSeekBar.setVisibility(View.VISIBLE);
+                findViewById(R.id.ic_episode_volume_bar).setVisibility(View.VISIBLE);
+            }
+            else
+                CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+
+        });
+
+        mVolumeUp.setOnClickListener(view -> {
+            final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+
+            if (audioManager != null) {
+                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                mVolumeSeekBar = findViewById(R.id.sb_podcast_volume_bar);
+                mVolumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                mVolumeSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+                mVolumeSeekBar.setVisibility(View.VISIBLE);
+                findViewById(R.id.ic_episode_volume_bar).setVisibility(View.VISIBLE);
+                            }
+            else
+                CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+        });
+
+        mVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) {
+                final AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager != null) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, position, 0);
+
+                    if (mVolumeBarHandler != null)
+                        mVolumeBarHandler.removeCallbacksAndMessages(null);
+
+                    mVolumeBarHandler = new Handler();
+                    mVolumeBarHandler.postDelayed(() ->
+                            {
+                                mVolumeSeekBar.setVisibility(View.GONE);
+                                findViewById(R.id.ic_episode_volume_bar).setVisibility(View.GONE);
+                            }
+                            , 2000);
+                } else
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
+            }
+
+            @Override
+            public void onStartTrackingTouch(final SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+            }
+        });
+
+        /*
         mVolumeUp.setOnClickListener(view -> {
             final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 
@@ -224,6 +289,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             else
                 CommonUtils.showToast(mActivity, getString(R.string.alert_no_system_audio));
         });
+         */
 
         mDownloadImage.setOnClickListener(view -> handleNetwork(true));
 
@@ -243,8 +309,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) {
-            }
+            public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) { }
 
             @Override
             public void onStartTrackingTouch(final SeekBar seekBar) {
@@ -279,6 +344,18 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     }
 
     @Override
+    public void onPause() {
+        //mDownloadProgressHandler.removeCallbacks(downloadProgress);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        unregisterNetworkCallback();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPositionReceiver);
+
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         setMainMenu();
@@ -299,16 +376,17 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         } else
             Utilities.ShowFailureActivity(mActivity, getString(R.string.general_error));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaReceiver, new IntentFilter("media_action"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPositionReceiver, new IntentFilter("media_position"));
     }
 
     private void MediaBrowserConnect() {
         if (mMediaBrowserCompat != null) {
             if (!mMediaBrowserCompat.isConnected())
                 mMediaBrowserCompat.connect();
-            else {
-                mMediaBrowserCompat.disconnect();
-                mMediaBrowserCompat.connect();
-            }
+            else
+                SetContent();
         } else {
             mMediaBrowserCompat = new MediaBrowserCompat(
                     mContext,
@@ -350,6 +428,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mSeekBar.setProgress(position);
                 mDurationView.setText(DateUtils.FormatPositionTime(duration));
                 mInfoLayout.setVisibility(View.VISIBLE);
+                mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.VISIBLE);
@@ -359,6 +438,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             } else {
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 mInfoLayout.setVisibility(View.GONE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -370,6 +450,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mCurrentState = STATE_PAUSED;
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -397,12 +478,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         if (mDownloadId > 0)
             downloadProgress.run();
-
-        try {
-            LocalBroadcastManager.getInstance(this).registerReceiver(mMediaReceiver, new IntentFilter("media_action"));
-            LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPositionReceiver, new IntentFilter("media_position"));
-        }
-        catch(Exception ignored){}
     }
 
     private void StartPlayback()
@@ -446,6 +521,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mProgressCircleDownloading.setVisibility(View.INVISIBLE);
             mDownloadSpeed.setVisibility(View.INVISIBLE);
             mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
             mVolumeUp.setVisibility(View.GONE);
             mSkipBackImage.setVisibility(View.INVISIBLE);
             mSkipBack.setVisibility(View.INVISIBLE);
@@ -462,13 +538,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         //mBroadcastManger.unregisterReceiver(mMediaReceiver);
     }
 
-    @Override
-    public void onPause() {
-        //mDownloadProgressHandler.removeCallbacks(downloadProgress);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        unregisterNetworkCallback();
-        super.onPause();
-    }
 
     private Runnable downloadProgress = new Runnable() {
             @Override
@@ -539,6 +608,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
                         mControlsLayout.setVisibility(View.VISIBLE);
+                        mVolumeDown.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mDownloadManager.remove(mDownloadId);
 
@@ -561,6 +631,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mPlayPauseImage.setVisibility(View.VISIBLE);
                         mControlsLayout.setVisibility(View.VISIBLE);
                         mInfoLayout.setVisibility(View.GONE);
+                        mVolumeDown.setVisibility(View.GONE);
                         mVolumeUp.setVisibility(View.GONE);
                         mProgressCircleDownloading.setVisibility(View.INVISIBLE);
                         mDownloadSpeed.setVisibility(View.INVISIBLE);
@@ -581,6 +652,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mDownloadSpeed.setVisibility(View.INVISIBLE);
                 mInfoLayout.setVisibility(View.GONE);
                 mControlsLayout.setVisibility(View.VISIBLE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mDownloadManager.remove(mDownloadId);
                 mDownloadProgressHandler.removeCallbacks(downloadProgress);
@@ -634,6 +706,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mPlayPauseImage.setVisibility(View.VISIBLE);
         mSeekBar.setVisibility(View.GONE);
         mInfoLayout.setVisibility(View.GONE);
+        mVolumeDown.setVisibility(View.GONE);
         mVolumeUp.setVisibility(View.GONE);
         Utilities.DeleteMediaFile(mActivity, mEpisode);
         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
@@ -777,7 +850,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mDownloadImage.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mSeekBar.setVisibility(View.GONE);
-            //mVolumeDown.setVisibility(View.VISIBLE);
+            mVolumeDown.setVisibility(View.VISIBLE);
             mVolumeUp.setVisibility(View.VISIBLE);
         });
 
@@ -896,7 +969,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
                 mProgressBar.setVisibility(ProgressBar.VISIBLE);
                 mInfoLayout.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.GONE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mSeekBar.setVisibility(View.GONE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -914,7 +987,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
                 mProgressBar.setVisibility(View.GONE);
                 mInfoLayout.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.GONE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mSkipBackImage.setVisibility(View.INVISIBLE);
                 mSkipForwardImage.setVisibility(View.INVISIBLE);
@@ -961,14 +1034,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 mInfoLayout.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.GONE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
             }
             else if (extras.getBoolean("media_completed"))
             {
                 mInfoLayout.setVisibility(View.GONE);
-                //mVolumeDown.setVisibility(View.GONE);
+                mVolumeDown.setVisibility(View.GONE);
                 mVolumeUp.setVisibility(View.GONE);
                 mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
                 //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
@@ -1002,7 +1075,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
                 mProgressBar.setVisibility(ProgressBar.GONE);
                 mInfoLayout.setVisibility(View.VISIBLE);
-                //mVolumeDown.setVisibility(View.VISIBLE);
+                mVolumeDown.setVisibility(View.VISIBLE);
                 mVolumeUp.setVisibility(View.VISIBLE);
 
                 mSeekBar.setMax(duration);
@@ -1111,6 +1184,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBackImage.setVisibility(View.INVISIBLE);
         mSkipBack.setVisibility(View.INVISIBLE);
         mDownloadImage.setVisibility(View.INVISIBLE);
+        mVolumeDown.setVisibility(View.INVISIBLE);
         mVolumeUp.setVisibility(View.INVISIBLE);
         mInfoLayout.setVisibility(View.INVISIBLE);
         findViewById(R.id.podcast_episode_description).setVisibility(View.INVISIBLE);
@@ -1141,7 +1215,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         findViewById(R.id.podcast_episode_description).setVisibility(View.VISIBLE);
 
         if (mEpisode.getEpisodeId() == GetPlayingEpisodeID(mContext))
-            findViewById(R.id.ic_volume_up).setVisibility(View.VISIBLE);
+            mVolumeUp.setVisibility(View.VISIBLE);
 
         SetContent();
     }

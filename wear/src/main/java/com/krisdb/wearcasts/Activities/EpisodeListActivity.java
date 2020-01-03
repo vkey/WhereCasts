@@ -115,6 +115,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mProgressThumb = findViewById(R.id.episode_list_progress_text_thumbnail);
         mSwipeRefreshLayout = findViewById(R.id.episode_list_swipe_layout);
         mEpisodeList.setEdgeItemsCenteringEnabled(false);
+        mEpisodeList.setCircularScrollingGestureEnabled(true);
         mEpisodeList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
         ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
 

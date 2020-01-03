@@ -62,6 +62,7 @@ public class PodcastsListFragment extends Fragment {
         mLogo = listView.findViewById(R.id.podcast_list_empty_logo);
 
         mPodcastsList.setEdgeItemsCenteringEnabled(true);
+        mPodcastsList.setCircularScrollingGestureEnabled(true);
         mPodcastsList.setLayoutManager(new WearableLinearLayoutManager(mActivity));
         //final WearableLinearLayoutManager manager = new WearableLinearLayoutManager(mActivity, new com.krisdb.wearcasts.Utilities.ScrollingLayoutPodcasts());
         //mPodcastsList.setLayoutManager(manager);
