@@ -240,7 +240,7 @@
                     android:id="@+id/sb_podcast_volume_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
+                    android:paddingStart="19dp"
                     android:paddingEnd="6dp"
                     android:paddingTop="30dp"
                     android:paddingBottom="5dp"
