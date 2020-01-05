@@ -97,6 +97,8 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
             findPreference("pref_theme").setEnabled(false);
             findPreference("pref_header_color").setSummary(getString(R.string.premium_locked_playback_speed));
             findPreference("pref_header_color").setEnabled(false);
+            findPreference("pref_display_show_clock_playing_screen").setSummary(getString(R.string.premium_locked_playback_speed));
+            findPreference("pref_display_show_clock_playing_screen").setEnabled(false);
         }
         else
         {

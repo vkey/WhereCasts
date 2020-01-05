@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class DisplayEpisodes implements Callable<List<PodcastItem>> {
 
         final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
 
-        final int numberOfEpisode = Integer.valueOf(prefs.getString("pref_episode_limit", context.getString(R.string.episode_list_default)));
+        final int numberOfEpisode = Utilities.hasPremium(context) ? Integer.valueOf(prefs.getString("pref_episode_limit", context.getString(R.string.episode_list_default))) : Integer.valueOf(context.getString(R.string.episode_list_default));
 
         if (mQuery == null)
             return GetEpisodes(context, mPodcastId, hidePlayed, numberOfEpisode, null);

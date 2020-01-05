@@ -50,6 +50,8 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             findPreference("pref_playback_skip_forward").setEnabled(false);
             findPreference("pref_playback_skip_back").setSummary(getString(R.string.premium_locked_playback_speed));
             findPreference("pref_playback_skip_back").setEnabled(false);
+            findPreference("pref_playback_auto_start").setSummary(getString(R.string.premium_locked_playback_speed));
+            findPreference("pref_playback_auto_start").setEnabled(false);
             if (buttonCount == 1 || buttonCount == 3) {
                 findPreference("pref_hardware_override_episode").setTitle(getString(R.string.settings_podcasts_label_hardware_buttons));
                 findPreference("pref_hardware_override_episode").setSummary(getString(R.string.premium_locked_playback_speed));

@@ -38,7 +38,7 @@ public class Processor {
         android.util.Log.d(mContext.getPackageName(), "Processing: Start " + podcast.getChannel().getTitle());
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        final int limit = Integer.valueOf(prefs.getString("pref_episode_limit", "50"));
+        final int limit = Utilities.hasPremium(mContext) ? Integer.valueOf(prefs.getString("pref_episode_limit", mContext.getString(R.string.episode_list_default))) : Integer.valueOf(mContext.getString(R.string.episode_list_default));
 
         final List<PodcastItem> newEpisodes = FeedParser.parse(podcast, limit);
 

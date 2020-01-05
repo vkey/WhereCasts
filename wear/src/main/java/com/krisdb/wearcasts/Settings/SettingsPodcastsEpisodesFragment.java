@@ -68,6 +68,8 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
             findPreference("pref_episodes_swipe_action").setEnabled(false);
             findPreference("pref_episodes_downloads_first").setEnabled(false);
             findPreference("pref_episodes_downloads_first").setSummary(getString(R.string.premium_locked_playback_speed));
+            findPreference("pref_episode_limit").setEnabled(false);
+            findPreference("pref_episode_limit").setSummary(getString(R.string.premium_locked_playback_speed));
         }
         else
         {
