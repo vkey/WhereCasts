@@ -8,6 +8,11 @@ import java.util.concurrent.Callable;
 public class FetchPodcast implements Callable<PodcastItem> {
     private String mTitle, mUrl;
 
+    public FetchPodcast(String url) {
+        this.mTitle = null;
+        this.mUrl = url;
+    }
+
     public FetchPodcast(String title, String url) {
         this.mTitle = title;
         this.mUrl = url;
