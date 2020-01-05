@@ -64,6 +64,14 @@
                   />
            -->
                     <SwitchPreference
+                        android:key="pref_playback_auto_start"
+                        android:title="@string/settings_podcasts_label_playback_auto_start"
+                        android:summary="@string/settings_podcasts_label_playback_auto_start_summary"
+                        android:defaultValue="false"
+                        />
+
+
+                    <SwitchPreference
                         android:key="pref_remove_notification"
                         android:title="@string/settings_podcasts_label_playback_remove_notification"
                         android:summary="@string/settings_podcasts_label_playback_remove_notification_summary"

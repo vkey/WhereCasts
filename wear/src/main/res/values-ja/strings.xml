@@ -158,7 +158,8 @@
     <string name="settings_podcasts_label_playback_speed">再生速度</string>
     <string name="settings_podcasts_label_playback_skip_back">スキップバック</string>
     <string name="settings_podcasts_label_playback_skip_forward">スキップフォワード</string>
-    <string name="settings_podcasts_label_playback_auto_start">自動的に再生を開始する</string>
+    <string name="settings_podcasts_label_playback_auto_start">自動再生を開始</string>
+    <string name="settings_podcasts_label_playback_auto_start_summary">エピソードを選択したときに再生を開始する</string>
     <string name="settings_podcasts_label_playback_remove_notification">通知を削除</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">休止中</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">Bluetooth接続時に再生を再開する</string>

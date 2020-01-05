@@ -155,7 +155,8 @@
     <string name="settings_podcasts_label_playback_speed">Playback Speed</string>
     <string name="settings_podcasts_label_playback_skip_back">Skip Back</string>
     <string name="settings_podcasts_label_playback_skip_forward">Skip Forward</string>
-    <string name="settings_podcasts_label_playback_auto_start">Start playback automatically</string>
+    <string name="settings_podcasts_label_playback_auto_start">Auto start playback</string>
+    <string name="settings_podcasts_label_playback_auto_start_summary">Start playback when selecting an episode</string>
     <string name="settings_podcasts_label_playback_remove_notification">Remove notification</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">Resume playback when Bluetooth connects</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth_summary">Resume playback when Bluetooth connects and pause playback when Bluetooth disconnects</string>

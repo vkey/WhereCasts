@@ -159,6 +159,7 @@
     <string name="settings_podcasts_label_playback_skip_back">Hoppa tillbaka</string>
     <string name="settings_podcasts_label_playback_skip_forward">Hoppa framåt</string>
     <string name="settings_podcasts_label_playback_auto_start">Starta uppspelningen automatiskt</string>
+    <string name="settings_podcasts_label_playback_auto_start_summary">Börja uppspelningen när du väljer ett avsnitt</string>
     <string name="settings_podcasts_label_playback_remove_notification">Ta bort anmälan</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">På paus</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">Återuppta uppspelningen när Bluetooth ansluts</string>

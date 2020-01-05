@@ -158,6 +158,7 @@
     <string name="settings_podcasts_label_playback_skip_back">跳回</string>
     <string name="settings_podcasts_label_playback_skip_forward">向前跳過</string>
     <string name="settings_podcasts_label_playback_auto_start">自動開始播放</string>
+    <string name="settings_podcasts_label_playback_auto_start_summary">選擇劇集時開始播放</string>
     <string name="settings_podcasts_label_playback_remove_notification">刪除通知</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">暫停</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">藍牙連接後恢復播放</string>
