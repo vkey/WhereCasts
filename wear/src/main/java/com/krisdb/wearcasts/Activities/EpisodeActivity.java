@@ -185,7 +185,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         mWearableActionDrawer.setOnMenuItemClickListener(this);
 
-        if (prefs.getBoolean("pref_display_show_clock_playing_screen", true))
+        if (hasPremium && prefs.getBoolean("pref_display_show_clock_playing_screen", true))
         {
             findViewById(R.id.podcast_episode_clock).setVisibility(View.VISIBLE);
             mEpisodeTitle.setPadding(0, getResources().getConfiguration().isScreenRound() ? 20 : 10, 0 ,0);
@@ -254,9 +254,16 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             @Override
             public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) {
                 final AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
                 if (audioManager != null) {
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, position, 0);
 
+                final ImageView volumeBarImage = findViewById(R.id.ic_episode_volume_bar);
+
+                if (position == 0)
+                    volumeBarImage.setImageDrawable(getDrawable(R.drawable.ic_action_episode_volume_bar_mute));
+                else
+                    volumeBarImage.setImageDrawable(getDrawable(R.drawable.ic_action_episode_volume_bar));
                     if (mVolumeBarHandler != null)
                         mVolumeBarHandler.removeCallbacksAndMessages(null);
 
@@ -264,7 +271,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     mVolumeBarHandler.postDelayed(() ->
                             {
                                 mVolumeSeekBar.setVisibility(View.GONE);
-                                findViewById(R.id.ic_episode_volume_bar).setVisibility(View.GONE);
+                                volumeBarImage.setVisibility(View.GONE);
                             }
                             , 2000);
                 } else
@@ -272,12 +279,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             }
 
             @Override
-            public void onStartTrackingTouch(final SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(final SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(final SeekBar seekBar) {
-            }
+            public void onStopTrackingTouch(final SeekBar seekBar) {}
         });
 
         /*
@@ -312,8 +317,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) { }
 
             @Override
-            public void onStartTrackingTouch(final SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(final SeekBar seekBar) { }
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
@@ -480,36 +484,36 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             downloadProgress.run();
     }
 
-    private void StartPlayback()
-    {
-        final Bundle extras = new Bundle();
-        extras.putString("local_file", mLocalFile);
-        extras.putInt("playlistid", mPlaylistID);
-        extras.putInt("episodeid", mEpisodeID);
-
-        //check for downloaded episode
-        if (mLocalFile != null || mEpisode.getIsDownloaded()) {
-
-            Utilities.enableBluetooth(mContext);
-
-            final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
-
-            MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
-
-            mCurrentState = STATE_PLAYING;
-        }
-        else
-            handleNetwork(false);
-
-        mSeekBar.setProgress(mEpisode.getPosition());
-    }
-
     private void togglePlayback()
     {
         final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisodeID(mContext);
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying))
-            StartPlayback();
+        {
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
+            mCurrentState = STATE_PAUSED;
+
+            final Bundle extras = new Bundle();
+            extras.putString("local_file", mLocalFile);
+            extras.putInt("playlistid", mPlaylistID);
+            extras.putInt("episodeid", mEpisodeID);
+
+            //check for downloaded episode
+            if (mLocalFile != null || mEpisode.getIsDownloaded()) {
+
+                Utilities.enableBluetooth(mContext);
+
+                final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
+
+                MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
+
+                mCurrentState = STATE_PLAYING;
+            }
+            else
+                handleNetwork(false);
+
+            mSeekBar.setProgress(mEpisode.getPosition());
+        }
         else
         {
             //pause episode
@@ -910,6 +914,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
                 SetContent();
                 findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
+
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_playback_auto_start", false) && Utilities.hasPremium(mContext) && mEpisodeID != GetPlayingEpisodeID(mContext))
+                    togglePlayback();
 
                 } catch( RemoteException e ) {
                 Log.e(mActivity.getPackageName(), e.toString());
