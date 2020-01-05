@@ -534,22 +534,23 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             });
 
             mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                if (what != -38) {
+                    final Intent intentMediaError = new Intent();
+                    intentMediaError.setAction("media_action");
+                    intentMediaError.putExtra("media_error", true);
+                    intentMediaError.putExtra("error_code", what);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
+                    PauseAudio();
+                    mError = true;
 
-                final Intent intentMediaError = new Intent();
-                intentMediaError.setAction("media_action");
-                intentMediaError.putExtra("media_error", true);
-                intentMediaError.putExtra("error_code", what);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
-                PauseAudio();
-                mError = true;
+                    if (mMediaPlayer != null) {
+                        if (mMediaPlayer.isPlaying())
+                            mMediaPlayer.stop();
 
-                if (mMediaPlayer != null) {
-                    if (mMediaPlayer.isPlaying())
-                        mMediaPlayer.stop();
-
-                    try {
-                        mMediaPlayer.reset();
-                    } catch (Exception ignored) {
+                        try {
+                            mMediaPlayer.reset();
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
 
