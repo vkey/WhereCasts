@@ -112,11 +112,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         dbPodcasts.close();*/
 
         CommonUtils.executeAsync(new SearchPodcasts(this, mQuery), (results) -> {
-            if (results.size() > 0) {
-                findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
-            }
-            else
-                findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
+            //if (results.size() > 0)
+                //findViewById(R.id.search_results_listennotes_layout).setVisibility(View.VISIBLE);
+            //else
+               // findViewById(R.id.search_results_listennotes_layout).setVisibility(View.GONE);
 
             CommonUtils.executeAsync(new WatchConnected(getApplicationContext()), (connected) -> {
                 mResultsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
+import com.krisdb.wearcastslibrary.Async.FetchPodcast;
 import com.krisdb.wearcastslibrary.Async.GetEpisodes;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -89,7 +90,26 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
             viewHolder.episodesExpand.setImageDrawable(mContext.getDrawable(R.drawable.ic_podcast_row_item_expand));
 
             viewHolder.title.setText(podcast.getChannel().getTitle());
-            viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+
+            if (podcast.getChannel().getDescription() == null) {
+                CommonUtils.executeAsync(new FetchPodcast(podcast.getChannel().getRSSUrl().toString()), (result) -> {
+                    String description = result.getChannel().getDescription();
+                    if (description != null) {
+                        description = CommonUtils.CleanDescription(description);
+                        if (description.length() > 130)
+                            description = description.substring(0, 130).concat("...");
+
+                        viewHolder.description.setText(description);
+                        viewHolder.description.setVisibility(View.VISIBLE);
+                    } else
+                        viewHolder.description.setVisibility(View.INVISIBLE);
+                });
+            }
+            else
+            {
+                viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+                viewHolder.description.setVisibility(View.VISIBLE);
+            }
 
             if (podcast.getChannel().getThumbnailUrl() != null) {
                 try {

@@ -40,11 +40,11 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
         List<PodcastItem> podcasts = new ArrayList<>();
 
         try {
-            final URL url = new URL(context.getString(R.string.listennotes_rest, URLEncoder.encode(mQuery, "UTF-8")));
+            final URL url = new URL(context.getString(R.string.directory_rest_url, URLEncoder.encode(mQuery, "UTF-8")));
             final HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
             conn.setConnectTimeout(3000);
             conn.setReadTimeout(5000);
-            conn.setRequestProperty("X-ListenAPI-Key", context.getString(R.string.listennotes_api_key));
+            //conn.setRequestProperty("X-ListenAPI-Key", context.getString(R.string.listennotes_api_key));
             //conn.setRequestProperty("X-Mashape-Key", mContext.get().getString(R.string.listennotes_api_key));
             conn.setRequestProperty("Accept", "application/json");
 
@@ -72,42 +72,48 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
 
                     final JSONObject podcastObj = podcastsArray.getJSONObject(p);
 
-                    final String latestPubDate = podcastObj.getString("lastest_pub_date_ms") != null ? podcastObj.getString("lastest_pub_date_ms").toLowerCase() : "";
+                    //final String latestPubDate = podcastObj.getString("lastest_pub_date_ms") != null ? podcastObj.getString("lastest_pub_date_ms").toLowerCase() : "";
 
-                    final Calendar calendarEpisode = Calendar.getInstance(Locale.ENGLISH);
-                    calendarEpisode.setTimeInMillis(Long.valueOf(latestPubDate));
+                    //final Calendar calendarEpisode = Calendar.getInstance(Locale.ENGLISH);
+                    //calendarEpisode.setTimeInMillis(Long.valueOf(latestPubDate));
 
-                    final Calendar calendarNow = Calendar.getInstance(Locale.ENGLISH);
-                    calendarNow.setTime(new Date());
+                    //final Calendar calendarNow = Calendar.getInstance(Locale.ENGLISH);
+                    //calendarNow.setTime(new Date());
 
-                    if (DateUtils.daysBetween(calendarEpisode, calendarNow) < 365)
-                    {
+                    //if (DateUtils.daysBetween(calendarEpisode, calendarNow) < 365)
+                    //{
                         final PodcastItem podcast = new PodcastItem();
                         final ChannelItem channel = new ChannelItem();
 
+                        String rssUrl = podcastObj.getString("feedUrl");
+
+                        /*
                         String rssUrl = CommonUtils.getRedirectUrl(podcastObj.getString("rss"));
 
                         if (rssUrl == null)
                             rssUrl = podcastObj.getString("rss");
+                         */
 
                         final ChannelItem channelItem = ChannelParser.parse(rssUrl);
 
                         if (channelItem.getTitle() == null)
-                            channel.setTitle(podcastObj.getString("title"));
+                            channel.setTitle(podcastObj.getString("collectionName"));
+                            //channel.setTitle(podcastObj.getString("title"));
                         else
                             channel.setTitle(channelItem.getTitle());
 
                         if (channelItem.getThumbnailUrl() != null)
                             channel.setThumbnailUrl(channelItem.getThumbnailUrl().toString());
                         else
-                            channel.setThumbnailUrl(podcastObj.getString("image"));
+                            channel.setThumbnailUrl(podcastObj.getString("artworkUrl100"));
+                            //channel.setThumbnailUrl(podcastObj.getString("image"));
 
                         if (channelItem.getThumbnailUrl() != null)
                             channel.setThumbnailName(CommonUtils.GetThumbnailName(channelItem));
 
                         channel.setRSSUrl(rssUrl);
 
-                        String description = channel.getDescription();
+      /*                  String description = channel.getDescription();
 
                         if (description == null)
                             description = podcastObj.getString("description_original");
@@ -119,14 +125,14 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
                         if (description.length() > 130)
                             description = description.substring(0, 130).concat("...");
 
-                        channel.setDescription(description);
+                        channel.setDescription(description);*/
 
                         podcast.setChannel(channel);
                         podcast.setIsREST(true);
 
                         if (channel.getTitle().equals("N/A") == false)
                             podcasts.add(podcast);
-                    }
+                        //}
                 }
             }
             conn.disconnect();

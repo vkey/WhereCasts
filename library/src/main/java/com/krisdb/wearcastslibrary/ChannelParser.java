@@ -22,51 +22,25 @@ public class ChannelParser {
         final RootElement root = new RootElement("rss");
         final Element channelNode = root.getChild("channel");
 
-        channelNode.getChild("title").setEndTextElementListener(new EndTextElementListener()
-        {
-            public void end(final String body) {
-                channel.setTitle(title == null || title.length() == 0 ? body : title);
-            }
-        });
+        channelNode.getChild("title").setEndTextElementListener(body -> channel.setTitle(title == null || title.length() == 0 ? body : title));
 
-        channelNode.getChild("link").setEndTextElementListener(new EndTextElementListener()
-        {
-            public void end(final String body) {
-                channel.setSiteUrl(body);
-            }
-        });
+        channelNode.getChild("link").setEndTextElementListener(channel::setSiteUrl);
 
-        channelNode.getChild("description").setEndTextElementListener(new EndTextElementListener()
-        {
-            public void end(final String body) {
-                channel.setDescription(description == null ? body : description);
-            }
-        });
+        channelNode.getChild("description").setEndTextElementListener(body -> channel.setDescription(description == null ? body : description));
 
         if (channel.getThumbnailUrl() == null) {
-            channelNode.getChild("image").getChild("url").setEndTextElementListener(new EndTextElementListener()
-            {
-                public void end(final String body) {
-                    channel.setThumbnailUrl(body);
-                }
-            });
+            channelNode.getChild("image").getChild("url").setEndTextElementListener(channel::setThumbnailUrl);
         }
 
-        channelNode.getChild("http://search.yahoo.com/mrss/", "thumbnail").setStartElementListener(new StartElementListener()
-        {
-            public void start(Attributes attr)
-            {
-                if (attr.getValue("url") != null)
-                    channel.setThumbnailUrl(attr.getValue("url"));
-            }
+        channelNode.getChild("http://search.yahoo.com/mrss/", "thumbnail").setStartElementListener(attr -> {
+            if (attr.getValue("url") != null)
+                channel.setThumbnailUrl(attr.getValue("url"));
         });
 
         if (channel.getThumbnailUrl() == null) {
-            channelNode.getChild("http://www.itunes.com/dtds/podcast-1.0.dtd", "image").setStartElementListener(new StartElementListener() {
-                public void start(Attributes attr) {
-                    if (attr.getValue("href") != null)
-                        channel.setThumbnailUrl(attr.getValue("href"));
-                }
+            channelNode.getChild("http://www.itunes.com/dtds/podcast-1.0.dtd", "image").setStartElementListener(attr -> {
+                if (attr.getValue("href") != null)
+                    channel.setThumbnailUrl(attr.getValue("href"));
             });
         }
 

@@ -20,6 +20,7 @@ import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.FetchPodcast;
 import com.krisdb.wearcastslibrary.Async.GetEpisodes;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -94,7 +95,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         holder.add.setOnClickListener(view1 -> addPodcast(holder));
 
-        holder.title.setOnClickListener(view12 -> addPodcast(holder));
+        //holder.title.setOnClickListener(view12 -> addPodcast(holder));
 
         return holder;
     }
@@ -180,8 +181,27 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         }
         else {
             title.setTextSize(16);
-            viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
-            viewHolder.description.setVisibility(View.VISIBLE);
+
+            if (podcast.getChannel().getDescription() == null) {
+                CommonUtils.executeAsync(new FetchPodcast(podcast.getChannel().getRSSUrl().toString()), (result) -> {
+                    String description = result.getChannel().getDescription();
+                    if (description != null) {
+                        description = CommonUtils.CleanDescription(description);
+                        if (description.length() > 100)
+                            description = description.substring(0, 100).concat("...");
+
+                        viewHolder.description.setText(description);
+                        viewHolder.description.setVisibility(View.VISIBLE);
+                    } else
+                        viewHolder.description.setVisibility(View.INVISIBLE);
+                });
+            }
+            else
+            {
+                viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+                viewHolder.description.setVisibility(View.VISIBLE);
+            }
+
             viewHolder.episodesExpand.setVisibility(View.VISIBLE);
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
