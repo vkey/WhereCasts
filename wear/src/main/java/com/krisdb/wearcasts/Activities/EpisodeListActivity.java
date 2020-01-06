@@ -174,7 +174,9 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mActivity, true)) {
 
             unregisterNetworkCallback();
-            CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
+
+            if (!CommonUtils.isNetworkAvailable(mActivity))
+                CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
@@ -523,7 +525,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
                     unregisterNetworkCallback();
 
-                    CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
+                    if (!CommonUtils.isNetworkAvailable(mActivity))
+                        CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                         @Override

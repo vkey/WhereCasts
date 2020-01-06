@@ -773,7 +773,8 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         {
             unregisterNetworkCallback();
 
-            CommonUtils.showToast(mContext, getString(R.string.alert_episode_network_waiting));
+            if (!CommonUtils.isNetworkAvailable(mContext))
+                CommonUtils.showToast(mContext, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                 @Override
