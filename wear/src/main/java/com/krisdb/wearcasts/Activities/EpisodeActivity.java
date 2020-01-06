@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -514,13 +513,17 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 if (playingEpisodeID > 0)
                 {
                     final Handler bluetoothHandler = new Handler();
+                    final int[] count = {0};
                     bluetoothHandler.postDelayed(() ->
                             {
-                                if (Utilities.BluetoothEnabled())
+                                if (Utilities.BluetoothEnabled() || count[0] == 5)
                                 {
                                     bluetoothHandler.removeCallbacksAndMessages(null);
                                     handleNetwork(false);
+                                    count[0]++;
                                 }
+
+                                Utilities.enableBluetooth(mContext);
                             }, 1000);
                 }
                 else
@@ -552,7 +555,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         super.onDestroy();
         //mBroadcastManger.unregisterReceiver(mMediaReceiver);
     }
-
 
     private Runnable downloadProgress = new Runnable() {
             @Override
