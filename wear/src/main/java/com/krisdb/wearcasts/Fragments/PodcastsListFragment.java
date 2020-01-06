@@ -101,11 +101,9 @@ public class PodcastsListFragment extends Fragment {
         final PodcastsViewModel podcastsModel = ViewModelProviders.of(this).get(PodcastsViewModel.class);
 
         podcastsModel.getPodcasts().observe(this, podcasts -> {
-            if (podcasts.size() > 0) {
-                mAdapter = new PodcastsAdapter(mActivity, podcasts);
-                mPodcastsList.setAdapter(mAdapter);
-            }
-            else
+            mAdapter = new PodcastsAdapter(mActivity, podcasts);
+            mPodcastsList.setAdapter(mAdapter);
+            if (podcasts.size() == 0)
                 showCopy(podcasts.size());
         });
    }
