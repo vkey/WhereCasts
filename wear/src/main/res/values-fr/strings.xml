@@ -160,7 +160,7 @@
     <string name="settings_podcasts_label_playback_skip_back">Sauter Retour</string>
     <string name="settings_podcasts_label_playback_skip_forward">Sauter en avant</string>
     <string name="settings_podcasts_label_playback_auto_start">Démarrage automatique de la lecture</string>
-    <string name="settings_podcasts_label_playback_auto_start_summary">Lancer la lecture lors de la sélection d'un épisode</string>
+    <string name="settings_podcasts_label_playback_auto_start_summary">Lancer la lecture lors de la sélection d\'un épisode</string>
     <string name="settings_podcasts_label_playback_remove_notification">Supprimer la notification</string>
     <string name="settings_podcasts_label_playback_remove_notification_summary">En pause</string>
     <string name="settings_podcasts_label_playback_detect_bluetooth">Reprendre la lecture lorsque Bluetooth se connecte</string>

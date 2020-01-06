@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -264,6 +265,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     volumeBarImage.setImageDrawable(getDrawable(R.drawable.ic_action_episode_volume_bar_mute));
                 else
                     volumeBarImage.setImageDrawable(getDrawable(R.drawable.ic_action_episode_volume_bar));
+
                     if (mVolumeBarHandler != null)
                         mVolumeBarHandler.removeCallbacksAndMessages(null);
 
@@ -486,13 +488,14 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     private void togglePlayback()
     {
-        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == GetPlayingEpisodeID(mContext);
+        final int playingEpisodeID = GetPlayingEpisodeID(mContext);
+        final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == playingEpisodeID;
+
+        if (playingEpisodeID > 0)
+            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
 
         if (mCurrentState == STATE_PAUSED || (mCurrentState == STATE_PLAYING && !isCurrentlyPlaying))
         {
-            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
-            mCurrentState = STATE_PAUSED;
-
             final Bundle extras = new Bundle();
             extras.putString("local_file", mLocalFile);
             extras.putInt("playlistid", mPlaylistID);
@@ -501,24 +504,32 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             //check for downloaded episode
             if (mLocalFile != null || mEpisode.getIsDownloaded()) {
 
-                Utilities.enableBluetooth(mContext);
-
                 final String uri = (mLocalFile != null) ? GetLocalDirectory(mActivity).concat(mLocalFile) : Utilities.GetMediaFile(mActivity, mEpisode);
 
                 MediaControllerCompat.getMediaController(mActivity).getTransportControls().playFromUri(Uri.parse(uri), extras);
 
                 mCurrentState = STATE_PLAYING;
             }
-            else
-                handleNetwork(false);
-
+            else {
+                if (playingEpisodeID > 0)
+                {
+                    final Handler bluetoothHandler = new Handler();
+                    bluetoothHandler.postDelayed(() ->
+                            {
+                                if (Utilities.BluetoothEnabled())
+                                {
+                                    bluetoothHandler.removeCallbacksAndMessages(null);
+                                    handleNetwork(false);
+                                }
+                            }, 1000);
+                }
+                else
+                    handleNetwork(false);
+            }
             mSeekBar.setProgress(mEpisode.getPosition());
         }
         else
         {
-            //pause episode
-            MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
-
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mDownloadImage.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
