@@ -20,6 +20,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -489,6 +490,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     {
         final int playingEpisodeID = GetPlayingEpisodeID(mContext);
         final boolean isCurrentlyPlaying = mEpisode.getEpisodeId() == playingEpisodeID;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (playingEpisodeID > 0)
             MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
@@ -512,19 +514,22 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             else {
                 if (playingEpisodeID > 0)
                 {
-                    final Handler bluetoothHandler = new Handler();
-                    final int[] count = {0};
-                    bluetoothHandler.postDelayed(() ->
-                            {
-                                if (Utilities.BluetoothEnabled() || count[0] == 5)
-                                {
-                                    bluetoothHandler.removeCallbacksAndMessages(null);
+                    if (prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
+                        CommonUtils.showToast(mContext, getString(R.string.alert_episode_network_waiting));
+                        new CountDownTimer(10000, 1000) {
+                            public void onTick(long millisUntilFinished) {
+                                if (Utilities.BluetoothEnabled()) {
                                     handleNetwork(false);
-                                    count[0]++;
+                                    this.cancel();
                                 }
+                                else
+                                    Utilities.enableBluetooth(mContext, false);
+                            }
 
-                                Utilities.enableBluetooth(mContext);
-                            }, 1000);
+                            public void onFinish() {}
+                        }.start();
+                    } else
+                        handleNetwork(false);
                 }
                 else
                     handleNetwork(false);
@@ -734,6 +739,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     private void handleNetwork(final Boolean download) {
         mDownload = download;
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (!CommonUtils.isNetworkAvailable(mActivity))
         {

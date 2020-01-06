@@ -155,6 +155,9 @@ public class CommonUtils {
 
     public static Boolean isNetworkAvailable(final Context ctx) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) return false;
+
         final Network network = connectivityManager.getActiveNetwork();
         final NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
 
