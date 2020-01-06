@@ -5,7 +5,6 @@ import android.content.Context;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.ChannelParser;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 import com.krisdb.wearcastslibrary.R;
 
@@ -17,10 +16,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import javax.net.ssl.HttpsURLConnection;

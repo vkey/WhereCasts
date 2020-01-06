@@ -1,12 +1,8 @@
 package com.krisdb.wearcastslibrary;
 
 import android.sax.Element;
-import android.sax.EndTextElementListener;
 import android.sax.RootElement;
-import android.sax.StartElementListener;
 import android.util.Xml;
-
-import org.xml.sax.Attributes;
 
 import java.io.InputStream;
 
