@@ -389,6 +389,15 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
 
     private void openEpisode(final int position)
     {
+        final SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        if (Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(mContext.getResources().getInteger(R.integer.default_home_screen)))) == mContext.getResources().getInteger(R.integer.home_screen_option_playing_Screen))
+        {
+            final SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("default_home_screen_playing_screen_playlistid", mPlaylistId);
+            editor.apply();
+        }
+
         final Intent intent = new Intent(mContext, EpisodeActivity.class);
 
         final Bundle bundle = new Bundle();

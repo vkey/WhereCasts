@@ -80,13 +80,13 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         if (Integer.valueOf(prefs.getString("pref_display_home_screen", String.valueOf(getResources().getInteger(R.integer.default_home_screen)))) == getResources().getInteger(R.integer.home_screen_option_playing_Screen))
         {
-
             int lastEpisodePlayedID = prefs.getInt("last_episode_played", 0);
 
             if (lastEpisodePlayedID > 0) {
                 Intent i = new Intent(this, EpisodeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("episodeid", lastEpisodePlayedID);
+                bundle.putInt("playlistid", prefs.getInt("default_home_screen_playing_screen_playlistid", 0));
                 i.putExtras(bundle);
 
                 startActivity(i);

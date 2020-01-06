@@ -62,6 +62,41 @@ public class PlaylistsUtilities {
         return output;
     }
 
+    public static int getPlaylistID(final Context ctx, final int episodeId)
+    {
+        int playlistId = 0;
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        Cursor cursor = sdb.rawQuery("SELECT [id] FROM tbl_playlists_xref WHERE [episode_id] = ?", new String[]{String.valueOf(episodeId)});
+
+        if (cursor.moveToFirst())
+            playlistId = cursor.getInt(0);
+
+        if (playlistId == 0)
+        {
+            cursor = sdb.rawQuery("SELECT [id] FROM tbl_podcast_episodes WHERE [download] = 1 AND [id] = ?", new String[]{String.valueOf(episodeId)});
+
+            if (cursor.moveToFirst())
+                playlistId = ctx.getResources().getInteger(R.integer.playlist_downloads);
+        }
+
+        if (playlistId == 0)
+        {
+            cursor = sdb.rawQuery("SELECT [id] FROM tbl_podcast_episodes WHERE [position] > 0 AND [id] = ?", new String[]{String.valueOf(episodeId)});
+
+            if (cursor.moveToFirst())
+                playlistId = ctx.getResources().getInteger(R.integer.playlist_inprogress);
+        }
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return playlistId;
+    }
+
     public static List<PodcastItem> getPlaylistItems(final Context ctx, final int playlistId, final Boolean isLocal) {
         return (isLocal) ? GetEpisodes(ctx, playlistId) : GetLocalFiles(ctx);
     }
