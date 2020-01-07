@@ -11,16 +11,17 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.krisdb.wearcasts.Activities.MainActivity;
 import com.krisdb.wearcasts.Async.CleanupDownloads;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 import java.util.Objects;
@@ -111,10 +112,9 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
             if (!isCurrentDownload(context)) {
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
-                    //CommonUtils.writeToFile(context,"sending network release broadcast");
-                    final Intent intentComplete = new Intent();
-                    intentComplete.setAction("downloads_complete");
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intentComplete);
+                    CommonUtils.writeToFile(context,"sending network release broadcast"); //TODO: Remove
+
+                    EventBus.getDefault().post(new DownloadComplete());
                 }
 
                 Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));

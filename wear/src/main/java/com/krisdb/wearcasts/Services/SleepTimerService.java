@@ -30,7 +30,6 @@ public class SleepTimerService extends IntentService {
     private MediaBrowserCompat mMediaBrowser;
     private Context mContext;
 
-
     public SleepTimerService() {
         super("SleepTimerService");
     }
@@ -82,10 +81,6 @@ public class SleepTimerService extends IntentService {
                         null);
 
                 mMediaBrowser.connect();
-
-                //final Intent intentSleepTimer = new Intent();
-                //intentSleepTimer.setAction("sleep_timer");
-                //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentSleepTimer);
 
                 stopSelf();
             }

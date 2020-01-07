@@ -1,17 +1,33 @@
 package com.krisdb.wearcasts.Services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.krisdb.wearcasts.Activities.DirectoryActivity;
+import com.krisdb.wearcasts.Models.FileUploadProgress;
+import com.krisdb.wearcasts.Models.MediaPlaybackStatus;
+import com.krisdb.wearcasts.Models.OPMLImport;
+import com.krisdb.wearcasts.Models.WatchStatus;
 import com.krisdb.wearcasts.R;
+
+import org.greenrobot.eventbus.EventBus;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class SyncService extends WearableListenerService {
 
@@ -38,10 +54,12 @@ public class SyncService extends WearableListenerService {
                 editor.putInt("id", id);
                 editor.apply();
 
-                final Intent intentMediaSynced = new Intent();
-                intentMediaSynced.setAction("media_action");
-                intentMediaSynced.putExtra("media_synced", true);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentMediaSynced);
+
+                MediaPlaybackStatus mpsMediaSync = new MediaPlaybackStatus();
+                mpsMediaSync.setMediaSync(true);
+
+                EventBus.getDefault().post(mpsMediaSync);
+
             } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/rateapp")) {
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_play_url)));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -50,25 +68,24 @@ public class SyncService extends WearableListenerService {
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/fileuploadprogress")) {
 
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-                final Boolean started = dataMapItem.getDataMap().getBoolean("started");
-                final Boolean processing = dataMapItem.getDataMap().getBoolean("processing");
-                final int length = dataMapItem.getDataMap().getInt("length");
-                final int progress = dataMapItem.getDataMap().getInt("progress");
-                final Boolean finished = dataMapItem.getDataMap().getBoolean("finished");
+                final boolean started = dataMapItem.getDataMap().getBoolean("started");
+                final boolean processing = dataMapItem.getDataMap().getBoolean("processing");
+                //final int length = dataMapItem.getDataMap().getInt("length");
+                //final int progress = dataMapItem.getDataMap().getInt("progress");
+                final boolean complete = dataMapItem.getDataMap().getBoolean("finished");
 
-                final Intent intentFileUploaded = new Intent();
-                intentFileUploaded.setAction("file_uploaded");
-                intentFileUploaded.putExtra("started", started);
-                intentFileUploaded.putExtra("processing", processing);
-                intentFileUploaded.putExtra("length", length);
-                intentFileUploaded.putExtra("finished", finished);
-                intentFileUploaded.putExtra("progress", progress);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentFileUploaded);
+                final FileUploadProgress fup = new FileUploadProgress();
+                fup.setStarted(started);
+                fup.setProcessing(processing);
+                fup.setComplete(complete);
+
+                EventBus.getDefault().post(fup);
+
             } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/premiumconfirm")) {
-                final Intent intentPremiumConfirm = new Intent();
-                intentPremiumConfirm.setAction("watchresponse");
-                intentPremiumConfirm.putExtra("premium", true);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentPremiumConfirm);
+                final WatchStatus wsPremiumConfirm = new WatchStatus();
+                wsPremiumConfirm.setPremiumConfirm(true);
+
+                EventBus.getDefault().post(wsPremiumConfirm);
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/syncplaybackspeed")) {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -78,44 +95,75 @@ public class SyncService extends WearableListenerService {
                 editor.apply();
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/thirdparty")) {
-                final Intent intent = new Intent();
-                intent.setAction("watchresponse");
-                intent.putExtra("thirdparty", true);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+                final WatchStatus wsThirdPartyConfirm = new WatchStatus();
+                wsThirdPartyConfirm.setThirdParty(true);
+
+                EventBus.getDefault().post(wsThirdPartyConfirm);
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_complete")) {
-                final Intent intent = new Intent();
-                intent.setAction("watchresponse");
-                intent.putExtra("opmlimport_complete", true);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                final OPMLImport opmlComplete = new OPMLImport();
+                opmlComplete.setComplete(true);
+
+                EventBus.getDefault().post(opmlComplete);
+
+                final Intent notificationIntent = new Intent(this, DirectoryActivity.class);
+                notificationIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                final PendingIntent intentDirectory = PendingIntent.getActivity(this, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    final String channelID = getPackageName().concat(".opmlcomplete");
+
+                    final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    final NotificationChannel channel = new NotificationChannel(channelID, getString(R.string.notification_channel_opml_import_complete), NotificationManager.IMPORTANCE_DEFAULT);
+                    notificationManager.createNotificationChannel(channel);
+
+                    final Notification notification = new NotificationCompat.Builder(this, channelID)
+                            .setSmallIcon(R.drawable.ic_notification)
+                            .setContentTitle(getString(R.string.notification_opml_import_complete_title))
+                            .setContentIntent(intentDirectory)
+                            .build();
+
+                    notificationManager.notify(122, notification);
+                } else {
+                    final NotificationCompat.Builder notificationBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setSmallIcon(R.drawable.ic_notification)
+                                    .setContentIntent(intentDirectory)
+                                    .setContentTitle(getString(R.string.notification_opml_import_complete_title));
+
+                    NotificationManagerCompat.from(this).notify(122, notificationBuilder.build());
+                }
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_podcasts")) {
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
 
-                final Intent intent = new Intent();
-                intent.setAction("watchresponse");
-                intent.putExtra("opmlimport_podcasts", true);
-                intent.putExtra("podcast_title", dataMapItem.getDataMap().getString("podcast_title"));
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                final OPMLImport opmlPodcasts = new OPMLImport();
+                opmlPodcasts.setPodcasts(true);
+                opmlPodcasts.setTitle(dataMapItem.getDataMap().getString("podcast_title"));
+
+                EventBus.getDefault().post(opmlPodcasts);
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_episodes")) {
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
 
-                final Intent intent = new Intent();
-                intent.setAction("watchresponse");
-                intent.putExtra("opmlimport_episodes", true);
-                intent.putExtra("podcast_title_episodes", dataMapItem.getDataMap().getString("podcast_title_episodes"));
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                final OPMLImport opmlEpisodes = new OPMLImport();
+                opmlEpisodes.setEpisodes(true);
+                opmlEpisodes.setTitle(dataMapItem.getDataMap().getString("podcast_title_episodes"));
+
+                EventBus.getDefault().post(opmlEpisodes);
+
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/opmlimport_art")) {
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
 
-                final Intent intent = new Intent();
-                intent.setAction("watchresponse");
-                intent.putExtra("opmlimport_art", true);
-                intent.putExtra("podcast_title_art", dataMapItem.getDataMap().getString("podcast_title_art"));
+                final OPMLImport opmlArt = new OPMLImport();
+                opmlArt.setArt(true);
+                opmlArt.setTitle(dataMapItem.getDataMap().getString("podcast_title_art"));
 
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                EventBus.getDefault().post(opmlArt);
             }
         }
     }

@@ -98,7 +98,9 @@
     <string name="alert_episode_import_first">Cet épisode sera envoyé à votre montre et téléchargé</string>
     <string name="alert_playlist_purchased">%d créé.</string>
     <string name="text_file_uploaded">Bien envoyé.\nGlissez à gauche sur l\'écran principal.</string>
+    <string name="text_file_uploaded_timeout">Une erreur s\'est produite lors du téléchargement.  Le fichier est peut-être trop volumineux.  Il peut être nécessaire de télécharger le fichier manuellement dans ce répertoire sur votre montre: /sdcard/WearCasts/Local/</string>
     <string name="text_file_upload_start">Envoi de fichier…</string>
+    <string name="text_file_upload_ini">En attente de la réponse de la montre…</string>
     <string name="alert_playlists_quantity_none">Sélectionnez une quantité</string>
     <string name="alert_playlists_purchase_disclaimer">L\'ajout de listes de lecture supprimera toutes les listes de lecture actuellement surveillées.</string>
     <string name="alert_playlists_readd_disclaimer">La ré-ajout de playlists supprimera toutes les playlists actuellement sur votre montre.</string>

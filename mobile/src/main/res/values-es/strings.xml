@@ -98,7 +98,9 @@
     <string name="alert_episode_import_first">Este episodio se enviará a tu reloj y se descargará</string>
     <string name="alert_playlist_purchased">%d creado.</string>
     <string name="text_file_uploaded">Enviado correctamente.\nDesliza a la izquierda en la pantalla principal.</string>
+    <string name="text_file_uploaded_timeout">Se produjo un error al subir.  El archivo puede ser demasiado grande.  Puede ser necesario cargar el archivo manualmente en este directorio en su reloj: /sdcard/WearCasts/Local/</string>
     <string name="text_file_upload_start">Archivo de envío…</string>
+    <string name="text_file_upload_ini">Esperando respuesta del reloj…</string>
     <string name="alert_playlists_quantity_none">Seleccione una cantidad</string>
     <string name="alert_playlists_purchase_disclaimer">Agregar listas de reproducción eliminará cualquier lista de reproducción actualmente en su reloj.</string>
     <string name="alert_playlists_readd_disclaimer">Al volver a agregar listas de reproducción, se eliminarán las listas de reproducción que estén actualmente en su reloj.</string>

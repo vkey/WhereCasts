@@ -6,10 +6,8 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
@@ -32,10 +30,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Models.OPMLImport;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.Async.EpisodeCount;
@@ -45,6 +43,9 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -60,7 +61,6 @@ public class UserAddActivity extends AppCompatActivity {
     private ProgressBar mProgressOPML;
     private TextView mTipView, mOPMLView;
     private CheckBox mThirdPartyAutoDownload;
-    private LocalBroadcastManager mBroadcastManger;
     private WeakReference<Activity> mActivityRef;
 
     @Override
@@ -79,7 +79,6 @@ public class UserAddActivity extends AppCompatActivity {
         final Button btnImportPodcast = findViewById(R.id.btn_import_podcast);
         final Button btnImportOPML = findViewById(R.id.btn_import_opml);
         mTipView = findViewById(R.id.main_tip);
-        mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
 
         btnImportPodcast.setOnClickListener(view -> {
 
@@ -272,94 +271,61 @@ public class UserAddActivity extends AppCompatActivity {
         }
     }
 
-    private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final Bundle extras = intent.getExtras();
-             if (extras.getBoolean("thirdparty")) {
-                 findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
-                 findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
-             }
-            else if (extras.getBoolean("opmlimport_complete")) {
-                 mProgressOPML.setVisibility(View.GONE);
-                 mOPMLView.setGravity(Gravity.START);
-                 mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_complete));
-                 mOPMLView.setTextColor(mActivity.getColor(R.color.wc_general_green));
-                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-                 final Intent notificationIntent = new Intent(mActivity, DirectoryActivity.class);
-                 notificationIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                 final PendingIntent intentDirectory = PendingIntent.getActivity(mActivity, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                     final String channelID = getPackageName().concat(".opmlcomplete");
-
-                     final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                     final NotificationChannel channel = new NotificationChannel(channelID, getString(R.string.notification_channel_opml_import_complete), NotificationManager.IMPORTANCE_DEFAULT);
-                     notificationManager.createNotificationChannel(channel);
-
-                     final Notification notification = new NotificationCompat.Builder(mActivity, channelID)
-                             .setSmallIcon(R.drawable.ic_notification)
-                             .setContentTitle(getString(R.string.notification_opml_import_complete_title))
-                             .setContentIntent(intentDirectory)
-                             .build();
-
-                     notificationManager.notify(122, notification);
-                 } else {
-                     final NotificationCompat.Builder notificationBuilder =
-                             new NotificationCompat.Builder(mActivity)
-                                     .setSmallIcon(R.drawable.ic_notification)
-                                     .setContentIntent(intentDirectory)
-                                     .setContentTitle(getString(R.string.notification_opml_import_complete_title));
-
-                     NotificationManagerCompat.from(mActivity).notify(122, notificationBuilder.build());
-                 }
-             }
-            else if (extras.getBoolean("opmlimport_podcasts")) {
-                 mProgressOPML.setVisibility(View.VISIBLE);
-                 mOPMLView.setGravity(Gravity.START);
-                 mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_parsing, extras.getString("podcast_title"))));
-             }
-            else if (extras.getBoolean("opmlimport_episodes")) {
-                 mProgressOPML.setVisibility(View.VISIBLE);
-                 mOPMLView.setGravity(Gravity.START);
-                 mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_episodes, extras.getString("podcast_title_episodes"))));
-             }
-            else if (extras.getBoolean("opmlimport_art")) {
-                 mProgressOPML.setVisibility(View.VISIBLE);
-                 mOPMLView.setGravity(Gravity.START);
-                 mOPMLView.setVisibility(View.VISIBLE);
-                 mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_art, extras.getString("podcast_title_art"))));
-             }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OPMLImport status) {
+        if (status.getComplete())
+        {
+            mProgressOPML.setVisibility(View.GONE);
+            mOPMLView.setGravity(Gravity.START);
+            mOPMLView.setVisibility(View.VISIBLE);
+            mOPMLView.setText(getString(R.string.text_importing_opml_complete));
+            mOPMLView.setTextColor(mActivity.getColor(R.color.wc_general_green));
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-    };
+        else if (status.getPodcasts())
+        {
+            mProgressOPML.setVisibility(View.VISIBLE);
+            mOPMLView.setGravity(Gravity.START);
+            mOPMLView.setVisibility(View.VISIBLE);
+            mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_parsing, status.getTitle())));
+        }
+        else if (status.getEpisodes())
+        {
+            mProgressOPML.setVisibility(View.VISIBLE);
+            mOPMLView.setGravity(Gravity.START);
+            mOPMLView.setVisibility(View.VISIBLE);
+            mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_episodes, status.getTitle())));
+        }
+        else if (status.getArt())
+        {
+            mProgressOPML.setVisibility(View.VISIBLE);
+            mOPMLView.setGravity(Gravity.START);
+            mOPMLView.setVisibility(View.VISIBLE);
+            mOPMLView.setText(getString(R.string.text_importing_opml_sent).concat(getString(R.string.text_importing_opml_art, status.getTitle())));
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     public void onPause() {
-        //mBroadcastManger.unregisterReceiver(mWatchResponse);
         super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroy() {
-        mBroadcastManger.unregisterReceiver(mWatchResponse);
         super.onDestroy();
     }
 

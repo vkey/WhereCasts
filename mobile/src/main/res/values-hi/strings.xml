@@ -98,7 +98,9 @@
     <string name="alert_episode_import_first">यह एपिसोड आपकी घड़ी पर भेजा जाएगा और डाउनलोड किया जाएगा</string>
     <string name="alert_playlist_purchased">%d बनाया था.</string>
     <string name="text_file_uploaded">सफलतापूर्वक भेज दिया.\nस्वाइप मुख्य स्क्रीन पर छोड़ दिया.</string>
+    <string name="text_file_uploaded_timeout">अपलोड करने में त्रुटि हुई.  फ़ाइल बहुत बड़ी हो सकती है.  आपकी निर्देशिका में फ़ाइल को मैन्युअल रूप से इस निर्देशिका में अपलोड करना आवश्यक हो सकता है: /sdcard/WearCasts/Local/</string>
     <string name="text_file_upload_start">फ़ाइल भेज रहा है…</string>
+    <string name="text_file_upload_ini">घड़ी से प्रतिक्रिया का इंतजार है…</string>
     <string name="alert_playlists_quantity_none">मात्रा का चयन करें</string>
     <string name="alert_playlists_purchase_disclaimer">प्लेलिस्ट जोड़ने से आपकी घड़ी में वर्तमान में मौजूद कोई भी प्लेलिस्ट हट जाएगी.</string>
     <string name="alert_playlists_readd_disclaimer">प्लेलिस्ट को दोबारा जोड़ने से आपकी घड़ी पर वर्तमान में कोई भी प्लेलिस्ट हटा दी जाएगी.</string>

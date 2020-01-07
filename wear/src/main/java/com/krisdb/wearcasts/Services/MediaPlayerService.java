@@ -38,7 +38,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
 
@@ -46,12 +45,15 @@ import com.krisdb.wearcasts.Activities.EpisodeActivity;
 import com.krisdb.wearcasts.Async.FinishMedia;
 import com.krisdb.wearcasts.Async.SyncWithMobileDevice;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Models.MediaPlaybackStatus;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -95,9 +97,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initMediaPlayer();
         initMediaSession();
-
-        //if (Utilities.sleepTimerEnabled(mContext))
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mSleepTimer, new IntentFilter("sleep_timer"));
 
         mHasPremium = Utilities.hasPremium(this);
     }
@@ -281,10 +280,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         mMediaSessionCompat.setActive(true);
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
 
-        final Intent intentMediaPlayed = new Intent();
-        intentMediaPlayed.setAction("media_action");
-        intentMediaPlayed.putExtra("media_played", true);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlayed);
+        final MediaPlaybackStatus mps = new MediaPlaybackStatus();
+        mps.setMediaPlay(true);
+
+        EventBus.getDefault().post(mps);
 
         showNotification(false);
 
@@ -348,10 +347,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaPlayer.pause();
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
 
-            final Intent intentMediaPaused = new Intent();
-            intentMediaPaused.setAction("media_action");
-            intentMediaPaused.putExtra("media_paused", true);
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPaused);
+            final MediaPlaybackStatus mpsPaused = new MediaPlaybackStatus();
+            mpsPaused.setMediaPaused(true);
+
+            EventBus.getDefault().post(mpsPaused);
+
             disableNoisyReceiver();
 
             showNotification(true);
@@ -388,10 +388,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mCallStarted = false;
 
-        final Intent intentMediaStart = new Intent();
-        intentMediaStart.setAction("media_action");
-        intentMediaStart.putExtra("media_start", true);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaStart);
+        final MediaPlaybackStatus mpsStart = new MediaPlaybackStatus();
+        mpsStart.setMediaStart(true);
+
+        EventBus.getDefault().post(mpsStart);
 
         if (mLocalFile == null) {
             final DBPodcastsEpisodes db = new DBPodcastsEpisodes(mContext);
@@ -406,17 +406,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             db.update(cvPlaying, mEpisode.getEpisodeId());
             db.close();
         }
-
-/*        if (CommonUtils.inDebugMode(mContext)) {
-            if (prefs.getBoolean("pref_detect_bluetooth_changes", true)) {
-                final IntentFilter filterBluetooth = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-                registerReceiver(mBluetoothConnected, filterBluetooth);
-            } else
-            {
-                try{unregisterReceiver(mBluetoothConnected);}
-                catch (Exception ignored){}
-            }
-        }*/
 
         initNoisyReceiver();
         initMediaSessionMetadata();
@@ -504,25 +493,16 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 mMediaHandler.removeCallbacksAndMessages(null);
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
 
-                final Intent intentMediaCompleted = new Intent();
-                intentMediaCompleted.setAction("media_action");
-                intentMediaCompleted.putExtra("media_started", false);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+                MediaPlaybackStatus mpsMediaPlaying = new MediaPlaybackStatus();
+                mpsMediaPlaying.setMediaPlaying(true);
+
+                EventBus.getDefault().post(mpsMediaPlaying);
 
                 if (mLocalFile == null)
                     SyncWithMobileDevice();
 
                 mp.start();
             });
-
-            mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
-                //Intent intentMediaBuffering = new Intent();
-                //intentMediaBuffering.setAction("media_buffering");
-                //intentMediaBuffering.putExtra("percent", percent);
-                //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
-                //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
-            }
-            );
 
             mMediaPlayer.setOnInfoListener((mp, what, extra) -> {
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
@@ -535,11 +515,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
                 if (what != -38) {
-                    final Intent intentMediaError = new Intent();
-                    intentMediaError.setAction("media_action");
-                    intentMediaError.putExtra("media_error", true);
-                    intentMediaError.putExtra("error_code", what);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
+
+                    final MediaPlaybackStatus mpsError = new MediaPlaybackStatus();
+                    mpsError.setErrorCode(what);
+                    mpsError.setMediaError(true);
+
+                    EventBus.getDefault().post(mpsError);
+
                     PauseAudio();
                     mError = true;
 
@@ -619,15 +601,14 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 extras.putInt("id", mEpisode.getEpisodeId());
                 mMediaSessionCompat.setExtras(extras);
 
-                final Intent intentMediaPlaylist = new Intent();
-                intentMediaPlaylist.setAction("media_action");
-                intentMediaPlaylist.putExtra("media_playlist_skip", true);
-                intentMediaPlaylist.putExtra("episodeid", mEpisode.getEpisodeId());
-                intentMediaPlaylist.putExtra("playlistid", mPlaylistID);
+                final MediaPlaybackStatus mpsPlaylistSkip = new MediaPlaybackStatus();
+                mpsPlaylistSkip.setMediaPlaylistSkip(true);
+                mpsPlaylistSkip.setEpisodeId(mEpisode.getEpisodeId());
+                mpsPlaylistSkip.setPlaylistId(mPlaylistID);
                 if (mLocalFile != null)
-                    intentMediaPlaylist.putExtra("local_file", mLocalFile);
+                    mpsPlaylistSkip.setLocalFile(mLocalFile);
 
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlaylist);
+                EventBus.getDefault().post(mpsPlaylistSkip);
             }
         } else {
             disableNoisyReceiver();
@@ -661,20 +642,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             //Log.d(mPackage, "MediaPlayerService Noisy receiver hit");
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 PauseAudio();
-            }
-        }
-    };
-
-    private BroadcastReceiver mBluetoothConnected = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
-
-                int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_DISCONNECTED);
-
-                if (state == BluetoothA2dp.STATE_CONNECTED && mMediaPlayer != null && !mMediaPlayer.isPlaying())
-                    PlayAudio();
             }
         }
     };
@@ -907,10 +874,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 mPlaybackCount = 0;
                 completeMedia(true);
             } else {
-                final Intent intentMediaPosition = new Intent();
-                intentMediaPosition.setAction("media_position");
-                intentMediaPosition.putExtra("position", position);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
+                final MediaPlaybackStatus mpPosition = new MediaPlaybackStatus();
+                mpPosition.setPosition(position);
+
+                EventBus.getDefault().post(mpPosition);
                 //initMediaSessionMetadata();
                 mPlaybackPosition = position;
                 mPlaybackCount++;
@@ -928,10 +895,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (!mError) {
             CommonUtils.executeSingleThreadAsync(new FinishMedia(mContext, mEpisode, mPlaylistID, mLocalFile, playbackError), (episodes) -> {
                 if (episodes.size() < 3) {
-                    final Intent intentMediaCompleted = new Intent();
-                    intentMediaCompleted.setAction("media_action");
-                    intentMediaCompleted.putExtra("media_completed", true);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+
+                    final MediaPlaybackStatus mpsCompleted = new MediaPlaybackStatus();
+                    mpsCompleted.setMediaCompleted(true);
+
+                    EventBus.getDefault().post(mpsCompleted);
                 }
 
                 playlistSkip(Enums.SkipDirection.NEXT, episodes);

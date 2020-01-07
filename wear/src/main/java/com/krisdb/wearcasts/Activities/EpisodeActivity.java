@@ -9,7 +9,6 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -49,7 +48,6 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
@@ -58,6 +56,7 @@ import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Async.ToggleBluetooth;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
+import com.krisdb.wearcasts.Models.MediaPlaybackStatus;
 import com.krisdb.wearcasts.Models.NavItem;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
@@ -68,6 +67,10 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -341,6 +344,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             editor.putBoolean("pref_hardware_override_episode", false);
             editor.apply();
         }
+
     }
 
     @Override
@@ -355,8 +359,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         unregisterNetworkCallback();
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPositionReceiver);
+        EventBus.getDefault().unregister(this);
 
         super.onPause();
     }
@@ -371,6 +374,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         if (intent != null && intent.getExtras() != null) {
             mEpisodeID = intent.getExtras().getInt("episodeid");
             mPlaylistID = intent.getExtras().getInt("playlistid");
+            mLocalFile = intent.getExtras().getString("local_file");
 
             if (mLocalFile != null) {
                 mEpisode = new PodcastItem();
@@ -383,8 +387,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         } else
             Utilities.ShowFailureActivity(mActivity, getString(R.string.general_error));
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaReceiver, new IntentFilter("media_action"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPositionReceiver, new IntentFilter("media_position"));
+        EventBus.getDefault().register(this);
     }
 
     private void MediaBrowserConnect() {
@@ -538,6 +541,9 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else
         {
+            if (mLocalFile != null)
+                MediaControllerCompat.getMediaController(mActivity).getTransportControls().pause();
+
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mDownloadImage.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -558,7 +564,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //mBroadcastManger.unregisterReceiver(mMediaReceiver);
     }
 
     private Runnable downloadProgress = new Runnable() {
@@ -971,160 +976,137 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
     };
 
-    private BroadcastReceiver mMediaPositionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final Bundle extras = intent.getExtras();
-
-            final int position = extras.getInt("position");
-            //Log.d(mContext.getPackageName(), "Position: " + position);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MediaPlaybackStatus status) {
+        if (status.getMediaPlay())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+            mSkipBackImage.setVisibility(View.VISIBLE);
+            mSkipForwardImage.setVisibility(View.VISIBLE);
+            mSkipBack.setVisibility(View.VISIBLE);
+            mSkipForward.setVisibility(View.VISIBLE);
+            mInfoLayout.setVisibility(View.VISIBLE);
+            mDownloadImage.setVisibility(View.GONE);
+            final int position = GetEpisodeValue(mActivity, mEpisode, "position");
+            final int duration = mEpisode.getDuration();
+            mSeekBar.setMax(duration);
             mSeekBar.setProgress(position);
-            mPositionView.setText(DateUtils.FormatPositionTime(position));
         }
-    };
-
-    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            final Bundle extras = intent.getExtras();
-
-            //Log.d(mContext.getPackageName(), extras.getBoolean("media_start") ? "media_start" : "");
-            //Log.d(mContext.getPackageName(), "Media played: " + extras.getBoolean("media_played"));
-
-            if (extras.getBoolean("media_start")) {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
-                mVolumeUp.setVisibility(View.GONE);
-                mSeekBar.setVisibility(View.GONE);
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mDownloadImage.setVisibility(View.GONE);
-                mSkipBack.setVisibility(View.INVISIBLE);
-                mSkipForward.setVisibility(View.INVISIBLE);
-                mDurationView.setVisibility(View.INVISIBLE);
-                mPositionView.setVisibility(View.INVISIBLE);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-            else if (extras.getBoolean("media_paused"))
-            {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-                mProgressBar.setVisibility(View.GONE);
-                mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
-                mVolumeUp.setVisibility(View.GONE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-                mSkipBack.setVisibility(View.INVISIBLE);
-                mSkipForward.setVisibility(View.INVISIBLE);
-                mDownloadImage.setVisibility(View.VISIBLE);
-            }
-            else if (extras.getBoolean("media_played"))
-            {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
-                mSkipBackImage.setVisibility(View.VISIBLE);
-                mSkipForwardImage.setVisibility(View.VISIBLE);
-                mSkipBack.setVisibility(View.VISIBLE);
-                mSkipForward.setVisibility(View.VISIBLE);
-                mInfoLayout.setVisibility(View.VISIBLE);
-                mDownloadImage.setVisibility(View.GONE);
-                final int position = GetEpisodeValue(mActivity, mEpisode, "position");
-                final int duration = mEpisode.getDuration();
-                mSeekBar.setMax(duration);
-                mSeekBar.setProgress(position);
-            }
-            else if (extras.getBoolean("media_error"))
-            {
-                String message = getString(R.string.general_error);
-
-                final int errorCode = extras.getInt("error_code");
-
-                if (errorCode == -11)
-                    message = getString(R.string.error_playback_timeout);
-                else if (errorCode == -15)
-                    message = getString(R.string.error_playback_notavailable);
-                else if (errorCode == -25)
-                    message = getString(R.string.error_playback_lowdisk);
-                else if (errorCode < 0)
-                    message = getString(R.string.error_playback_other);
-
-                message = message.concat("\n(error code: ".concat(String.valueOf(errorCode).concat(")")));
-
-                Utilities.ShowFailureActivity(mActivity, message);
-
-                //showToast(mActivity, message);
-
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
-                mVolumeUp.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
-            }
-            else if (extras.getBoolean("media_completed"))
-            {
-                mInfoLayout.setVisibility(View.GONE);
-                mVolumeDown.setVisibility(View.GONE);
-                mVolumeUp.setVisibility(View.GONE);
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mSkipBack.setVisibility(View.INVISIBLE);
-                mSkipForward.setVisibility(View.INVISIBLE);
-            }
-            else if (extras.getBoolean("media_playlist_skip"))
-            {
-                mEpisodeID = extras.getInt("episodeid");
-                mPlaylistID = extras.getInt("playlistid");
-
-                if (extras.getString("local_file") != null)
-                    mLocalFile = extras.getString("local_file");
-                else
-                    mEpisode = GetEpisode(mContext, mEpisodeID, mPlaylistID);
-
-                MediaBrowserConnect();
-            }
-            else {
-                int duration;
-
-                if (mLocalFile != null)
-                    duration = (int) PreferenceManager.getDefaultSharedPreferences(mContext).getLong(Utilities.GetLocalDurationKey(mLocalFile), 0);
-                else
-                    duration = mEpisode.getDuration();
-
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_pause_dark : R.drawable.ic_action_episode_pause));
-
-                mProgressBar.setVisibility(ProgressBar.GONE);
-                mInfoLayout.setVisibility(View.VISIBLE);
-                mVolumeDown.setVisibility(View.VISIBLE);
-                mVolumeUp.setVisibility(View.VISIBLE);
-
-                mSeekBar.setMax(duration);
-                mSeekBar.setVisibility(View.VISIBLE);
-                mSkipForwardImage.setVisibility(View.VISIBLE);
-                mSkipBackImage.setVisibility(View.VISIBLE);
-                mSkipBack.setVisibility(View.VISIBLE);
-                mSkipForward.setVisibility(View.VISIBLE);
-                mDurationView.setText(DateUtils.FormatPositionTime(duration));
-                mDurationView.setVisibility(View.VISIBLE);
-                mPositionView.setVisibility(View.VISIBLE);
-                mDownloadProgressHandler.removeCallbacks(downloadProgress);
-                mDownloadSpeed.setVisibility(View.INVISIBLE);
-                mProgressCircleDownloading.setVisibility(View.INVISIBLE);
-                mDownloadImage.setVisibility(View.INVISIBLE);
-
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-                //SaveEpisodeValue(mActivity, mEpisode, "buffering", 0);
-            }
+        else if (status.getMediaStart())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+            mSeekBar.setVisibility(View.GONE);
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mDownloadImage.setVisibility(View.GONE);
+            mSkipBack.setVisibility(View.INVISIBLE);
+            mSkipForward.setVisibility(View.INVISIBLE);
+            mDurationView.setVisibility(View.INVISIBLE);
+            mPositionView.setVisibility(View.INVISIBLE);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-    };
+        else if (status.getMediaPaused())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mProgressBar.setVisibility(View.GONE);
+            mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipBack.setVisibility(View.INVISIBLE);
+            mSkipForward.setVisibility(View.INVISIBLE);
+            mDownloadImage.setVisibility(View.VISIBLE);
+        }
+        else if (status.getMediaError())
+        {
+            String message = getString(R.string.general_error);
+
+            final int errorCode = status.getErrorCode();
+
+            if (errorCode == -11)
+                message = getString(R.string.error_playback_timeout);
+            else if (errorCode == -15)
+                message = getString(R.string.error_playback_notavailable);
+            else if (errorCode == -25)
+                message = getString(R.string.error_playback_lowdisk);
+            else if (errorCode < 0)
+                message = getString(R.string.error_playback_other);
+
+            message = message.concat("\n(error code: ".concat(String.valueOf(errorCode).concat(")")));
+
+            Utilities.ShowFailureActivity(mActivity, message);
+
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+        }
+        else if (status.getMediaCompleted())
+        {
+            mInfoLayout.setVisibility(View.GONE);
+            mVolumeDown.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mSkipBack.setVisibility(View.INVISIBLE);
+            mSkipForward.setVisibility(View.INVISIBLE);
+        }
+        else if (status.getMediaPlaylistSkip())
+        {
+            mEpisodeID = status.getEpisodeId();
+            mPlaylistID = status.getPlaylistId();
+
+            if (status.getLocalFile() != null)
+                mLocalFile = status.getLocalFile();
+            else
+                mEpisode = GetEpisode(mContext, mEpisodeID, mPlaylistID);
+
+            MediaBrowserConnect();
+        }
+        else if (status.getMediaPlaying())
+        {
+            int duration;
+
+            if (mLocalFile != null)
+                duration = (int) PreferenceManager.getDefaultSharedPreferences(mContext).getLong(Utilities.GetLocalDurationKey(mLocalFile), 0);
+            else
+                duration = mEpisode.getDuration();
+
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+
+            mProgressBar.setVisibility(ProgressBar.GONE);
+            mInfoLayout.setVisibility(View.VISIBLE);
+            mVolumeDown.setVisibility(View.VISIBLE);
+            mVolumeUp.setVisibility(View.VISIBLE);
+
+            mSeekBar.setMax(duration);
+            mSeekBar.setVisibility(View.VISIBLE);
+            mSkipForwardImage.setVisibility(View.VISIBLE);
+            mSkipBackImage.setVisibility(View.VISIBLE);
+            mSkipBack.setVisibility(View.VISIBLE);
+            mSkipForward.setVisibility(View.VISIBLE);
+            mDurationView.setText(DateUtils.FormatPositionTime(duration));
+            mDurationView.setVisibility(View.VISIBLE);
+            mPositionView.setVisibility(View.VISIBLE);
+            mDownloadProgressHandler.removeCallbacks(downloadProgress);
+            mDownloadSpeed.setVisibility(View.INVISIBLE);
+            mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+            mDownloadImage.setVisibility(View.INVISIBLE);
+
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        else if (status.getPosition() > 0) {
+            mSeekBar.setProgress(status.getPosition());
+            mPositionView.setText(DateUtils.FormatPositionTime(status.getPosition()));
+        }
+    }
 
     @Override
     public void onItemSelected(final int position) {
@@ -1390,15 +1372,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         menu.removeItem(mEpisode.getFinished() ? R.id.menu_drawer_episode_markplayed : R.id.menu_drawer_episode_markunplayed);
     }
-
-    private BroadcastReceiver mMediaBufferingReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            //int percent = intent.getExtras().getInt("percent");
-            //Log.d(mContext.getPackageName(), "Buffering Percent: " + percent);
-        }
-    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){

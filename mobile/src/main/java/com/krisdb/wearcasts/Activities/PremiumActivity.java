@@ -2,17 +2,18 @@ package com.krisdb.wearcasts.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.BillingClient;
@@ -33,11 +33,17 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.krisdb.wearcasts.Models.FileUploadProgress;
+import com.krisdb.wearcasts.Models.WatchStatus;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.Async.SendFileToWatch;
 import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,12 +61,12 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
     private TextView tvUploadSummary;
     private static WeakReference<ProgressBar> mProgressFileUpload;
     private Boolean mPremiumSubUnlocked = false, mPremiumInappUnlocked = false;
-    private LocalBroadcastManager mBroadcastManger;
     private Button mPremiumButton, mPlaylistsReadd, mPlaylistsButButton;
     private Spinner mPlaylistSkus;
     private int mPlaylistPurchasedCount = 0;
     private WeakReference<PremiumActivity> mActivityRef;
     private BillingClient mBillingClient;
+    private CountDownTimer mFileUploadTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +83,6 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         mPlaylistsReadd = findViewById(R.id.btn_playlists_readd);
         mPlaylistsButButton = findViewById(R.id.btn_playlist_buy);
         mPlaylistSkus = findViewById(R.id.playlist_buy_qty);
-        mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
         tvUploadSummary = findViewById(R.id.upload_file_summary);
         mPremiumButton = findViewById(R.id.btn_unlock_premium);
 
@@ -235,6 +240,8 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             editor.putInt("visits", visits);
             editor.apply();
         }
+
+        SetPremiumContent();
     }
 
     @Override
@@ -341,10 +348,10 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             });
             mPlaylistSkus.setEnabled(true);
             mPlaylistsButButton.setEnabled(true);
-            findViewById(R.id.btn_playlist_premium).setVisibility(View.INVISIBLE);
-            findViewById(R.id.premium_trial).setVisibility(View.INVISIBLE);
-            findViewById(R.id.premium_benefits_title).setVisibility(View.INVISIBLE);
-            findViewById(R.id.premium_benefits_list).setVisibility(View.INVISIBLE);
+            findViewById(R.id.btn_playlist_premium).setVisibility(View.GONE);
+            findViewById(R.id.premium_trial).setVisibility(View.GONE);
+            findViewById(R.id.premium_benefits_title).setVisibility(View.GONE);
+            findViewById(R.id.premium_benefits_list).setVisibility(View.GONE);
         }
         else {
             mPlaylistSkus.setEnabled(false);
@@ -353,8 +360,8 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             findViewById(R.id.btn_upload_file).setEnabled(false);
             tvUploadSummary.setText(mActivity.getString(R.string.upload_file_summary_locked));
             findViewById(R.id.premium_trial).setVisibility(View.VISIBLE);
-            findViewById(R.id.premium_benefits_title).setVisibility(View.VISIBLE);
-            findViewById(R.id.premium_benefits_list).setVisibility(View.VISIBLE);
+            findViewById(R.id.premium_benefits_title).setVisibility(View.GONE);
+            findViewById(R.id.premium_benefits_list).setVisibility(View.GONE);
         }
     }
 
@@ -368,52 +375,64 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
     @Override
     public void onResume() {
         super.onResume();
-        mBroadcastManger.registerReceiver(mFileUploadReceiver, new IntentFilter("file_uploaded"));
-        mBroadcastManger.registerReceiver(mWatchResponse, new IntentFilter("watchresponse"));
-
-        SetPremiumContent();
+        EventBus.getDefault().register(this);
     }
 
-    private BroadcastReceiver mWatchResponse = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getExtras().getBoolean("premium")) {
-                CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.success));
-                mProgressFileUpload.get().setVisibility(View.GONE);
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WatchStatus status) {
+        if (status.getPremiumConfirm())
+        {
+            CommonUtils.showSnackbar(mPlaylistsButButton, getString(R.string.success));
+            mProgressFileUpload.get().setVisibility(View.GONE);
         }
-    };
+    }
 
-    private BroadcastReceiver mFileUploadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            final Bundle extras = intent.getExtras();
-            if (extras.getBoolean("started")) {
-                tvUploadSummary.setText(mActivity.getString(R.string.text_file_upload_start));
-                tvUploadSummary.setTextColor(mActivity.getColor(R.color.dark_grey));
-
-                //mProgressOPML.setIndeterminate(false);
-                //mProgressFileUpload.setMax(extras.getInt("length"));
-            }
-            else if (extras.getBoolean("processing"))
-            {
-                //mProgressOPML.setIndeterminate(false);
-                //mProgressFileUpload.setProgress(extras.getInt("progress"));
-            }
-            else if (extras.getBoolean("finished")) {
-                mProgressFileUpload.get().setVisibility(View.GONE);
-                tvUploadSummary.setText(getString(R.string.text_file_uploaded));
-                tvUploadSummary.setTextColor(mActivity.getColor(R.color.green));
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(FileUploadProgress status) {
+        if (status.getStarted())
+        {
+            Log.d(mActivity.getPackageName(), "status: " + status.getStarted());
+            tvUploadSummary.setText(getString(R.string.text_file_upload_start));
+            tvUploadSummary.setTextColor(getColor(CommonUtils.isNightModeActive(mActivity) ? R.color.wc_white : R.color.wc_gray));
         }
-    };
+        else if (status.getComplete())
+        {
+            Log.d(mActivity.getPackageName(), "status: " + status.getComplete());
+            mProgressFileUpload.get().setVisibility(View.GONE);
+            tvUploadSummary.setText(getString(R.string.text_file_uploaded));
+            tvUploadSummary.setTextColor(mActivity.getColor(R.color.green));
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+            if (mFileUploadTimer != null)
+                mFileUploadTimer.cancel();
+        }
+    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
         if (resultCode == RESULT_OK) {
             if (requestCode == UPLOAD_REQUEST_CODE) {
+
+                Log.d(mActivity.getPackageName(), "status: initialed");
+
+                tvUploadSummary.setText(getString(R.string.text_file_upload_ini));
+                tvUploadSummary.setTextColor(getColor(CommonUtils.isNightModeActive(mActivity) ? R.color.wc_white : R.color.wc_gray));
+                mProgressFileUpload.get().setVisibility(View.VISIBLE);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+                mFileUploadTimer = new CountDownTimer(30000, 1000) {
+
+                    public void onTick(long millisUntilFinished) { }
+
+                    public void onFinish() {
+                        tvUploadSummary.setText(getString(R.string.text_file_uploaded_timeout));
+                        tvUploadSummary.setTextColor(mActivity.getColor(R.color.wc_red));
+                        mProgressFileUpload.get().setVisibility(View.GONE);
+                    }
+
+                }.start();
+
                 final ClipData clipData = resultData.getClipData();
 
                 if (clipData == null) {
@@ -457,8 +476,8 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
 
     @Override
     public void onPause() {
-        mBroadcastManger.unregisterReceiver(mFileUploadReceiver);
-        mBroadcastManger.unregisterReceiver(mWatchResponse);
+        EventBus.getDefault().unregister(this);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onPause();
     }
 }

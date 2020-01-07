@@ -45,7 +45,7 @@
             android:layout_marginBottom="60dp"
             android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
-            android:visibility="invisible"
+            android:visibility="gone"
             style="@style/Button"
             />
 
@@ -98,7 +98,8 @@
             android:layout_below="@+id/btn_upload_file"
             android:textSize="15sp"
             android:text="@string/upload_file_summary_locked"
-            android:layout_marginTop="15dp"
+            android:paddingTop="25dp"
+            android:lineSpacingExtra="2dp"
             />
 
          <ProgressBar
@@ -123,7 +124,7 @@
             android:text="@string/premium_benefits_title"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            android:visibility="invisible"
+            android:visibility="gone"
             />
 
         <TextView
@@ -135,7 +136,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/premium_benefits_list"
             android:layout_centerHorizontal="true"
-            android:visibility="invisible"
+            android:visibility="gone"
             />
 
     </RelativeLayout>

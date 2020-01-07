@@ -1,9 +1,6 @@
 package com.krisdb.wearcasts.Services;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -18,16 +15,21 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,7 +44,6 @@ public class SyncWorker extends Worker {
 
     private static WeakReference<Context> mContext;
     private static List<PodcastItem> mDownloadEpisodes;
-    private LocalBroadcastManager mBroadcastManger;
     private ConnectivityManager mManager;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private static final int MESSAGE_CONNECTIVITY_TIMEOUT = 1;
@@ -52,15 +53,13 @@ public class SyncWorker extends Worker {
     public SyncWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
         mContext = new WeakReference<>(context);
-        mBroadcastManger = LocalBroadcastManager.getInstance(mContext.get());
 
         mTimeOutHandler = new TimeOutHandler(this);
         mManager = (ConnectivityManager)mContext.get().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //CommonUtils.writeToFile(mContext.get(),"job started");
 
-        try { mBroadcastManger.registerReceiver(mDownloadsComplete, new IntentFilter("downloads_complete")); }
-        catch (Exception ignored) {}
+        EventBus.getDefault().register(this);
     }
 
     @NonNull
@@ -193,17 +192,13 @@ public class SyncWorker extends Worker {
         return Result.success();
     }
 
-    private BroadcastReceiver mDownloadsComplete = new BroadcastReceiver() {
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            unregisterNetworkCallback();
-            //CommonUtils.writeToFile(mContext.get(),"network release received");
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DownloadComplete complete) {
+        CommonUtils.writeToFile(mContext.get(),"network release broadcast received");//TODO: Remove
 
-            try {
-                mBroadcastManger.unregisterReceiver(mDownloadsComplete);
-            } catch (Exception ignored) {}
-        }
-    };
+        unregisterNetworkCallback();
+        EventBus.getDefault().unregister(this);
+    }
 
     private static class TimeOutHandler extends Handler {
         private final WeakReference<SyncWorker> mMainActivityWeakReference;

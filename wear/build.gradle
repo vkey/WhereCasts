@@ -50,5 +50,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
     implementation project(':library')
 }

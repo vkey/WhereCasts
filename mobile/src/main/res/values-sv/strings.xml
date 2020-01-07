@@ -98,7 +98,9 @@
     <string name="alert_episode_import_first">Det här avsnittet skickas till din klocka och laddas ner</string>
     <string name="alert_playlist_purchased">%d skapad.</string>
     <string name="text_file_uploaded">Skickades framgångsfullt.\nDra åt vänster på huvudskärmen.</string>
+    <string name="text_file_uploaded_timeout">Ett fel uppstod vid uppladdningen.  Filen kan vara för stor.  Det kan vara nödvändigt att ladda upp filen manuellt till den här katalogen på din klocka: /sdcard/WearCasts/Local/</string>
     <string name="text_file_upload_start">Skickar fil…</string>
+    <string name="text_file_upload_ini">Väntar på svar från klockan…</string>
     <string name="alert_playlists_quantity_none">Välj en mängd</string>
     <string name="alert_playlists_purchase_disclaimer">Om du lägger till spellistor raderas alla spellistor som för närvarande finns på din klocka.</string>
     <string name="alert_playlists_readd_disclaimer">Om du lägger till spellistor raderas alla spellistor som finns på din klocka.</string>

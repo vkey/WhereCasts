@@ -2,10 +2,8 @@ package com.krisdb.wearcasts.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
@@ -59,7 +56,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     public static List<Integer> mPlayListIds;
     private static List<NavItem> mNavItems;
     private static Boolean mRefresh = false, mShowPodcastList = false, mPremiumInappUnlocked = false, mPremiumSubUnlocked = false;
-    private LocalBroadcastManager mBroadcastManger;
     private static int PERMISSIONS_CODE = 121;
     private static WeakReference<WearableNavigationDrawerView> mNavDrawer;
     private static WeakReference<MainActivity> mActivityRef;
@@ -73,7 +69,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
         setContentView(R.layout.activity_main);
 
-        mBroadcastManger = LocalBroadcastManager.getInstance(this);
         mActivityRef = new WeakReference<>(this);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -425,18 +420,9 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     }
 
 
-    private BroadcastReceiver mFragmentsReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //if (intent.getExtras().getBoolean("hide_paging_indicator"))
-            //findViewById(R.id.main_pager_dots).setVisibility(View.GONE);
-        }
-    };
-
     @Override
     public void onResume() {
         super.onResume();
-        mBroadcastManger.registerReceiver(mFragmentsReceiver, new IntentFilter("fragment"));
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -454,7 +440,6 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
 
     @Override
     public void onPause() {
-        mBroadcastManger.unregisterReceiver(mFragmentsReceiver);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onPause();
     }

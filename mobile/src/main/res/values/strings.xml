@@ -100,6 +100,8 @@
     <string name="alert_episode_import_first">This episode will be sent to your watch and downloaded</string>
     <string name="alert_playlist_purchased">%d created.</string>
     <string name="text_file_uploaded">Sent successfully.\nSwipe left on the main screen.</string>
+    <string name="text_file_uploaded_timeout">An error occurred with uploading.  The file may be too large.  It may be necessary to upload the file manually to this directory on your watch: /sdcard/WearCasts/Local/</string>
+    <string name="text_file_upload_ini">Waiting for response from watch…</string>
     <string name="text_file_upload_start">Sending file…</string>
     <string name="alert_playlists_quantity_none">Select a quantity</string>
     <string name="alert_playlists_purchase_disclaimer">Adding playlists will delete any playlists currently on your watch.</string>

@@ -188,6 +188,7 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final Asset asset = dataMapItem.getDataMap().getAsset("local_file");
                 final String fileName = dataMapItem.getDataMap().getString("local_filename");
+                SendToDevice("started", 0, 0);
 
                 CommonUtils.executeAsync(new ConvertFileToAsset(context, asset), (response) -> {
                     final InputStream inputStream = response.getInputStream();
@@ -200,7 +201,6 @@ public class ImportService extends WearableListenerService implements DataClient
 
                         int bytes, totalSize = inputStream.available();
                         long total = 0;
-                        SendToDevice("started", 0, totalSize);
 
                         while ((bytes = inputStream.read(buffer)) > 0) {
                             //total += bytes;

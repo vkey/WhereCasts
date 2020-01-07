@@ -1,11 +1,7 @@
 package com.krisdb.wearcasts.Fragments;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,12 +25,16 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.krisdb.wearcasts.Models.MediaPlaybackStatus;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.krisdb.wearcastslibrary.CommonUtils.showToast;
@@ -49,7 +49,6 @@ public class PlayerFragment extends Fragment {
     private MediaBrowserCompat mMediaBrowserCompat;
     private SeekBar mSeekBar;
     private RelativeLayout mInfoLayout;
-    private LocalBroadcastManager mBroadcastManger;
     private ProgressBar mProgressBar;
     private TextView mPositionView, mDurationView;
     private Activity mActivity;
@@ -84,7 +83,6 @@ public class PlayerFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_player, container, false);
 
-        mBroadcastManger = LocalBroadcastManager.getInstance(mActivity);
         mProgressBar = mView.findViewById(R.id.podcast_progress_bar);
         mSeekBar = mView.findViewById(R.id.sb_podcast_episode);
         mPlayPauseImage = mView.findViewById(R.id.iv_podcast_playpause);
@@ -192,7 +190,7 @@ public class PlayerFragment extends Fragment {
         super.onResume();
         SetContent();
 
-        mBroadcastManger.registerReceiver(mMediaReceiver, new IntentFilter("media_action"));
+        EventBus.getDefault().register(this);
     }
 
 
@@ -267,93 +265,84 @@ public class PlayerFragment extends Fragment {
         }
     };
 
-    private BroadcastReceiver mMediaReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            final Bundle extras = intent.getExtras();
-
-            //Log.d(mContext.getPackageName(), "Media duration: " + Utilities.GetEpisodeValue(mContext, mEpisode, "duration"));
-            if (extras.getBoolean("media_start")) {
-                mProgressBar.setIndeterminate(true);
-                mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                mInfoLayout.setVisibility(View.GONE);
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mDurationView.setVisibility(View.INVISIBLE);
-                mPositionView.setVisibility(View.INVISIBLE);
-                mPlayPauseImage.setEnabled(false);
-            }
-            else if (extras.getBoolean("media_error"))
-            {
-                String message = getString(R.string.general_error);
-
-                final int errorCode = extras.getInt("error_code");
-
-                if (errorCode == -11)
-                    message = getString(R.string.error_playback_timeout);
-                else if (errorCode == -15)
-                    message = getString(R.string.error_playback_notavailable);
-                else if (errorCode == -25)
-                    message = getString(R.string.error_playback_lowdisk);
-                else if (errorCode < 0)
-                    message = getString(R.string.error_playback_other);
-
-                showToast(mActivity, message);
-
-                //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                mInfoLayout.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
-            }
-            else if (extras.getBoolean("media_synced")) {
-                SetContent();
-            }
-            else if (extras.getBoolean("media_paused"))
-            {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                mProgressBar.setVisibility(View.GONE);
-                mInfoLayout.setVisibility(View.GONE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-            }
-            else if (extras.getBoolean("media_position"))
-            {
-                int position = intent.getExtras().getInt("position");
-                mSeekBar.setProgress(position);
-            }
-            else if (extras.getBoolean("media_completed"))
-            {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
-                mSkipForwardImage.setVisibility(View.INVISIBLE);
-                mSkipBackImage.setVisibility(View.INVISIBLE);
-                mSeekBar.setVisibility(View.INVISIBLE);
-                mDurationView.setVisibility(View.INVISIBLE);
-                mPositionView.setVisibility(View.INVISIBLE);
-                mPlayPauseImage.setEnabled(true);
-            }
-            else if (extras.getBoolean("media_played"))
-            {
-                mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
-                mSkipBackImage.setVisibility(View.VISIBLE);
-                mSkipForwardImage.setVisibility(View.VISIBLE);
-                mInfoLayout.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                int duration = PreferenceManager.getDefaultSharedPreferences(mActivity).getInt("duration", 0);
-                mProgressBar.setVisibility(ProgressBar.GONE);
-                mInfoLayout.setVisibility(View.VISIBLE);
-                mSeekBar.setMax(duration);
-                mSkipForwardImage.setVisibility(View.VISIBLE);
-                mSkipBackImage.setVisibility(View.VISIBLE);
-                mDurationView.setText(DateUtils.FormatPositionTime(duration));
-                mDurationView.setVisibility(View.VISIBLE);
-                mPositionView.setVisibility(View.VISIBLE);
-                mPlayPauseImage.setEnabled(true);
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MediaPlaybackStatus status) {
+        if (status.getMediaPlay())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
+            mSkipBackImage.setVisibility(View.VISIBLE);
+            mSkipForwardImage.setVisibility(View.VISIBLE);
+            mInfoLayout.setVisibility(View.VISIBLE);
         }
-    };
+        else if (status.getMediaStart())
+        {
+            mProgressBar.setIndeterminate(true);
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mInfoLayout.setVisibility(View.GONE);
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mDurationView.setVisibility(View.INVISIBLE);
+            mPositionView.setVisibility(View.INVISIBLE);
+            mPlayPauseImage.setEnabled(false);
+        }
+        else if (status.getMediaPaused())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mProgressBar.setVisibility(View.GONE);
+            mInfoLayout.setVisibility(View.GONE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+        }
+        else if (status.getMediaError())
+        {
+            String message = getString(R.string.general_error);
+
+            final int errorCode = status.getErrorCode();
+
+            if (errorCode == -11)
+                message = getString(R.string.error_playback_timeout);
+            else if (errorCode == -15)
+                message = getString(R.string.error_playback_notavailable);
+            else if (errorCode == -25)
+                message = getString(R.string.error_playback_lowdisk);
+            else if (errorCode < 0)
+                message = getString(R.string.error_playback_other);
+
+            showToast(mActivity, message);
+
+            //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mInfoLayout.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+        }
+        else if (status.getMediaCompleted())
+        {
+            mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
+            mSkipForwardImage.setVisibility(View.INVISIBLE);
+            mSkipBackImage.setVisibility(View.INVISIBLE);
+            mSeekBar.setVisibility(View.INVISIBLE);
+            mDurationView.setVisibility(View.INVISIBLE);
+            mPositionView.setVisibility(View.INVISIBLE);
+            mPlayPauseImage.setEnabled(true);
+        }
+        else if (status.getMediaSync())
+            SetContent();
+        else if (status.getMediaPlaying())
+        {
+            int duration = PreferenceManager.getDefaultSharedPreferences(mActivity).getInt("duration", 0);
+            mProgressBar.setVisibility(ProgressBar.GONE);
+            mInfoLayout.setVisibility(View.VISIBLE);
+            mSeekBar.setMax(duration);
+            mSkipForwardImage.setVisibility(View.VISIBLE);
+            mSkipBackImage.setVisibility(View.VISIBLE);
+            mDurationView.setText(DateUtils.FormatPositionTime(duration));
+            mDurationView.setVisibility(View.VISIBLE);
+            mPositionView.setVisibility(View.VISIBLE);
+            mPlayPauseImage.setEnabled(true);
+        }
+        else if (status.getPosition() > 0)
+            mSeekBar.setProgress(status.getPosition());
+    }
 
     private Runnable currentPositionDisplay = new Runnable() {
         @Override
@@ -376,7 +365,7 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mBroadcastManger.unregisterReceiver(mMediaReceiver);
+        EventBus.getDefault().unregister(this);
         mPositionHandler.removeCallbacks(currentPositionDisplay);
     }
 }

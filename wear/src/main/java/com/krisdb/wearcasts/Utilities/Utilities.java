@@ -411,14 +411,6 @@ public class Utilities {
 
         ContextCompat.startForegroundService(ctx, new Intent(ctx, SleepTimerService.class));
 
-/*        final int minutes = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ctx).getString("pref_sleep_timer", "0"));
-
-        final OneTimeWorkRequest sleepTimerWorkRequest = new OneTimeWorkRequest.Builder(SleepTimerJob.class)
-                .setInitialDelay(minutes, TimeUnit.MINUTES)
-                .addTag("sleep_timer")
-                .build();
-
-        WorkManager.getInstance(ctx).enqueue(sleepTimerWorkRequest);*/
     }
 
     public static void CancelSleepTimerJob(final Context ctx)

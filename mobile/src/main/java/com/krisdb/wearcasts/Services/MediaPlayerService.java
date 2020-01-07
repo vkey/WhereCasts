@@ -32,15 +32,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Activities.DirectoryActivity;
+import com.krisdb.wearcasts.Models.MediaPlaybackStatus;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -170,10 +172,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             mMediaSessionCompat.setActive(true);
             setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
 
-            final Intent intentMediaPlayed = new Intent();
-            intentMediaPlayed.putExtra("media_played", true);
-            intentMediaPlayed.setAction("media_action");
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPlayed);
+            final MediaPlaybackStatus mps = new MediaPlaybackStatus();
+            mps.setMediaPlay(true);
+
+            EventBus.getDefault().post(mps);
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final SharedPreferences.Editor editor = prefs.edit();
@@ -247,10 +249,10 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             showNotification(true);
             disableNoisyReceiver();
 
-            final Intent intentMediaPaused = new Intent();
-            intentMediaPaused.putExtra("media_paused", true);
-            intentMediaPaused.setAction("media_action");
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPaused);
+            final MediaPlaybackStatus mpsPaused = new MediaPlaybackStatus();
+            mpsPaused.setMediaPaused(true);
+
+            EventBus.getDefault().post(mpsPaused);
 
             if (mTelephonyManager != null)
                 mTelephonyManager.listen(mPhoneState, PhoneStateListener.LISTEN_NONE);
@@ -276,10 +278,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     }
 
     private void StartStream(Uri uri) {
-        final Intent intentMediaStart = new Intent();
-        intentMediaStart.putExtra("media_start", true);
-        intentMediaStart.setAction("media_action");
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaStart);
+
+        final MediaPlaybackStatus mpsStart = new MediaPlaybackStatus();
+        mpsStart.setMediaStart(true);
+
+        EventBus.getDefault().post(mpsStart);
+
         initNoisyReceiver();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = prefs.edit();
@@ -301,10 +305,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 public void onCompletion(MediaPlayer mp) {
                     setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
 
-                    final Intent intentMediaStop = new Intent();
-                    intentMediaStop.setAction("media_action");
-                    intentMediaStop.putExtra("media_completed", true);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaStop);
+
+                    MediaPlaybackStatus mpsCompleted = new MediaPlaybackStatus();
+                    mpsCompleted.setMediaCompleted(true);
+
+                    EventBus.getDefault().post(mpsCompleted);
+
                     SyncWithWearDevice(true);
 
                     final SharedPreferences.Editor editor = prefs.edit();
@@ -315,79 +321,45 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 }
             });
 
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer player) {
-                    mMediaTimeHandler.postDelayed(UpdateMediaTime, 100);
-                    mMediaPlayer.seekTo(prefs.getInt("position", 0));
-                }
+            mMediaPlayer.setOnPreparedListener(player -> {
+                mMediaTimeHandler.postDelayed(UpdateMediaTime, 100);
+                mMediaPlayer.seekTo(prefs.getInt("position", 0));
             });
 
-            mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-                @Override
-                public void onSeekComplete(MediaPlayer mp) {
-                    setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
-                    mp.start();
-                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("isplaying", true);
-                    editor.apply();
+            mMediaPlayer.setOnSeekCompleteListener(mp -> {
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
+                mp.start();
+                final SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor editor1 = prefs1.edit();
+                editor1.putBoolean("isplaying", true);
+                editor1.apply();
 
-                    final Intent intentMediaCompleted = new Intent();
-                    intentMediaCompleted.putExtra("media_start", false);
-                    intentMediaCompleted.setAction("media_action");
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaCompleted);
+                MediaPlaybackStatus mpsMediaPlaying = new MediaPlaybackStatus();
+                mpsMediaPlaying.setMediaPlaying(true);
 
-                    SyncWithWearDevice();
-                }
+                EventBus.getDefault().post(mpsMediaPlaying);
+
+                SyncWithWearDevice();
             });
 
-            mMediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-                  @Override
-                  public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                      //Intent intentMediaBuffering = new Intent();
-                      //intentMediaBuffering.setAction("media_buffering");
-                      //intentMediaBuffering.putExtra("percent", percent);
-                      //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaBuffering);
-                      //setMediaPlaybackState(PlaybackStateCompat.STATE_BUFFERING);
-                  }
-              }
-            );
+            mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                final MediaPlaybackStatus mpsError = new MediaPlaybackStatus();
+                mpsError.setErrorCode(what);
+                mpsError.setMediaError(true);
 
-/*            mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                @Override
-                public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                    if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                        Log.d(mPackage, "Buffering started");
-                    } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                        Log.d(mPackage, "Buffering ended");
-                    }
-                    return false;
+                Log.e(mPackage, "Service error: " + what + " " + extra);
+
+                if (mMediaPlayer != null) {
+                    if (mMediaPlayer.isPlaying())
+                        mMediaPlayer.stop();
+
+                    try {
+                        mMediaPlayer.reset();
+                    } catch (Exception ignored)
+                    {}
                 }
-            });*/
 
-            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    Intent intentMediaError = new Intent();
-                    intentMediaError.setAction("media_error");
-                    intentMediaError.putExtra("error_code", what);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaError);
-
-                    Log.e(mPackage, "Service error: " + String.valueOf(what) + " " + String.valueOf(extra));
-
-                    if (mMediaPlayer != null) {
-                        if (mMediaPlayer.isPlaying())
-                            mMediaPlayer.stop();
-
-                        try {
-                            mMediaPlayer.reset();
-                        } catch (Exception ignored)
-                        {}
-                    }
-
-                    return true;
-                }
+                return true;
             });
 
             mMediaPlayer.prepareAsync();
@@ -415,17 +387,6 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
                 PauseAudio();
             }
-        }
-    };
-
-    private BroadcastReceiver mMediaProgressChanged = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final int position = intent.getExtras().getInt("position");
-
-            mMediaPlayer.seekTo(position);
-
-            Log.d(mContext.getPackageName(), "Media position changed to: " + position);
         }
     };
 
@@ -593,18 +554,11 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
     private Runnable UpdateMediaTime = new Runnable() {
         public void run() {
-            //startTime = mediaPlayer.getCurrentPosition();
-            //tx1.setText(String.format("%d min, %d sec",
-            //TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-            //      TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-            //TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-            //toMinutes((long) startTime)))
-            //);
-            Intent intentMediaPosition = new Intent();
-            intentMediaPosition.setAction("media_action");
-            intentMediaPosition.putExtra("media_position", true);
-            intentMediaPosition.putExtra("position", getCurrentPosition(mMediaPlayer));
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intentMediaPosition);
+
+            MediaPlaybackStatus mpsPosition = new MediaPlaybackStatus();
+            mpsPosition.setPosition(getCurrentPosition(mMediaPlayer));
+
+            EventBus.getDefault().post(mpsPosition);
 
             mMediaTimeHandler.postDelayed(this, 100);
         }

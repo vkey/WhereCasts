@@ -98,7 +98,9 @@
     <string name="alert_episode_import_first">Diese Episode wird an Ihre Uhr gesendet und heruntergeladen</string>
     <string name="alert_playlist_purchased">%d erstellt.</string>
     <string name="text_file_uploaded">Erfolgreich gesendet.\nWischen Sie auf dem Hauptbildschirm nach links</string>
+    <string name="text_file_uploaded_timeout">Beim Hochladen ist ein Fehler aufgetreten.  Die Datei ist möglicherweise zu groß.  Möglicherweise muss die Datei manuell in dieses Verzeichnis auf Ihrer Uhr hochgeladen werden: /sdcard/WearCasts/Local/</string>
     <string name="text_file_upload_start">Datei wird gesendet…</string>
+    <string name="text_file_upload_ini">Warten auf Antwort von der Uhr…</string>
     <string name="alert_playlists_quantity_none">Wählen Sie eine Menge</string>
     <string name="alert_playlists_purchase_disclaimer">Durch das Hinzufügen von Wiedergabelisten werden alle Wiedergabelisten gelöscht, die sich derzeit auf Ihrer Uhr befinden.</string>
     <string name="alert_playlists_readd_disclaimer">Durch das erneute Hinzufügen von Wiedergabelisten werden alle derzeit auf der Uhr gespeicherten Wiedergabelisten gelöscht.</string>
