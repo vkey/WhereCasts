@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -394,6 +393,11 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
             Log.d(mActivity.getPackageName(), "status: " + status.getStarted());
             tvUploadSummary.setText(getString(R.string.text_file_upload_start));
             tvUploadSummary.setTextColor(getColor(CommonUtils.isNightModeActive(mActivity) ? R.color.wc_white : R.color.wc_gray));
+
+            if (mFileUploadTimer != null)
+                mFileUploadTimer.cancel();
+
+            StartTimeoutTimer();
         }
         else if (status.getComplete())
         {
@@ -421,17 +425,7 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
                 mProgressFileUpload.get().setVisibility(View.VISIBLE);
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-                mFileUploadTimer = new CountDownTimer(30000, 1000) {
-
-                    public void onTick(long millisUntilFinished) { }
-
-                    public void onFinish() {
-                        tvUploadSummary.setText(getString(R.string.text_file_uploaded_timeout));
-                        tvUploadSummary.setTextColor(mActivity.getColor(R.color.wc_red));
-                        mProgressFileUpload.get().setVisibility(View.GONE);
-                    }
-
-                }.start();
+                StartTimeoutTimer();
 
                 final ClipData clipData = resultData.getClipData();
 
@@ -453,6 +447,20 @@ public class PremiumActivity extends AppCompatActivity implements PurchasesUpdat
         }
     }
 
+    private void StartTimeoutTimer()
+    {
+        mFileUploadTimer = new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) { }
+
+            public void onFinish() {
+                tvUploadSummary.setText(getString(R.string.text_file_uploaded_timeout));
+                tvUploadSummary.setTextColor(mActivity.getColor(R.color.wc_red));
+                mProgressFileUpload.get().setVisibility(View.GONE);
+            }
+
+        }.start();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

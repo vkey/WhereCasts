@@ -2,15 +2,9 @@ package com.krisdb.wearcasts.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -27,8 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.wearable.Asset;
@@ -51,7 +43,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.krisdb.wearcastslibrary.CommonUtils.isValidUrl;
 
 public class UserAddActivity extends AppCompatActivity {
