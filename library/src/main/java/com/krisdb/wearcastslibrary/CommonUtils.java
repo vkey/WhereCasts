@@ -86,25 +86,30 @@ import static android.os.Environment.getExternalStorageDirectory;
 
 public class CommonUtils {
 
-    public static boolean isNightModeActive(Context context) {
-        int defaultNightMode = AppCompatDelegate.getDefaultNightMode();
-        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            return true;
-        }
-        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_NO) {
-            return false;
-        }
+    public static void Log(final Context context, final String text)
+    {
+        if (inDebugMode(context))
+            Log.d(context.getPackageName(), "(WearCasts Log) " + text);
+    }
 
-        int currentNightMode = context.getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
+    public static boolean isNightModeActive(final Context context) {
+        final int defaultNightMode = AppCompatDelegate.getDefaultNightMode();
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_YES)
+            return true;
+
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_NO)
+            return false;
+
+        final int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
         switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
             case Configuration.UI_MODE_NIGHT_NO:
                 return false;
             case Configuration.UI_MODE_NIGHT_YES:
                 return true;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                return false;
         }
+
         return false;
     }
     public static <R> void executeSingleThreadAsync(Callable<R> callable, Interfaces.Callback<R> callback) {
