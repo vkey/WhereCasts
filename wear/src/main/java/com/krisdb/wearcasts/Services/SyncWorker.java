@@ -194,8 +194,6 @@ public class SyncWorker extends Worker {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(DownloadComplete complete) {
-        CommonUtils.writeToFile(mContext.get(),"network release broadcast received");//TODO: Remove
-
         unregisterNetworkCallback();
         EventBus.getDefault().unregister(this);
     }

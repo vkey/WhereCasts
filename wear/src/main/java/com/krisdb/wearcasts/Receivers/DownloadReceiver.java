@@ -112,8 +112,6 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
             if (!isCurrentDownload(context)) {
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
-                    CommonUtils.writeToFile(context,"sending network release broadcast"); //TODO: Remove
-
                     EventBus.getDefault().post(new DownloadComplete());
                 }
 
