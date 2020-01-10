@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Models.OPMLImport;
+import com.krisdb.wearcasts.Models.WatchStatus;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities;
 import com.krisdb.wearcastslibrary.Async.EpisodeCount;
@@ -259,6 +260,15 @@ public class UserAddActivity extends AppCompatActivity {
         {
             editor.putInt("visits", visits);
             editor.apply();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WatchStatus status) {
+        if (status.getThirdParty())
+        {
+            findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
         }
     }
 

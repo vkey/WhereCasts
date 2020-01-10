@@ -78,13 +78,11 @@ public class SyncService extends WearableListenerService {
                 fup.setStarted(started);
                 fup.setProcessing(processing);
                 fup.setComplete(complete);
-
                 EventBus.getDefault().post(fup);
 
             } else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/premiumconfirm")) {
                 final WatchStatus wsPremiumConfirm = new WatchStatus();
                 wsPremiumConfirm.setPremiumConfirm(true);
-
                 EventBus.getDefault().post(wsPremiumConfirm);
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/syncplaybackspeed")) {

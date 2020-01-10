@@ -22,7 +22,6 @@ import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
