@@ -91,6 +91,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         mMediaSessionCompat = new MediaSessionCompat(this, MediaPlayerService.class.getSimpleName());
+
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mContext = this;
 
@@ -768,11 +769,12 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
             mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        final Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-        mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
+       //final Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        //mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
 
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
-        mMediaSessionCompat.setMediaButtonReceiver(pendingIntent);
+        //final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
+        //mMediaSessionCompat.setMediaButtonReceiver(pendingIntent);
+        mMediaSessionCompat.setMediaButtonReceiver(null);
 
         setSessionToken(mMediaSessionCompat.getSessionToken());
     }
