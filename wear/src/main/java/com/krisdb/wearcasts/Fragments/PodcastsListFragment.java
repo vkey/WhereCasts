@@ -28,6 +28,7 @@ import com.krisdb.wearcastslibrary.DateUtils;
 
 import java.lang.ref.WeakReference;
 
+import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class PodcastsListFragment extends Fragment {
@@ -38,6 +39,7 @@ public class PodcastsListFragment extends Fragment {
     private PodcastsAdapter mAdapter;
     private static WeakReference<Activity> mActivityRef;
     private ImageView mLogo;
+    private static int SYNC_RESULT_CODE = 111;
 
     public static PodcastsListFragment newInstance() {
         return new PodcastsListFragment();
@@ -80,7 +82,7 @@ public class PodcastsListFragment extends Fragment {
                final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
                alert.setMessage(getString(R.string.alert_episode_network_notfound));
                alert.setPositiveButton(getString(R.string.confirm_yes), (dialog, which) -> {
-                   startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), 1);
+                   startActivityForResult(new Intent(com.krisdb.wearcastslibrary.Constants.WifiIntent), SYNC_RESULT_CODE);
                    dialog.dismiss();
                });
 
@@ -94,6 +96,22 @@ public class PodcastsListFragment extends Fragment {
            });
        }
    }
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SYNC_RESULT_CODE)
+            {
+                CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
+                CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
+                    RefreshContent();
+                    CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
+                });
+
+            }
+        }
+    }
 
     private void RefreshContent() {
         if (!isAdded()) return;
@@ -181,6 +199,8 @@ public class PodcastsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!isAdded()) return;
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
