@@ -940,7 +940,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 SetContent();
                 findViewById(R.id.podcast_episode_layout).setVisibility(View.VISIBLE);
 
-                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_playback_auto_start", false) && Utilities.hasPremium(mContext) && mEpisodeID != GetPlayingEpisodeID(mContext))
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_playback_auto_start", false) && Utilities.hasPremium(mContext) && (mEpisodeID != GetPlayingEpisodeID(mContext) || mLocalFile != null))
                     togglePlayback();
 
                 } catch( RemoteException e ) {
