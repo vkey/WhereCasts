@@ -390,6 +390,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     }
 
     private void MediaBrowserConnect() {
+
         if (mMediaBrowserCompat != null) {
             if (!mMediaBrowserCompat.isConnected())
                 mMediaBrowserCompat.connect();
