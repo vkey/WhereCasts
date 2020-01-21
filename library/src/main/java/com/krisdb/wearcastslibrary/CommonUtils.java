@@ -182,6 +182,10 @@ public class CommonUtils {
     }
 
     public static Boolean isNetworkAvailable(final Context ctx) {
+        return isNetworkAvailable(ctx, false);
+    }
+
+    public static Boolean isNetworkAvailable(final Context ctx, final Boolean excludeBluetooth) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (connectivityManager == null) return false;
@@ -189,7 +193,10 @@ public class CommonUtils {
         final Network network = connectivityManager.getActiveNetwork();
         final NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
 
-        return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+        if (excludeBluetooth)
+            return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+        else
+            return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     public static Network getActiveNetwork(final Context ctx) {
@@ -451,9 +458,9 @@ public class CommonUtils {
     {
         if (str == null || str.length() == 0) return "";
 
-        str = str.replaceAll("[ ':.–!&|{}_-]","");
+        Log.d("com.krisdb.wearcasts", "Clean String");
 
-        return str;
+        return str.replaceAll("[ ':,.–!&)(|{}_-]","");
     }
 
     public static SpannableString boldText(final String text)
@@ -659,6 +666,10 @@ public class CommonUtils {
 
     public static String GetThumbnailName(final ChannelItem channel) {
         return CleanString(channel.getTitle()).concat(".png");
+    }
+
+    public static String GetThumbnailName(final String title) {
+        return CleanString(title).concat(".png");
     }
 
    public static boolean isValidUrl(final String url) {

@@ -153,7 +153,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(ctx)) {
                     unregisterNetworkCallback();
 
-                    if (!CommonUtils.isNetworkAvailable(ctx))
+                    if (!CommonUtils.isNetworkAvailable(ctx, true))
                         CommonUtils.showToast(ctx, ctx.getString(R.string.alert_episode_network_waiting));
 
                     mNoNetworkPosition = position;

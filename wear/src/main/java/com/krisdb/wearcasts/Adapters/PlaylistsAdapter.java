@@ -246,7 +246,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
             unregisterNetworkCallback();
             Utilities.disableBluetooth(mContext);
 
-            if (!CommonUtils.isNetworkAvailable(mContext))
+            if (!CommonUtils.isNetworkAvailable(mContext, true))
                 CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {

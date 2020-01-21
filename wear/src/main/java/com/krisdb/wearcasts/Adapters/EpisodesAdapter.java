@@ -251,7 +251,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
         else if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext)) {
             unregisterNetworkCallback();
 
-            if (!CommonUtils.isNetworkAvailable(mContext))
+            if (!CommonUtils.isNetworkAvailable(mContext, true))
                 CommonUtils.showToast(mContext, mContext.getString(R.string.alert_episode_network_waiting));
 
             mNoNetworkPosition = holder.getAdapterPosition();

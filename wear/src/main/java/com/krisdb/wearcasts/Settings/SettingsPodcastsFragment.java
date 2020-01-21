@@ -144,7 +144,7 @@ public class SettingsPodcastsFragment extends PreferenceFragment {
 
             unregisterNetworkCallback();
 
-            if (isAdded() && !CommonUtils.isNetworkAvailable(mActivity))
+            if (isAdded() && !CommonUtils.isNetworkAvailable(mActivity, true))
                 CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {

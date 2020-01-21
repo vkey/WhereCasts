@@ -22,6 +22,7 @@ import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -151,6 +152,9 @@ public class SyncWorker extends Worker {
                 if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(mContext.get(), false)) {
 
                     unregisterNetworkCallback();
+
+                    if (!CommonUtils.isNetworkAvailable(ctx, true))
+                        CommonUtils.showToast(ctx, ctx.getString(R.string.alert_episode_network_waiting));
 
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                         @Override
