@@ -175,7 +175,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
             unregisterNetworkCallback();
 
-            if (!CommonUtils.isNetworkAvailable(mActivity))
+            if (!CommonUtils.isNetworkAvailable(mActivity, true))
                 CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
             mNetworkCallback = new ConnectivityManager.NetworkCallback() {
@@ -525,7 +525,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
                     unregisterNetworkCallback();
 
-                    if (!CommonUtils.isNetworkAvailable(mActivity))
+                    if (!CommonUtils.isNetworkAvailable(mActivity, true))
                         CommonUtils.showToast(mActivity, getString(R.string.alert_episode_network_waiting));
 
                     mNetworkCallback = new ConnectivityManager.NetworkCallback() {
