@@ -37,9 +37,12 @@ public class DownloadReceiver extends BroadcastReceiver  {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (Objects.equals(intent.getAction(), DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
-            context.startActivity(new Intent(context, MainActivity.class));
+            final Intent intentMain = new Intent(context, MainActivity.class);
+            intentMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK );
+            context.startActivity(intentMain);
         } else if (Objects.equals(intent.getAction(), DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
+            //https://stackoverflow.com/questions/14073323/is-it-possible-to-cancel-stop-a-download-started-using-downloadmanager
             final long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
 
             if (downloadId == 0) return;
