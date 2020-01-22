@@ -92,10 +92,12 @@ public class PodcastsListFragment extends Fragment {
            CommonUtils.showToast(mActivity, getString(R.string.alert_sync_started));
            CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mActivity, 0), (response) -> {
                RefreshContent();
-               CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
+               if (isAdded())
+                   CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
            });
        }
    }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
