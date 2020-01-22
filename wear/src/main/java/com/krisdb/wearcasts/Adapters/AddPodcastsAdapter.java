@@ -119,7 +119,8 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
         final URL thumbUrl = channel.getThumbnailUrl();
 
         if (thumbUrl != null) {
-            final String thumbName = channel.getThumbnailName();
+            //final String thumbName = channel.getThumbnailName();
+            final String thumbName = CommonUtils.GetThumbnailName(channel.getTitle());
 
             cv.put("thumbnail_url", thumbUrl.toString());
             cv.put("thumbnail_name", thumbName);

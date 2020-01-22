@@ -117,7 +117,7 @@ public class GetDirectory implements Callable<List<PodcastCategory>> {
                     channel.setSiteUrl(podcastObj.getString("siteurl"));
                     if (podcastObj.getString("thumbnail") != null) {
                         channel.setThumbnailUrl(podcastObj.getString("thumbnail"));
-                        channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
+                        //channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
                     }
 
                     if (mSaveThumbs && channel.getThumbnailUrl() != null)

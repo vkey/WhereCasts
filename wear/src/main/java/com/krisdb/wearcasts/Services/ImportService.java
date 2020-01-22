@@ -149,6 +149,9 @@ public class ImportService extends WearableListenerService implements DataClient
                     if (prefs.getBoolean("pref_disable_bluetooth", false) && Utilities.BluetoothEnabled() && Utilities.disableBluetooth(context)) {
                         unregisterNetworkCallback();
 
+                        if (!CommonUtils.isNetworkAvailable(context, true))
+                            CommonUtils.showToast(context, context.getString(R.string.alert_episode_network_waiting));
+
                         final PodcastItem finalEpisode = episode;
                         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
                             @Override
@@ -257,16 +260,16 @@ public class ImportService extends WearableListenerService implements DataClient
             if (type == DataEvent.TYPE_CHANGED && path.equals("/podcastimport")) {
 
                 final PodcastItem podcast = new PodcastItem();
-                podcast.setTitle(dataMapItem.getDataMap().getString("title"));
 
                 final ChannelItem channel = new ChannelItem();
+                channel.setTitle(dataMapItem.getDataMap().getString("title"));
                 channel.setRSSUrl(dataMapItem.getDataMap().getString("rss_url"));
                 channel.setThumbnailUrl(dataMapItem.getDataMap().getString("rss_url"));
                 channel.setSiteUrl(dataMapItem.getDataMap().getString("site_url"));
 
                 if (dataMapItem.getDataMap().getString("thumbnail_url") != null) {
                     channel.setThumbnailUrl(dataMapItem.getDataMap().getString("thumbnail_url"));
-                    channel.setThumbnailName(dataMapItem.getDataMap().getString("thumbnail_name"));
+                    //channel.setThumbnailName(CommonUtils.GetThumbnailName(dataMapItem.getDataMap().getString("title")));
                 }
 
                 podcast.setChannel(channel);

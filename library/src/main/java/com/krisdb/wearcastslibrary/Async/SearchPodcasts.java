@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.ChannelParser;
-import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 import com.krisdb.wearcastslibrary.R;
 
@@ -104,8 +103,8 @@ public class SearchPodcasts implements Callable<List<PodcastItem>> {
                             channel.setThumbnailUrl(podcastObj.getString("artworkUrl100"));
                             //channel.setThumbnailUrl(podcastObj.getString("image"));
 
-                        if (channelItem.getThumbnailUrl() != null)
-                            channel.setThumbnailName(CommonUtils.GetThumbnailName(channelItem));
+                        //if (channelItem.getThumbnailUrl() != null)
+                            //channel.setThumbnailName(CommonUtils.GetThumbnailName(channelItem));
 
                         channel.setRSSUrl(rssUrl);
 

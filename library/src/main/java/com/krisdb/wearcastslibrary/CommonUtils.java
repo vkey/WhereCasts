@@ -458,8 +458,6 @@ public class CommonUtils {
     {
         if (str == null || str.length() == 0) return "";
 
-        Log.d("com.krisdb.wearcasts", "Clean String");
-
         return str.replaceAll("[ ':,.–!&)(|{}_-]","");
     }
 
@@ -665,11 +663,11 @@ public class CommonUtils {
     }
 
     public static String GetThumbnailName(final ChannelItem channel) {
-        return CleanString(channel.getTitle()).concat(".png");
+        return GetThumbnailName(channel.getTitle());
     }
 
     public static String GetThumbnailName(final String title) {
-        return CleanString(title).concat(".png");
+        return CleanString(title).toLowerCase().concat(".png");
     }
 
    public static boolean isValidUrl(final String url) {

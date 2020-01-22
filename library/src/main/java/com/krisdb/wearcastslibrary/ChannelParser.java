@@ -55,8 +55,8 @@ public class ChannelParser {
             e.printStackTrace();
         }
 
-        if (channel.getThumbnailUrl() != null)
-            channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
+        //if (channel.getThumbnailUrl() != null)
+            //channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
 
         if (channel.getTitle() == null)
             channel.setTitle(title == null ? "N/A" : title);
