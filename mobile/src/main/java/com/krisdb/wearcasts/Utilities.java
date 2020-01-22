@@ -61,7 +61,8 @@ public class Utilities {
             dataMap.getDataMap().putString("site_url", (podcast.getChannel().getSiteUrl() != null) ? podcast.getChannel().getSiteUrl().toString() : "");
 
             dataMap.getDataMap().putString("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
-            dataMap.getDataMap().putString("thumbnail_name", podcast.getChannel().getThumbnailName());
+            //dataMap.getDataMap().putString("thumbnail_name", CommonUtils.GetThumbnailName(podcast.getTitle()));
+            //dataMap.getDataMap().putString("thumbnail_name", podcast.getChannel().getThumbnailName());
 
             CommonUtils.DeviceSync(ctx, dataMap);
         }
@@ -77,7 +78,7 @@ public class Utilities {
                 if (p.getChannel().getThumbnailUrl() != null)
                 {
                     dataMap.getDataMap().putString("thumbnail_url", p.getChannel().getThumbnailUrl().toString());
-                    dataMap.getDataMap().putString("thumbnail_name", p.getChannel().getThumbnailName());
+                    //dataMap.getDataMap().putString("thumbnail_name", p.getChannel().getThumbnailName());
                 }
 
                 CommonUtils.DeviceSync(ctx, dataMap);
