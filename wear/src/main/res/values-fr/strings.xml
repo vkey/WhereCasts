@@ -329,6 +329,7 @@
     <string name="alert_download_error_unhandled_http">Code http non géré</string>
     <string name="alert_download_error_unknown">Erreur inconnue. Veuillez réessayer</string>
     <string name="alert_download_error_not_found">Podcast non trouvé</string>
+    <string name="alert_download_error_bad_url">Il y a une erreur avec l\'URL de ce podcast.\nContactez le fournisseur de podcast.</string>
     <string name="alert_download_error_default">Une erreur est survenue. Veuillez réessayer</string>
     <string name="alert_download_error_restart">Échec du téléchargement. Redémarrage…</string>
     <string name="alert_download_error_failed">Le téléchargement n\'a pas pu être redémarré.</string>

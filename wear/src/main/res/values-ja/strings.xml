@@ -328,6 +328,7 @@
     <string name="alert_download_error_unhandled_http">未処理のhttpコードe</string>
     <string name="alert_download_error_unknown">不明なエラー. もう一度お試しください</string>
     <string name="alert_download_error_not_found">ポッドキャストが見つかりません</string>
+    <string name="alert_download_error_bad_url">このポッドキャストのURLにエラーがあります.\nポッドキャストプロバイダーにお問い合わせください.</string>
     <string name="alert_download_error_default">エラーが発生しました. もう一度お試しください</string>
     <string name="alert_download_error_restart">ダウンロードに失敗しました. 再起動する…</string>
     <string name="alert_download_error_failed">ダウンロードを再開できませんでした.</string>

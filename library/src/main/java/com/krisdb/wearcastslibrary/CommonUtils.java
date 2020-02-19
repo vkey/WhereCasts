@@ -226,15 +226,15 @@ public class CommonUtils {
     }
 
 
-    public static String getRedirectUrl(final String url) {
-        String output = null;
+    public static URL getRedirectUrl(final String url) {
+        URL output = null;
         HttpURLConnection ucon = null;
         try {
             final URL url2 = new URL(url);
             ucon = (HttpURLConnection) url2.openConnection();
             ucon.setInstanceFollowRedirects(false);
             final URL secondURL = new URL(ucon.getHeaderField("Location"));
-            output = secondURL.toString();
+            output = secondURL;
             ucon.disconnect();
         } catch (Exception ex) {
             if (ucon != null)
@@ -243,6 +243,31 @@ public class CommonUtils {
         }
 
         return output;
+    }
+
+    public static URL getFinalURL(URL url) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setInstanceFollowRedirects(false);
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
+            con.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+            con.addRequestProperty("Referer", "https://www.google.com/");
+            con.connect();
+            //con.getInputStream();
+            int resCode = con.getResponseCode();
+            if (resCode == HttpURLConnection.HTTP_SEE_OTHER
+                    || resCode == HttpURLConnection.HTTP_MOVED_PERM
+                    || resCode == HttpURLConnection.HTTP_MOVED_TEMP) {
+                String Location = con.getHeaderField("Location");
+                if (Location.startsWith("/")) {
+                    Location = url.getProtocol() + "://" + url.getHost() + Location;
+                }
+                return getFinalURL(new URL(Location));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return url;
     }
 
     public static Boolean inDebugMode(final Context ctx)
@@ -346,10 +371,10 @@ public class CommonUtils {
             final int statusCode = conn.getResponseCode();
 
             if (statusCode == 301 || statusCode == 302) {
-                final String redirectUrl = getRedirectUrl(url);
+                final URL redirectUrl = getRedirectUrl(url);
 
                 if (redirectUrl != null)
-                    return getRemoteStream(redirectUrl);
+                    return getRemoteStream(redirectUrl.toString());
             }
 
             if (statusCode == 200)

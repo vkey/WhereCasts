@@ -35,6 +35,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int failedDownloadReason = 0;
 
         if (Objects.equals(intent.getAction(), DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
             final Intent intentMain = new Intent(context, MainActivity.class);
@@ -91,11 +92,13 @@ public class DownloadReceiver extends BroadcastReceiver  {
                         editor.apply();
                     }
                 } else if (status == DownloadManager.STATUS_FAILED) {
+                    failedDownloadReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
                     //CommonUtils.writeToFile(context,"download failed (" + episode.getTitle() + ")");
                     clearFailedDownload(context, episode);
-                    final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
+/*                    final int downloadCount = prefs.getInt("downloads_" + episode.getEpisodeId(), 0);
 
-/*                    final SharedPreferences.Editor editor = prefs.edit();
+                    final SharedPreferences.Editor editor = prefs.edit();
 
                     if (prefs.getBoolean("pref_downloads_restart_on_failure", true) && downloadCount < 10) {
                         long id = startDownload(context, episode);
@@ -118,13 +121,14 @@ public class DownloadReceiver extends BroadcastReceiver  {
                     EventBus.getDefault().post(new DownloadComplete());
                 }
 
-                Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));
-
                 final SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("from_job", false);
                 editor.apply();
 
-                CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
+                if (failedDownloadReason != DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
+                    Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));
+                    CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> {});
+                }
             }
         }
     }

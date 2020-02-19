@@ -328,6 +328,7 @@
     <string name="alert_download_error_unhandled_http">अनचाहे http कोड</string>
     <string name="alert_download_error_unknown">अज्ञात त्रुटि। कृपया पुन: प्रयास करें</string>
     <string name="alert_download_error_not_found">पॉडकास्ट नहीं मिला</string>
+    <string name="alert_download_error_bad_url">इस पॉडकास्ट के URL में कोई त्रुटि है.\nपॉडकास्ट प्रदाता से संपर्क करें.</string>
     <string name="alert_download_error_default">एक गलती हुई है। कृपया पुन: प्रयास करें</string>
     <string name="alert_download_error_restart">डाउनलोड विफल। पुन: प्रारंभ हो…</string>
     <string name="alert_download_error_failed">डाउनलोड को पुनरारंभ नहीं किया जा सका.</string>

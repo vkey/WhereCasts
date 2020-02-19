@@ -327,6 +327,7 @@
     <string name="alert_download_error_unhandled_http">未處理的http代碼</string>
     <string name="alert_download_error_unknown">未知錯誤。 請再試一次</string>
     <string name="alert_download_error_not_found">未找到播客</string>
+    <string name="alert_download_error_bad_url">該播客的網址有誤.\n聯繫播客提供商.</string>
     <string name="alert_download_error_default">發生了錯誤。 請再試一次</string>
     <string name="alert_download_error_restart">下載失敗。重新啟動…</string>
     <string name="alert_download_error_failed">下載無法重新啟動.</string>

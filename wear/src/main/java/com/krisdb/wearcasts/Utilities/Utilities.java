@@ -511,6 +511,10 @@ public class Utilities {
 
         final long downloadId = manager.enqueue(download);
 
+        //CommonUtils.writeToFile(ctx, "Download episode: " + episode.getTitle());
+        //CommonUtils.writeToFile(ctx, "Download id: " + downloadId);
+        //CommonUtils.writeToFile(ctx, "\n\n");
+
         SaveEpisodeValue(ctx, episode, "downloadid", downloadId);
 
         return downloadId;
@@ -602,6 +606,8 @@ public class Utilities {
                 return ctx.getString(R.string.alert_download_error_unknown);
             case 404:
                 return ctx.getString(R.string.alert_download_error_not_found);
+            case 1:
+                return ctx.getString(R.string.alert_download_error_bad_url);
         }
 
         return ctx.getString(R.string.alert_download_error_default);

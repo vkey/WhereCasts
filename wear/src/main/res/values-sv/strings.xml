@@ -328,6 +328,7 @@
     <string name="alert_download_error_unhandled_http">Hanterad http-kod</string>
     <string name="alert_download_error_unknown">Okänt fel. Var god försök igen</string>
     <string name="alert_download_error_not_found">Podcast inte hittad</string>
+    <string name="alert_download_error_bad_url">Det finns ett fel med den här podcastens URL.\nKontakta podcastleverantören.</string>
     <string name="alert_download_error_default">Ett fel har uppstått. Var god försök igen</string>
     <string name="alert_download_error_restart">Nedladdning misslyckad. omstart…</string>
     <string name="alert_download_error_failed">Hämtningen kunde inte startas om.</string>
