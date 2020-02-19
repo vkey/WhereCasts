@@ -17,6 +17,7 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
+import com.krisdb.wearcastslibrary.Async.GetRedirectURL;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -93,6 +94,16 @@ public class DownloadReceiver extends BroadcastReceiver  {
                     }
                 } else if (status == DownloadManager.STATUS_FAILED) {
                     failedDownloadReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
+                    if (failedDownloadReason == DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
+                        CommonUtils.executeAsync(new GetRedirectURL(episode.getMediaUrl()), (new_url) -> {
+                            if (new_url != null) {
+                                episode.setMediaUrl(new_url.toString());
+                                Utilities.startDownload(context, episode, false);
+                            } else
+                                CommonUtils.showToast(context, Utilities.GetDownloadErrorReason(context, 1));
+                        });
+                    }
 
                     //CommonUtils.writeToFile(context,"download failed (" + episode.getTitle() + ")");
                     clearFailedDownload(context, episode);

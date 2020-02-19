@@ -60,8 +60,8 @@ import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Services.MediaPlayerService;
 import com.krisdb.wearcasts.Settings.SettingsPodcastsActivity;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.Async.GetRedirectURL;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
@@ -636,17 +636,25 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadManager.remove(mDownloadId);
 
                         if (reason == DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
-                            CommonUtils.executeAsync(new GetRedirectURL(mEpisode.getMediaUrl()), (url) -> {
-                                if (url != null) {
-                                    mEpisode.setMediaUrl(url.toString());
-                                    DownloadEpisode(false);
-                                }
-                                else
-                                    DownloadFailed(1);
-                            });
-                        } else
-                            DownloadFailed(reason);
+                            mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mActivity, mEpisode);
+                            mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+                        }
+                        else
+                        {
+                            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+                            mDownloadImage.setOnClickListener(view -> DownloadEpisode());
+                            mPlayPauseImage.setVisibility(View.VISIBLE);
+                            mProgressCircleLoading.setVisibility(View.INVISIBLE);
+                            mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+                            mDownloadSpeed.setVisibility(View.INVISIBLE);
+                            mInfoLayout.setVisibility(View.GONE);
+                            mControlsLayout.setVisibility(View.VISIBLE);
+                            mVolumeDown.setVisibility(View.GONE);
+                            mVolumeUp.setVisibility(View.GONE);
 
+                            CommonUtils.showToast(mActivity, Utilities.GetDownloadErrorReason(mActivity, reason));
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        }
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
@@ -693,24 +701,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             cursor.close();
         }
     };
-
-
-    private void DownloadFailed(final int reason)
-    {
-        mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-        mDownloadImage.setOnClickListener(view -> DownloadEpisode());
-        mPlayPauseImage.setVisibility(View.VISIBLE);
-        mProgressCircleLoading.setVisibility(View.INVISIBLE);
-        mProgressCircleDownloading.setVisibility(View.INVISIBLE);
-        mDownloadSpeed.setVisibility(View.INVISIBLE);
-        mInfoLayout.setVisibility(View.GONE);
-        mControlsLayout.setVisibility(View.VISIBLE);
-        mVolumeDown.setVisibility(View.GONE);
-        mVolumeUp.setVisibility(View.GONE);
-
-        CommonUtils.showToast(mActivity, Utilities.GetDownloadErrorReason(mActivity, reason));
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
 
     private void DownloadEpisode()
     {
