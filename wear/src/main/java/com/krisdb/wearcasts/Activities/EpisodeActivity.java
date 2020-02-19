@@ -73,7 +73,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
