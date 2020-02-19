@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -392,20 +391,26 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     private void MediaBrowserConnect() {
 
-        if (mMediaBrowserCompat != null) {
-            if (!mMediaBrowserCompat.isConnected())
-                mMediaBrowserCompat.connect();
-            else
-                SetContent();
-        } else {
-            mMediaBrowserCompat = new MediaBrowserCompat(
-                    mContext,
-                    new ComponentName(mContext, MediaPlayerService.class),
-                    mMediaBrowserCompatConnectionCallback,
-                    getIntent().getExtras()
-            );
+        try {
+            if (mMediaBrowserCompat != null) {
+                if (!mMediaBrowserCompat.isConnected())
+                    mMediaBrowserCompat.connect();
+                else
+                    SetContent();
+            } else {
+                mMediaBrowserCompat = new MediaBrowserCompat(
+                        mContext,
+                        new ComponentName(mContext, MediaPlayerService.class),
+                        mMediaBrowserCompatConnectionCallback,
+                        getIntent().getExtras()
+                );
 
-            mMediaBrowserCompat.connect();
+                mMediaBrowserCompat.connect();
+            }
+        }
+        catch (IllegalStateException ex)
+        {
+            ex.printStackTrace();
         }
     }
 
@@ -956,7 +961,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                 if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_playback_auto_start", false) && Utilities.hasPremium(mContext) && (mEpisodeID != GetPlayingEpisodeID(mContext) || mLocalFile != null))
                     togglePlayback();
 
-                } catch( RemoteException e ) {
+                } catch( Exception e ) {
                 Log.e(mActivity.getPackageName(), e.toString());
             }
         }
