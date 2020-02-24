@@ -386,6 +386,13 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
         db.close();
     }
 
+    public void update(final ContentValues cv, final String field, final Integer id)
+    {
+        final SQLiteDatabase db = this.getWritableDatabase();
+        db.update(mEpisodesTable, cv, field + " = ?", new String[] { id.toString() });
+        db.close();
+    }
+
     public void updateAll(final ContentValues cv, final Integer podcastId)
     {
         final SQLiteDatabase db = this.getWritableDatabase();

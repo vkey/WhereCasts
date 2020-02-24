@@ -538,7 +538,7 @@ public class Utilities {
                 cursor.moveToNext();
             }
         }
-
+        cursor.close();
         sdb.close();
         db.close();
     }

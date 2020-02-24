@@ -37,6 +37,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
     public void onReceive(final Context context, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int failedDownloadReason = 0;
+        final DownloadManager managerDownload = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
 
         if (Objects.equals(intent.getAction(), DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
             final Intent intentMain = new Intent(context, MainActivity.class);
@@ -53,13 +54,12 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
-            final DownloadManager managerDownload = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
 
             final Cursor cursor = managerDownload.query(query);
 
             if (cursor.moveToFirst()) {
                 final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                final String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                //final String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     //CommonUtils.writeToFile(context,"download successful (" + episode.getTitle() + ")");
@@ -92,6 +92,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                         editor.putBoolean("refresh_vp", true);
                         editor.apply();
                     }
+
                 } else if (status == DownloadManager.STATUS_FAILED) {
                     failedDownloadReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
@@ -138,8 +139,19 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
                 if (failedDownloadReason != DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
                     Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));
-                    CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> {});
+                    CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
                 }
+
+                //clear all downloads just in case
+                final Cursor cursorClear = managerDownload.query(new DownloadManager.Query());
+
+                if (cursorClear.moveToFirst()) {
+                    while (!cursorClear.isAfterLast()) {
+                        managerDownload.remove(cursorClear.getInt(cursorClear.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+                        cursorClear.moveToNext();
+                    }
+                }
+                cursorClear.close();
             }
         }
     }

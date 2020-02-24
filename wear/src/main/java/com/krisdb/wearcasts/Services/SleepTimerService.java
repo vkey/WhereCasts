@@ -1,16 +1,17 @@
 package com.krisdb.wearcasts.Services;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.media.MediaBrowserCompat;
@@ -24,19 +25,13 @@ import com.krisdb.wearcasts.R;
 
 import java.lang.ref.WeakReference;
 
-public class SleepTimerService extends IntentService {
+public class SleepTimerService extends Service {
 
     private CountDownTimer timer;
     private MediaBrowserCompat mMediaBrowser;
     private Context mContext;
 
-    public SleepTimerService() {
-        super("SleepTimerService");
-    }
-
-    public SleepTimerService(String name) {
-        super(name);
-    }
+    public SleepTimerService() {}
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -115,6 +110,9 @@ public class SleepTimerService extends IntentService {
             timer.cancel();
     }
 
+    @Nullable
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {}
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }

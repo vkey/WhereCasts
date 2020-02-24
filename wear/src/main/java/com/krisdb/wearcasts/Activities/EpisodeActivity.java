@@ -492,7 +492,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mDownloadId = mEpisode.getDownloadId();
 
         if (mDownloadId > 0)
-            downloadProgress.run();
+            mDownloadProgressHandler.post(downloadProgress);
     }
 
     private void togglePlayback()
