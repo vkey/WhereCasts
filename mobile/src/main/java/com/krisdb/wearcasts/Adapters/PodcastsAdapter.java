@@ -123,7 +123,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
             if (podcast.getIsSenttoWatch())
                 viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add_confirm));
             else
-                viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add));
+                viewHolder.add_image.setImageDrawable(ContextCompat.getDrawable(mContext, CommonUtils.isNightModeActive(mContext) ? R.drawable.ic_podcast_add_light : R.drawable.ic_podcast_add));
 
             viewHolder.add_image.setOnClickListener(view -> {
                 if (isConnected) {

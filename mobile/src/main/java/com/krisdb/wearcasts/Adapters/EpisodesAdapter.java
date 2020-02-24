@@ -124,7 +124,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         if (episode.getIsSenttoWatch())
             viewHolder.sendEpisode.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add_confirm));
         else
-            viewHolder.sendEpisode.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_action_send_episode_to_phone));
+            viewHolder.sendEpisode.setImageDrawable(ContextCompat.getDrawable(mContext, CommonUtils.isNightModeActive(mContext) ? R.drawable.ic_action_send_episode_to_phone_light : R.drawable.ic_action_send_episode_to_phone));
     }
 
     @Override
