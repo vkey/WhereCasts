@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
@@ -30,8 +29,6 @@ public class SettingsPodcastsPodcastsFragment extends PreferenceFragment impleme
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         Utilities.SetPodcstRefresh(getActivity());
 
         if (key.equals("pref_display_podcasts_sort_order"))

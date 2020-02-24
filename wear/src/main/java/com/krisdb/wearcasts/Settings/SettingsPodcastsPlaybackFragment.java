@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -121,14 +120,18 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
             final PreferenceCategory category = (PreferenceCategory) findPreference("pref_playback");
             category.removePreference(findPreference("pref_detect_bluetooth_changes"));
         }*/
-
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -149,8 +152,6 @@ public class SettingsPodcastsPlaybackFragment extends PreferenceFragment impleme
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         if (key.equals("pref_playback_speed") && Utilities.hasPremium(mActivity)) {
             findPreference("pref_playback_speed").setSummary(((ListPreference) findPreference("pref_playback_speed")).getEntry());
 

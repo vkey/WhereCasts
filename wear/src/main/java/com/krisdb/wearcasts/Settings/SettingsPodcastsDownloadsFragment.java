@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -139,8 +138,6 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         if (key.equals("pref_download_complete_sound")) {
             final SwitchPreference cbSound = (SwitchPreference)findPreference("pref_download_complete_sound");
 

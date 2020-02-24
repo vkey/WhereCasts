@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -118,7 +117,6 @@ public class SettingsPodcastsDisplayFragment extends PreferenceFragment implemen
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
         if (Objects.equals(key, "pref_theme")) {
             final Intent i = mActivity.getBaseContext().getPackageManager().getLaunchIntentForPackage(mActivity.getBaseContext().getPackageName());
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);

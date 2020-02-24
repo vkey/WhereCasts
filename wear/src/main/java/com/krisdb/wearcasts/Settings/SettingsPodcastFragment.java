@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -348,10 +347,13 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
         }
 
         Utilities.SetPodcstRefresh(mActivity);
-
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
 
     @Override
     public void onPause() {
@@ -377,8 +379,6 @@ public class SettingsPodcastFragment extends PreferenceFragment implements Share
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         final Boolean hasPremium = Utilities.hasPremium(mActivity);
         if (hasPremium)
         {

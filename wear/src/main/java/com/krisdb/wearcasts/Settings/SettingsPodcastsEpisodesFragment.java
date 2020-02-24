@@ -3,7 +3,6 @@ package com.krisdb.wearcasts.Settings;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -87,8 +86,6 @@ public class SettingsPodcastsEpisodesFragment extends PreferenceFragment impleme
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         if (key.equals("pref_episode_limit"))
             findPreference("pref_episode_limit").setSummary(((ListPreference) findPreference("pref_episode_limit")).getEntry());
 

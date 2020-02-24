@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
@@ -98,8 +97,6 @@ public class SettingsPlaylistsFragment extends PreferenceFragment implements Sha
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SystemClock.sleep(500);
-
         if (Objects.equals(key, "pref_hide_empty_playlists")) {
             final SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("refresh_vp", true);
