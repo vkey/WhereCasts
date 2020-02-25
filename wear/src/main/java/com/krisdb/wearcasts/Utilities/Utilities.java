@@ -520,6 +520,23 @@ public class Utilities {
         return downloadId;
     }
 
+    public static void clearAllDownloads(final Context ctx)
+    {
+        final DownloadManager manager = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
+
+        final Cursor cursorFailed = manager.query(new DownloadManager.Query());
+
+        if (cursorFailed.moveToFirst()) {
+            while (!cursorFailed.isAfterLast()) {
+                if (cursorFailed.getInt(cursorFailed.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL) //successful download's file will be deleted if removed
+                    manager.remove(cursorFailed.getInt(cursorFailed.getColumnIndex(DownloadManager.COLUMN_ID)));
+                cursorFailed.moveToNext();
+            }
+        }
+
+        cursorFailed.close();
+    }
+
     public static void cancelAllDownloads(final Context ctx) {
         final DownloadManager manager = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
 
@@ -542,16 +559,7 @@ public class Utilities {
         sdb.close();
         db.close();
 
-        final Cursor cursor2 = manager.query(new DownloadManager.Query());
-
-        if (cursor2.moveToFirst()) {
-            while (!cursor2.isAfterLast()) {
-                manager.remove(cursor2.getInt(cursor2.getColumnIndex(DownloadManager.COLUMN_ID)));
-                cursor2.moveToNext();
-            }
-        }
-
-        cursor2.close();
+        clearAllDownloads(ctx);
     }
 
     public static int getDownloadId(final Context ctx, final int episodeId)

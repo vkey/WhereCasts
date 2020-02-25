@@ -80,10 +80,12 @@ import java.util.concurrent.TimeUnit;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisode;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetPlayingEpisodeID;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.IsCurrentDownload;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markPlayed;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.markUnplayed;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
+import static com.krisdb.wearcasts.Utilities.Utilities.clearAllDownloads;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetBackgroundLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
@@ -359,6 +361,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         unregisterNetworkCallback();
 
         EventBus.getDefault().unregister(this);
+        mDownloadProgressHandler.removeCallbacks(downloadProgress);
 
         super.onPause();
     }

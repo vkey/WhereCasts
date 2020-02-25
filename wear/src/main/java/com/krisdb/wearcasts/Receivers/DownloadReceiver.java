@@ -16,6 +16,7 @@ import com.krisdb.wearcasts.Async.CleanupDownloads;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.DownloadComplete;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Async.GetRedirectURL;
 import com.krisdb.wearcastslibrary.CommonUtils;
@@ -29,7 +30,7 @@ import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
-import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.IsCurrentDownload;
+import static com.krisdb.wearcasts.Utilities.Utilities.clearAllDownloads;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
 public class DownloadReceiver extends BroadcastReceiver  {
@@ -129,7 +130,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
             cursor.close();
 
-            if (!isCurrentDownload(context)) {
+            if (!EpisodeUtilities.IsCurrentDownload(context)) {
                 if (prefs.getBoolean("from_job", false) && prefs.getBoolean("pref_disable_bluetooth", false) && !Utilities.BluetoothEnabled()) {
                     EventBus.getDefault().post(new DownloadComplete());
                 }
@@ -143,20 +144,8 @@ public class DownloadReceiver extends BroadcastReceiver  {
                     CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> {
                     });
                 }
-            }
 
-            //fix issue where episodes already downloaded are downloading again
-            //if there are no episodes bsing downloaded clear all downloads, regardless of status
-            if (!IsCurrentDownload(context)) {
-                final Cursor cursorFailed = managerDownload.query(new DownloadManager.Query());
-
-                if (cursorFailed.moveToFirst()) {
-                    while (!cursorFailed.isAfterLast()) {
-                        managerDownload.remove(cursorFailed.getInt(cursorFailed.getColumnIndex(DownloadManager.COLUMN_ID)));
-                        cursorFailed.moveToNext();
-                    }
-                }
-                cursorFailed.close();
+                clearAllDownloads(context);
             }
         }
     }
