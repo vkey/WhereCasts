@@ -142,6 +142,24 @@ public class EpisodeUtilities {
         return episodes;
     }
 
+    public static boolean IsCurrentDownload(final Context ctx)
+    {
+        boolean output;
+
+        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(ctx);
+        final SQLiteDatabase sdb = db.select();
+
+        final Cursor cursor = sdb.rawQuery("SELECT [id] FROM [tbl_podcast_episodes] WHERE [downloadid] > 0", null);
+
+        output = cursor.moveToFirst();
+
+        cursor.close();
+        db.close();
+        sdb.close();
+
+        return output;
+    }
+
     public static int GetDownloadIDByEpisode(final Context ctx, final PodcastItem episode) {
         int downloadId = -1;
 

@@ -541,6 +541,17 @@ public class Utilities {
         cursor.close();
         sdb.close();
         db.close();
+
+        final Cursor cursor2 = manager.query(new DownloadManager.Query());
+
+        if (cursor2.moveToFirst()) {
+            while (!cursor2.isAfterLast()) {
+                manager.remove(cursor2.getInt(cursor2.getColumnIndex(DownloadManager.COLUMN_ID)));
+                cursor2.moveToNext();
+            }
+        }
+
+        cursor2.close();
     }
 
     public static int getDownloadId(final Context ctx, final int episodeId)

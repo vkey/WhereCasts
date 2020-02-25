@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodeByDownloadID;
+import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.IsCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 
 public class DownloadReceiver extends BroadcastReceiver  {
@@ -139,19 +140,23 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
                 if (failedDownloadReason != DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
                     Utilities.enableBluetooth(context, !prefs.getBoolean("from_job", false));
-                    CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> { });
+                    CommonUtils.executeSingleThreadAsync(new CleanupDownloads(context), (response) -> {
+                    });
                 }
+            }
 
-                //clear all downloads just in case
-                final Cursor cursorClear = managerDownload.query(new DownloadManager.Query());
+            //fix issue where episodes already downloaded are downloading again
+            //if there are no episodes bsing downloaded clear all downloads, regardless of status
+            if (!IsCurrentDownload(context)) {
+                final Cursor cursorFailed = managerDownload.query(new DownloadManager.Query());
 
-                if (cursorClear.moveToFirst()) {
-                    while (!cursorClear.isAfterLast()) {
-                        managerDownload.remove(cursorClear.getInt(cursorClear.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-                        cursorClear.moveToNext();
+                if (cursorFailed.moveToFirst()) {
+                    while (!cursorFailed.isAfterLast()) {
+                        managerDownload.remove(cursorFailed.getInt(cursorFailed.getColumnIndex(DownloadManager.COLUMN_ID)));
+                        cursorFailed.moveToNext();
                     }
                 }
-                cursorClear.close();
+                cursorFailed.close();
             }
         }
     }
