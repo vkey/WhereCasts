@@ -106,6 +106,7 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
 
         findPreference("pref_cancel_downloads").setOnPreferenceClickListener(preference -> {
             Utilities.cancelAllDownloads(getActivity());
+            Utilities.clearAllDownloads(getActivity());
             Utilities.ShowConfirmationActivity(getActivity(), getString(R.string.alert_downloads_all_cancelled));
             //CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
             return false;
