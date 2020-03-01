@@ -72,8 +72,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
     private Context mContext;
     private MediaSessionCompat mMediaSessionCompat;
     private final MediaHandler mMediaHandler = new MediaHandler(this);
-    private int mPlaylistID;
-    //private int mPlaybackCount = 0, mPlaybackPosition = 0;
+    private int mPlaylistID, mPlaybackPosition = 0, mPlaybackCount = 0;
     private static int mNotificationID = 101;
     private String mLocalFile;
     private TelephonyManager mTelephonyManager;
@@ -283,7 +282,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         EventBus.getDefault().post(mps);
 
         showNotification(false);
-
+        mPlaybackPosition = 0;
+        mPlaybackCount = 0;
         mMediaPlayer.start();
 
         if (mHasPremium) {
@@ -338,8 +338,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                 editor.apply();
             }
 
-            //mPlaybackPosition = 0;
-            //mPlaybackCount = 0;
+            mPlaybackPosition = 0;
+            mPlaybackCount = 0;
 
             mMediaPlayer.pause();
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
@@ -406,7 +406,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
         initNoisyReceiver();
         initMediaSessionMetadata();
-
+        mPlaybackPosition = 0;
+        mPlaybackCount = 0;
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {
@@ -484,8 +485,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     editor.apply();
                 }
 
-                //mPlaybackPosition = 0;
-                //mPlaybackCount = 0;
+                mPlaybackPosition = 0;
+                mPlaybackCount = 0;
 
                 mMediaHandler.removeCallbacksAndMessages(null);
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
@@ -521,6 +522,8 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                     PauseAudio();
                     mError = true;
+                    mPlaybackPosition = 0;
+                    mPlaybackCount = 0;
 
                     if (mMediaPlayer != null) {
                         if (mMediaPlayer.isPlaying())
@@ -861,28 +864,22 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
             final int finishTime = mMediaPlayer.getDuration() - specifiedTime;
 
-            if (position >= finishTime) {
-                mMediaHandler.removeCallbacksAndMessages(null);
-                //mPlaybackPosition = 0;
-                //mPlaybackCount = 0;
-                completeMedia(false);
-            }
-            /*else if (mPlaybackCount%11 == 0 && (mPlaybackPosition > 0 && mPlaybackPosition == position))
-            {
-                Log.d(mContext.getPackageName(), "Seek Error 2");
+            if (position >= finishTime || (mPlaybackPosition > 0 && (mPlaybackPosition == position))) {
                 mMediaHandler.removeCallbacksAndMessages(null);
                 mPlaybackPosition = 0;
                 mPlaybackCount = 0;
-                completeMedia(true);
-            } */
-            else {
+                completeMedia(false);
+            } else {
                 final MediaPlaybackStatus mpPosition = new MediaPlaybackStatus();
                 mpPosition.setPosition(position);
 
                 EventBus.getDefault().post(mpPosition);
                 //initMediaSessionMetadata();
-                //mPlaybackPosition = position;
-                //mPlaybackCount++;
+                if (mPlaybackCount > 10) {
+                    mPlaybackPosition = position;
+                    mPlaybackCount = 0;
+                } else
+                    mPlaybackCount++;
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
         }
