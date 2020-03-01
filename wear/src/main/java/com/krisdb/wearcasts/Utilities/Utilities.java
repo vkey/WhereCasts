@@ -494,6 +494,8 @@ public class Utilities {
 
         if (episode.getMediaUrl() == null) return 0;
 
+        if (Utilities.getEpisodeFile(ctx, episode).exists()) return 0;
+
         if (showToast)
             CommonUtils.showToast(ctx, ctx.getString(R.string.alert_episode_download_start));
 
