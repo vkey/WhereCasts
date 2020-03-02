@@ -261,6 +261,8 @@ public class CommonUtils {
 
             if (!data.contains("\n"))
                 outputStreamWriter.append(DateUtils.FormatDate(new Date(), "M/d/Y h:m:s a")).append(": ").append(data);
+            else
+                outputStreamWriter.append(data);
 
             outputStreamWriter.close();
         } catch (IOException e) {
