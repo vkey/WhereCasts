@@ -599,20 +599,27 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
+                        if (status == DownloadManager.STATUS_PAUSED && bytes_downloaded == 0)
+                        {
+                            showFailedDownload(404);
+                            mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                        }
+
                         try {
                             if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
                                 final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
 
                                 if (bytesPerSec < 1000000.0) {
-                                    if (bytesPerSec / 1024 == 0.00)
+                                    if (bytesPerSec / 1024 == 0.00) {
                                         mProgressCircleLoading.setVisibility(View.VISIBLE);
+                                        mDownloadSpeed.setText(String.format(Locale.getDefault(), "%.02f", bytesPerSec / 1024).concat(" KB/s"));
+                                    }
                                     else {
-                                        mDownloadSpeed.setText(String.format("%.02f", bytesPerSec / 1024, Locale.US).concat(" KB/s"));
                                         mDownloadSpeed.setVisibility(View.VISIBLE);
                                         mProgressCircleLoading.setVisibility(View.GONE);
                                     }
                                 } else {
-                                    mDownloadSpeed.setText((String.format("%.02f", (bytesPerSec / 1024) / 1024, Locale.US)).concat(" MB/s"));
+                                    mDownloadSpeed.setText((String.format(Locale.getDefault(), "%.02f", (bytesPerSec / 1024) / 1024)).concat(" MB/s"));
                                     mProgressCircleLoading.setVisibility(View.GONE);
                                 }
                             } else
@@ -632,30 +639,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
                         break;
                     case DownloadManager.STATUS_FAILED:
-                        final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-
-                        mDownloadManager.remove(mDownloadId);
-
-                        if (reason == DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
-                            mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mActivity, mEpisode);
-                            mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
-                        }
-                        else
-                        {
-                            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
-                            mDownloadImage.setOnClickListener(view -> DownloadEpisode());
-                            mPlayPauseImage.setVisibility(View.VISIBLE);
-                            mProgressCircleLoading.setVisibility(View.INVISIBLE);
-                            mProgressCircleDownloading.setVisibility(View.INVISIBLE);
-                            mDownloadSpeed.setVisibility(View.INVISIBLE);
-                            mInfoLayout.setVisibility(View.GONE);
-                            mControlsLayout.setVisibility(View.VISIBLE);
-                            mVolumeDown.setVisibility(View.GONE);
-                            mVolumeUp.setVisibility(View.GONE);
-
-                            CommonUtils.showToast(mActivity, Utilities.GetDownloadErrorReason(mActivity, reason));
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        }
+                        showFailedDownload(cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON)));
                         break;
                     case DownloadManager.STATUS_SUCCESSFUL:
                         mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_delete2));
@@ -702,6 +686,32 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             cursor.close();
         }
     };
+
+    private void showFailedDownload(final int reason)
+    {
+        mDownloadManager.remove(mDownloadId);
+
+        if (reason == DownloadManager.ERROR_TOO_MANY_REDIRECTS) {
+            mDownloadId = EpisodeUtilities.GetDownloadIDByEpisode(mActivity, mEpisode);
+            mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
+        }
+        else
+        {
+            mDownloadImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_download_circle));
+            mDownloadImage.setOnClickListener(view -> DownloadEpisode());
+            mPlayPauseImage.setVisibility(View.VISIBLE);
+            mProgressCircleLoading.setVisibility(View.INVISIBLE);
+            mProgressCircleDownloading.setVisibility(View.INVISIBLE);
+            mDownloadSpeed.setVisibility(View.INVISIBLE);
+            mInfoLayout.setVisibility(View.GONE);
+            mControlsLayout.setVisibility(View.VISIBLE);
+            mVolumeDown.setVisibility(View.GONE);
+            mVolumeUp.setVisibility(View.GONE);
+
+            CommonUtils.showToast(mActivity, Utilities.GetDownloadErrorReason(mActivity, reason));
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
 
     private void DownloadEpisode()
     {
