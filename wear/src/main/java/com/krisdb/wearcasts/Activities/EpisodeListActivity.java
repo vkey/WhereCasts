@@ -29,7 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -262,7 +262,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
         mEpisodeList.setVisibility(View.INVISIBLE);
 
-        final EpisodesViewModel model = ViewModelProviders.of(this).get(EpisodesViewModel.class);
+        final EpisodesViewModel model = new ViewModelProvider(this).get(EpisodesViewModel.class);
         model.getEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
             mEpisodes = episodes;
             mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);

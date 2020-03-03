@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.activity.ConfirmationActivity;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
@@ -112,7 +112,7 @@ public class AddPodcastsActivity extends BaseFragmentActivity implements Wearabl
         mProgressBarText.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final DirectoryViewModel model = ViewModelProviders.of(this).get(DirectoryViewModel.class);
+        final DirectoryViewModel model = new ViewModelProvider(this).get(DirectoryViewModel.class);
         model.getDirectory(mForceRefresh, false).observe(this, categories -> {
             if (categories.size() > 0) {
                 mNumberOfPages = categories.size();

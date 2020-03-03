@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
@@ -118,7 +118,7 @@ public class PodcastsListFragment extends Fragment {
     private void RefreshContent() {
         if (!isAdded()) return;
 
-        final PodcastsViewModel podcastsModel = ViewModelProviders.of(this).get(PodcastsViewModel.class);
+        final PodcastsViewModel podcastsModel = new ViewModelProvider(this).get(PodcastsViewModel.class);
 
         podcastsModel.getPodcasts().observe(this, podcasts -> {
             mAdapter = new PodcastsAdapter(mActivity, podcasts);

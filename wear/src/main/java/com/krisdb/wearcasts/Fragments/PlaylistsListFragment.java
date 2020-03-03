@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
@@ -132,7 +132,7 @@ public class PlaylistsListFragment extends Fragment {
         mProgressPlaylistLayout.setVisibility(View.VISIBLE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        final PlaylistViewModel model = ViewModelProviders.of(this).get(PlaylistViewModel.class);
+        final PlaylistViewModel model = new ViewModelProvider(this).get(PlaylistViewModel.class);
 
         model.getEpisodes(mPlaylistId).observe(this, episodes -> {
             mAdapter = new PlaylistsAdapter(mActivity, this, episodes, mPlaylistId, mTextColor, mHeaderColor);
