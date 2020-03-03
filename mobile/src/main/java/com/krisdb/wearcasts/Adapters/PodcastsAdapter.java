@@ -95,7 +95,6 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
                 CommonUtils.executeAsync(new FetchPodcast(podcast.getChannel().getRSSUrl().toString()), (result) -> {
                     String description = result.getChannel().getDescription();
                     if (description != null) {
-                        description = CommonUtils.CleanDescription(description);
                         if (description.length() > 130)
                             description = description.substring(0, 130).concat("...");
 
@@ -107,7 +106,7 @@ public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.ViewHo
             }
             else
             {
-                viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+                viewHolder.description.setText(podcast.getChannel().getDescription());
                 viewHolder.description.setVisibility(View.VISIBLE);
             }
 

@@ -22,7 +22,7 @@ public class ChannelParser {
 
         channelNode.getChild("link").setEndTextElementListener(channel::setSiteUrl);
 
-        channelNode.getChild("description").setEndTextElementListener(body -> channel.setDescription(description == null ? body : description));
+        channelNode.getChild("description").setEndTextElementListener(body -> channel.setDescription(description == null ? CommonUtils.CleanDescription(body) : description));
 
         if (channel.getThumbnailUrl() == null) {
             channelNode.getChild("image").getChild("url").setEndTextElementListener(channel::setThumbnailUrl);

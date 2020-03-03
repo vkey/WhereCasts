@@ -187,7 +187,6 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                 CommonUtils.executeAsync(new FetchPodcast(podcast.getChannel().getRSSUrl().toString()), (result) -> {
                     String description = result.getChannel().getDescription();
                     if (description != null) {
-                        description = CommonUtils.CleanDescription(description);
                         if (description.length() > 100)
                             description = description.substring(0, 100).concat("...");
 
@@ -199,7 +198,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
             }
             else
             {
-                viewHolder.description.setText(CommonUtils.CleanDescription(podcast.getChannel().getDescription()));
+                viewHolder.description.setText(podcast.getChannel().getDescription());
                 viewHolder.description.setVisibility(View.VISIBLE);
             }
 

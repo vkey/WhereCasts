@@ -23,7 +23,7 @@ public class Utilities {
         final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/episodeimport");
         final DataMap dataMap = dataMapRequest.getDataMap();
         dataMap.putString("title", episode.getTitle());
-        dataMap.putString("description", episode.getDescription());
+        dataMap.putString("description",CommonUtils.CleanDescription(episode.getDescription()));
         if (episode.getMediaUrl() != null)
             dataMap.putString("mediaurl", episode.getMediaUrl().toString());
         if (episode.getEpisodeUrl() != null)

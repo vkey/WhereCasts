@@ -119,7 +119,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
         viewHolder.date.setText(DateUtils.GetDisplayDate(mContext, episode.getPubDate()));
 
         if (episode.getDescription() != null)
-            viewHolder.description.setText(CommonUtils.CleanDescription(episode.getDescription()));
+            viewHolder.description.setText(episode.getDescription());
 
         if (episode.getIsSenttoWatch())
             viewHolder.sendEpisode.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_podcast_add_confirm));

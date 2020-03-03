@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.FeedParser;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -68,7 +69,7 @@ public class Processor {
                 cv.put("title", newEpisode.getTitle() != null ? newEpisode.getTitle() : "");
 
                 if (newEpisode.getDescription() != null)
-                    cv.put("description", newEpisode.getDescription().trim());
+                    cv.put("description", CommonUtils.CleanDescription(newEpisode.getDescription().trim()));
 
                 if (newEpisode.getMediaUrl() != null)
                     cv.put("mediaurl", newEpisode.getMediaUrl().toString());

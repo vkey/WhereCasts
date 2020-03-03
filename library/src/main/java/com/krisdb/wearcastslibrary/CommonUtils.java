@@ -482,14 +482,16 @@ public class CommonUtils {
 
     public static String CleanDescription(String str)
     {
-        str = str.replaceAll("\\<[^>]*>","");
-        str = str.replace("&#8217;","'");
-        str = str.replace("[&#8230;]","");
-        str = str.replace("&quot;","\"");
-        str = str.replace("&#039;","'");
-        str = str.replace("&nbsp;"," ");
-        str = str.replace("&amp;","&");
-        return str;
+        //str = stripHTML(str);
+        //str = str.replaceAll("\\<[^>]*>","");
+        //str = str.replace("&#8217;","'");
+        //str = str.replace("[&#8230;]","");
+        //str = str.replace("&quot;","\"");
+        //str = str.replace("&#039;","'");
+        //str = str.replace("&nbsp;"," ");
+        //str = str.replace("&amp;","&");
+        //return str;
+        return stripHTML(str);
     }
 
     public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast)
