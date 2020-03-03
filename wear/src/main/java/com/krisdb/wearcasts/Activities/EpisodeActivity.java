@@ -73,7 +73,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -118,7 +117,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
     private String mLocalFile;
     private int mPlaylistID, mCurrentState, mThemeID, mEpisodeID;
-    private long mDownloadId, mDownloadStartTime;
+    private long mDownloadId;
     private static final int STATE_PAUSED = 0, STATE_PLAYING = 1;
     private static boolean mDownload;
     private AlertDialog mPlaylistDialog = null;
@@ -579,10 +578,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             final DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(mDownloadId);
             final Cursor cursor = mDownloadManager.query(query);
-            //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-            if (mDownloadStartTime == 0)
-                mDownloadStartTime = System.nanoTime();
 
             if (cursor.moveToFirst()) {
                 final int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
@@ -599,35 +594,21 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
                     case DownloadManager.STATUS_PENDING:
                         final int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 
-                        if (status == DownloadManager.STATUS_PAUSED && bytes_downloaded == 0)
-                        {
+                        if (status == DownloadManager.STATUS_PAUSED && bytes_downloaded == 0) {
                             showFailedDownload(404);
-                            mDownloadProgressHandler.removeCallbacksAndMessages(downloadProgress);
+                            mDownloadProgressHandler.removeCallbacks(downloadProgress);
                         }
 
-                        try {
-                            if (bytes_downloaded > 0 && mDownloadStartTime > 0 && (System.nanoTime() - mDownloadStartTime) > 0) {
-                                final float bytesPerSec = bytes_downloaded / ((System.nanoTime() - mDownloadStartTime) / 1000000000);
-
-                                if (bytesPerSec < 1000000.0) {
-                                    if (bytesPerSec / 1024 == 0.00) {
-                                        mProgressCircleLoading.setVisibility(View.VISIBLE);
-                                        mDownloadSpeed.setText(String.format(Locale.getDefault(), "%.02f", bytesPerSec / 1024).concat(" KB/s"));
-                                    }
-                                    else {
-                                        mDownloadSpeed.setVisibility(View.VISIBLE);
-                                        mProgressCircleLoading.setVisibility(View.GONE);
-                                    }
-                                } else {
-                                    mDownloadSpeed.setText((String.format(Locale.getDefault(), "%.02f", (bytesPerSec / 1024) / 1024)).concat(" MB/s"));
-                                    mProgressCircleLoading.setVisibility(View.GONE);
-                                }
-                            } else
-                                mDownloadSpeed.setVisibility(View.INVISIBLE);
-                        } catch (Exception ex) {
+                        final int dl_progress = (int) ((bytes_downloaded * 100L) / bytes_total);
+                        if (dl_progress > 0) {
+                            mDownloadSpeed.setText(dl_progress + "%");
+                            mDownloadSpeed.setVisibility(View.VISIBLE);
+                            mProgressCircleLoading.setVisibility(View.GONE);
+                        }
+                        else
+                        {
                             mDownloadSpeed.setVisibility(View.INVISIBLE);
-                            if (mDownloadStartTime == 0)
-                                mDownloadStartTime = System.nanoTime();
+                            mProgressCircleLoading.setVisibility(View.VISIBLE);
                         }
 
                         mProgressCircleDownloading.setProgress(bytes_downloaded);
@@ -733,7 +714,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             //showToast(mActivity, getString(R.string.alert_episode_download_start));
         });
 
-        mDownloadStartTime = System.nanoTime();
         mDownloadProgressHandler.postDelayed(downloadProgress, 1000);
     }
 
