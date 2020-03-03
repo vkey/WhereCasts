@@ -490,8 +490,10 @@ public class CommonUtils {
         //str = str.replace("&#039;","'");
         //str = str.replace("&nbsp;"," ");
         //str = str.replace("&amp;","&");
+        str = stripHTML(str);
+        str = str.replace("￼","");
         //return str;
-        return stripHTML(str);
+        return str;
     }
 
     public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast)
