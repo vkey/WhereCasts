@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -52,7 +52,7 @@ public class DirectoryActivity extends AppCompatActivity {
         findViewById(R.id.main_progress_text).setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        final DirectoryViewModel model = ViewModelProviders.of(this).get(DirectoryViewModel.class);
+        final DirectoryViewModel model = new ViewModelProvider(this).get(DirectoryViewModel.class);
         model.getDirectory().observe(this, categories -> {
             SetDirectory(categories);
             mProgressBar.setVisibility(View.GONE);
