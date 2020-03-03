@@ -162,7 +162,8 @@ public class PodcastsListFragment extends Fragment {
 
             if (visits < 10) {
                 emptyText = emptyText.concat(mActivity.getString(R.string.empty_podcast_list)).concat("\n\n").concat(mActivity.getString(R.string.empty_podcast_list2));
-                swipeLeftView.setVisibility(View.VISIBLE);
+                if (swipeLeftView != null)
+                    swipeLeftView.setVisibility(View.VISIBLE);
             }
             else if (lastUpdateDate.length() > 0) {
                 emptyText = emptyText.concat(getString(R.string.last_updated)

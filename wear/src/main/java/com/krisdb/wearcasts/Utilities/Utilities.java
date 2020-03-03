@@ -208,7 +208,7 @@ public class Utilities {
     }
 
     public static void enableBluetooth(final Context ctx, final boolean showToast) {
-        if (!BluetoothEnabled()) {
+        if (HasBluetooth() && !BluetoothEnabled()) {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             final boolean disableBluetooth = prefs.getBoolean("pref_disable_bluetooth", false);

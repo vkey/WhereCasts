@@ -126,6 +126,20 @@ public class DownloadReceiver extends BroadcastReceiver  {
                     editor.apply();*/
                 }
             }
+            else {
+                if (prefs.getBoolean("from_job", false))
+                    clearFailedDownload(context, episode);
+                else
+                {
+                    final ContentValues cvFailed = new ContentValues();
+                    cvFailed.put("download", 0);
+                    cvFailed.put("downloadid", 0);
+
+                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
+                    db.update(cvFailed, episode.getEpisodeId());
+                    db.close();
+                }
+            }
 
             cursor.close();
 
