@@ -376,8 +376,11 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             mLocalFile = intent.getExtras().getString("local_file");
 
             if (mLocalFile != null) {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 mEpisode = new PodcastItem();
                 mEpisode.setTitle(mLocalFile);
+                mEpisode.setPosition(prefs.getInt(Utilities.GetLocalPositionKey(mLocalFile), 0));
+                mEpisode.setDuration((int)prefs.getLong(Utilities.GetLocalDurationKey(mLocalFile), 0));
             } else if (mEpisodeID > -1)
                 mEpisode = GetEpisode(mActivity, mEpisodeID, mPlaylistID);
 

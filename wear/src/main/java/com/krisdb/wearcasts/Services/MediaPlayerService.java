@@ -654,6 +654,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         final Bundle bundle = new Bundle();
         bundle.putInt("episodeid", mEpisode.getEpisodeId());
         bundle.putInt("playlistid", mPlaylistID);
+        bundle.putString("local_file", mLocalFile);
 
         final Intent notificationIntent = new Intent(mContext, EpisodeActivity.class);
         notificationIntent.putExtras(bundle);
