@@ -31,6 +31,18 @@
                 />
         </LinearLayout>
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/episode_list_swipe_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.wear.widget.WearableRecyclerView
+                android:id="@+id/episode_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="50dp"
+                />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <ImageView
             android:id="@+id/episode_list_progress_text_thumbnail"
             android:maxWidth="90dp"
@@ -43,19 +55,6 @@
             android:visibility="gone"
             android:layout_below="@+id/episode_list_progress_text_playlist_layout"
             />
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/episode_list_swipe_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.wear.widget.WearableRecyclerView
-                android:id="@+id/episode_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="50dp"
-                />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         <TextView
             android:id="@+id/episode_list_status"
             android:layout_width="wrap_content"
