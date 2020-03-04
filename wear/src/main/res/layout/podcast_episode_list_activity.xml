@@ -31,6 +31,18 @@
                 />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/episode_list_progress_text_thumbnail"
+            android:maxWidth="90dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:layout_below="@+id/episode_list_progress_text_playlist_layout"
+            />
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/episode_list_swipe_layout"
             android:layout_width="match_parent"
@@ -44,18 +56,6 @@
                 />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <ImageView
-            android:id="@+id/episode_list_progress_text_thumbnail"
-            android:maxWidth="90dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            android:layout_below="@+id/episode_list_progress_text_playlist_layout"
-            />
         <TextView
             android:id="@+id/episode_list_status"
             android:layout_width="wrap_content"

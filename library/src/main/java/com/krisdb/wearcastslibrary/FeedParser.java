@@ -46,7 +46,7 @@ public class FeedParser {
                             if (name.equalsIgnoreCase("link")) {
                                 episode.setEpisodeUrl(parser.nextText());
                             } else if (name.equalsIgnoreCase("description")) {
-                                episode.setDescription(parser.nextText().trim());
+                                episode.setDescription(CommonUtils.CleanDescription(parser.nextText().trim()));
                             } else if (name.equalsIgnoreCase("title")) {
                                 episode.setTitle(parser.nextText().trim());
                             } else if (name.equalsIgnoreCase("pubDate")) {
@@ -79,12 +79,7 @@ public class FeedParser {
         }
 
             try {
-                Collections.sort(episodes, new Comparator<PodcastItem>() {
-                    @Override
-                    public int compare(final PodcastItem item1, final PodcastItem item2) {
-                        return DateUtils.ConvertDate(item2.getPubDate()).compareTo(DateUtils.ConvertDate(item1.getPubDate()));
-                    }
-                });
+                Collections.sort(episodes, (item1, item2) -> DateUtils.ConvertDate(item2.getPubDate()).compareTo(DateUtils.ConvertDate(item1.getPubDate())));
             } catch (Exception ignored) {}
 
         return episodes;

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.icu.lang.UProperty;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -39,11 +40,13 @@ import androidx.wear.widget.drawer.WearableActionDrawerView;
 
 import com.krisdb.wearcasts.Adapters.EpisodesAdapter;
 import com.krisdb.wearcasts.Adapters.PlaylistsAssignAdapter;
+import com.krisdb.wearcasts.Async.DisplayEpisodes;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Controllers.EpisodesSwipeController;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Settings.SettingsPodcastActivity;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
@@ -74,6 +77,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static int SEARCH_RESULTS_CODE = 131;
     private static int DOWNLOAD_RESULTS_CODE = 132;
     private static int LOW_BANDWIDTH_RESULTS_CODE = 133;
+    private static int PODCAST_SETTINGS_CODE = 134;
     private static WeakReference<EpisodeListActivity> mActivityRef;
     private WearableRecyclerView mEpisodeList;
     private int mTextColor, mItemID;
@@ -90,6 +94,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static final long NETWORK_CONNECTIVITY_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(7);
     private List<PodcastItem> mEpisodes, mDownloadEpisodes;
     private AlertDialog mPlaylistDialog = null;
+    private EpisodesViewModel mViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,11 +123,13 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mEpisodeList.setLayoutManager(new WearableLinearLayoutManager(mActivity, new ScrollingLayoutEpisodes()));
         ((SimpleItemAnimator)mEpisodeList.getItemAnimator()).setSupportsChangeAnimations(false);
 
+        //mSwipeRefreshLayout.setProgressViewOffset(false, 100,0);
+
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
         if (mQuery != null)
         {
             mQuery = null;
-            RefreshContent();
+            UpdateContent();
             mSwipeRefreshLayout.setRefreshing(false);
         }
         else if (!CommonUtils.isNetworkAvailable(mActivity))
@@ -140,7 +147,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             }
         }
          else {
-            mStatus.setVisibility(View.GONE);
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             mSwipeRefreshLayout.setRefreshing(true);
 
@@ -149,7 +155,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 if (response.getDownloadEpisodes().size() > 0)
                     downloadEpisodes(response.getDownloadEpisodes());
                 else
-                    runOnUiThread(this::RefreshContent);
+                    runOnUiThread(this::UpdateContent);
 
                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             });
@@ -188,7 +194,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     for (final PodcastItem episode : mDownloadEpisodes)
                         Utilities.startDownload(mActivity, episode, false);
 
-                    runOnUiThread(() -> RefreshContent());
+                    runOnUiThread(() -> UpdateContent());
                 }
 
             };
@@ -211,7 +217,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             for (final PodcastItem episode : mDownloadEpisodes)
                 Utilities.startDownload(mActivity, episode, false);
 
-            RefreshContent();
+            UpdateContent();
         }
     }
 
@@ -235,6 +241,17 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
         mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
         mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
+        mProgressThumb.setOnLongClickListener(view17 -> {
+            final Intent intent = new Intent(this, SettingsPodcastActivity.class);
+            final Bundle bundle = new Bundle();
+            bundle.putInt("podcastId", podcast.getPodcastId());
+            intent.putExtras(bundle);
+
+            if (podcast.getPodcastId() > 0)
+                startActivityForResult(intent, PODCAST_SETTINGS_CODE);
+
+            return false;
+        });
 
         final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
         final ViewGroup.MarginLayoutParams paramsThumb = (ViewGroup.MarginLayoutParams) mProgressThumb.getLayoutParams();
@@ -256,14 +273,14 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             paramsLayout.setMargins(0, 0, 0, 0);
         }
 
+        mEpisodeList.setVisibility(View.GONE);
         mProgressThumb.setVisibility(View.VISIBLE);
         mStatus.setVisibility(View.VISIBLE);
         mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
         mSwipeRefreshLayout.setEnabled(true);
-        mEpisodeList.setVisibility(View.INVISIBLE);
 
-        final EpisodesViewModel model = new ViewModelProvider(this).get(EpisodesViewModel.class);
-        model.getEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
+        mViewModel = new ViewModelProvider(this).get(EpisodesViewModel.class);
+        mViewModel.updateEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
             mEpisodes = episodes;
             mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
             mEpisodeList.setAdapter(mAdapter);
@@ -285,17 +302,33 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 }
 
                 mStatus.setVisibility(TextView.GONE);
-
                 mProgressThumb.setVisibility(View.GONE);
                 mEpisodeList.setVisibility(View.VISIBLE);
             }
         });
     }
 
+    private void UpdateContent()
+    {
+        mEpisodeList.setVisibility(View.GONE);
+        mStatus.setVisibility(View.VISIBLE);
+        mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
+
+        CommonUtils.executeCachedAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
+            mViewModel.updateEpisodes(episodes);
+
+            if (episodes.size() == 1)
+                mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
+            else
+                mStatus.setVisibility(TextView.GONE);
+            mEpisodeList.setVisibility(View.VISIBLE);
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
             if (requestCode == NO_NETWORK_RESULTS_CODE) {
                 mSwipeRefreshLayout.setRefreshing(true);
                 mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -309,6 +342,8 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     }
                     mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 });
+            } else if (requestCode == PODCAST_SETTINGS_CODE) {
+                UpdateContent();
             } else if (requestCode == SEARCH_RESULTS_CODE) {
                 mQuery = data.getData().toString();
 

@@ -2,6 +2,7 @@ package com.krisdb.wearcasts.Async;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.R;
@@ -27,7 +28,6 @@ public class DisplayEpisodes implements Callable<List<PodcastItem>> {
 
     @Override
     public List<PodcastItem> call() {
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);

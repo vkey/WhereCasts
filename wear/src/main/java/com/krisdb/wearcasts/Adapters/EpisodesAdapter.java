@@ -132,7 +132,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             intent.putExtras(bundle);
 
             if (podcast.getPodcastId() > 0)
-                mContext.startActivity(intent);
+                mContext.startActivityForResult(intent, 134);
 
             return false;
         });
