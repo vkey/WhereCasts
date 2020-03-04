@@ -2,7 +2,6 @@ package com.krisdb.wearcasts.Async;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import com.krisdb.wearcasts.R;
