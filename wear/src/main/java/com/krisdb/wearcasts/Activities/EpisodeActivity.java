@@ -1081,6 +1081,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
             else
                 duration = mEpisode.getDuration();
 
+            //fix from PlayerFM sending wrong duration
+            if (mEpisode.getDuration() != status.getDuration()) {
+                duration = status.getDuration();
+                mEpisode.setDuration(duration);
+            }
+
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_pause));
 
             mProgressBar.setVisibility(ProgressBar.GONE);
@@ -1106,12 +1112,6 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else if (status.getPosition() > 0) {
             mSeekBar.setProgress(status.getPosition());
-            //fix from PlayerFM sending wrong duration
-            if (mEpisode.getDuration() != status.getDuration()) {
-                mEpisode.setDuration(status.getDuration());
-                mSeekBar.setMax(status.getDuration());
-                mDurationView.setText(DateUtils.FormatPositionTime(status.getDuration()));
-            }
             mPositionView.setText(DateUtils.FormatPositionTime(status.getPosition()));
         }
     }
