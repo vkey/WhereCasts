@@ -99,9 +99,9 @@ public class DateUtils {
     }
 
     public static String FormatPositionTime(final int position) {
-        long second = (position / 1000) % 60;
-        long minute = (position / (1000 * 60)) % 60;
-        long hour = (position / (1000 * 60 * 60)) % 24;
+        final long second = (position / 1000) % 60;
+        final long minute = (position / (1000 * 60)) % 60;
+        final long hour = (position / (1000 * 60 * 60)) % 24;
 
         if (hour < 1)
             return String.format(Locale.ENGLISH, "%d:%02d", minute, second);
