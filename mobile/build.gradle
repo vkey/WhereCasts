@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = "2.2.0-alpha03"
+    def lifecycle_version = "2.2.0"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
