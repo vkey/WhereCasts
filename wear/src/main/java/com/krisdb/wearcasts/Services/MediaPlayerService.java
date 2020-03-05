@@ -877,11 +877,17 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
 
                 EventBus.getDefault().post(mpPosition);
                 //initMediaSessionMetadata();
-                if (mPlaybackCount > 10) {
+                if (mPlaybackCount > 50) {
                     mPlaybackPosition = position;
                     mPlaybackCount = 0;
                 } else
                     mPlaybackCount++;
+
+                //CommonUtils.Log(mContext, "mPlaybackCount: " + mPlaybackCount);
+                //CommonUtils.Log(mContext, "mPlaybackPosition: " + mPlaybackPosition);
+                //CommonUtils.Log(mContext, "position: " + position);
+                //CommonUtils.Log(mContext, "Equals: " + (mPlaybackPosition == position));
+
                 mMediaHandler.postDelayed(mUpdateMediaPosition, 100);
             }
         }
