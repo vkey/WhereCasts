@@ -1106,6 +1106,12 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         }
         else if (status.getPosition() > 0) {
             mSeekBar.setProgress(status.getPosition());
+            //fix from PlayerFM sending wrong duration
+            if (mEpisode.getDuration() != status.getDuration()) {
+                mEpisode.setDuration(status.getDuration());
+                mSeekBar.setMax(status.getDuration());
+                mDurationView.setText(DateUtils.FormatPositionTime(status.getDuration()));
+            }
             mPositionView.setText(DateUtils.FormatPositionTime(status.getPosition()));
         }
     }

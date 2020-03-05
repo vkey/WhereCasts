@@ -873,6 +873,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
             } else {
                 final MediaPlaybackStatus mpPosition = new MediaPlaybackStatus();
                 mpPosition.setPosition(position);
+                mpPosition.setDuration(mMediaPlayer.getDuration());
 
                 EventBus.getDefault().post(mpPosition);
                 //initMediaSessionMetadata();

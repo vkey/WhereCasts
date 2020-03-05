@@ -2,7 +2,7 @@ package com.krisdb.wearcasts.Models;
 
 public class MediaPlaybackStatus {
     private String local_file;
-    private int position, error_code, episodeid, playlistid;
+    private int position, error_code, episodeid, playlistid, duration;
     private boolean media_play, media_start, media_paused, media_error, media_completed, media_playlist_skip, media_playing;
 
     public int getPosition() {
@@ -11,6 +11,14 @@ public class MediaPlaybackStatus {
 
     public void setPosition(final int position) {
         this.position = position;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final int duration) {
+        this.duration = duration;
     }
 
     public boolean getMediaPlay() {
