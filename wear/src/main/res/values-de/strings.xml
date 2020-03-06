@@ -22,7 +22,7 @@
 
     <string name="premium_locked_playback_speed">Premium, entsperren durch Telefon-App.</string>
 
-    <string name="empty_episode_list">Zum Aktualisieren nach unten wischen</string>
+    <string name="empty_episode_list">Wischen Sie nach unten, um nach neuen Folgen zu suchen</string>
     <string name="empty_episode_list_search_results">Keine Ergebnisse\nWischen Sie nach unten, um alle anzuzeigen</string>
 
     <string name="empty_podcast_list">Importieren Sie Podcasts per Telefon-App oder ziehen Sie nach unten, um Podcasts zu entdecken</string>
@@ -294,6 +294,8 @@
 
     <string name="alert_download_error">Diese Episode wurde nicht korrekt heruntergeladen.  Bitte versuchen Sie es erneut</string>
     <string name="alert_download_error_low">Download konnte nicht gestartet werden.\nDeaktivieren Sie Bluetooth oder wenden Sie sich an den Podcast-Anbieter, wenn das Problem weiterhin besteht.</string>
+
+    <string name="alert_no_new_episodes">Keine neuen Folgen</string>
 
     <string name="alert_podcast_added">Hinzugefügt</string>
     <string name="alert_episode_playlist_added">Hinzugefügt zu %s</string>

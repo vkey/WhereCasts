@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">Premium, låsa upp via telefonapp.</string>
 
-    <string name="empty_episode_list">Dra ner för att uppdatera</string>
+    <string name="empty_episode_list">Dra nedåt för att leta efter nya avsnitt</string>
     <string name="empty_episode_list_search_results">Inga resultat\nDra ner för att visa alla</string>
 
     <string name="empty_podcast_list">Importera podcaster via telefonapp eller dra ner för att upptäcka podcaster</string>
@@ -290,6 +290,8 @@
 
     <string name="alert_download_error">Det här avsnittet laddades inte korrekt.  Försök att ladda ner den igen</string>
     <string name="alert_download_error_low">Nedladdningen kunde inte startas.\nFörsök att inaktivera Bluetooth eller kontakta podcastleverantören om problemet kvarstår.</string>
+
+    <string name="alert_no_new_episodes">Inga nya avsnitt</string>
 
     <string name="alert_add_podcast_no_episodes">men inga episoder hittades</string>
     <string name="alert_no_system_audio">Inget systemljud hittades</string>

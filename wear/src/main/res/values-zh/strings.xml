@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">保費，通過手機應用程序解鎖.</string>
 
-    <string name="empty_episode_list">向下滑動即可刷新</string>
+    <string name="empty_episode_list">向下滑動以查看新劇集</string>
     <string name="empty_episode_list_search_results">沒有結果\n向下滑動即可顯示所有內容</string>
 
     <string name="empty_podcast_list">通過電話應用導入播客或下拉以發現播客</string>
@@ -289,6 +289,8 @@
 
     <string name="alert_download_error">此劇集下載不正確.  請嘗試再次下載</string>
     <string name="alert_download_error_low">無法開始下載.\n如果問題仍然存在，請嘗試禁用藍牙或聯繫播客提供商.</string>
+
+    <string name="alert_no_new_episodes">沒有新劇集</string>
 
     <string name="alert_add_podcast_no_episodes">但沒有找到劇集</string>
     <string name="alert_no_system_audio">找不到系統音頻</string>

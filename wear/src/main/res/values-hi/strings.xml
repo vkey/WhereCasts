@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">प्रीमियम, फ़ोन ऐप के माध्यम से अनलॉक करें.</string>
 
-    <string name="empty_episode_list">ताज़ा करने के लिए नीचे स्वाइप करें</string>
+    <string name="empty_episode_list">नए एपिसोड की जांच के लिए नीचे स्वाइप करेंं</string>
     <string name="empty_episode_list_search_results">कोई परिणाम नहीं\nसभी को दिखाने के लिए नीचे स्वाइप करें</string>
 
     <string name="empty_podcast_list">फ़ोन ऐप के माध्यम से पॉडकास्ट आयात करें या पॉडकास्ट खोजने के लिए नीचे खींचें</string>
@@ -290,6 +290,8 @@
 
     <string name="alert_download_error">यह एपिसोड सही तरीके से डाउनलोड नहीं हुआ.  कृपया इसे फिर से डाउनलोड करने का प्रयास करें</string>
     <string name="alert_download_error_low">डाउनलोड शुरू नहीं किया जा सका.\nयदि समस्या बनी रहती है, तो ब्लूटूथ या पॉडकास्ट प्रदाता से संपर्क करने का प्रयास करें.</string>
+
+    <string name="alert_no_new_episodes">कोई नया प्रकरण नहीं</string>
 
     <string name="alert_add_podcast_no_episodes">लेकिन कोई एपिसोड नहीं मिला</string>
     <string name="alert_no_system_audio">कोई सिस्टम ऑडियो नहीं मिला</string>

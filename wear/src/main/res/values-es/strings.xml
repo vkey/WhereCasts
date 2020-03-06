@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">Premium, desbloquea a través de la aplicación del teléfono.</string>
 
-    <string name="empty_episode_list">Desliza hacia abajo para actualizar</string>
+    <string name="empty_episode_list">Desliza hacia abajo para buscar nuevos episodios</string>
     <string name="empty_episode_list_search_results">No hay resultados\nDesliza hacia abajo para mostrar todo</string>
 
     <string name="empty_podcast_list">Importe podcasts a través de la aplicación del teléfono o despliegue para descubrir los podcasts</string>
@@ -290,6 +290,8 @@
 
     <string name="alert_download_error">Este episodio no se descargó correctamente.  Intenta descargarlo nuevamente</string>
     <string name="alert_download_error_low">La descarga no se pudo iniciar.\nIntente deshabilitar Bluetooth o póngase en contacto con el proveedor de podcast si el problema persiste.</string>
+
+    <string name="alert_no_new_episodes">No hay nuevos episodios</string>
 
     <string name="alert_add_podcast_no_episodes">pero no se han encontrado episodios</string>
     <string name="alert_no_system_audio">No se encontró el audio del sistema</string>

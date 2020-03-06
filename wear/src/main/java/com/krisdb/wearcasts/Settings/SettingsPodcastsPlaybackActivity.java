@@ -19,7 +19,7 @@ public class SettingsPodcastsPlaybackActivity extends BasePreferenceActivity {
         ft.commit();
 
         //final android.database.sqlite.SQLiteDatabase sdb1 = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
-        //sdb1.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 4 ORDER BY [pubDate] DESC LIMIT 2)");
+        //sdb1.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 1 OR [pid] = 2 ORDER BY [pubDate] DESC LIMIT 2)");
 
         //final android.database.sqlite.SQLiteDatabase sdb2 = com.krisdb.wearcasts.Databases.DatabaseHelper.select(this);
         //sdb2.execSQL("DELETE FROM [tbl_podcast_episodes] WHERE [id] IN (SELECT [id] FROM [tbl_podcast_episodes] WHERE [pid] = 2 ORDER BY [pubDate] DESC LIMIT 2)");

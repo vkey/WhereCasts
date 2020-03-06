@@ -22,7 +22,7 @@ public class EpisodesViewModel extends AndroidViewModel {
         this.application = application;
     }
 
-    public LiveData<List<PodcastItem>> updateEpisodes(final int podcastId, final String query) {
+    public LiveData<List<PodcastItem>> getEpisodes(final int podcastId, final String query) {
         if (episodes == null) {
             episodes = new MutableLiveData<>();
 

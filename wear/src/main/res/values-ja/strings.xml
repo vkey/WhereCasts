@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">プレミアム、電話アプリからロック解除.</string>
 
-    <string name="empty_episode_list">スワイプしてリフレッシュする</string>
+    <string name="empty_episode_list">下にスワイプして新しいエピソードを確認します</string>
     <string name="empty_episode_list_search_results">結果がありません\n下にスワイプしてすべてを表示する</string>
 
     <string name="empty_podcast_list">電話アプリでポッドキャストをインポートするか、プルダウンしてポッドキャストを発見する</string>
@@ -290,6 +290,8 @@
 
     <string name="alert_download_error">このエピソードは正しくダウンロードされませんでした.  もう一度ダウンロードしてみてください</string>
     <string name="alert_download_error_low">ダウンロードを開始できませんでした.\n問題が解決しない場合は、Bluetoothを無効にするか、ポッドキャストプロバイダーに連絡してください.</string>
+
+    <string name="alert_no_new_episodes">新しいエピソードはありません</string>
 
     <string name="alert_add_podcast_no_episodes">エピソードは見つかりませんでした</string>
     <string name="alert_no_system_audio">システムオーディオが見つかりません</string>

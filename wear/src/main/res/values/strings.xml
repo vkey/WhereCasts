@@ -46,7 +46,7 @@
 
     <string name="premium_locked_playback_speed">Premium, unlock through phone app.</string>
 
-    <string name="empty_episode_list">Swipe down to refresh</string>
+    <string name="empty_episode_list">Swipe down to check for new episodes</string>
     <string name="empty_episode_list_search_results">No Results\nSwipe down to show all</string>
 
     <string name="empty_podcast_list">Import podcasts via phone app or pull down to discover podcasts</string>
@@ -294,6 +294,8 @@
 
     <string name="alert_download_error">This episode did not download correctly.  Please try downloading it again</string>
     <string name="alert_download_error_low">Download could not be started.\nTry disabling Bluetooth or contact podcast provider if issue persists.</string>
+
+    <string name="alert_no_new_episodes">No new episodes</string>
 
     <string name="alert_main_menu_start_update">Start update?</string>
     <string name="alert_add_podcast_no_episodes">but no episodes found</string>

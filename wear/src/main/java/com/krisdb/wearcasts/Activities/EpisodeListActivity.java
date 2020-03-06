@@ -19,12 +19,10 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,7 +55,6 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesFiltered;
@@ -80,10 +77,9 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
     private static WeakReference<EpisodeListActivity> mActivityRef;
     private WearableRecyclerView mEpisodeList;
     private int mTextColor, mItemID;
-    private TextView mStatus, mProgressPlaylistText;
+    private TextView mStatus;
     private ImageView mProgressThumb;
-    private LinearLayout mProgressPlaylistLayout;
-    private RelativeLayout mEpisodeListLayout;
+    private LinearLayout mEpisodeListLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EpisodesAdapter mAdapter;
     private ConnectivityManager mManager;
@@ -113,8 +109,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mWearableActionDrawer.setOnMenuItemClickListener(this);
         mEpisodeListLayout = findViewById(R.id.episodes_list_layout);
         mEpisodeList = findViewById(R.id.episode_list);
-        mProgressPlaylistLayout = findViewById(R.id.episode_list_progress_text_playlist_layout);
-        mProgressPlaylistText = findViewById(R.id.episode_list_progress_text_playlist);
         mStatus = findViewById(R.id.episode_list_status);
         mProgressThumb = findViewById(R.id.episode_list_progress_text_thumbnail);
         mSwipeRefreshLayout = findViewById(R.id.episode_list_swipe_layout);
@@ -156,6 +150,9 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 else
                     runOnUiThread(this::UpdateContent);
 
+                if (response.getNewEpisodeCount() == 0)
+                    CommonUtils.showToast(mActivity, mActivity.getString(R.string.alert_no_new_episodes));
+
                 mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             });
         }
@@ -165,7 +162,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
         mTextColor = ContextCompat.getColor(mActivity, R.color.wc_white);
 
-        RefreshContent();
+        SetContent();
     }
 
     private void downloadEpisodes(final List<PodcastItem> episodes) {
@@ -220,7 +217,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         }
     }
 
-    public void RefreshContent() {
+    public void SetContent() {
 
         final Resources resources = mActivity.getResources();
         final String densityName = CommonUtils.getDensityName(mActivity);
@@ -231,7 +228,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, GetPodcast(mActivity, mPodcastId));
             mEpisodeListLayout.setBackgroundColor(colors.first);
             mTextColor = colors.second;
-            mProgressPlaylistText.setTextColor(mTextColor);
         }
 
         mStatus.setTextColor(mTextColor);
@@ -252,26 +248,6 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
             return false;
         });
 
-        final ViewGroup.MarginLayoutParams paramsLayout = (ViewGroup.MarginLayoutParams) mProgressPlaylistLayout.getLayoutParams();
-        final ViewGroup.MarginLayoutParams paramsThumb = (ViewGroup.MarginLayoutParams) mProgressThumb.getLayoutParams();
-
-        if (Objects.equals(densityName, getString(R.string.hdpi))) {
-            if (isRound) {
-                mProgressPlaylistLayout.setPadding(0, 8, 0, 8);
-                paramsLayout.setMargins(0, 0, 0, 40);
-            } else {
-                mProgressPlaylistLayout.setPadding(0, 7, 0, 7);
-                paramsLayout.setMargins(0, 0, 0, 20);
-                paramsThumb.setMargins(0, 20, 0, 0);
-            }
-        } else if (Objects.equals(densityName, getString(R.string.xhdpi))) {
-            mProgressPlaylistLayout.setPadding(0, 8, 0, 10);
-            paramsLayout.setMargins(0, 0, 0, 0);
-        } else {
-            mProgressPlaylistLayout.setPadding(0, 10, 0, 10);
-            paramsLayout.setMargins(0, 0, 0, 0);
-        }
-
         mEpisodeList.setVisibility(View.GONE);
         mProgressThumb.setVisibility(View.VISIBLE);
         mStatus.setVisibility(View.VISIBLE);
@@ -279,18 +255,20 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mSwipeRefreshLayout.setEnabled(true);
 
         mViewModel = new ViewModelProvider(this).get(EpisodesViewModel.class);
-        mViewModel.updateEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
+        mViewModel.getEpisodes(mPodcastId, mQuery).observe(this, episodes -> {
             mEpisodes = episodes;
-            mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
-            mEpisodeList.setAdapter(mAdapter);
-
-            final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
-            itemTouchhelper.attachToRecyclerView(mEpisodeList);
 
             if (episodes.size() == 1) {
                 mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
                 mStatus.setVisibility(View.VISIBLE);
+                mProgressThumb.setVisibility(View.VISIBLE);
+                mEpisodeList.setVisibility(View.GONE);
             } else {
+                mAdapter = new EpisodesAdapter(mActivity, episodes, mTextColor, mSwipeRefreshLayout, mWearableActionDrawer);
+                mEpisodeList.setAdapter(mAdapter);
+
+                final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
+                itemTouchhelper.attachToRecyclerView(mEpisodeList);
                 if (HasNewEpisodes(mActivity, mPodcastId)) {
                     Utilities.SetPodcstRefresh(mActivity);
                     final ContentValues cv = new ContentValues();
@@ -312,15 +290,10 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         mEpisodeList.setVisibility(View.GONE);
         mStatus.setVisibility(View.VISIBLE);
         mStatus.setText(mActivity.getString(R.string.text_loading_episodes));
+        mProgressThumb.setVisibility(View.VISIBLE);
 
         CommonUtils.executeCachedAsync(new DisplayEpisodes(this, mPodcastId, mQuery), (episodes) -> {
             mViewModel.updateEpisodes(episodes);
-
-            if (episodes.size() == 1)
-                mStatus.setText(mQuery != null ? mActivity.getString(R.string.empty_episode_list_search_results) : mActivity.getString(R.string.empty_episode_list));
-            else
-                mStatus.setVisibility(TextView.GONE);
-            mEpisodeList.setVisibility(View.VISIBLE);
         });
     }
 
@@ -337,7 +310,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                     if (response.getDownloadEpisodes().size() > 0)
                         downloadEpisodes(response.getDownloadEpisodes());
                     else {
-                        runOnUiThread(this::RefreshContent);
+                        runOnUiThread(this::UpdateContent);
                     }
                     mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 });
@@ -376,7 +349,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 for (final PodcastItem episode : mDownloadEpisodes)
                     Utilities.startDownload(mActivity, episode, false);
 
-                runOnUiThread(() -> RefreshContent());
+                runOnUiThread(this::UpdateContent);
             }
         }
     }
