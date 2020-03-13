@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.core.text.HtmlCompat;
@@ -496,8 +497,12 @@ public class CommonUtils {
         return str;
     }
 
-    public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast)
+    public static boolean IsDark(final int color)
     {
+        return ColorUtils.calculateLuminance(color) < 0.3;
+    }
+
+    public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast) {
         final Bitmap bitmap = BitmapFactory.decodeFile(CommonUtils.GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(podcast.getPodcastId())));
 
         if (bitmap == null)
@@ -507,16 +512,27 @@ public class CommonUtils {
 
         Pair<Integer, Integer> p = null;
 
-        if (palette.getDarkVibrantSwatch() != null) {
+        if (palette.getDarkVibrantSwatch() != null)
             p = new Pair<>(palette.getDarkVibrantSwatch().getRgb(), palette.getDarkVibrantSwatch().getBodyTextColor());
-        } else if (palette.getDarkMutedSwatch() != null) {
+
+        if (palette.getDarkMutedSwatch() != null)
             p = new Pair<>(palette.getDarkMutedSwatch().getRgb(), palette.getDarkMutedSwatch().getBodyTextColor());
-        } else if (palette.getVibrantSwatch() != null) {
-            p = new Pair<>(palette.getVibrantSwatch().getRgb(), palette.getVibrantSwatch().getBodyTextColor());
-        }
+
+        if (palette.getMutedSwatch() != null)
+            p = new Pair<>(palette.getMutedSwatch().getRgb(), palette.getMutedSwatch().getBodyTextColor());
+
+        if (palette.getLightMutedSwatch() != null)
+            p = new Pair<>(palette.getLightMutedSwatch().getRgb(), palette.getLightMutedSwatch().getBodyTextColor());
+
+        if (palette.getLightVibrantSwatch() != null)
+            p = new Pair<>(palette.getLightVibrantSwatch().getRgb(), palette.getLightVibrantSwatch().getBodyTextColor());
+
+        //if (p == null)
+            //p = new Pair<>(palette.getVibrantSwatch().getRgb(), palette.getVibrantSwatch().getBodyTextColor());
 
         return p;
     }
+
     public static Drawable GetBackgroundLogo(final Context ctx, final PodcastItem episode) {
         return GetBackgroundLogo(ctx, episode, R.drawable.ic_logo_placeholder);
     }

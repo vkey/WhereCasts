@@ -523,8 +523,10 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             progressDownloadLoading.setVisibility(View.GONE);
             progressDownload.setVisibility(View.GONE);
 
+            final boolean isDark = CommonUtils.IsDark(mTextColor);
+
             if (episode.getDownloadId() > 0) {
-                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_cancel));
+                download.setImageDrawable(mContext.getDrawable(isDark ? R.drawable.ic_action_episode_row_item_download_cancel_dark : R.drawable.ic_action_episode_row_item_download_cancel));
 
  /*               final int downloadBytes = Utilities.getDownloadProgress(mContext, episode.getDownloadId());
                 if (downloadBytes > 0) {
@@ -536,23 +538,20 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                     progressDownloadLoading.setVisibility(View.VISIBLE);*/
             }
             else if (episode.getIsDownloaded())
-                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download_delete));
+                download.setImageDrawable(mContext.getDrawable(isDark ? R.drawable.ic_action_episode_row_item_download_delete_dark : R.drawable.ic_action_episode_row_item_download_delete));
             else
-                download.setImageDrawable(mContext.getDrawable(R.drawable.ic_action_episode_row_item_download));
+                download.setImageDrawable(mContext.getDrawable(isDark ? R.drawable.ic_action_episode_row_item_download_dark : R.drawable.ic_action_episode_row_item_download));
 
             if (episode.getDuration() > 0) {
                 duration.setText(episode.getDisplayDuration());
                 duration.setVisibility(View.VISIBLE);
-                duration.setTextColor(mTextColor);
             }
             else
                 duration.setVisibility(View.GONE);
 
-            title.setTextColor(mTextColor);
             title.setTextSize(14);
             title.setGravity(Gravity.START);
 
-            date.setTextColor(mTextColor);
             date.setText(episode.getDisplayDate());
 
             if (!episode.getFinished()) {
@@ -564,17 +563,25 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             }
 
             if (episode.getIsSelected()) {
-                layout.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
-                title.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
-                duration.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
-                date.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
-                download.setBackgroundColor(mContext.getColor(R.color.wc_episode_selected));
+                final int color_bg = mContext.getColor(isDark ? R.color.wc_episode_selected : R.color.wc_episode_selected_dark);
+                final int color_text = mContext.getColor(isDark ? R.color.wc_episode_text_selected : R.color.wc_episode_text_selected_dark);
+                layout.setBackgroundColor(color_bg);
+                title.setBackgroundColor(color_bg);
+                duration.setBackgroundColor(color_bg);
+                date.setBackgroundColor(color_bg);
+                download.setBackgroundColor(color_bg);
+                title.setTextColor(color_text);
+                date.setTextColor(color_text);
+                duration.setTextColor(color_text);
             } else {
                 layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 duration.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 date.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
                 download.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
+                title.setTextColor(mTextColor);
+                date.setTextColor(mTextColor);
+                duration.setTextColor(mTextColor);
             }
 
             if (isHDPI) {

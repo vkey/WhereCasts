@@ -224,11 +224,11 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         final Boolean isRound = resources.getConfiguration().isScreenRound();
         final int themeId = Utilities.getThemeOptionId(mActivity);
 
-        if (themeId == getResources().getInteger(R.integer.theme_dynamic)) {
+        if (themeId == resources.getInteger(R.integer.theme_dynamic)) {
             final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, GetPodcast(mActivity, mPodcastId));
-            mEpisodeListLayout.setBackgroundColor(colors.first);
-            mSwipeRefreshLayout.setBackgroundColor(colors.first);
-            mTextColor = colors.second;
+            mEpisodeListLayout.setBackgroundColor(colors != null ? colors.first : ContextCompat.getColor(mActivity, R.color.wc_transparent));
+            mSwipeRefreshLayout.setBackgroundColor(colors != null ? colors.first : ContextCompat.getColor(mActivity, R.color.wc_transparent));
+            mTextColor = colors != null ? colors.second : ContextCompat.getColor(mActivity, R.color.wc_white);
         }
 
         mStatus.setTextColor(mTextColor);

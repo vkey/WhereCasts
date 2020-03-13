@@ -37,7 +37,10 @@
 
     <color name="wc_episode_progress">#00BCD4</color>
     <color name="wc_episode_progress_secondary">#A5A5A5</color>
-    <color name="wc_episode_selected">#00BCD4</color>
+    <color name="wc_episode_selected_dark">#00BCD4</color>
+    <color name="wc_episode_selected">#FFEB3B</color>
+    <color name="wc_episode_text_selected_dark">#FFFFFF</color>
+    <color name="wc_episode_text_selected">#000000</color>
     <color name="wc_playlist_progress">#21E92B</color>
 
 </resources>
