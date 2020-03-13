@@ -542,17 +542,9 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             else
                 download.setImageDrawable(mContext.getDrawable(isDark ? R.drawable.ic_action_episode_row_item_download_dark : R.drawable.ic_action_episode_row_item_download));
 
-            if (episode.getDuration() > 0) {
-                duration.setText(episode.getDisplayDuration());
-                duration.setVisibility(View.VISIBLE);
-            }
-            else
-                duration.setVisibility(View.GONE);
 
             title.setTextSize(14);
             title.setGravity(Gravity.START);
-
-            date.setText(episode.getDisplayDate());
 
             if (!episode.getFinished()) {
                 title.setText(CommonUtils.boldText(episode.getTitle()));
@@ -582,6 +574,15 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
                 title.setTextColor(mTextColor);
                 date.setTextColor(mTextColor);
                 duration.setTextColor(mTextColor);
+
+                final boolean boldText = isDark && !episode.getFinished() && Utilities.getThemeOptionId(mContext) == mContext.getResources().getInteger(R.integer.theme_dynamic);
+
+                date.setText(boldText ? CommonUtils.boldText(episode.getDisplayDate()) : episode.getDisplayDate());
+                if (episode.getDuration() > 0) {
+                    duration.setText(boldText ? CommonUtils.boldText(String.valueOf(episode.getDisplayDuration())) : episode.getDisplayDuration());
+                    duration.setVisibility(View.VISIBLE);
+                } else
+                    duration.setVisibility(View.GONE);
             }
 
             if (isHDPI) {

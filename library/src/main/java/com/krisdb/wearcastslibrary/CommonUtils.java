@@ -512,9 +512,6 @@ public class CommonUtils {
 
         Pair<Integer, Integer> p = null;
 
-        if (palette.getDarkVibrantSwatch() != null)
-            p = new Pair<>(palette.getDarkVibrantSwatch().getRgb(), palette.getDarkVibrantSwatch().getBodyTextColor());
-
         if (palette.getDarkMutedSwatch() != null)
             p = new Pair<>(palette.getDarkMutedSwatch().getRgb(), palette.getDarkMutedSwatch().getBodyTextColor());
 
@@ -527,8 +524,8 @@ public class CommonUtils {
         if (palette.getLightVibrantSwatch() != null)
             p = new Pair<>(palette.getLightVibrantSwatch().getRgb(), palette.getLightVibrantSwatch().getBodyTextColor());
 
-        //if (p == null)
-            //p = new Pair<>(palette.getVibrantSwatch().getRgb(), palette.getVibrantSwatch().getBodyTextColor());
+        if (palette.getDarkVibrantSwatch() != null)
+            p = new Pair<>(palette.getDarkVibrantSwatch().getRgb(), palette.getDarkVibrantSwatch().getBodyTextColor());
 
         return p;
     }

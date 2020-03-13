@@ -10,11 +10,6 @@
         <item name="android:background">@color/wc_background_dark</item>
     </style>
 
-    <style name="Light" parent="Main">
-        <item name="android:background">@color/wc_background_light</item>
-        <item name="android:textColor">@color/wc_textColor_light</item>
-    </style>
-
     <style name="AMOLED" parent="Main">
         <item name="android:background">@color/wc_background_amoled</item>
     </style>
