@@ -9,12 +9,30 @@ import java.net.URL;
 public class PodcastItem implements Serializable
 {
     private String title, description, pubDate, downloadDate, displayDate, displayDuration; //pubdate must be String for inserting into sql
-    private URL mediaurl, episodeUrl;
+    private URL mediaurl, episodeUrl, thumbnailUrl;
     private int pid, eid, position, duration, newCount, playlistid, download_total, download_progress, downloadid;
     private boolean read, istitle = false, finished, local, isREST, isSentToWatch, isDownloaded, isSelected;
     private ChannelItem channel;
     private PodcastItem latestEpisode;
     private transient Drawable displayThumb;
+
+    public URL getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(final String url) {
+        try
+        {
+            if (url != null)
+                this.thumbnailUrl = new URL(url);
+            else
+                this.thumbnailUrl = null;
+        }
+        catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public String getDisplayDate() { return displayDate; }
 

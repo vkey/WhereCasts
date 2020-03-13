@@ -6,24 +6,24 @@ import com.krisdb.wearcastslibrary.CommonUtils;
 
 import java.util.concurrent.Callable;
 
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
-
 public class SaveLogo implements Callable<Boolean> {
     private final Context context;
-    private String mUrl, mFileName;
+    private String mUrl, mDirectory, mFileName;
     private Boolean mForce;
 
-    public SaveLogo(final Context context, final String url, final String filename)
+    public SaveLogo(final Context context, final String url, final String directory, final String filename)
     {
         this.context = context;
+        this.mDirectory = directory;
         this.mFileName = filename;
         this.mUrl = url;
         this.mForce = false;
     }
 
-    public SaveLogo(final Context context, final String url, final String filename, final Boolean force) {
+    public SaveLogo(final Context context, final String url, final String directory, final String filename, final Boolean force) {
         this.context = context;
         this.mUrl = url;
+        this.mDirectory = directory;
         this.mFileName = filename;
         this.mForce = force;
     }
@@ -33,7 +33,7 @@ public class SaveLogo implements Callable<Boolean> {
         CommonUtils.SavePodcastLogo(
                 context,
                 mUrl,
-                GetThumbnailDirectory(context),
+                mDirectory,
                 mFileName,
                 context.getResources().getInteger(com.krisdb.wearcastslibrary.R.integer.podcast_art_download_width),
                 mForce

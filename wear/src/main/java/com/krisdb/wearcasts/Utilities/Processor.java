@@ -73,6 +73,9 @@ public class Processor {
                 if (newEpisode.getMediaUrl() != null)
                     cv.put("mediaurl", newEpisode.getMediaUrl().toString());
 
+                //if (newEpisode.getThumbnailUrl() != null)
+                    //cv.put("thumbnail_url", newEpisode.getThumbnailUrl().toString());
+
                 if (newEpisode.getEpisodeUrl() != null)
                     cv.put("url", newEpisode.getEpisodeUrl().toString());
 
@@ -82,6 +85,9 @@ public class Processor {
 
                 final long episodeId = db.insert(cv);
                 newEpisode.setEpisodeId((int) episodeId);
+
+                //if (newEpisode.getThumbnailUrl() != null)
+                    //CommonUtils.executeSingleThreadAsync(new SaveLogo(mContext, newEpisode.getThumbnailUrl().toString(), CommonUtils.GetEpisodesThumbnailDirectory(mContext), CommonUtils.GetThumbnailName((int)episodeId)), (response) -> { });
 
                 if (assignPlaylist)
                     db.addEpisodeToPlaylist(autoAssignPlaylistId, (int) episodeId);

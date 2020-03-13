@@ -2,17 +2,24 @@ package com.krisdb.wearcasts.Databases;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
+import android.os.Environment;
 
+import com.krisdb.wearcasts.Async.SyncArt;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
+import java.io.File;
 import java.util.List;
 
+import static android.os.Environment.getExternalStorageDirectory;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodes;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetEpisodesThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class DBPodcastsEpisodes extends SQLiteOpenHelper
 {
@@ -23,7 +30,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
     private Context mContext;
 
     public DBPodcastsEpisodes(final Context context) {
-        super(context, "Episodes", null, 5);
+        super(context, "Episodes", null, 6);
         mContext = context;
     }
 
@@ -36,6 +43,7 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
                 "[url] TEXT null," + //episode url
                 "[description] TEXT null," +
                 "[mediaurl] TEXT null," +
+                "[thumbnail_url] TEXT null," +
                 "[downloadurl] TEXT null," +
                 "[duration] INTEGER null," +
                 "[position] INTEGER not null DEFAULT 0," +
@@ -87,50 +95,32 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
 
-        final StringBuilder sbCreate = new StringBuilder();
-        sbCreate.append("create table IF NOT EXISTS ["+mPodcastsTable+"] (");
-        sbCreate.append("[id] INTEGER primary key AUTOINCREMENT,");
-        sbCreate.append("[title] TEXT not null,");
-        sbCreate.append("[url] TEXT not null,"); //rss url
-        sbCreate.append("[site_url] TEXT null,");
-        sbCreate.append("[thumbnail_url] TEXT null,");
-        sbCreate.append("[thumbnail_name] TEXT null,");
-        sbCreate.append("[description] TEXT null,");
-        sbCreate.append("[dateAdded] DATETIME DEFAULT CURRENT_TIMESTAMP");
-        sbCreate.append(");");
+        String thumbDir;
 
-        db.execSQL(sbCreate.toString());
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+            thumbDir = getExternalStorageDirectory() + "/WearCasts/Images/Thumbnails/";
+        else
+            thumbDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS) + "/WearCasts/Images/Thumbnails/";
 
-        final DBPodcasts dbPodcasts = new DBPodcasts(mContext);
-        final SQLiteDatabase sdb = dbPodcasts.select();
+        final File thumbsDirectory = new File(thumbDir);
+        final String[] thumbs = thumbsDirectory.list();
 
-        final Cursor cursor = sdb.rawQuery("SELECT id,title,url,site_url,thumbnail_url,thumbnail_name,description,dateAdded FROM ["+mPodcastsTable+"]", null);
+        for (final String thumb : thumbs)
+            new File(thumbsDirectory, thumb).delete();
 
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
+        final File dirThumbsPodcasts = new File(GetPodcastsThumbnailDirectory(mContext));
 
-                final ContentValues cv1 = new ContentValues();
-                cv1.put("title", cursor.getString(1));
-                cv1.put("url", cursor.getString(2));
-                cv1.put("site_url", cursor.getString(3));
-                cv1.put("thumbnail_url", cursor.getString(4));
-                cv1.put("thumbnail_name", cursor.getString(5));
-                cv1.put("dateAdded", DateUtils.GetDate());
+        if (!dirThumbsPodcasts.exists())
+            dirThumbsPodcasts.mkdirs();
 
-                final long id = db.insert(mPodcastsTable, null, cv1);
+        final File dirThumbsEpisodes = new File(GetEpisodesThumbnailDirectory(mContext));
 
-                final ContentValues cv2 = new ContentValues();
-                cv2.put("pid", id);
+        if (!dirThumbsEpisodes.exists())
+            dirThumbsEpisodes.mkdirs();
 
-                db.update(mEpisodesTable, cv2, "[pid] = ?", new String[] { String.valueOf(cursor.getInt(0)) });
+        CommonUtils.executeSingleThreadAsync(new SyncArt(mContext), (response) -> {});
 
-                cursor.moveToNext();
-            }
-        }
-
-        cursor.close();
-        sdb.close();
-        dbPodcasts.close();
+        db.execSQL("ALTER TABLE " + mEpisodesTable + " ADD COLUMN thumbnail_url TEXT");
     }
 
 
@@ -164,7 +154,8 @@ public class DBPodcastsEpisodes extends SQLiteOpenHelper
                 statement.bindString(7, episode.getPubDate());
                 statement.bindLong(8, episode.getDuration());
 
-                int epidodeId = (int)statement.executeInsert();
+                //int epidodeId = (int)statement.executeInsert();
+                statement.executeInsert();
 
             }
             db.setTransactionSuccessful();

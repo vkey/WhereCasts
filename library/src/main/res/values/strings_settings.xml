@@ -12,7 +12,8 @@
     <string name="date_format_last_modified">E MMM dd HH:mm:ss z yyyy</string>
 
     <string name="directory_episodes">/WearCasts/Episodes/</string>
-    <string name="directory_thumbnails">/WearCasts/Thumbnails/</string>
+    <string name="directory_thumbnails_podcasts">/WearCasts/Thumbnails/Podcasts/</string>
+    <string name="directory_thumbnails_episodes">/WearCasts/Thumbnails/Episodes/</string>
     <string name="directory_local">/WearCasts/Local/</string>
 
     <string name="contact_email">krisdb@live.com</string>

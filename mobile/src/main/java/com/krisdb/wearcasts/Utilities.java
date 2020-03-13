@@ -33,6 +33,7 @@ public class Utilities {
         dataMap.putLong("time", new Date().getTime());
         dataMap.putInt("playlistid", episode.getPlaylistId());
         dataMap.putBoolean("auto_download", autoDownload);
+        dataMap.putString("thumb_url", episode.getThumbnailUrl() != null ? episode.getThumbnailUrl().toString() : null);
 
         CommonUtils.DeviceSync(ctx, dataMapRequest);
    }

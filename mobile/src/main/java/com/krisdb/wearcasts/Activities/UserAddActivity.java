@@ -39,6 +39,7 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -177,6 +178,7 @@ public class UserAddActivity extends AppCompatActivity {
                 final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                 try {
                     findViewById(R.id.user_add_third_party_progress).setVisibility(View.VISIBLE);
+
                     final JSONObject json = new JSONObject(text);
 
                     String url = null, title = null, description = null, message = null, pubDate = null;
@@ -186,12 +188,11 @@ public class UserAddActivity extends AppCompatActivity {
                     final PodcastItem episode = new PodcastItem();
 
                     //PLAYER FM
-                    if (json.has("platform") && (json.get("platform")).equals("fm.player"))
-                    {
+                    if (json.has("platform") && (json.get("platform")).equals("fm.player")) {
                         url = (String) json.get("url");
                         title = (String) json.get("title");
                         description = (String) json.get("description");
-                        duration = Integer.valueOf((String)json.get("duration"));
+                        duration = Integer.valueOf((String) json.get("duration"));
 
                         final String jsonDate = (String) json.get("publishedAt");
                         final Date jsonDate2 = new Date(Long.valueOf(jsonDate) * 1000);
@@ -211,10 +212,11 @@ public class UserAddActivity extends AppCompatActivity {
                     episode.setDuration(duration);
 
                     Utilities.sendEpisode(mActivity, episode, mThirdPartyAutoDownload.isChecked());
-                    ((TextView)findViewById(R.id.user_add_third_party_message)).setText(message);
+                    ((TextView) findViewById(R.id.user_add_third_party_message)).setText(message);
 
-                    new CountDownTimer(5000, 100) {
-                        public void onTick(long millisUntilFinished) {}
+                    new CountDownTimer(10000, 100) {
+                        public void onTick(long millisUntilFinished) {
+                        }
 
                         public void onFinish() {
                             if (findViewById(R.id.user_add_third_party_progress).getVisibility() == View.VISIBLE) {
@@ -226,8 +228,15 @@ public class UserAddActivity extends AppCompatActivity {
                             }
                         }
                     }.start();
-                } catch (Exception ex) {
+                }
+                catch (JSONException ex) {
                     ((TextView) findViewById(R.id.tv_import_podcast_link)).setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+                    findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+                } catch (Exception ex) {
+                    mOPMLView.setText(R.string.general_error);
+                    mOPMLView.setVisibility(View.VISIBLE);
+                    mOPMLView.setTextColor(ContextCompat.getColor(mActivity, R.color.wc_red));
+                    mOPMLView.setTextSize(14);
                     findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
                 }
             }
@@ -269,6 +278,7 @@ public class UserAddActivity extends AppCompatActivity {
         {
             findViewById(R.id.user_add_third_party_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.user_add_third_party_progress).setVisibility(View.GONE);
+            mOPMLView.setVisibility(View.GONE);
         }
     }
 

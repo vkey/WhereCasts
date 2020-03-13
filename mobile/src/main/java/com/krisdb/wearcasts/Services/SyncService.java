@@ -94,7 +94,7 @@ public class SyncService extends WearableListenerService {
             }
             else if (event.getType() == DataEvent.TYPE_CHANGED && event.getDataItem().getUri().getPath().equals("/thirdparty")) {
 
-                final WatchStatus wsThirdPartyConfirm = new WatchStatus();
+                 final WatchStatus wsThirdPartyConfirm = new WatchStatus();
                 wsThirdPartyConfirm.setThirdParty(true);
 
                 EventBus.getDefault().post(wsThirdPartyConfirm);

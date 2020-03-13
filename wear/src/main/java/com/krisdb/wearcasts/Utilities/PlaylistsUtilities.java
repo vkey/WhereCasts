@@ -22,11 +22,14 @@ import java.util.List;
 import static com.krisdb.wearcasts.Utilities.DBUtilities.GetChannel;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLocalFiles;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SetPodcastEpisode;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetEpisodesThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class PlaylistsUtilities {
-    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload,tbl_podcast_episodes.downloadid";
+    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload,tbl_podcast_episodes.downloadid,tbl_podcast_episodes.thumbnail_url";
 
     public static Boolean playlistIsEmpty(final Context ctx, final int playlistId)
     {
@@ -202,7 +205,13 @@ public class PlaylistsUtilities {
                     episode.setDisplayDate(GetDisplayDate(ctx, cursor.getString(6)));
 
                     episode.setChannel(GetChannel(ctx, cursor.getInt(1)));
-                    episode.setDisplayThumbnail(GetRoundedLogo(ctx, episode.getChannel()));
+
+                    if (episode.getThumbnailUrl() != null)
+                        episode.setDisplayThumbnail(GetRoundedLogo(ctx, GetEpisodesThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(episode.getEpisodeId()))));
+                    else if (episode.getChannel().getThumbnailUrl() != null)
+                        episode.setDisplayThumbnail(GetRoundedLogo(ctx, GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(episode.getPodcastId()))));
+                    else
+                        episode.setDisplayThumbnail(GetRoundedPlaceholderLogo(ctx));
 
                     episodes.add(episode);
                     cursor.moveToNext();

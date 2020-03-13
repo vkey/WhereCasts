@@ -38,21 +38,15 @@ public class DBUtilities {
         cv.put("url", podcast.getChannel().getRSSUrl().toString());
         cv.put("site_url", podcast.getChannel().getSiteUrl() != null ? podcast.getChannel().getSiteUrl().toString() : null);
         cv.put("dateAdded", DateUtils.GetDate());
-        String thumbnailUrl = null;
-        String fileName = null;
-
-        if (podcast.getChannel().getThumbnailUrl() != null) {
-            thumbnailUrl = podcast.getChannel().getThumbnailUrl().toString();
-            fileName = CommonUtils.GetThumbnailName(podcast.getChannel().getTitle());
-
-            if (fetchArt)
-                CommonUtils.executeSingleThreadAsync(new SaveLogo(context, thumbnailUrl, fileName), (response) -> { });
-        }
-
-        cv.put("thumbnail_url", thumbnailUrl);
-        cv.put("thumbnail_name", fileName);
 
         final int podcastId = (int)db.insertPodcast(cv);
+
+        if (podcast.getChannel().getThumbnailUrl() != null) {
+            cv.put("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
+
+            if (fetchArt)
+                CommonUtils.executeSingleThreadAsync(new SaveLogo(context, podcast.getChannel().getThumbnailUrl().toString(), CommonUtils.GetPodcastsThumbnailDirectory(context), CommonUtils.GetThumbnailName(podcast.getPodcastId())), (response) -> { });
+        }
 
         if (fetchEpisodes)
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context, podcastId), (response) -> { });
@@ -64,22 +58,21 @@ public class DBUtilities {
         final SQLiteDatabase sdb = db.select();
 
         final Cursor cursor = sdb.rawQuery(
-                "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts] WHERE [id] = ?",
+                "SELECT [id],[title],[url],[thumbnail_url],[description] FROM [tbl_podcasts] WHERE [id] = ?",
                 new String[]{String.valueOf(podcastId)
                 });
 
         if (cursor.moveToFirst()) {
             channel.setRSSUrl(cursor.getString(2));
-            if (cursor.getString(3) != null && cursor.getString(4) != null) {
+            if (cursor.getString(3) != null) {
                 channel.setThumbnailUrl(cursor.getString(3));
-                channel.setThumbnailName(cursor.getString(4));
             }
 
             if (cursor.getString(1) != null)
                 channel.setTitle(cursor.getString(1));
 
-            if (cursor.getString(5) != null)
-                channel.setDescription(cursor.getString(5));
+            if (cursor.getString(4) != null)
+                channel.setDescription(cursor.getString(4));
         }
 
         cursor.close();

@@ -14,6 +14,7 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.Databases.DatabaseHelper;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -25,11 +26,13 @@ import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.DBUtilities.GetChannel;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.DateUtils.GetDisplayDate;
 
 public class EpisodeUtilities {
-    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload,tbl_podcast_episodes.downloadid";
+    private static final String mEpisodeColumns = "tbl_podcast_episodes.id,tbl_podcast_episodes.pid,tbl_podcast_episodes.title,tbl_podcast_episodes.description,tbl_podcast_episodes.url,tbl_podcast_episodes.mediaurl,tbl_podcast_episodes.pubDate,tbl_podcast_episodes.read,tbl_podcast_episodes.finished,tbl_podcast_episodes.position,tbl_podcast_episodes.duration,tbl_podcast_episodes.download,tbl_podcast_episodes.dateDownload,tbl_podcast_episodes.downloadid,tbl_podcast_episodes.thumbnail_url";
     private static WeakReference<Context> mContext;
 
     public static void resetDownload(final Context context, final int episodeId)
@@ -630,8 +633,13 @@ public class EpisodeUtilities {
         final PodcastItem titleItem = new PodcastItem();
         titleItem.setTitle("");
         titleItem.setIsTitle(true);
-        ChannelItem channelItem = GetChannel(ctx, podcastId);
-        titleItem.setDisplayThumbnail(GetRoundedLogo(ctx , channelItem));
+
+        final ChannelItem channelItem = GetChannel(ctx, podcastId);
+        if (channelItem.getThumbnailUrl() != null)
+            titleItem.setDisplayThumbnail(GetRoundedLogo(ctx, GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(podcastId))));
+        else
+            titleItem.setDisplayThumbnail(GetRoundedPlaceholderLogo(ctx));
+
         titleItem.setPodcastId(podcastId);
 
         titleItem.setChannel(channelItem);
@@ -777,6 +785,7 @@ public class EpisodeUtilities {
         episode.setIsDownloaded(cursor.getInt(cache.getColumnIndex(cursor, "download")) == 1);
         episode.setDownloadDate(cursor.getString(cache.getColumnIndex(cursor, "dateDownload")));
         episode.setDownloadId(cursor.getInt(cache.getColumnIndex(cursor, "downloadid")));
+        episode.setThumbnailUrl(cursor.getString(cache.getColumnIndex(cursor, "thumbnail_url")));
         //episode.setIsRadio(cursor.getInt(cache.getColumnIndex(cursor, "radio")) == 1);
 
         return episode;

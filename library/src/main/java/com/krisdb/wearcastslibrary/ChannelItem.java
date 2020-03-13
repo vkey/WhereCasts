@@ -1,21 +1,12 @@
 package com.krisdb.wearcastslibrary;
 
-
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ChannelItem implements Serializable {
-    private String title, description, thumbnailname, displayTitle;
+    private String title, description, displayTitle;
     private URL siteurl, rssurl, thumbnail;
-
-    public String getThumbnailName() {
-        return thumbnailname;
-    }
-
-    public void setThumbnailName(final String thumbnailname) {
-        this.thumbnailname = thumbnailname.trim();
-    }
 
     public String getTitle() {
         return title;

@@ -48,8 +48,9 @@ import java.util.Locale;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.android.billingclient.api.BillingClient.BillingResponseCode.OK;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetEpisodesThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class MainActivity extends BaseFragmentActivity implements WearableNavigationDrawerView.OnItemSelectedListener, PurchasesUpdatedListener {
     private static int mNumberOfPages;
@@ -449,10 +450,15 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
     if (requestCode == PERMISSIONS_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                final File dirThumbs = new File(GetThumbnailDirectory(this));
+                final File dirThumbsPodcasts = new File(GetPodcastsThumbnailDirectory(this));
 
-                if (!dirThumbs.exists())
-                    dirThumbs.mkdirs();
+                if (!dirThumbsPodcasts.exists())
+                    dirThumbsPodcasts.mkdirs();
+
+                final File dirThumbsEpisodes = new File(GetEpisodesThumbnailDirectory(this));
+
+                if (!dirThumbsEpisodes.exists())
+                    dirThumbsEpisodes.mkdirs();
 
                 final File dirLocal = new File(GetLocalDirectory(this));
 

@@ -118,17 +118,13 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
 
         final URL thumbUrl = channel.getThumbnailUrl();
 
-        if (thumbUrl != null) {
-            //final String thumbName = channel.getThumbnailName();
-            final String thumbName = CommonUtils.GetThumbnailName(channel.getTitle());
-
+        if (thumbUrl != null)
             cv.put("thumbnail_url", thumbUrl.toString());
-            cv.put("thumbnail_name", thumbName);
-
-            CommonUtils.executeSingleThreadAsync(new SaveLogo(mContext, thumbUrl.toString(), thumbName), (response) -> { });
-        }
 
         final int podcastId = (int) new DBPodcastsEpisodes(mContext).insertPodcast(cv);
+
+        if (thumbUrl != null)
+            CommonUtils.executeSingleThreadAsync(new SaveLogo(mContext, thumbUrl.toString(), CommonUtils.GetPodcastsThumbnailDirectory(mContext), CommonUtils.GetThumbnailName(podcastId)), (response) -> { });
 
         CommonUtils.executeSingleThreadAsync(new SyncPodcasts(mContext, podcastId), (response) -> {
             if (response.getNewEpisodeCount() == 0)

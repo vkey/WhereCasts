@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
-
 public class GetDirectory implements Callable<List<PodcastCategory>> {
     private final Context context;
     private Boolean mForceRefresh = false, mSaveThumbs = false;
@@ -115,13 +113,15 @@ public class GetDirectory implements Callable<List<PodcastCategory>> {
                     channel.setDescription(podcastObj.getString("description"));
                     channel.setRSSUrl(podcastObj.getString("rssurl"));
                     channel.setSiteUrl(podcastObj.getString("siteurl"));
-                    if (podcastObj.getString("thumbnail") != null) {
-                        channel.setThumbnailUrl(podcastObj.getString("thumbnail"));
-                        //channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
-                    }
+                    channel.setThumbnailUrl(podcastObj.getString("thumbnail"));
 
-                    if (mSaveThumbs && channel.getThumbnailUrl() != null)
-                        CommonUtils.SavePodcastLogo(context, channel.getThumbnailUrl().toString(), GetThumbnailDirectory(context), channel.getThumbnailName(), context.getResources().getInteger(com.krisdb.wearcastslibrary.R.integer.podcast_art_download_width), mForceRefresh);
+                    //if (podcastObj.getString("thumbnail") != null) {
+                        //channel.setThumbnailUrl(podcastObj.getString("thumbnail"));
+                        //channel.setThumbnailName(CommonUtils.GetThumbnailName(channel));
+                    //}
+
+                    //if (mSaveThumbs && channel.getThumbnailUrl() != null)
+                       // CommonUtils.SavePodcastLogo(context, channel.getThumbnailUrl().toString(), GetPodcastsThumbnailDirectory(context), channel.getThumbnailName(), context.getResources().getInteger(com.krisdb.wearcastslibrary.R.integer.podcast_art_download_width), mForceRefresh);
 
                     final PodcastItem podcast = new PodcastItem();
                     podcast.setTitle(podcastObj.getString("name"));

@@ -10,7 +10,8 @@ import com.krisdb.wearcastslibrary.PodcastItem;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailName;
 
 public class Unsubscribe implements Callable<Boolean> {
     private final Context context;
@@ -26,10 +27,10 @@ public class Unsubscribe implements Callable<Boolean> {
 
         final PodcastItem podcast = PodcastUtilities.GetPodcast(context, mPodcastID);
 
-        final File thumb = new File(new File(GetThumbnailDirectory(context)), podcast.getChannel().getThumbnailName());
+        final File thumbPodcast = new File(GetPodcastsThumbnailDirectory(context), GetThumbnailName(podcast.getPodcastId()));
 
-        if (thumb.exists())
-            thumb.delete();
+        if (thumbPodcast.exists())
+            thumbPodcast.delete();
 
         final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
         db.deletePodcast(mPodcastID);

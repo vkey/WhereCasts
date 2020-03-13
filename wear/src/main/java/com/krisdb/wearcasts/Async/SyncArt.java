@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcasts;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class SyncArt implements Callable<Boolean> {
     private final Context context;
@@ -33,27 +34,18 @@ public class SyncArt implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
-        final File dirThumbs = new File(GetThumbnailDirectory(context));
+        final File dirThumbs = new File(GetPodcastsThumbnailDirectory(context));
 
         final List<PodcastItem> podcasts = GetPodcasts(context);
 
         if (!dirThumbs.exists())
             dirThumbs.mkdirs();
-        else {
-            for (final PodcastItem podcast : podcasts)
-            {
-                if (podcast.getChannel() != null && podcast.getChannel().getThumbnailName() != null) {
-                    final File thumb = new File(dirThumbs, podcast.getChannel().getThumbnailName());
-
-                    if (thumb.exists())
-                        thumb.delete();
-                }
-            }
-        }
+        else
+            Utilities.deleteAllThumbnails(context);
 
         for (final PodcastItem podcast : podcasts) {
             if (podcast.getChannel().getThumbnailUrl() != null) {
-                CommonUtils.SavePodcastLogo(context, podcast.getChannel().getThumbnailUrl().toString(), GetThumbnailDirectory(context), podcast.getChannel().getThumbnailName(), context.getResources().getInteger(R.integer.podcast_art_download_width));
+                CommonUtils.SavePodcastLogo(context, podcast.getChannel().getThumbnailUrl().toString(), GetPodcastsThumbnailDirectory(context), CommonUtils.GetThumbnailName(podcast.getPodcastId()), context.getResources().getInteger(R.integer.podcast_art_download_width));
 
                 if (mOpmlImport) {
                     final PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/opmlimport_art");

@@ -21,7 +21,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import static android.app.Activity.RESULT_OK;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -92,13 +92,13 @@ public class SettingsPodcastsUpdatesFragment extends PreferenceFragment implemen
 
     private void setDeleteThumbnailsTitle()
     {
-        final File thumbsDirectory = new File(GetThumbnailDirectory(mActivity));
+        final File thumbsDirectory = new File(GetPodcastsThumbnailDirectory(mActivity));
         final String[] thumbs = thumbsDirectory.list();
 
         if (thumbs != null)
             findPreference("pref_delete_thumbs").setTitle(getString(R.string.settings_podcasts_label_downloads_thumbs_all,  thumbs.length));
 
-        long size = Utilities.getFilesSize(GetThumbnailDirectory(mActivity));
+        long size = Utilities.getFilesSize(GetPodcastsThumbnailDirectory(mActivity));
 
         if (size > 0)
             findPreference("pref_delete_thumbs").setSummary(android.text.format.Formatter.formatShortFileSize(getActivity(), size));

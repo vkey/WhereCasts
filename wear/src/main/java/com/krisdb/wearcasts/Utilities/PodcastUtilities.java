@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
+import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
 import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetLatestEpisode;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class PodcastUtilities {
@@ -83,7 +85,7 @@ public class PodcastUtilities {
             final SQLiteDatabase sdb = db.select();
 
             final Cursor cursor = sdb.rawQuery(
-                    "SELECT [id],[title],[url],[thumbnail_url],[thumbnail_name],[description] FROM [tbl_podcasts] WHERE [id] = ?",
+                    "SELECT [id],[title],[url],[thumbnail_url],[description] FROM [tbl_podcasts] WHERE [id] = ?",
                     new String[]{String.valueOf(podcastId)});
 
             if (cursor.moveToFirst()) {
@@ -92,14 +94,13 @@ public class PodcastUtilities {
                 final ChannelItem channel = new ChannelItem();
                 channel.setTitle(cursor.getString(1));
                 channel.setRSSUrl(cursor.getString(2));
-                if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                if (cursor.getString(3) != null) {
                     channel.setThumbnailUrl(cursor.getString(3));
-                    channel.setThumbnailName(cursor.getString(4));
                 }
                 podcast.setChannel(channel);
 
-                if (cursor.getString(5) != null)
-                    podcast.setDescription(cursor.getString(5));
+                if (cursor.getString(4) != null)
+                    podcast.setDescription(cursor.getString(4));
             }
 
             cursor.close();
@@ -139,7 +140,7 @@ public class PodcastUtilities {
 
             String sql;
             if (hideEmpty && showDownloaded)
-                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -149,7 +150,7 @@ public class PodcastUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else if (hideEmpty)
-                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1)")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -159,7 +160,7 @@ public class PodcastUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else if (showDownloaded)
-                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("JOIN tbl_podcast_episodes ")
@@ -169,7 +170,7 @@ public class PodcastUtilities {
                         .concat("ORDER BY ")
                         .concat(orderString);
             else
-                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url,tbl_podcasts.thumbnail_name"
+                sql = "SELECT tbl_podcasts.id,tbl_podcasts.title,tbl_podcasts.url,tbl_podcasts.thumbnail_url"
                         .concat(",(select distinct count(tbl_podcast_episodes.pid ) from tbl_podcast_episodes where tbl_podcast_episodes.pid = tbl_podcasts.id and tbl_podcast_episodes.New = 1) ")
                         .concat("FROM [tbl_podcasts] ")
                         .concat("ORDER BY ")
@@ -197,14 +198,14 @@ public class PodcastUtilities {
                     final ChannelItem channel = new ChannelItem();
                     channel.setTitle(cursor.getString(1));
                     channel.setRSSUrl(cursor.getString(2));
-                    if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                    if (cursor.getString(3) != null) {
                         channel.setThumbnailUrl(cursor.getString(3));
-                        channel.setThumbnailName(cursor.getString(4));
+                        //channel.setThumbnailName(cursor.getString(4));
                     }
                     podcast.setChannel(channel);
 
-                    podcast.setDisplayThumbnail(GetRoundedLogo(ctx, podcast.getChannel()));
-                    podcast.setNewCount(cursor.getInt(5));
+                    podcast.setDisplayThumbnail(GetRoundedLogo(ctx, GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(podcast.getPodcastId()))));
+                    podcast.setNewCount(cursor.getInt(4));
                     if (orderId == latestEpisodesSortOrderID)
                         podcast.setLatestEpisode(GetLatestEpisode(ctx, cursor.getInt(0)));
 

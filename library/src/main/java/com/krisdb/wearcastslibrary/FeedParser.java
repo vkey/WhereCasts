@@ -58,6 +58,9 @@ public class FeedParser {
                                 episode.setDuration(text != null && text.length() > 0 ? DateUtils.getMilliseconds(text) : 0);
                                 //episode.setDuration(CommonUtils.GetDuration(episode.getMediaUrl().toString()));
                             }
+                            else if (name.equalsIgnoreCase("media:thumbnail")) {
+                                episode.setThumbnailUrl(parser.getAttributeValue(null, "url"));
+                            }
                         }
                         break;
                     case XmlPullParser.END_TAG:

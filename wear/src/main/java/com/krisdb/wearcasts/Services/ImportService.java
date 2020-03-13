@@ -17,11 +17,13 @@ import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.krisdb.wearcasts.Async.ProcessOPML;
+import com.krisdb.wearcasts.Async.SaveLogo;
 import com.krisdb.wearcasts.Async.SyncArt;
 import com.krisdb.wearcasts.Async.SyncPodcasts;
 import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
@@ -109,14 +111,15 @@ public class ImportService extends WearableListenerService implements DataClient
                 PodcastItem episode = GetEpisodeByTitle(this, dataMapItem.getDataMap().getString("title"));
 
                 if (episode == null) {
+                    final DataMap dm = dataMapItem.getDataMap();
                     episode = new PodcastItem();
                     episode.setPodcastId(getResources().getInteger(R.integer.episode_with_no_podcast_id));
-                    episode.setTitle(dataMapItem.getDataMap().getString("title"));
-                    episode.setDescription(dataMapItem.getDataMap().getString("description"));
-                    episode.setPubDate(dataMapItem.getDataMap().getString("pubDate"));
-                    episode.setMediaUrl(dataMapItem.getDataMap().getString("mediaurl"));
-                    episode.setEpisodeUrl(dataMapItem.getDataMap().getString("url"));
-                    episode.setDuration(dataMapItem.getDataMap().getInt("duration"));
+                    episode.setTitle(dm.getString("title"));
+                    episode.setDescription(dm.getString("description"));
+                    episode.setPubDate(dm.getString("pubDate"));
+                    episode.setMediaUrl(dm.getString("mediaurl"));
+                    episode.setEpisodeUrl(dm.getString("url"));
+                    episode.setDuration(dm.getInt("duration"));
                     final ContentValues cv = new ContentValues();
                     cv.put("pid", episode.getPodcastId());
                     cv.put("title", episode.getTitle());
@@ -128,10 +131,13 @@ public class ImportService extends WearableListenerService implements DataClient
                     cv.put("pubDate", episode.getPubDate());
                     cv.put("duration", episode.getDuration());
                     cv.put("dateAdded", DateUtils.GetDate());
-                    //cv.put("radio", isRadio);
+                    cv.put("thumbnail_url", dm.getString("thumb_url"));
 
                     final long episodeId = db.insert(cv);
                     episode.setEpisodeId((int) episodeId);
+
+                    if (dm.getString("thumb_url") != null)
+                        CommonUtils.executeSingleThreadAsync(new SaveLogo(context, dm.getString("thumb_url"), CommonUtils.GetEpisodesThumbnailDirectory(context), CommonUtils.GetThumbnailName((int)episodeId)), (response) -> { });
                 }
 
                 final int playlist = dataMapItem.getDataMap().getInt("playlistid");

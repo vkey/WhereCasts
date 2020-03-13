@@ -421,7 +421,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
 
         setMenu();
 
-        mScrollView.setBackground(GetBackgroundLogo(mActivity, mEpisode.getChannel()));
+        mScrollView.setBackground(GetBackgroundLogo(mActivity, mEpisode));
 
         mEpisodeTitle.setText(CommonUtils.boldText(mEpisode.getTitle()));
 

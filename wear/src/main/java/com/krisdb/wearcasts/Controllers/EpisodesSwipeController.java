@@ -82,7 +82,7 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.alert_refreshing_thumb));
                 //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_refreshing_thumb));
 
-                CommonUtils.executeSingleThreadAsync(new SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), episode.getChannel().getThumbnailName(), true), (response) -> { });
+                CommonUtils.executeSingleThreadAsync(new SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), CommonUtils.GetPodcastsThumbnailDirectory(ctx), CommonUtils.GetThumbnailName(episode.getEpisodeId()), true), (response) -> { });
             }
             mAdapter.refreshItem2(mEpisodes,0);
         }

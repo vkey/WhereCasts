@@ -57,9 +57,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.GetEpisodesWithDownloads;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.assignedToPlaylist;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetEpisodesThumbnailDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 import static com.krisdb.wearcastslibrary.CommonUtils.GetMediaDirectory;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class Utilities {
 
@@ -680,6 +681,11 @@ public class Utilities {
 
         if (file.exists())
             file.delete();
+
+        final File thumb = new File(GetEpisodesThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(episode.getEpisodeId())));
+
+        if (thumb.exists())
+            thumb.delete();
     }
 
     public static File getEpisodeFile(final Context ctx, final PodcastItem episode)
@@ -728,7 +734,7 @@ public class Utilities {
 
     public static int deleteAllThumbnails(final Context ctx)
     {
-        final File thumbsDirectory = new File(GetThumbnailDirectory(ctx));
+        final File thumbsDirectory = new File(GetPodcastsThumbnailDirectory(ctx));
         final String[] thumbs = thumbsDirectory.list();
 
         final int length = thumbs.length;

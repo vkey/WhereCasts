@@ -52,7 +52,6 @@ import java.util.concurrent.TimeUnit;
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
-import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedPlaceholderLogo;
 import static com.krisdb.wearcastslibrary.CommonUtils.isCurrentDownload;
 import static com.krisdb.wearcastslibrary.CommonUtils.isFinishedDownload;
 
@@ -499,11 +498,7 @@ public class EpisodesAdapter extends WearableRecyclerView.Adapter<EpisodesAdapte
             duration.setVisibility(View.GONE);
             thumbTitle.setVisibility(View.VISIBLE);
             thumbTitle.setMaxWidth(Utilities.getThumbMaxWidth(mContext, mDensityName, isRound));
-
-            if (episode.getDisplayThumbnail() != null) //thumbnail row
-                thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
-            else
-                thumbTitle.setImageDrawable(GetRoundedPlaceholderLogo(mContext));
+            thumbTitle.setImageDrawable(episode.getDisplayThumbnail());
 
             layout.setBackgroundColor(mContext.getColor(R.color.wc_transparent));
             title.setBackgroundColor(mContext.getColor(R.color.wc_transparent));

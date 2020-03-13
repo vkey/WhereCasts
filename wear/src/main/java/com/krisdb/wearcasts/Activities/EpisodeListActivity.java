@@ -62,6 +62,7 @@ import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.HasNewEpisodes;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylists;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
 import static com.krisdb.wearcasts.Utilities.PodcastUtilities.GetPodcast;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
 
 public class EpisodeListActivity extends BaseFragmentActivity implements MenuItem.OnMenuItemClickListener {
 
@@ -234,7 +235,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
         final PodcastItem podcast = GetPodcast(mActivity, mPodcastId);
 
-        mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, podcast.getChannel()));
+        mProgressThumb.setImageDrawable(CommonUtils.GetRoundedLogo(mActivity, GetPodcastsThumbnailDirectory(mActivity).concat(CommonUtils.GetThumbnailName(podcast.getPodcastId()))));
         mProgressThumb.setMaxWidth(Utilities.getThumbMaxWidth(mActivity, densityName, isRound));
         mProgressThumb.setOnLongClickListener(view17 -> {
             final Intent intent = new Intent(this, SettingsPodcastActivity.class);
