@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -228,6 +229,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId()) {
             final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, GetPodcast(mActivity, mPodcastId));
             mEpisodeListLayout.setBackgroundColor(colors.first);
+            mSwipeRefreshLayout.setBackgroundColor(colors.first);
             mTextColor = colors.second;
         }
 

@@ -498,7 +498,7 @@ public class CommonUtils {
 
     public static Pair<Integer, Integer> GetBackgroundColor(final Context ctx, final PodcastItem podcast)
     {
-        final Bitmap bitmap = BitmapFactory.decodeFile(CommonUtils.GetPodcastsThumbnailDirectory(ctx) + podcast.getPodcastId());
+        final Bitmap bitmap = BitmapFactory.decodeFile(CommonUtils.GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(podcast.getPodcastId())));
 
         if (bitmap == null)
             return new Pair<>(0, -3355444);
