@@ -13,7 +13,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
@@ -135,8 +134,8 @@ public class PodcastUtilities {
 
             int orderId = Integer.valueOf(prefs.getString("pref_display_podcasts_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_podcasts_sort_order))));
 
-            final String orderString = Utilities.GetOrderClause(orderId, "tbl_podcasts");
-            final int latestEpisodesSortOrderID = Enums.SortOrder.LATESTEPISODES.getSorderOrderCode();
+            final String orderString = Utilities.GetOrderClause(ctx, orderId, "tbl_podcasts");
+            final int latestEpisodesSortOrderID = ctx.getResources().getInteger(R.integer.sortorder_latestepisodes);
 
             String sql;
             if (hideEmpty && showDownloaded)
@@ -218,13 +217,8 @@ public class PodcastUtilities {
             db.close();
             sdb.close();
 
-            if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode()) {
-                Collections.sort(podcasts, new Comparator<PodcastItem>() {
-                    @Override
-                    public int compare(final PodcastItem item1, final PodcastItem item2) {
-                        return Integer.compare(item2.getNewCount(), item1.getNewCount());
-                    }
-                });
+            if (orderId == ctx.getResources().getInteger(R.integer.sortorder_newepisodes)) {
+                Collections.sort(podcasts, (item1, item2) -> Integer.compare(item2.getNewCount(), item1.getNewCount()));
             }
 
             if (orderId == latestEpisodesSortOrderID) {

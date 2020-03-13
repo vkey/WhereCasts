@@ -654,7 +654,7 @@ public class EpisodeUtilities {
         else
             order = Integer.valueOf(prefs.getString("pref_display_episodes_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_global_sort_order)))); //global sort order
 
-        String orderString = orderBy == null ? Utilities.GetOrderClause(order) : orderBy;
+        String orderString = orderBy == null ? Utilities.GetOrderClause(ctx, order) : orderBy;
 
         final boolean showOnlyDownloads = prefs.getBoolean("pref_display_show_downloaded_episodes", false);
 
@@ -718,7 +718,7 @@ public class EpisodeUtilities {
         else
             order = Integer.valueOf(prefs.getString("pref_display_episodes_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_episodes_global_sort_order)))); //global sort order
 
-        String orderString = Utilities.GetOrderClause(order);
+        String orderString = Utilities.GetOrderClause(ctx, order);
 
         final boolean showOnlyDownloads = prefs.getBoolean("pref_display_show_downloaded_episodes", false);
 

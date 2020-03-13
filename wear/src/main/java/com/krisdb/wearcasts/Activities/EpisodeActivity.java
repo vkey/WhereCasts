@@ -64,7 +64,6 @@ import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1188,7 +1187,7 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mNavDrawer.getController().closeDrawer();
         mScrollView.fullScroll(ScrollView.FOCUS_UP);
 
-        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
+        if (mThemeID == getResources().getInteger(R.integer.theme_dark)) {
             findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
             findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
             findViewById(R.id.podcast_episode_buttons_layout).setBackgroundColor(getColor(R.color.wc_background_amoled));
@@ -1211,10 +1210,10 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
     public void onExitAmbient() {
         super.onExitAmbient();
 
-        if (mThemeID == Enums.ThemeOptions.DEFAULT.getThemeId())
+        if (mThemeID == getResources().getInteger(R.integer.theme_default))
             mScrollView.setBackgroundColor(getColor(R.color.wc_transparent));
 
-        if (mThemeID == Enums.ThemeOptions.DARK.getThemeId()) {
+        if (mThemeID == getResources().getInteger(R.integer.theme_dark)) {
             mScrollView.setBackgroundColor(getColor(R.color.wc_background_dark));
             findViewById(R.id.podcast_episode_layout).setBackgroundColor(getColor(R.color.wc_background_dark));
             findViewById(R.id.drawer_layout).setBackgroundColor(getColor(R.color.wc_background_dark));

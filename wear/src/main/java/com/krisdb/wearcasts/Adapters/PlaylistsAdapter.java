@@ -36,7 +36,6 @@ import com.krisdb.wearcasts.Fragments.PlaylistsListFragment;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -353,7 +352,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                     cv.put("finished", 1);
                     db.update(cv, mEpisodes.get(position).getEpisodeId());
 
-                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == mContext.getResources().getInteger(R.integer.autodelete_played))
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
 
                 } else if (mPlaylistId == mPlaylistDownloads)
@@ -372,7 +371,7 @@ public class PlaylistsAdapter extends WearableRecyclerView.Adapter<PlaylistsAdap
                 }
                 else {
                     SaveEpisodeValue(mContext, mEpisodes.get(position), "finished", mEpisodes.get(position).getFinished() ? 0 : 1);
-                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                    if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == mContext.getResources().getInteger(R.integer.autodelete_played))
                         Utilities.DeleteMediaFile(mContext, mEpisodes.get(position));
                 }
                 refreshList();

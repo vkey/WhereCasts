@@ -7,11 +7,11 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.krisdb.wearcasts.Models.SyncPodcastsResponse;
+import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class SyncPodcasts implements Callable<SyncPodcastsResponse> {
 
                 final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
 
-                if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                if (autoDeleteID > context.getResources().getInteger(R.integer.autodelete_played)) {
                     List<PodcastItem> downloads2 = GetEpisodesWithDownloads(context, podcast.getPodcastId());
 
                     for (final PodcastItem download : downloads2) {

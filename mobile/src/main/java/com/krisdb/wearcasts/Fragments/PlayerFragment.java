@@ -310,7 +310,6 @@ public class PlayerFragment extends Fragment {
 
             showToast(mActivity, message);
 
-            //mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, mThemeID == Enums.ThemeOptions.LIGHT.getThemeId() ? R.drawable.ic_action_episode_play_dark : R.drawable.ic_action_episode_play));
             mPlayPauseImage.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.ic_action_episode_play));
             mInfoLayout.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);

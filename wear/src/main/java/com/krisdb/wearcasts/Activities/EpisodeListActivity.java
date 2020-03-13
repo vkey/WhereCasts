@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -50,7 +49,6 @@ import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcasts.ViewModels.EpisodesViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.lang.ref.WeakReference;
@@ -226,7 +224,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
         final Boolean isRound = resources.getConfiguration().isScreenRound();
         final int themeId = Utilities.getThemeOptionId(mActivity);
 
-        if (themeId == Enums.ThemeOptions.DYNAMIC.getThemeId()) {
+        if (themeId == getResources().getInteger(R.integer.theme_dynamic)) {
             final Pair<Integer, Integer> colors = CommonUtils.GetBackgroundColor(mActivity, GetPodcast(mActivity, mPodcastId));
             mEpisodeListLayout.setBackgroundColor(colors.first);
             mSwipeRefreshLayout.setBackgroundColor(colors.first);
@@ -381,7 +379,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                 .build();
 
         final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
-        final boolean autoDelete = autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID();
+        final boolean autoDelete = autoDeleteID == getResources().getInteger(R.integer.autodelete_played);
         final boolean hidePlayed = prefs.getBoolean("pref_" + mPodcastId + "_hide_played", false);
 
         switch (itemId) {
@@ -438,7 +436,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
                         if (episodeAfter.getEpisodeId() == episode.getEpisodeId()) {
                             episode.setFinished(true);
                             episode.setIsSelected(false);
-                            if (autoDeleteID == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                            if (autoDeleteID == getResources().getInteger(R.integer.autodelete_played)) {
                                 Utilities.DeleteMediaFile(mActivity, episode);
                                 episode.setIsDownloaded(false);
                             }

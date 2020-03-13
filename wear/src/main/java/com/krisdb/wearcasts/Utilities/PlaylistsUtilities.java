@@ -13,7 +13,6 @@ import com.krisdb.wearcasts.Models.PlaylistItem;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcastslibrary.ChannelItem;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.ArrayList;
@@ -171,11 +170,11 @@ public class PlaylistsUtilities {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             final int order = Integer.valueOf(prefs.getString("pref_display_playlist_sort_order", String.valueOf(ctx.getResources().getInteger(R.integer.default_playlist_sort_order))));
 
-            String orderString = Utilities.GetOrderClause(order);
+            String orderString = Utilities.GetOrderClause(ctx, order);
 
             final boolean progressFirst = prefs.getBoolean("pref_playlists_show_progress_first", false);
 
-            if (progressFirst && order != Enums.SortOrder.PROGRESS.getSorderOrderCode())
+            if (progressFirst && order != ctx.getResources().getInteger(R.integer.sortorder_progress))
                 orderString = "tbl_podcast_episodes.position DESC,".concat(orderString);
 
             //final int truncateWords = ctx.getResources().getInteger(R.integer.episode_truncate_words);

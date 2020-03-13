@@ -24,4 +24,30 @@
     <integer name="episode_with_no_podcast_id">-5</integer>
     <integer name="episode_truncate_words">6</integer>
     <integer name="episode_truncate_length">35</integer>
+
+    <integer name="theme_default">1</integer>
+    <integer name="theme_dark">2</integer>
+    <integer name="theme_amoled">3</integer>
+    <integer name="theme_dynamic">4</integer>
+
+    <integer name="sortorder_name_asc">1</integer>
+    <integer name="sortorder_name_desc">2</integer>
+    <integer name="sortorder_date_asc">3</integer>
+    <integer name="sortorder_date_desc">4</integer>
+    <integer name="sortorder_datedownloaded_asc">5</integer>
+    <integer name="sortorder_datedownloaded_desc">6</integer>
+    <integer name="sortorder_dateadded_asc">7</integer>
+    <integer name="sortorder_dateadded_desc">8</integer>
+    <integer name="sortorder_progress">9</integer>
+    <integer name="sortorder_newepisodes">10</integer>
+    <integer name="sortorder_latestepisodes">11</integer>
+
+    <integer name="autodelete_never">0</integer>
+    <integer name="autodelete_played">1</integer>
+    <integer name="autodelete_24hours">2</integer>
+    <integer name="autodelete_2days">3</integer>
+    <integer name="autodelete_1week">4</integer>
+
+    <integer name="playback_skip_previous">1</integer>
+    <integer name="playback_skip_next">2</integer>
 </resources>

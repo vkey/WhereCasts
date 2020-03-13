@@ -10,7 +10,6 @@ import com.krisdb.wearcasts.Databases.DBPodcastsEpisodes;
 import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.Utilities;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -72,7 +71,7 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
                 cv.put("position", 0);
                 db.update(cv, mEpisode.getEpisodeId());
 
-                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID())
+                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == context.getResources().getInteger(R.integer.autodelete_played))
                     Utilities.DeleteMediaFile(context, mEpisode);
 
                 if (mPlaylistID != -1 && prefs.getBoolean("pref_remove_playlist_onend", false))
@@ -80,7 +79,7 @@ public class FinishMedia implements Callable<List<PodcastItem>> {
 
                 db.close();
             } else {
-                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+                if (Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1")) == context.getResources().getInteger(R.integer.autodelete_played)) {
                     final File localFile = new File(GetLocalDirectory(context).concat(mLocalFile));
 
                     if (localFile.exists())

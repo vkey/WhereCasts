@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -42,7 +43,6 @@ import com.krisdb.wearcasts.Services.SleepTimerService;
 import com.krisdb.wearcasts.Services.SyncWorker;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -174,12 +174,11 @@ public class Utilities {
         final int option = getThemeOptionId(ctx);
 
         int output;
+        final Resources resources = ctx.getResources();
 
-        if (option == Enums.ThemeOptions.DARK.getThemeId())
+        if (option == resources.getInteger(R.integer.theme_dark))
             output = R.style.Dark;
-        else if (option == Enums.ThemeOptions.LIGHT.getThemeId())
-            output = R.style.Light;
-        else if (option == Enums.ThemeOptions.AMOLED.getThemeId())
+        else if (option == resources.getInteger(R.integer.theme_amoled))
             output = R.style.AMOLED;
         else
             output = R.style.Main;
@@ -306,21 +305,7 @@ public class Utilities {
        return ctx.getColor(R.color.wc_header_color_red);
     }
 
-    public static int getBackgroundColor(final Context ctx)
-    {
-        final int optionId = Utilities.getThemeOptionId(ctx);
-
-        if (optionId == Enums.ThemeOptions.LIGHT.getThemeId())
-            return ctx.getColor(R.color.wc_background_light);
-        else if (optionId == Enums.ThemeOptions.DARK.getThemeId())
-            return ctx.getColor(R.color.wc_background_dark);
-        else if (optionId == Enums.ThemeOptions.AMOLED.getThemeId())
-            return ctx.getColor(R.color.wc_background_amoled);
-        else
-            return ctx.getColor(R.color.wc_transparent);
-    }
-
-    public static void vibrate(final Context ctx) {
+   public static void vibrate(final Context ctx) {
         vibrate(ctx, 40);
     }
 
@@ -442,33 +427,35 @@ public class Utilities {
         WorkManager.getInstance(ctx).cancelAllWorkByTag("sync_podcasts");
     }
 
-    public static String GetOrderClause(final int orderId) {
-        return  GetOrderClause(orderId, "tbl_podcast_episodes");
+    public static String GetOrderClause(final Context ctx, final int orderId) {
+        return GetOrderClause(ctx, orderId, "tbl_podcast_episodes");
     }
 
-    public static String GetOrderClause(final int orderId, final String tablename)
+    public static String GetOrderClause(final Context ctx, final int orderId, final String tablename)
     {
         String orderString = "";
 
-        if (orderId == Enums.SortOrder.NAMEASC.getSorderOrderCode())
+        final Resources resources = ctx.getResources();
+
+        if (orderId == resources.getInteger(R.integer.sortorder_name_asc))
             orderString = orderString.concat(tablename).concat(".title ASC");
-        else if (orderId == Enums.SortOrder.NAMEDESC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_name_desc))
             orderString = orderString.concat(tablename).concat(".title DESC");
-        else if (orderId == Enums.SortOrder.DATEASC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_date_asc))
             orderString = orderString.concat(tablename).concat(".pubDate ASC");
-        else if (orderId == Enums.SortOrder.DATEDESC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_date_desc))
             orderString = orderString.concat(tablename).concat(".pubDate DESC");
-        else if (orderId == Enums.SortOrder.DATEDOWNLOADED_DESC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_datedownloaded_desc))
             orderString = orderString.concat(tablename).concat(".dateDownload DESC");
-        else if (orderId == Enums.SortOrder.DATEDOWNLOADED_ASC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_datedownloaded_asc))
             orderString = orderString.concat(tablename).concat(".dateDownload ASC");
-        else if (orderId == Enums.SortOrder.DATEADDED_ASC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_dateadded_asc))
             orderString = orderString.concat(tablename).concat(".dateAdded ASC");
-        else if (orderId == Enums.SortOrder.DATEADDED_DESC.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_dateadded_desc))
             orderString = orderString.concat(tablename).concat(".dateAdded DESC");
-        else if (orderId == Enums.SortOrder.PROGRESS.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_progress))
             orderString = orderString.concat(tablename).concat(".position DESC");
-        else if (orderId == Enums.SortOrder.NEWEPISODES.getSorderOrderCode())
+        else if (orderId == resources.getInteger(R.integer.sortorder_newepisodes))
             orderString = orderString.concat(tablename).concat(".title ASC");
         else
             orderString = orderString.concat(tablename).concat(".title ASC");

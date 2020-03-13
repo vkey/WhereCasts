@@ -49,7 +49,6 @@ import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.Async.WatchConnected;
 import com.krisdb.wearcastslibrary.CommonUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -549,7 +548,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
         }
     }
 
-    private void playlistSkip(final Enums.SkipDirection direction, final List<PodcastItem> episodes) {
+    private void playlistSkip(final int direction, final List<PodcastItem> episodes) {
 
         if (mEpisode.getPodcastId() > -1 && PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("pref_episodes_continuous_play", true) == false) {
             setMediaPlaybackState(PlaybackStateCompat.STATE_STOPPED);
@@ -572,13 +571,13 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     }
                 }
 
-                if (direction == Enums.SkipDirection.NEXT && currentPosition < episodes.size() - 1) //in middle
+                if (direction == getResources().getInteger(R.integer.playback_skip_next) && currentPosition < episodes.size() - 1) //in middle
                     mEpisode = episodes.get(currentPosition + 1);
-                else if (direction == Enums.SkipDirection.NEXT && currentPosition == episodes.size() - 1) //at end
+                else if (direction == getResources().getInteger(R.integer.playback_skip_next) && currentPosition == episodes.size() - 1) //at end
                     mEpisode = episodes.get(1);
-                else if (direction == Enums.SkipDirection.PREVIOUS && currentPosition == 1) //at beginning, go to end
+                else if (direction == getResources().getInteger(R.integer.playback_skip_previous) && currentPosition == 1) //at beginning, go to end
                     mEpisode = episodes.get(episodes.size() - 1);
-                else if (direction == Enums.SkipDirection.PREVIOUS && currentPosition <= episodes.size() - 1) //in middle
+                else if (direction == getResources().getInteger(R.integer.playback_skip_previous) && currentPosition <= episodes.size() - 1) //in middle
                     mEpisode = episodes.get(currentPosition - 1);
 
                 String uri;
@@ -909,7 +908,7 @@ public class MediaPlayerService extends MediaBrowserServiceCompat implements Aud
                     EventBus.getDefault().post(mpsCompleted);
                 }
 
-                playlistSkip(Enums.SkipDirection.NEXT, episodes);
+                playlistSkip(getResources().getInteger(R.integer.playback_skip_next), episodes);
             });
         }
     }

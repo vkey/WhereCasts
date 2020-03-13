@@ -7,9 +7,9 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
+import com.krisdb.wearcasts.R;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.io.File;
@@ -46,7 +46,7 @@ public class CleanupDownloads implements Callable<Boolean> {
                 }
             }
 
-            if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+            if (autoDeleteID > context.getResources().getInteger(R.integer.autodelete_played)) {
                 final List<PodcastItem> downloads2 = GetEpisodesWithDownloads(context, podcast.getPodcastId());
 
                 for (final PodcastItem download : downloads2) {

@@ -24,7 +24,6 @@ import com.krisdb.wearcasts.Utilities.Processor;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcastslibrary.CommonUtils;
 import com.krisdb.wearcastslibrary.DateUtils;
-import com.krisdb.wearcastslibrary.Enums;
 import com.krisdb.wearcastslibrary.PodcastItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -100,7 +99,7 @@ public class SyncWorker extends Worker {
 
             final int autoDeleteID = Integer.valueOf(prefs.getString("pref_downloads_auto_delete", "1"));
 
-            if (autoDeleteID > Enums.AutoDelete.PLAYED.getAutoDeleteID()) {
+            if (autoDeleteID > ctx.getResources().getInteger(R.integer.autodelete_played)) {
                 List<PodcastItem> downloads2 = GetEpisodesWithDownloads(ctx, podcast.getPodcastId());
 
                 for (final PodcastItem download : downloads2) {
