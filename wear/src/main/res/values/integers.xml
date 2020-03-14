@@ -50,4 +50,6 @@
 
     <integer name="playback_skip_previous">1</integer>
     <integer name="playback_skip_next">2</integer>
+
+    <integer name="requestcode_playlist_no_network">112</integer>
 </resources>

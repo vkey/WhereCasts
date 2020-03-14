@@ -110,7 +110,6 @@ public class PodcastsListFragment extends Fragment {
                     RefreshContent();
                     CommonUtils.showToast(mActivity, getString(R.string.alert_sync_finished));
                 });
-
             }
         }
     }

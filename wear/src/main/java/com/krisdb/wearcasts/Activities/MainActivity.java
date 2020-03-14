@@ -361,16 +361,15 @@ public class MainActivity extends BaseFragmentActivity implements WearableNaviga
         findViewById(R.id.main_splash_image).setVisibility(View.GONE);
     }
 
-    private void setMainMenu()
-    {
-        mNavItems = Utilities.getNavItems(this);
-        mNavDrawer = new WeakReference<>(findViewById(R.id.drawer_nav_main));
+   private void setMainMenu() {
+       mNavItems = Utilities.getNavItems(this);
+       mNavDrawer = new WeakReference<>(findViewById(R.id.drawer_nav_main));
 
-        if (mNavDrawer.get() != null) {
-            mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
-            mNavDrawer.get().addOnItemSelectedListener(this);
-        }
-    }
+       if (mNavDrawer.get() != null) {
+           mNavDrawer.get().setAdapter(new NavigationAdapter(this, mNavItems));
+           mNavDrawer.get().addOnItemSelectedListener(this);
+       }
+   }
 
     @Override
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {}
