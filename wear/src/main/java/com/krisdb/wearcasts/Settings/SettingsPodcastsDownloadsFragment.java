@@ -108,6 +108,7 @@ public class SettingsPodcastsDownloadsFragment extends PreferenceFragment implem
             Utilities.cancelAllDownloads(getActivity());
             Utilities.clearAllDownloads(getActivity());
             Utilities.ShowConfirmationActivity(getActivity(), getString(R.string.alert_downloads_all_cancelled));
+            setDeleteDownloadsTitle();
             //CommonUtils.showToast(getActivity(), getString(R.string.alert_downloads_all_cancelled));
             return false;
         });

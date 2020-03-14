@@ -14,7 +14,7 @@
     <integer name="default_playlist_sort_order">5</integer>
     <integer name="default_podcasts_sort_order">1</integer>
     <integer name="default_home_screen">0</integer>
-    <integer name="default_theme">0</integer>
+    <integer name="default_theme">4</integer>
     <integer name="default_header_color">10</integer>
     <integer name="default_finish_end_time">0</integer>
     <integer name="default_font_size">1</integer>

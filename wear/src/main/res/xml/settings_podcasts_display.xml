@@ -9,7 +9,7 @@
             android:title="@string/settings_podcasts_label_header_theme"
             android:entries="@array/theme_options_text"
             android:entryValues="@array/theme_options_values"
-            android:defaultValue="0"
+            android:defaultValue="4"
             android:icon="@drawable/ic_setting_dropdown_indicator"
             android:foreground="?android:attr/selectableItemBackground"
             />

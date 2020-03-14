@@ -34,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.krisdb.wearcasts.Utilities.EpisodeUtilities.SaveEpisodeValue;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.playlistIsEmpty;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetPodcastsThumbnailDirectory;
+import static com.krisdb.wearcastslibrary.CommonUtils.GetRoundedLogo;
 
 public class EpisodesSwipeController extends ItemTouchHelper.Callback {
 
@@ -82,9 +84,12 @@ public class EpisodesSwipeController extends ItemTouchHelper.Callback {
                 Utilities.ShowConfirmationActivity(ctx, ctx.getString(R.string.alert_refreshing_thumb));
                 //CommonUtils.showToast(ctx, ctx.getString(R.string.alert_refreshing_thumb));
 
-                CommonUtils.executeSingleThreadAsync(new SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), CommonUtils.GetPodcastsThumbnailDirectory(ctx), CommonUtils.GetThumbnailName(episode.getEpisodeId()), true), (response) -> { });
+                CommonUtils.executeSingleThreadAsync(new SaveLogo(ctx, episode.getChannel().getThumbnailUrl().toString(), GetPodcastsThumbnailDirectory(ctx), CommonUtils.GetThumbnailName(episode.getPodcastId()), true), (response) -> {
+                    mEpisodes.get(0).setDisplayThumbnail(GetRoundedLogo(ctx, GetPodcastsThumbnailDirectory(ctx).concat(CommonUtils.GetThumbnailName(episode.getPodcastId()))));
+                    mAdapter.refreshItem2(mEpisodes,0);
+                    Utilities.SetPodcstRefresh(ctx);
+                });
             }
-            mAdapter.refreshItem2(mEpisodes,0);
         }
         else {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

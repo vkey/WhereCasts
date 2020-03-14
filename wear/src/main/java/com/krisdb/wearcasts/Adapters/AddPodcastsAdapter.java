@@ -131,7 +131,7 @@ public class AddPodcastsAdapter extends WearableRecyclerView.Adapter<AddPodcasts
                 CommonUtils.showToast(mContext, mContext.getString(R.string.alert_add_podcast_no_episodes));
         });
 
-        Utilities.vibrate(mContext);
+       Utilities.vibrate(mContext);
         Utilities.ShowConfirmationActivity(mContext, mContext.getString(R.string.alert_podcast_added));
         Utilities.SetPodcstRefresh(mContext);
     }
