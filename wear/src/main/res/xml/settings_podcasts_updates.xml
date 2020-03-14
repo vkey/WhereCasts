@@ -53,6 +53,7 @@
             android:entryValues="@array/hours_values"
             />
 
+        <Preference android:key="pref_sync_podcasts" android:title="@string/settings_podcasts_label_sync_podcasts" />
         <Preference android:key="pref_sync_art" android:title="@string/settings_podcasts_label_sync_thumbnails" />
         <Preference android:key="pref_delete_thumbs" />
     </PreferenceCategory>
