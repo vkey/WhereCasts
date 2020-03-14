@@ -33,4 +33,9 @@ public class PlaylistViewModel extends AndroidViewModel {
 
         return episodes;
     }
+
+    public void updateEpisodes(final List<PodcastItem> newepisodes)
+    {
+        episodes.postValue(newepisodes);
+    }
 }

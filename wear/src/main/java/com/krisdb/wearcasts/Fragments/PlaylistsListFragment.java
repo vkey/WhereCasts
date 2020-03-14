@@ -1,9 +1,12 @@
 package com.krisdb.wearcasts.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -21,14 +24,18 @@ import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 
 import com.krisdb.wearcasts.Adapters.PlaylistsAdapter;
+import com.krisdb.wearcasts.Async.DisplayPlaylistEpisodes;
 import com.krisdb.wearcasts.R;
+import com.krisdb.wearcasts.Utilities.EpisodeUtilities;
 import com.krisdb.wearcasts.Utilities.ScrollingLayoutEpisodes;
 import com.krisdb.wearcasts.Utilities.Utilities;
 import com.krisdb.wearcasts.ViewModels.PlaylistViewModel;
 import com.krisdb.wearcastslibrary.CommonUtils;
+import com.krisdb.wearcastslibrary.PodcastItem;
 
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static com.krisdb.wearcasts.Utilities.PlaylistsUtilities.getPlaylistName;
 
 public class PlaylistsListFragment extends Fragment {
@@ -39,6 +46,7 @@ public class PlaylistsListFragment extends Fragment {
     private TextView mProgressPlaylistText;
     private LinearLayout mProgressPlaylistLayout;
     private PlaylistsAdapter mAdapter;
+    private PlaylistViewModel mViewModel;
 
     public static PlaylistsListFragment newInstance(final int playlistId) {
 
@@ -132,9 +140,9 @@ public class PlaylistsListFragment extends Fragment {
         mProgressPlaylistLayout.setVisibility(View.VISIBLE);
         mPlaylistList.setVisibility(View.INVISIBLE);
 
-        final PlaylistViewModel model = new ViewModelProvider(this).get(PlaylistViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
 
-        model.getEpisodes(mPlaylistId).observe(this, episodes -> {
+        mViewModel.getEpisodes(mPlaylistId).observe(this, episodes -> {
             mAdapter = new PlaylistsAdapter(mActivity, this, episodes, mPlaylistId, mTextColor, mHeaderColor);
             mPlaylistList.setAdapter(mAdapter);
 
@@ -142,6 +150,28 @@ public class PlaylistsListFragment extends Fragment {
             mPlaylistList.setVisibility(View.VISIBLE);
         });
     }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+
+        if (resultCode == RESULT_OK) {
+
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+            final int episodeId = prefs.getInt("no_network_playlist_episodeid", 0);
+
+            final PodcastItem episode = EpisodeUtilities.GetEpisode(mActivity, episodeId);
+
+            Utilities.startDownload(mActivity, episode);
+
+            if (requestCode == getResources().getInteger(R.integer.requestcode_playlist_no_network)) {
+                CommonUtils.executeCachedAsync(new DisplayPlaylistEpisodes(mActivity, mPlaylistId), (episodes) -> {
+                    mViewModel.updateEpisodes(episodes);
+                });
+            }
+        }
+    }
+
 
     @Override
     public void onResume() {
