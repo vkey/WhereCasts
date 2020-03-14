@@ -220,6 +220,16 @@ public class EpisodeActivity extends WearableActivity implements MenuItem.OnMenu
         mSkipBack.setText(String.valueOf(skipBack));
         mSkipForward.setText(String.valueOf(skipForward));
 
+        if (skipBack > 99)
+            mSkipBack.setPadding(20, 0, 0, 0);
+        else
+            mSkipBack.setPadding(26, 0, 0, 0);
+
+        if (skipForward > 99)
+            mSkipForward.setPadding(0, 0, 20, 0);
+        else
+            mSkipForward.setPadding(0, 0, 26, 0);
+
         mVolumeDown.setOnClickListener(view -> {
             final AudioManager audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 
