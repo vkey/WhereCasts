@@ -270,6 +270,7 @@ public class EpisodeListActivity extends BaseFragmentActivity implements MenuIte
 
                 final ItemTouchHelper itemTouchhelper = new ItemTouchHelper(new EpisodesSwipeController(mActivity, mAdapter, mQuery, episodes));
                 itemTouchhelper.attachToRecyclerView(mEpisodeList);
+
                 if (HasNewEpisodes(mActivity, mPodcastId)) {
                     Utilities.SetPodcstRefresh(mActivity);
                     final ContentValues cv = new ContentValues();
