@@ -130,15 +130,7 @@ public class DownloadReceiver extends BroadcastReceiver  {
                 if (prefs.getBoolean("from_job", false))
                     clearFailedDownload(context, episode);
                 else
-                {
-                    final ContentValues cvFailed = new ContentValues();
-                    cvFailed.put("download", 0);
-                    cvFailed.put("downloadid", 0);
-
-                    final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
-                    db.update(cvFailed, episode.getEpisodeId());
-                    db.close();
-                }
+                    Utilities.DeleteMediaFile(context, episode);
             }
 
             cursor.close();
@@ -165,14 +157,6 @@ public class DownloadReceiver extends BroadcastReceiver  {
 
     private void clearFailedDownload(final Context context, final PodcastItem episode) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        final ContentValues cvFailed = new ContentValues();
-        cvFailed.put("download", 0);
-        cvFailed.put("downloadid", 0);
-
-        final DBPodcastsEpisodes db = new DBPodcastsEpisodes(context);
-        db.update(cvFailed, episode.getEpisodeId());
-        db.close();
 
         Utilities.DeleteMediaFile(context, episode);
 
