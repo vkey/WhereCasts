@@ -27,11 +27,11 @@ import static com.krisdb.wearcastslibrary.CommonUtils.GetLocalDirectory;
 
 public class DBUtilities {
 
-    public static void insertPodcast(final Context context, final PodcastItem podcast) {
-        insertPodcast(context, new DBPodcastsEpisodes(context), podcast, true, true);
+    public static int insertPodcast(final Context context, final PodcastItem podcast) {
+        return insertPodcast(context, new DBPodcastsEpisodes(context), podcast, true, true);
     }
 
-    public static void insertPodcast(final Context context, final DBPodcastsEpisodes db, final PodcastItem podcast, final boolean fetchArt, final boolean fetchEpisodes)
+    public static int insertPodcast(final Context context, final DBPodcastsEpisodes db, final PodcastItem podcast, final boolean fetchArt, final boolean fetchEpisodes)
     {
         final ContentValues cv = new ContentValues();
         cv.put("title", podcast.getChannel().getTitle());
@@ -48,6 +48,8 @@ public class DBUtilities {
 
         if (fetchEpisodes)
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context, podcastId), (response) -> { });
+
+        return podcastId;
     }
 
     static ChannelItem GetChannel(final Context ctx, final int podcastId) {

@@ -267,20 +267,23 @@ public class ImportService extends WearableListenerService implements DataClient
 
                 final PodcastItem podcast = new PodcastItem();
 
+                final String thumbUrl = dataMapItem.getDataMap().getString("thumbnail_url");
+
                 final ChannelItem channel = new ChannelItem();
                 channel.setTitle(dataMapItem.getDataMap().getString("title"));
                 channel.setRSSUrl(dataMapItem.getDataMap().getString("rss_url"));
                 channel.setThumbnailUrl(dataMapItem.getDataMap().getString("rss_url"));
                 channel.setSiteUrl(dataMapItem.getDataMap().getString("site_url"));
 
-                if (dataMapItem.getDataMap().getString("thumbnail_url") != null) {
-                    channel.setThumbnailUrl(dataMapItem.getDataMap().getString("thumbnail_url"));
-                    //channel.setThumbnailName(CommonUtils.GetThumbnailName(dataMapItem.getDataMap().getString("title")));
-                }
+                if (thumbUrl != null)
+                    channel.setThumbnailUrl(thumbUrl);
 
                 podcast.setChannel(channel);
 
-                DBUtilities.insertPodcast(context, podcast);
+                final int podcastID = DBUtilities.insertPodcast(context, podcast);
+
+                if (thumbUrl!= null)
+                    CommonUtils.executeSingleThreadAsync(new SaveLogo(context, thumbUrl, CommonUtils.GetPodcastsThumbnailDirectory(context), CommonUtils.GetThumbnailName(podcastID)), (response) -> { });
 
                 Utilities.vibrate(this);
             }
