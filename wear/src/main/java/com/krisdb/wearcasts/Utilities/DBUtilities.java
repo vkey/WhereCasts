@@ -38,15 +38,13 @@ public class DBUtilities {
         cv.put("url", podcast.getChannel().getRSSUrl().toString());
         cv.put("site_url", podcast.getChannel().getSiteUrl() != null ? podcast.getChannel().getSiteUrl().toString() : null);
         cv.put("dateAdded", DateUtils.GetDate());
+        if (podcast.getChannel().getThumbnailUrl() != null)
+            cv.put("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
 
         final int podcastId = (int)db.insertPodcast(cv);
 
-        if (podcast.getChannel().getThumbnailUrl() != null) {
-            cv.put("thumbnail_url", podcast.getChannel().getThumbnailUrl().toString());
-
-            if (fetchArt)
+        if (podcast.getChannel().getThumbnailUrl() != null && fetchArt)
                 CommonUtils.executeSingleThreadAsync(new SaveLogo(context, podcast.getChannel().getThumbnailUrl().toString(), CommonUtils.GetPodcastsThumbnailDirectory(context), CommonUtils.GetThumbnailName(podcast.getPodcastId())), (response) -> { });
-        }
 
         if (fetchEpisodes)
             CommonUtils.executeSingleThreadAsync(new SyncPodcasts(context, podcastId), (response) -> { });
